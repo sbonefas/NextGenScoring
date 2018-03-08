@@ -4,16 +4,21 @@
 .score {
 	display: inline-block;
 }
-.score div {
-	padding-left: 50px;
-	padding-right: 50px;
-}
 .clock {
 	display: inline-block;
 }
+div.clock {
+	margin: 0 auto;
+	width: 300px;
+	margin-left: 300px;
+	margin-right: 300px
+}
 #scorebar {
-	width:100%;
+	/*
+	width: 100%;
+	*/
 	background-color: #b3b3b3;
+	padding: 40px;
 }
 #visitor {
 	float: right;
@@ -34,4 +39,10 @@
     text-align: center;
 }
 
-.playtable
+#home .score {
+	padding-left: 20px;
+}
+#visitor .score {
+	padding-right: 20px;
+}
+
