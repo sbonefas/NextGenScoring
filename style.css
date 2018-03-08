@@ -23,3 +23,15 @@
 	float: left;
 	display: inline-block;
 }
+
+/* play by plays */
+#playbyplaybox {
+    width: 100%;
+    background-color: #b3b3b3;
+}
+
+.playbyplayheader {
+    text-align: center;
+}
+
+.playtable
