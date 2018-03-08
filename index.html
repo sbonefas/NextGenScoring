@@ -1,0 +1,96 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="style.css">
+		<title>NextGen Scoring</title>
+	</head>
+
+	<body>
+		<div id = "scorebar">
+			<div id = "home">
+				<div class = "fouls">
+					<h3 class = "fouls">Fouls</h3>
+					<h3 class = "fouls">0</h3>
+					<h4 class = "fouls">Full: 0</h4>
+					<h4 class = "fouls">Partial: 0</h4>
+				</div>
+				<div class = "score">
+					<h2 class = "score">Home</h2>
+					<h2 class = "score">0</h2>
+				</div>
+			</div>
+			<div class = "clock">
+				<h2 class = "clock">20:00</h2>
+				<h3 class = "clock">Half</h3>
+				<h4 class = "clock">1</h4>
+				<h3 class = "clock">**Clock is stopped**</h3>
+			</div>
+			<div id = "visitor">
+				<div class = "score">
+					<h2 class = "score">Visitor</h2>
+					<h2 class = "score">0</h2>
+				</div>
+				<div class = "fouls">
+					<h3 class = "fouls">Fouls</h3>
+					<h3 class = "fouls">0</h3>
+					<h4 class = "fouls">Full: 0</h4>
+					<h4 class = "fouls">Partial: 0</h4>
+				</div>
+			</div>
+			
+		</div>
+		<div id = "playbyplaybox">
+			<h3 class="playbyplayheader">Play-by-Play</h3>
+			<table class="playtable">
+				<tr>
+					<th>Time</th>
+					<th>Team</th>
+					<th>Play</th>
+					<th>Score</th>
+				</tr>
+				<tr>
+					<td>19:41</td>
+					<td>WIS</td>
+					<td>Ethan Happ made a 3 Point Jumper</td>
+					<td>3-0</td>
+				</tr>
+				<tr>
+					<td>19:23</td>
+					<td>WIS</td>
+					<td>Ethan Happ made a 3 Point Jumper</td>
+					<td>6-0</td>
+				</tr>
+				<tr>
+					<td>19:02</td>
+					<td>WIS</td>
+					<td>Brad Davison made a Layup</td>
+					<td>8-0</td>
+				</tr>
+				<tr>
+					<td>19:41</td>
+					<td>MINN</td>
+					<td>Nate Mason made a 3 Point Jumper</td>
+					<td>8-3</td>
+				</tr>
+
+			</table>
+		</div>
+
+		<div id="app">
+			{{ message }}
+		</div>
+
+		<script type="text/javascript" src="./vue.js"></script>
+		<script type="text/javascript" src="./app.js"></script>
+	</body>
+	<!-- 
+<script>
+			var app = new Vue({
+  				el: '#app',
+  				data: {
+    			message: 'Hello Vue!'
+  				}
+			})
+		</script>
+		-->
+</html>
+
