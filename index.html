@@ -1,10 +1,42 @@
 <html>
 	<head>
-		
+		<link rel="stylesheet" href="style.css">
 	</head>
 
 	<body>
-		<h1>This is our homepage</h1>
+		<div id = "scorebar">
+			<div id = "home">
+				<div class = "fouls">
+					<h3 class = "fouls">Fouls</h3>
+					<p class = "fouls">0</p>
+					<h4 class = "fouls">Full: 0</h4>
+					<h4 class = "fouls">Partial: 0</h4>
+				</div>
+				<div class = "score">
+					<h2 class = "score">Home</h2>
+					<p class = "score">0</p>
+				</div>
+			</div>
+			<div class = "clock">
+				<h2 class = "clock">20:00</h2>
+				<h3 class = "clock">Half</h3>
+				<h4 class = "clock">1</h4>
+				<h3 class = "clock">**Clock is stopped**</h3>
+			</div>
+			<div id = "visitor">
+				<div class = "score">
+					<h2 class = "score">Visitor</h2>
+					<p class = "score">0</p>
+				</div>
+				<div class = "fouls">
+					<h3 class = "fouls">Fouls</h3>
+					<p class = "fouls">0</p>
+					<h4 class = "fouls">Full: 0</h4>
+					<h4 class = "fouls">Partial: 0</h4>
+				</div>
+			</div>
+			
+		</div>
 		<div id="app">
 			{{ message }}
 		</div>
