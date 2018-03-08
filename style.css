@@ -28,17 +28,6 @@ div.clock {
 	float: left;
 	display: inline-block;
 }
-
-/* play by plays */
-#playbyplaybox {
-    width: 100%;
-    background-color: #b3b3b3;
-}
-
-.playbyplayheader {
-    text-align: center;
-}
-
 #home .score {
 	padding-left: 20px;
 }
@@ -46,3 +35,37 @@ div.clock {
 	padding-right: 20px;
 }
 
+/* play by plays */
+#playbyplaybox {
+    width: 60%;
+    margin: auto;
+    vertical-align: center;
+    background-color: #b3b3b3;
+}
+
+#playbyplaybox h3 {
+    text-align: center;
+}
+
+#playbyplaybox table {
+    border-collapse: collapse;
+    width: 100%;
+    text-align: center;
+    font-size: 16px;
+}
+
+#playbyplaybox th {
+    border-bottom: 1px solid black;
+    text-align: center;
+    text-transform: uppercase;
+    background-color: #b3b3b3;
+}
+
+#playbyplaybox tr {
+    border-bottom: 1px solid black;
+    background-color: #e4e4e4;
+}
+
+.playteam {
+    text-transform: uppercase;
+}
