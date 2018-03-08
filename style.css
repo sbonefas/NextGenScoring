@@ -1,0 +1,25 @@
+.fouls {
+	display: inline-block;
+}
+.score {
+	display: inline-block;
+}
+.score div {
+	padding-left: 50px;
+	padding-right: 50px;
+}
+.clock {
+	display: inline-block;
+}
+#scorebar {
+	width:100%;
+	background-color: #b3b3b3;
+}
+#visitor {
+	float: right;
+	display: inline-block;
+}
+#home {
+	float: left;
+	display: inline-block;
+}
