@@ -1,9 +1,7 @@
 <template>
   <div class="hello">
     <div class="holder">
-      
-      <button v-shortkey.once="['f', 'g']" @shortkey="theAction()">TEST</button> 
-      
+
       <form @submit.prevent="addSkill">
         <input type="text" placeholder="Enter a skill you have.." v-model="skill" v-validate="'min:5'" name="skill">
         
@@ -38,10 +36,17 @@ export default {
       ]
     }
   },
+  created() {
+    document.addEventListener('keydown', this.keyevent);
+  },
   methods: {
-    theAction() {
-      console.log("A");
+    keyevent(e) {
+      console.log(e.keyCode);
+      if(e.keyCode == 175) {
+        console.log("F3 PRESSED");
+      }
     },
+
     addSkill() {
       this.$validator.validateAll().then((result) => {
         if (result) {
