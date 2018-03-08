@@ -1,11 +1,22 @@
 {
-  "name": "hello-world",
+  "name": "nextgenscoring",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "506 best project",
+  "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sbonefas/NextGenScoring.git"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sbonefas/NextGenScoring/issues"
+  },
+  "homepage": "https://github.com/sbonefas/NextGenScoring#readme",
+  "devDependencies": {
+    "electron": "^1.8.3"
+  }
 }
