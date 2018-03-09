@@ -53,14 +53,14 @@ div.clock {
 }
 /* play by plays */
 #playbyplaybox {
-    width: 100%;
+    width: 60%;
     height: 30%;
     background-color: #b3b3b3;
     margin: auto;
     vertical-align: center;
 }
 
-#playbyplaybox h3 {
+#playbyplaybox h2 {
     text-align: center;
 }
 
