@@ -1,5 +1,6 @@
 html {
 	background-color: #c5050c; /*UW Red*/
+	font-family: "Verlag", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 /*Scorebar*/
 .fouls {
@@ -21,9 +22,11 @@ div.clock {
 	/*
 	width: 100%;
 	*/
-	background-color: #646569; /*UW Grey*/
+	background-color: #282728; /*UW Grey*/
+	color: #f9f9f9;
 	padding: 40px;
 	height:10%;
+	text-transform: uppercase;
 }
 #visitor {
 	float: right;
@@ -45,6 +48,7 @@ div.clock {
 #playerstats {
 	width: 100%;
 	height: 40%;
+	background-color: #dadfe1;
 }
 #ps-home {
 	display: inline-block;
@@ -58,7 +62,8 @@ div.clock {
 #playbyplaybox {
     width: 60%;
     height: 30%;
-    background-color: #646569; /*UW Grey*/
+    background-color: #282728; /*UW Grey*/
+    color: #f9f9f9;
     margin: auto;
     vertical-align: center;
 
@@ -79,12 +84,13 @@ div.clock {
     border-bottom: 1px solid black;
     text-align: center;
     text-transform: uppercase;
-    background-color: #b3b3b3;
+    background-color: #282728; /*UW Grey*/
+    color: #f9f9f9;
 }
 
 #playbyplaybox tr {
     border-bottom: 1px solid black;
-    background-color: #e4e4e4;
+    background-color: #dadfe1; /*uw-gray-blue*/
 }
 
 .playteam {
