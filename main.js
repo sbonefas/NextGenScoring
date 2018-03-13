@@ -36,28 +36,45 @@ function createWindow() {
 function readTestData(file_path) {
 	var test_data = fs.readFileSync(file_path, 'utf8');
 	if(TESTING) console.log(test_data);
+	return test_data;
 }
 
 /**
- * Sends data from the frond end to the back end. 
+ * Sends data from the front end to the back end. 
  * Dummy function for the front end. Temporary
  * --USED FOR TESTING--
  */
-function sendData(keystrokes) {
+
+ipc.on('send-data', function(event,keystrokes,file_path){ 
 	console.log(keystrokes);
-}
+	//TODO: write data to file 
+	//if successful
+		//event.sender.send('send-data-success', test_data);
+	//if failure
+		//event.sender.send('send-data-failure');
+})
 
 /**
  * Sends data from the back end to the front end.
  * Dummy function for the front end. Temporary
  * --USED FOR TESTING--
  */
-function getData() {
-	return "getData success";
-}
+ipc.on('get-data', function(event,keystrokes,file_path){ 
+	console.log(keystrokes);
+	//execute function for receiving data from file
+	var test_data = readTestData(file_path);
+	//if successful
+		//event.sender.send('get-data-success', test_data);
+	//if failure
+		//event.sender.send('get-data-failure');
+})
 
 
-
+/**
+ * Example for using IPC to communicate between frontend & backend
+ * (see corresponding script in index.html)
+ *
+ */
 
 ipc.on('async-message', function(event){
 	event.sender.send('async-reply', 'Main process opened the error dialog'); 
