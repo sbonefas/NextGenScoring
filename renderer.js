@@ -19,5 +19,5 @@ asyncBtn.addEventListener('click', function() {
 })
 
 ipc.on('async-reply', function(event, arg){
-	console.log(arg);	
+	console.log(arg); 	
 })
