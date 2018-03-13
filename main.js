@@ -22,6 +22,7 @@ function createWindow() {
 
 	win.on('closed', () => {
 		win = null;
+		app.quit();
 	})
 }
 
