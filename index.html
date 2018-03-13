@@ -455,10 +455,20 @@
   				}
 			})
 </script>
-				
-		<button id="asyncBtn">Display Async</button>
-		<script>
-			require('./renderer.js');
+		-->		
+             	<script>
+			//require('./renderer.js');
+			const electron = require("electron");
+			const ipc = electron.ipcRenderer;
+
+			let Data = {
+				message: 'asdf'
+			};
+
+			ipc.send('asdf-message', Data);
+			ipc.on('asdf-reply', function(event,arg){
+				console.log(arg);
+			})
 		</script>
-		-->
+		
 </html>
