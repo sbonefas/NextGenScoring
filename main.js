@@ -26,7 +26,7 @@ function createWindow() {
 }
 
 ipc.on('async-message', function(event){
-	event.sender.send('async-reply', 'Main process opened the error dialog');
+	event.sender.send('async-reply', 'Main process opened the error dialog'); 
 })
 
 app.on('ready', createWindow);
