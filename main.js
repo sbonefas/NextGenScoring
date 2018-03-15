@@ -23,7 +23,15 @@ function createWindow() {
 		slashes: true		
 	}));
 
-	if(TESTING) drw.readTestData('data/test_data.txt');
+	if(TESTING) {
+		drw.readTestData('data/test_data.txt');
+
+		if(drw.test_read()) console.log("test_read success");
+		else console.log("test_read fail");
+
+		if(drw.test_write()) console.log("test_write success");
+		else console.log("test_write fail");
+	}
 
 	win.on('closed', () => {
 		win = null;

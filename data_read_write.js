@@ -1,4 +1,3 @@
-const electron = require("electron");
 const fs = require("fs");	//node.js filesystem
 const TESTING = true;
 
@@ -7,11 +6,8 @@ const TESTING = true;
  * are temporarily stored in 'data/'.
  * --USED FOR TESTING--
  */
-exports.readTestData = function(file_path) {
-	
+exports.readTestData = function(file_path) {	
 	var test_data = fs.readFileSync(file_path, 'utf8');
-	if(TESTING) console.log(test_data);
-	
 	return test_data;
 }
 
@@ -22,7 +18,19 @@ exports.readTestData = function(file_path) {
  */
 exports.writeTestData = function(file_path, data) {
 	fs.writeFileSync(file_path, data, 'utf8');
-	if(TESTING) console.log(test_data);
-
 }
 
+exports.test_read = function() {
+	var file_path = './data/test_read_data.txt';
+	var data = exports.readTestData(file_path);
+	if(data === "this is test data to read") return true;
+	else return false;
+}
+
+exports.test_write = function() {
+	var file_path = './data/test_write_data.txt';
+	var write_me = "this is test data to write";
+	exports.writeTestData(file_path, write_me);
+	if(exports.readTestData(file_path) === write_me) return true;
+	else return false;
+}
