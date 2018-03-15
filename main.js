@@ -1,5 +1,7 @@
 console.log('main process loaded');
 
+var drw = require('./data_read_write.js');
+
 const electron = require("electron");
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
@@ -21,38 +23,13 @@ function createWindow() {
 		slashes: true		
 	}));
 
-	if(TESTING) readTestData('data/test_data.txt');
+	if(TESTING) drw.readTestData('data/test_data.txt');
 
 	win.on('closed', () => {
 		win = null;
 		app.quit();
 	})
 }
-
-/** 
- * Reads the data in a given file and prints it to console. Data files
- * are temporarily stored in 'data/'.
- * --USED FOR TESTING--
- */
-function readTestData(file_path) {
-	
-	var test_data = fs.readFileSync(file_path, 'utf8');
-	if(TESTING) console.log(test_data);
-	
-	return test_data;
-}
-
-/** 
- * Writes the data in a given file and prints it to console. Data files
- * are temporarily stored in 'data/'.
- * --USED FOR TESTING--
- */
-function writeTestData(file_path, data) {
-	fs.writeFileSync(file_path, data, 'utf8');
-	if(TESTING) console.log(test_data);
-
-}
-
 
 /**
  * Sends data from the front end to the back end. 
@@ -67,7 +44,7 @@ ipc.on('send-data', function(event,keystrokes,file_path){
 		if(TESTING) console.log(test_data); 
 	} catch (e) {
 		//if failure
-		console.log("An error occurred in file writing: " e);
+		console.log("An error occurred in file writing: " + e);
 		event.sender.send('send-data-failure');
 		return;
 	}
@@ -83,10 +60,10 @@ ipc.on('get-data', function(event,keystrokes,file_path){
 	console.log(keystrokes);
 	var test_data;
 	try {
-		test_data = readTestData(file_path);
+		test_data = drw.readTestData(file_path);
 	} catch (e) {
 		//if failure
-		console.log("An error occurred in file reading: " e);
+		console.log("An error occurred in file reading: " + e);
 		event.sender.send('get-data-failure');
 		return;
 	}
