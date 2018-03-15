@@ -1,0 +1,47 @@
+.fouls {
+	display: inline-block;
+}
+.score {
+	display: inline-block;
+}
+.clock {
+	display: inline-block;
+}
+div.clock {
+	margin: 0 auto;
+	width: 300px;
+	margin-left: 300px;
+	margin-right: 300px
+}
+#scorebar {
+	/*
+	width: 100%;
+	*/
+	background-color: #b3b3b3;
+	padding: 40px;
+}
+#visitor {
+	float: right;
+	display: inline-block;
+}
+#home {
+	float: left;
+	display: inline-block;
+}
+
+/* play by plays */
+#playbyplaybox {
+    width: 100%;
+    background-color: #b3b3b3;
+}
+
+.playbyplayheader {
+    text-align: center;
+}
+
+#home .score {
+	padding-left: 20px;
+}
+#visitor .score {
+	padding-right: 20px;
+} 

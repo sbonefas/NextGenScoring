@@ -1,0 +1,7 @@
+THIS IS TEST DATA
+
+this,is,sample,csv,data
+more,data,4,d,2,22,dataaaa
+data
+
+DELETE THIS ONCE readTestData IS GONE IN main.js
