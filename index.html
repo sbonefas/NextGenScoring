@@ -28,7 +28,7 @@
 				<h2 class = "clock" id = "clockh2">20:00</h2>
 				<h3 class = "clock">Half</h3>
 				<h4 class = "clock">1</h4>
-				<h3 class = "clock">**Clock is stopped**</h3>
+				<h3 class = "clock" id="clockisstopped">**Clock is stopped**</h3>
 				<br>
 			</div>
 			<div id = "visitor">
@@ -484,6 +484,7 @@
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 		<script>
 			//Keep clock functionality on the frontend
+			// Uses EasyTimer.js from Github https://albert-gonzalez.github.io/easytimer.js/
 			var timer = new Timer();
 			timer.start({countdown: true, startValues: {seconds: 1200}});
 			timer.pause();
@@ -501,9 +502,11 @@
        				 if(paused) {
        				 	timer.start();
        				 	paused = false;
+       				 	$("#clockisstopped").toggle();
        				 } else {
        				 	timer.pause();
        				 	paused = true;
+       				 	$("#clockisstopped").toggle();
        				 }
     			}
 			}
