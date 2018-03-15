@@ -60,18 +60,17 @@ function writeTestData(file_path, data) {
  * --USED FOR TESTING--
  */
 
-ipc.on('send-data', function(event,keystrokes,file_path){ 
-	console.log(keystrokes);
+ipc.on('send-data', function(event,keystrokes){ 
 	try {
-		fs.writeFileSync(file_path, data, 'utf8');
-		if(TESTING) console.log(test_data); 
+		fs.writeFileSync(file_path, keystrokes, 'utf8');
+		if(TESTING) console.log(keystrokes); 
 	} catch (e) {
 		//if failure
-		console.log("An error occurred in file writing: " e);
+		console.log("An error occurred in file writing: " + e);
 		event.sender.send('send-data-failure');
 		return;
 	}
-	event.sender.send('send-data-success', test_data);
+	event.sender.send('send-data-success');
 })
 
 /**
@@ -79,14 +78,13 @@ ipc.on('send-data', function(event,keystrokes,file_path){
  * Dummy function for the front end. Temporary
  * --USED FOR TESTING--
  */
-ipc.on('get-data', function(event,keystrokes,file_path){ 
-	console.log(keystrokes);
+ipc.on('get-data', function(event){ 
 	var test_data;
 	try {
 		test_data = readTestData(file_path);
 	} catch (e) {
 		//if failure
-		console.log("An error occurred in file reading: " e);
+		console.log("An error occurred in file reading: " + e);
 		event.sender.send('get-data-failure');
 		return;
 	}
