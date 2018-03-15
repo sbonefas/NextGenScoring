@@ -67,7 +67,7 @@ ipc.on('send-data', function(event,keystrokes,file_path){
 		if(TESTING) console.log(test_data); 
 	} catch (e) {
 		//if failure
-		console.log("An error occurred in file writing: " e);
+		console.log("An error occurred in file writing: ", e);
 		event.sender.send('send-data-failure');
 		return;
 	}
@@ -86,7 +86,7 @@ ipc.on('get-data', function(event,keystrokes,file_path){
 		test_data = readTestData(file_path);
 	} catch (e) {
 		//if failure
-		console.log("An error occurred in file reading: " e);
+		console.log("An error occurred in file reading: ", e);
 		event.sender.send('get-data-failure');
 		return;
 	}
