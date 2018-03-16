@@ -12,7 +12,7 @@ P - GOOD FG IN THE PAINT                  X - MISSED 3PT SHOT (REBOUND)
 Z - GOOD FG- FAST BREAK & PAINT   K - BLOCKED SHOT
 `;
 Vue.component('player', {
-  template: `<table cellpadding="5">
+  template: `<table cellpadding="5" class="playerstats">
                 <tr>
                     <td> {{in_game}} </td>
                     <td> {{number}} </td>
@@ -106,6 +106,25 @@ var app = new Vue({
      else if(e.keyCode == 86) {
        window.alert("RECORDING VISITING TEAM");
        home = false
+     }
+     else if(e.keyCode == 83){
+       who_came_out = window.prompt("ENTER ## OF PLAYER LEAVING");
+       who_came_in = window.prompt("ENTER ## OF PLAYER ENTERING");
+       if(home == true)
+       {
+         for(index = 0; index < home_team.length; index++)
+         {
+            if(who_came_out == home_team[index].number)
+            {
+              home_team[index].in_game = " "
+            }
+            if(who_came_in == home_team[index].number)
+            {
+              home_team[index].in_game = "*"
+            }
+         }
+
+       }
      }
    }
   }
