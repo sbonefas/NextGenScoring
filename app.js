@@ -54,7 +54,7 @@ Vue.component('player_2', {
     return number_2
   }
 })
-var home_stats = {fg: 0.0, tfg: 0.0, ftp: 0.0, tvs: 0, blocks: 0, steals: 0, paint: 0, offto: 0, sndch: 0, fastb: 0}
+var home_stats = {fg: 0.0, tfg: 0.0, ftp: 0.0, tvs: 0, blocks: 0, steals: 0, paint: 0, offto: 0, sndch: 0, fastb: 0, fga: 0, tfga: 0}
 Vue.component('home_team_stats', {
   template: `
   <div>
@@ -89,11 +89,31 @@ var app = new Vue({
            {
              home_team[index].fg += 1;
              home_team[index].fa += 1;
+             var total_attempts = 0;
+             var total_fgs = 0;
+             for(players = 0; players < home_team.length; players++)
+             {
+               total_attempts += home_team[players].fa
+               total_fgs += home_team[players].fg
+             }
+             home_stats.fg = (total_fgs/total_attempts)
              break;
            }
            else if((who_did_it == home_team[index].number && (result_code == "y" || result_code == "Y"))) {
              home_team[index].m3 += 1;
              home_team[index].fa += 1;
+             break;
+           }
+           else if (who_did_it == home_team[index].number && (result_code == "r" || result_code == "R")) {
+             home_team[index].fa += 1;
+             var total_attempts = 0;
+             var total_fgs = 0;
+             for(players = 0; players < home_team.length; players++)
+             {
+               total_attempts += home_team[players].fa;
+               total_fgs += home_team[players].fg;
+             }
+             home_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
              break;
            }
          }
