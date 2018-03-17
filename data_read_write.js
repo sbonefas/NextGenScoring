@@ -1,7 +1,24 @@
 const fs = require("fs");	//node.js filesystem
 
-const TESTING = true;
-var data_location_path = "./data/";
+
+
+
+/** path to the folder where data is kept */
+var game_data_location_path = "./data/";
+
+/**
+ * Edits the stored data location path where game files are held.
+ *
+ * @param new_path New file path to the directory where games are held. The
+ * directory must exists before calling this function.
+ * @return True if path is successfully edited. False if the directory path
+ * does not exist.
+ */
+exports.edit_game_data_location_path = function(new_path) {
+	if(!fs.existsSync(new_path)) return false;
+	game_data_location_path = new_path;
+	return true;
+}
 
 /** 
  * Creates an empty .csv game file with the given file_name.
@@ -13,8 +30,7 @@ var data_location_path = "./data/";
  * or if the path to the data folder is invalid.
  */
 exports.create_game_file = function(file_name) {
-	var file_path = data_location_path + file_name + '.csv';
-
+	var file_path = game_data_location_path + file_name + '.csv';
 	if(fs.existsSync(file_path)) return false;
 
 	try {
@@ -24,6 +40,28 @@ exports.create_game_file = function(file_name) {
 	}
 
 	return true;
+}
+
+/**
+ * Writes to the game file with the given filename and adds stats
+ * corresponding to the given key inputs.
+ *
+ * @param key_inputs String of characters and numbers that correspond
+ * to a play taken in by a statkeeper.
+ * @param file_name Name of the file to write to. The file name should
+ * not include the filetype or directory.
+ */
+exports.write_to_game_file = function(key_inputs, file_name) {
+	var file_path = game_data_location_path + file_name + '.csv';
+	if(!fs.existsSync(file_path)) return false;
+
+	//TODO: parse key_inputs and write to given file.
+	//	- use 'csv' module?
+	//	- write specific line
+	//	- maybe return something based on the error type because there will be a couple
+	//		- couldn't find file
+	//		- player doesn't exist in file
+	//		- etc...
 }
 
 
@@ -41,10 +79,7 @@ exports.create_game_file = function(file_name) {
 
 
 
-
-
 /** TEST FUNCTIONS. NOT PRODUCTION CODE */
-
 
 /** 
  * Reads the data in a given file and prints it to console. Data files
