@@ -56,7 +56,7 @@ function createWindow() {
 
 ipc.on('send-data', function(event,keystrokes){ 
 	try {
-		fs.writeFileSync(file_path, keystrokes, 'utf8');
+		drw.write_to_game_file(keystrokes, file_path);
 		if(TESTING) console.log(keystrokes); 
 	} catch (e) {
 		//if failure
