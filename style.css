@@ -87,7 +87,9 @@ div.clock {
     text-transform: uppercase;
     background-color: #282728; /*UW Grey*/
     color: #f9f9f9;
+
 }
+
 
 #playbyplaybox tr {
     border-bottom: 1px solid black;
@@ -97,3 +99,4 @@ div.clock {
 .playteam {
     text-transform: uppercase;
 }
+>>>>>>> origin/develop
