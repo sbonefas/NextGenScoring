@@ -59,7 +59,7 @@ function createWindow() {
  *
  *			
  * [PLAYER_NUMBER, FIELDGOAL, FIELDGOAL_ATTEMPT, MADE_3, FREETHROW, FREETHROW_ATTEMPT, REBOUND, ASSIST, PERSONAL FOUL, BLOCK, TURNOVER, STEAL]
- * [			0			 ,		1			,					2				 ,	3		 ,		 4		,					5				 ,		6   ,   7   ,        8      ,	 9  , 	 10   ,  11  ]
+ * [	  0      ,     1    ,	     2         ,   3   ,     4    ,         5	     ,	  6   ,   7   ,       8      ,	 9  , 	 10   ,  11  ]
  *
  */
 
