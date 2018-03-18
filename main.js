@@ -55,75 +55,143 @@ function createWindow() {
  * Sends data from the front end to the back end. 
  * Dummy function for the front end. Temporary
  * --USED FOR TESTING--
- * STAT FORMAT AS FOLLOWS:
+ * 
+ * KEYARRAY HOLDS ARGUMENTS FROM FRONTEND
+ * FORMAT:
+ *	 
+ * FOR FIELD GOALS: [PLAY_CODE, PLAYER_NUMBER, RESULT_CODE, REBOUND/ASSIST/BLOCK_PLAYER (REBOUND IF RESULT_CODE = 'R or X' / BLOCK IF RESULT_CODE = 'K' / ASSIST IF ANYTHING ELSE), HOME/AWAY]
+ *                  [    0    ,       1      ,      2     ,                                                       3                                                               ,     4    ]	
+ * 
+ * FOR FREETHROWS: [E, PLAYER_NUMBER, RESULT_CODE, HOME/AWAY]
  *
- *			
- * [PLAYER_NUMBER, FIELDGOAL, FIELDGOAL_ATTEMPT, MADE_3, FREETHROW, FREETHROW_ATTEMPT, REBOUND, ASSIST, PERSONAL FOUL, BLOCK, TURNOVER, STEAL]
- * [			0			 ,		1			,					2				 ,	3		 ,		 4		,					5				 ,		6   ,   7   ,        8      ,	 9  , 	 10   ,  11  ]
+ * FOR REBOUNDS/ASSISTS/FOULS/BLOCKS/TURNOVERS/STEALS: [PLAY_CODE, PLAYER_NUMBER, HOME/AWAY]
+ *  
+ * 
+ *
+ * STATARRAY GETS SUBMITTED TO GAME FILE
+ * FORMAT:
+ *
+ *	 (1)/(0)
+ * [HOME/AWAY, PLAYER_NUMBER, FIELDGOAL, FIELDGOAL_ATTEMPT, MADE_3, FREETHROW, FREETHROW_ATTEMPT, REBOUND, ASSIST, PERSONAL FOUL, BLOCK, TURNOVER, STEAL]
+ * [    0    ,       1      ,     2    ,         3        ,    4  ,     5    ,         6        ,    7   ,   8   ,        9     ,   10 ,    11   ,   12 ]
+ *
+ * [7]-[12] ARE EDITED IN SUBPLAY FUNCTIONS BELOW
+ *
+ * TO: T (TEAM TURNOVER)
+ * TO: D (DEAD BALL)
+ *
  *
  */
 
  
 function addPlay(keystrokes){ 
-	var statArray = [0,0,0,0,0,0,0,0,0,0];
+	var statArray = [0,0,0,0,0,0,0,0,0,0,0,0,0];
 	var keyArray = keystrokes.split(/ /);
 	if(TESTING) console.log(keyArray);
 		
 	//input parsing
-	statArray[0] = keyArray[1];	//add player's number
+	statArray[0] = 
+	statArray[1] = keyArray[1];	//add player's number
 	switch(keyArray[0]){
-		case "d" || "l" || "p" || "j" || "w" || "y":
-			statArray[1] = 1;	//fieldgoal attempt			
+		case 'y':
+		case 'w':
+		case 'j':
+		case 'p':
+		case 'l':
+		case 'd':
+			
+			var team = keyArray[4];
+			statArray[3] = 1;	//fieldgoal attempt
+			
 			switch(keyArray[2]){
-				case "g" || "G" || "q" || "Q":
+				case 'g' || 'G' || 'q' || 'Q':
 					statArray[0] = 1;	//fieldgoal
+					if (keyArray[3] != '') assist(team, keyArray[3]);	//If there's an assist, record it
 					break;
-				case "y":
-					statArray[3] = 1;	//made 3-pointer
+				case 'y':
+					statArray[4] = 1;	//made 3-pointer
+					if (keyArray[3] != '') assist(team, keyArray[3]);	//If there's an assist, record it
 					break;
-				case "r":
-					//statArray[6] = 1; //rebound
+				case 'r':
+					if (keyArray[3] != '') rebound(team, keyArray[3]);	//If there's a rebound, record it
 					break;
-				case "x":
-					//statArray[6] = 1; //rebound	
+				case 'x':
+					if (keyArray[3] != '') rebound(team, keyArray[3]);	//If there's a rebound, record it
 					break;
-				case "k":
-					//blocked shot
+				case 'k':
+					block(team, keyArray[3]);
 					break;
-				case "p":
+				case 'p':
 					//in the paint
 					break;
-				case "f":
+				case 'f':
 					//fast break
 					break;
-				case "z":
+				case 'z':
 					//fast break in paint
-					break;
+					break;				
 			}
-		case "e":
-			statArray[5] = 1; //freethrow attempt
-			if (keyArray[2] == "g") statArray[4] = 1;
 			break;
-		case "r":
-			statArray[6] = 1;	//rebound
+		case 'e':
+			statArray[6] = 1; //freethrow attempt
+			if (keyArray[2] == 'g') statArray[4] = 1;
 			break;
-		case "a":
-			statArray[7] = 1; //assist
+		case 'r':
+			rebound(team, keyArray[3]);
 			break;
-		case "f":
-			statArray[8] = 1;	//foul
+		case 'a':
+			assist(team, keyArray[3]); //assist
 			break;
-		case "t":
-			statArray[10] = 1; //turnover
+		case 'f':
+			statArray[9] = 1;	//foul
+			break;
+		case 't':
+			statArray[11] = 1; //turnover
 			//team turnover
 			//dead ball
 			break;
-		case "s":
-			statArray[11] = 1;	//steal
+		case 's':
+			statArray[12] = 1;	//steal
 			break;
 	}
+	console.log(statArray);
+	drw.write_to_game_file(statArray, file_path);
+} 
+ 
+ 
+/*	
+ *	SUBPLAY FUNCTIONS
+ *	CALLED BY ADDPLAY()
+ *
+ *
+ */ 
+ 
+function rebound(team, player_number){
+	var statArray = [team, player_number,0,0,0,0,0,1,0,0,0,0,0];
 	drw.write_to_game_file(statArray, file_path);
 }
+ 
+function assist(team, player_number){
+	var statArray = [team, player_number,0,0,0,0,0,0,1,0,0,0,0];
+	drw.write_to_game_file(statArray, file_path);	
+}
+
+function block(team, player_number){
+	var statArray = [team, player_number,0,0,0,0,0,0,0,0,1,0,0];
+	drw.write_to_game_file(statArray, file_path);	
+}
+
+/*
+function turnover(team, player_number){
+	var statArray = [team, player_number,0,0,0,0,0,0,0,0,0,1,0];
+	drw.write_to_game_file(statArray, file_path);	
+}
+*/
+
+/*
+ *	IPC EVENT HANDLER
+ *
+ */
  
 ipc.on('send-data', function (event,keystrokes){ 
 	try {
@@ -136,6 +204,8 @@ ipc.on('send-data', function (event,keystrokes){
 	}
 	event.sender.send('send-data-success');
 });
+
+
 
 /**
  * Sends data from the back end to the front end.
