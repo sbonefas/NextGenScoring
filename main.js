@@ -48,16 +48,86 @@ function createWindow() {
 	})
 }
 
+
+
+
 /**
  * Sends data from the front end to the back end. 
  * Dummy function for the front end. Temporary
  * --USED FOR TESTING--
+ * STAT FORMAT AS FOLLOWS:
+ *
+ *			
+ * [PLAYER_NUMBER, FIELDGOAL, FIELDGOAL_ATTEMPT, MADE_3, FREETHROW, FREETHROW_ATTEMPT, REBOUND, ASSIST, PERSONAL FOUL, BLOCK, TURNOVER, STEAL]
+ * [			0			 ,		1			,					2				 ,	3		 ,		 4		,					5				 ,		6   ,   7   ,        8      ,	 9  , 	 10   ,  11  ]
+ *
  */
 
-ipc.on('send-data', function(event,keystrokes){ 
+ 
+function addPlay(keystrokes){ 
+	var statArray = [0,0,0,0,0,0,0,0,0,0];
+	var keyArray = keystrokes.split(/ /);
+	if(TESTING) console.log(keyArray);
+		
+	//input parsing
+	statArray[0] = keyArray[1];	//add player's number
+	switch(keyArray[0]){
+		case "d" || "l" || "p" || "j" || "w" || "y":
+			statArray[1] = 1;	//fieldgoal attempt			
+			switch(keyArray[2]){
+				case "g" || "G" || "q" || "Q":
+					statArray[0] = 1;	//fieldgoal
+					break;
+				case "y":
+					statArray[3] = 1;	//made 3-pointer
+					break;
+				case "r":
+					//statArray[6] = 1; //rebound
+					break;
+				case "x":
+					//statArray[6] = 1; //rebound	
+					break;
+				case "k":
+					//blocked shot
+					break;
+				case "p":
+					//in the paint
+					break;
+				case "f":
+					//fast break
+					break;
+				case "z":
+					//fast break in paint
+					break;
+			}
+		case "e":
+			statArray[5] = 1; //freethrow attempt
+			if (keyArray[2] == "g") statArray[4] = 1;
+			break;
+		case "r":
+			statArray[6] = 1;	//rebound
+			break;
+		case "a":
+			statArray[7] = 1; //assist
+			break;
+		case "f":
+			statArray[8] = 1;	//foul
+			break;
+		case "t":
+			statArray[10] = 1; //turnover
+			//team turnover
+			//dead ball
+			break;
+		case "s":
+			statArray[11] = 1;	//steal
+			break;
+	}
+	drw.write_to_game_file(statArray, file_path);
+}
+ 
+ipc.on('send-data', function (event,keystrokes){ 
 	try {
-		drw.write_to_game_file(keystrokes, file_path);
-		if(TESTING) console.log(keystrokes); 
+		addPlay(keystrokes);
 	} catch (e) {
 		//if failure
 		console.log("An error occurred in file writing: " + e);
@@ -65,7 +135,7 @@ ipc.on('send-data', function(event,keystrokes){
 		return;
 	}
 	event.sender.send('send-data-success');
-})
+});
 
 /**
  * Sends data from the back end to the front end.
