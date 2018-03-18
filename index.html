@@ -24,11 +24,12 @@
 					<h2 class = "score">0</h2>
 				</div>
 			</div>
-			<div class = "clock">
-				<h2 class = "clock">20:00</h2>
+			<div class = "clock" id="clockdiv">
+				<h2 class = "clock" id = "clockh2">20:00</h2>
 				<h3 class = "clock">Half</h3>
 				<h4 class = "clock">1</h4>
-				<h3 class = "clock">**Clock is stopped**</h3>
+				<h3 class = "clock" id="clockisstopped">**Clock is stopped**</h3>
+				<br>
 			</div>
 			<div id = "visitor">
 				<div class = "score">
@@ -50,165 +51,34 @@
 		</div>
 
 		<!-- Stats -->
-		<div id = "playerstats">
-			<div id = "ps-home">
-				<h2> Home team: Teamname</h2>
-				<table class="playerstatstable" cellpadding="3">
-					<tr>
-						<th>?</th>
-						<th>##</th>
-						<th>--Name--</th>
-						<th>FG</th>
-						<th>FA</th>
-						<th>3M</th>
-						<th>FT</th>
-						<th>FA</th>
-						<th>RB</th>
-						<th>AS</th>
-						<th>PF</th>
-						<th>TP</th>
-					</tr>
-					<tr>
-						<td>*</td>
-						<td>01</td>
-						<td>Player_1</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-					</tr>
-					<tr>
-						<td>*</td>
-						<td>02</td>
-						<td>Player_2</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-					</tr>
-					<tr>
-						<td>*</td>
-						<td>03</td>
-						<td>Player_3</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-					</tr>
-					<tr>
-						<td>*</td>
-						<td>04</td>
-						<td>Player_4</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-					</tr>
-					<tr>
-						<td>*</td>
-						<td>05</td>
-						<td>Player_5</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-					</tr>
-					<tr>
-						<td></td>
-						<td>11</td>
-						<td>Bench_1</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-					</tr>
-					<tr>
-						<td></td>
-						<td>12</td>
-						<td>Bench_2</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-					</tr>
-					<tr>
-						<td></td>
-						<td>13</td>
-						<td>Bench_3</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-					</tr>
-					<tr>
-						<td></td>
-						<td>14</td>
-						<td>Bench_4</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-					</tr>
-					<tr>
-						<td></td>
-						<td>15</td>
-						<td>Bench_5</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-					</tr>
-				</table>
+		<div id = "app">
+			<div id = "playerstats">
+				<div id = "ps-home">
+					<h2> Home team: Wisconsin</h2>
+					<table class="playerstatstable" cellpadding="3">
+						<tr>
+							<th>?</th>
+							<th>##</th>
+							<th>--Name--</th>
+							<th>FG</th>
+							<th>FA</th>
+							<th>3M</th>
+							<th>FT</th>
+							<th>FA</th>
+							<th>RB</th>
+							<th>AS</th>
+							<th>PF</th>
+							<th>TP</th>
+						</tr>
+					</table>
+					<table class="player">
+						<player></player>
+					</table>
+					<table class="players">
+						<player_2>test</player_2>
+					</table>
+					<home_team_stats>test</home_team_stats>
+				</div>
 			</div>
 			<div id = "ps-visitor">
 				<h2> Visiting team: Teamname</h2>
@@ -367,7 +237,24 @@
 						<td>0</td>
 						<td>0</td>
 					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td>Totals</td>
+						<td>0</td>
+						<td>0</td>
+						<td>0</td>
+						<td>0</td>
+						<td>0</td>
+						<td>0</td>
+						<td>0</td>
+						<td>0</td>
+						<td>0</td>
+					</tr>
 				</table>
+				<p>FG%: 0.000   3FG%: 0.000   FT%: 0.000</p>
+				<p>TEAM: TURNOVERS: 00   BLOCKS: 00   STEALS: 00</p>
+				<p>paint: 00   offto: 00   2ndch: 00   fastb: 00</p>
 			</div>
 		</div>
 
@@ -445,18 +332,49 @@
 
 		<script type="text/javascript" src="./vue.js"></script>
 		<script type="text/javascript" src="./app.js"></script>
-	</body>
-	<!-- 
-<script>
+		<script src="easytimer.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		<script>
+			//Keep clock functionality on the frontend
+			// Uses EasyTimer.js from Github https://albert-gonzalez.github.io/easytimer.js/
+			var timer = new Timer();
+			timer.start({countdown: true, startValues: {seconds: 1200}});
+			timer.pause();
+			var paused = true;
+			$('#clockdiv #clockh2').html(timer.getTimeValues().toString());
+			timer.addEventListener('secondsUpdated', function (e) {
+			    $('#clockdiv #clockh2').html(timer.getTimeValues().toString());
+			});
+			timer.addEventListener('targetAchieved', function (e) {
+			    $('#clockdiv #clockh2').html('KABOOM!!');
+			});	
+
+			document.body.onkeyup = function(e){
+    			if(e.keyCode == 32 && e.target == document.body){
+       				 if(paused) {
+       				 	timer.start();
+       				 	paused = false;
+       				 	$("#clockisstopped").toggle();
+       				 } else {
+       				 	timer.pause();
+       				 	paused = true;
+       				 	$("#clockisstopped").toggle();
+       				 }
+    			}
+			}
+
+
+		</script>
+		<!-- <script>
 			var app = new Vue({
   				el: '#app',
   				data: {
     			message: 'Hello Vue!'
   				}
 			})
-</script>
-		-->		
-             	<script>
+		</script> -->		
+        
+		<script>
 			//require('./renderer.js');
 			const electron = require("electron");
 			const ipc = electron.ipcRenderer;
@@ -470,5 +388,5 @@
 				console.log(arg);
 			})
 		</script>
-		
+		</body>
 </html>
