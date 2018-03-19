@@ -4,7 +4,11 @@ const fs = require("fs");	//node.js filesystem
 
 
 /** path to the folder where data is kept */
-var game_data_location_path = "./data/";
+var game_data_location_path = "data/";
+
+function get_file_path(file_name) {
+	return game_data_location_path + file_name + '.txt';
+}
 
 /**
  * Edits the stored data location path where game files are held.
@@ -30,15 +34,16 @@ exports.edit_game_data_location_path = function(new_path) {
  * or if the path to the data folder is invalid.
  */
 exports.create_game_file = function(file_name) {
-	var file_path = game_data_location_path + file_name + '.csv';
+	// Check if file exists
+	var file_path = get_file_path(file_name);
 	if(fs.existsSync(file_path)) return false;
 
+	// Create file. Return false on errors
 	try {
     	fs.writeFileSync(file_path, '');
 	} catch (e) {
     	return false;
 	}
-
 	return true;
 }
 
@@ -50,18 +55,87 @@ exports.create_game_file = function(file_name) {
  * to a play taken in by a statkeeper.
  * @param file_name Name of the file to write to. The file name should
  * not include the filetype or directory.
+ * @return True if write is successful, false otherwise.
  */
 exports.write_to_game_file = function(key_inputs, file_name) {
-	var file_path = game_data_location_path + file_name + '.csv';
+	var file_path = get_file_path(file_name);
 	if(!fs.existsSync(file_path)) return false;
 
-	//TODO: parse key_inputs and write to given file.
-	//	- use 'csv' module?
-	//	- write specific line
-	//	- maybe return something based on the error type because there will be a couple
-	//		- couldn't find file
-	//		- player doesn't exist in file
-	//		- etc...
+	switch(key_inputs.charAt(0)) {
+		// Shot:
+		case 'J':
+		case 'D':
+		case 'L':
+		case 'P':
+		case 'Y':
+		case 'W':
+			write_shot(key_inputs, file_path);
+			break;
+
+		// Free Throw:
+		case 'E':
+			write_freethrow(key_inputs, file_path);
+			break;
+
+		// Turnover:
+		case 'T':
+			write_turnover(key_inputs, file_path);
+			break;
+
+		// Rebound:
+		case 'R':
+			write_rebound(key_inputs, file_path);
+			break;
+
+		// Assist:
+		case 'A':
+			write_assist(key_inputs, file_path);
+			break;
+
+		// Steal:
+		case 'S':
+			write_steal(key_inputs, file_path);
+			break;
+
+		// Block:
+		case 'B':
+			write_block(key_inputs, file_path);
+			break;
+
+		default:
+			return false;
+
+	}
+
+	return true;
+}
+
+function write_shot(key_inputs, file_path) {
+	
+}
+
+function write_freethrow(key_inputs, file_path) {
+
+}
+
+function write_turnover(key_inputs, file_path) {
+
+}
+
+function write_rebound(key_inputs, file_path) {
+
+}
+
+function write_assist(key_inputs, file_path) {
+	
+}
+
+function write_steal(key_inputs, file_path) {
+	
+}
+
+function write_block(key_inputs, file_path) {
+	
 }
 
 
