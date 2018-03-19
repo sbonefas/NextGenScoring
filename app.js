@@ -8,6 +8,7 @@ var home_7 = {in_game: " ", number: "07", name: "Bench_2", fg: 0, fa: 0, m3: 0, 
 var home_8 = {in_game: " ", number: "08", name: "Bench_3", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0}
 var home_9 = {in_game: " ", number: "09", name: "Bench_4", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0}
 var home_10 = {in_game: " ", number: "10", name: "Bench_5", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0}
+var home_totals = {in_game: " ", number: " ", name: "Totals", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0}
 
 var home_team = [home_1, home_2, home_3, home_4, home_5, home_6, home_7, home_8, home_9, home_10];
 var home = true;
@@ -239,6 +240,29 @@ Vue.component('player_h10', {
     return home_10
   }
 })
+Vue.component('player_total', {
+  template: `
+           <table cellpadding="5">
+             <tr>
+               <td> {{in_game}} </td>
+               <td> {{number}} </td>
+               <td> {{name}} </td>
+               <td> {{fg}} </td>
+               <td> {{fa}} </td>
+               <td> {{m3}} </td>
+               <td> {{ftm}} </td>
+               <td> {{fta}} </td>
+               <td> {{rb}} </td>
+               <td> {{as}} </td>
+               <td> {{pf}} </td>
+               <td> {{tp}} </td>
+             </tr>
+           </table>`,
+  data: function () {
+    return home_totals
+  }
+})
+
 
 
 var home_stats = {fg: 0.0, tfg: 0.0, ftp: 0.0, tvs: 0, blocks: 0, steals: 0, paint: 0, offto: 0, sndch: 0, fastb: 0, fga: 0, tfga: 0}
@@ -276,6 +300,8 @@ var app = new Vue({
            {
              home_team[index].fg += 1;
              home_team[index].fa += 1;
+             home_totals.fg += 1;
+             home_totals.fa += 1;
              var total_attempts = 0;
              var total_fgs = 0;
              for(players = 0; players < home_team.length; players++)
@@ -288,11 +314,14 @@ var app = new Vue({
            }
            else if((who_did_it == home_team[index].number && (result_code == "y" || result_code == "Y"))) {
              home_team[index].m3 += 1;
+             home_totals.m3 += 1;
              home_team[index].fa += 1;
+             home_totals.fa += 1;
              break;
            }
            else if (who_did_it == home_team[index].number && (result_code == "r" || result_code == "R")) {
              home_team[index].fa += 1;
+             home_totals.fa += 1;
              var total_attempts = 0;
              var total_fgs = 0;
              for(players = 0; players < home_team.length; players++)
