@@ -12,17 +12,25 @@ html {
 }
 .clock {
 	display: inline-block;
+	vertical-align: center;
+}
+.clock h2 {
+	display: inline-block;
+	vertical-align: center;
 }
 div.clock {
 	margin: 0 auto;
 	width: 300px;
 	margin-left: 300px;
-	margin-right: 300px
+	margin-right: 300px;
+	position: relative;
+	text-align: center;
 }
 #scorebar {
 	/*
 	width: 100%;
-	*/
+    */
+    width: auto;
 	background-color: #282728; /*UW Grey*/
 	color: #f9f9f9;
 	padding: 40px;
@@ -31,6 +39,7 @@ div.clock {
 }
 #visitor {
 	float: right;
+	text-align: right;
 	display: inline-block;
 }
 #home {
@@ -59,6 +68,7 @@ div.clock {
 	display: inline-block;
 	float: right;
 }
+
 /* play by plays */
 #playbyplaybox {
     width: 60%;
@@ -67,7 +77,6 @@ div.clock {
     color: #f9f9f9;
     margin: auto;
     vertical-align: center;
-
 }
 
 #playbyplaybox h2 {
