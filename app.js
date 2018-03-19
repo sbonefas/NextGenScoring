@@ -283,6 +283,24 @@ Vue.component('home_team_stats', {
   }
 })
 
+// play by play
+var playmsg = {time: "19:85", team: "WISC", playdscrp: "Hi", score: "100-2"}
+var playlist = [];
+Vue.component('play_01', {
+  template: `<table>
+                <tr>
+                    <td> {{time}} </td>
+                    <td> {{team}} </td>
+                    <td> {{playdscrp}} </td>
+                    <td> {{score}} </td>
+                </tr>
+            </table>`,
+  data: function () {
+    return playmsg
+  }
+})
+
+
 var app = new Vue({
   el: '#app',
   data: {

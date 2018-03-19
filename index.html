@@ -49,9 +49,10 @@
 			</div>
 		</div>
 
+		<div id = "app">
 		<!-- Stats -->
 		<div id = "playerstats">
-			<div id = "app">
+			<!--<div id = "app">-->
 				<div id = "ps-home">
 					<h2> Home team: Wisconsin</h2>
 					<table class="playerstatstable" cellpadding="3">
@@ -70,43 +71,22 @@
 							<th>TP</th>
 						</tr>
 					</table>
-					<table class="player">
-						<player_h01></player_h01>
-					</table>
-					<table class="player">
-						<player_h02></player_h02>
-					</table>
-					<table class="player">
-						<player_h03></player_h03>
-					</table>
-					<table class="player">
-						<player_h04></player_h04>
-					</table>
-					<table class="player">
-						<player_h05></player_h05>
-					</table>
-					<table class="player">
-						<player_h06></player_h06>
-					</table>
-					<table class="player">
-						<player_h07></player_h07>
-					</table>
-					<table class="player">
-						<player_h08></player_h08>
-					</table>
-					<table class="player">
-						<player_h09></player_h09>
-					</table>
-					<table class="player">
-						<player_h10></player_h10>
-					</table>
-					<table class="player">
-						<player_total></player_total>
-					</table>
+
+					<player_h01></player_h01>
+					<player_h02></player_h02>
+					<player_h03></player_h03>
+					<player_h04></player_h04>
+					<player_h05></player_h05>
+					<player_h06></player_h06>
+					<player_h07></player_h07>
+					<player_h08></player_h08>
+					<player_h09></player_h09>
+					<player_h10></player_h10>
+					<player_total></player_total>
 
 					<home_team_stats></home_team_stats>
 				</div>
-			</div>
+			<!--</div> -->
 			<div id = "ps-visitor">
 				<h2> Visiting team: Teamname</h2>
 				<table class="playerstatstable" cellpadding="3">
@@ -285,7 +265,6 @@
 			</div>
 		</div>
 
-		<!-- PLAY BY PLAY BOX -->
 		<div id = "playbyplaybox">
 			<h2>Play-by-Play</h2>
 			<table cellpadding="3">
@@ -295,12 +274,16 @@
 					<th>Play</th>
 					<th>Score</th>
 				</tr>
+			</table>
+			<play_01></play_01>
+			<table cellpadding="3">
 				<tr>
 					<td>19:41</td>
 					<td class="playteam">wis</td>
 					<td>Ethan Happ made a 3 Point Jumper</td>
 					<td>3-0</td>
 				</tr>
+
 				<tr>
 					<td>19:23</td>
 					<td class="playteam">wis</td>
@@ -352,6 +335,8 @@
 
 			</table>
 		</div>
+		</div>
+
 
 		<div id="app">
 			{{ message }}
