@@ -12,6 +12,7 @@ var home_totals = {in_game: " ", number: " ", name: "Totals", fg: 0, fa: 0, m3: 
 
 var home_team = [home_1, home_2, home_3, home_4, home_5, home_6, home_7, home_8, home_9, home_10];
 var home = true;
+var altHeld = false;
 var teams = ["Wisconsin"];
 result_code_prompt = `
 PRESS A RESULT CODE...
@@ -21,8 +22,11 @@ Y - GOOD 3PT FIELD GOAL                  R - MISSED SHOT (REBOUND)
 P - GOOD FG IN THE PAINT                  X - MISSED 3PT SHOT (REBOUND)
 Z - GOOD FG- FAST BREAK & PAINT   K - BLOCKED SHOT
 `;
+help_menu = `HELP!!!!!`;
+
+// Vue components for home players
 Vue.component('player_h01', {
-  template: `<table cellpadding="5" class="playerstats">
+  template: `<table cellpadding="3" class="playerstats">
                 <tr>
                     <td> {{in_game}} </td>
                     <td> {{number}} </td>
@@ -44,7 +48,7 @@ Vue.component('player_h01', {
 })
 Vue.component('player_h02', {
   template: `
-           <table cellpadding="5">
+           <table cellpadding="3">
              <tr>
                <td> {{in_game}} </td>
                <td> {{number}} </td>
@@ -66,7 +70,7 @@ Vue.component('player_h02', {
 })
 Vue.component('player_h03', {
   template: `
-           <table cellpadding="5">
+           <table cellpadding="3">
              <tr>
                <td> {{in_game}} </td>
                <td> {{number}} </td>
@@ -88,7 +92,7 @@ Vue.component('player_h03', {
 })
 Vue.component('player_h04', {
   template: `
-           <table cellpadding="5">
+           <table cellpadding="3">
              <tr>
                <td> {{in_game}} </td>
                <td> {{number}} </td>
@@ -110,7 +114,7 @@ Vue.component('player_h04', {
 })
 Vue.component('player_h05', {
   template: `
-           <table cellpadding="5">
+           <table cellpadding="3">
              <tr>
                <td> {{in_game}} </td>
                <td> {{number}} </td>
@@ -132,7 +136,7 @@ Vue.component('player_h05', {
 })
 Vue.component('player_h06', {
   template: `
-           <table cellpadding="5">
+           <table cellpadding="3">
              <tr>
                <td> {{in_game}} </td>
                <td> {{number}} </td>
@@ -154,7 +158,7 @@ Vue.component('player_h06', {
 })
 Vue.component('player_h07', {
   template: `
-           <table cellpadding="5">
+           <table cellpadding="3">
              <tr>
                <td> {{in_game}} </td>
                <td> {{number}} </td>
@@ -176,7 +180,7 @@ Vue.component('player_h07', {
 })
 Vue.component('player_h08', {
   template: `
-           <table cellpadding="5">
+           <table cellpadding="3">
              <tr>
                <td> {{in_game}} </td>
                <td> {{number}} </td>
@@ -198,7 +202,7 @@ Vue.component('player_h08', {
 })
 Vue.component('player_h09', {
   template: `
-           <table cellpadding="5">
+           <table cellpadding="3">
              <tr>
                <td> {{in_game}} </td>
                <td> {{number}} </td>
@@ -220,7 +224,7 @@ Vue.component('player_h09', {
 })
 Vue.component('player_h10', {
   template: `
-           <table cellpadding="5">
+           <table cellpadding="3">
              <tr>
                <td> {{in_game}} </td>
                <td> {{number}} </td>
@@ -242,7 +246,7 @@ Vue.component('player_h10', {
 })
 Vue.component('player_total', {
   template: `
-           <table cellpadding="5">
+           <table cellpadding="3">
              <tr>
                <td> {{in_game}} </td>
                <td> {{number}} </td>
@@ -290,7 +294,18 @@ var app = new Vue({
   methods: {
    keyevent(e) {
      console.log(e.keyCode);
-     if(e.keyCode == 74) {
+
+     // alt + h
+     if(e.keyCode == 18) {
+        altHeld = true;
+     }
+     if(altHeld && e.keyCode == 72) {
+        window.alert(help_menu);
+        altHeld = false;
+     }
+
+     // j then (g | q | y | r)
+     else if(e.keyCode == 74) {
        who_did_it = window.prompt("SHOT BY: (Key in a player ##)");
        result_code = window.prompt(result_code_prompt);
        if(home == true) {
@@ -335,14 +350,20 @@ var app = new Vue({
          }
        }
      }
+
+     // h
      else if(e.keyCode == 72) {
        window.alert("RECORDING HOME TEAM");
        home = true;
      }
+
+     // v
      else if(e.keyCode == 86) {
        window.alert("RECORDING VISITING TEAM");
        home = false
      }
+
+     // s
      else if(e.keyCode == 83){
        who_came_out = window.prompt("ENTER ## OF PLAYER LEAVING");
        who_came_in = window.prompt("ENTER ## OF PLAYER ENTERING");
@@ -359,7 +380,6 @@ var app = new Vue({
               home_team[index].in_game = "*"
             }
          }
-
        }
      }
    }
