@@ -1,3 +1,4 @@
+var TESTING_MODE = false;  // this signals that you are in testing mode and will disable the annoying password promt that happens every time you load the page. Set this to false when in production mode!
 var home = true;
 
 result_code_prompt = `
@@ -37,6 +38,23 @@ Vue.component('vis_team_stats', {
     return vis_stats
   }
 })
+
+window.onload = function () {
+  if(!TESTING_MODE) {
+    $(document.body).hide();
+   var password = "";
+   while(password != "123") {
+    var password = prompt("Please enter the password to access this site.");
+    if(password != "123") {
+      alert("Incorrect password");
+    }
+   }
+   if(password == "123") {
+      $(document.body).show();
+   }
+  }
+  
+}
 
 function launchClockPrompt() { // called when the user clicks on the game clock in the scorebar. Is used to edit the clock time and change between half 1, half 2, and OT
   var period = prompt("Please enter the current period\n1: Period 1\n2: Period 2\nOT: First overtime\n2OT: Second overtime\n30T: Third overtime\n40T: Fourth overtime\n50T: Fifth overtime\n60T: Sixth overtime\n\nWARNING: Changing periods will reset the clock to 20:00 (or 5:00 for OT periods)");
