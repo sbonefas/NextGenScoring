@@ -444,11 +444,11 @@ var app = new Vue({
             }
          }
          // add to play by play - HOME
-         app.playlist.push({ time: "00:00", team: "Home", playdscrp: "Sub", score: app.home_score + "-" + app.vis_score })
+         app.playlist.push({ time: "00:00", team: "Home", playdscrp: `${who_came_out} -> ${who_came_in}`, score: app.home_score + "-" + app.vis_score })
        }
        else {
          // add to play by play - VISITOR
-         app.playlist.push({ time: "00:00", team: "Visitor", playdscrp: "Sub", score: app.home_score + "-" + app.vis_score })
+         app.playlist.push({ time: "00:00", team: "Visitor", playdscrp: `${who_came_out} -> ${who_came_in}`, score: app.home_score + "-" + app.vis_score })
        }
      }
    }
