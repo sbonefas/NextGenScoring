@@ -1,5 +1,5 @@
 var home = true;
-var teams = ["Wisconsin"];
+
 result_code_prompt = `
 PRESS A RESULT CODE...
 
@@ -42,7 +42,7 @@ Vue.component('vis_team_stats', {
 var app = new Vue({
   el: '#app',
   data: {
-    message: 'Hello and welcome!',
+    teams: ["Wisconsin", "Away"],
     home_score: 0,
     home_fouls: 0,
     home_full: 0,
@@ -116,7 +116,7 @@ var app = new Vue({
              // add to home team score
              app.home_score += 2;
              // add to play by play - HOME
-             app.playlist.push({ time: "00:00", team: "Home", playdscrp: "J -> G | Q", score: app.home_score + "-" + app.vis_score })
+             app.playlist.push({ time: "00:00", team: app.teams[0], playdscrp: "J -> G | Q", score: app.home_score + "-" + app.vis_score })
 
              var total_attempts = 0;
              var total_fgs = 0;
@@ -137,7 +137,7 @@ var app = new Vue({
              // add to home team score
              app.home_score += 3;
              // add to play by play - HOME
-             app.playlist.push({ time: "00:00", team: "Home", playdscrp: "J -> Y", score: app.home_score + "-" + app.vis_score })
+             app.playlist.push({ time: "00:00", team: app.teams[0], playdscrp: "J -> Y", score: app.home_score + "-" + app.vis_score })
              break;
            }
            // missed shot (rebound)
@@ -145,7 +145,7 @@ var app = new Vue({
              app.home_team[index].fa += 1;
              app.home_totals.fa += 1;
              // add to play by play - HOME
-             app.playlist.push({ time: "00:00", team: "Home", playdscrp: "J -> R", score: app.home_score + "-" + app.vis_score })
+             app.playlist.push({ time: "00:00", team: app.teams[0], playdscrp: "J -> R", score: app.home_score + "-" + app.vis_score })
              var total_attempts = 0;
              var total_fgs = 0;
              for(players = 0; players < app.home_team.length; players++)
@@ -194,7 +194,7 @@ var app = new Vue({
        h2.style.textDecoration = "none";
      }
 
-     // s - Substitution
+     // F6 - Substitution
      else if(e.keyCode == 117){
        who_came_out = window.prompt("ENTER ## OF PLAYER LEAVING");
        who_came_in = window.prompt("ENTER ## OF PLAYER ENTERING");
@@ -212,11 +212,22 @@ var app = new Vue({
             }
          }
          // add to play by play - HOME
-         app.playlist.push({ time: "00:00", team: "Home", playdscrp: "Sub", score: app.home_score + "-" + app.vis_score })
+         app.playlist.push({ time: "00:00", team: app.teams[0], playdscrp: "Sub", score: app.home_score + "-" + app.vis_score })
        }
        else {
+         for(index = 0; index < app.vis_team.length; index++)
+         {
+            if(who_came_out == app.vis_team[index].number)
+            {
+              app.vis_team[index].in_game = " "
+            }
+            if(who_came_in == app.vis_team[index].number)
+            {
+              app.vis_team[index].in_game = "*"
+            }
+         }
          // add to play by play - VISITOR
-         app.playlist.push({ time: "00:00", team: "Visitor", playdscrp: "Sub", score: app.home_score + "-" + app.vis_score })
+         app.playlist.push({ time: "00:00", team: app.teams[1], playdscrp: "Sub", score: app.home_score + "-" + app.vis_score })
        }
      }
    }
