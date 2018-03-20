@@ -427,7 +427,7 @@ var app = new Vue({
      }
 
      // s - Substitution
-     else if(e.keyCode == 83){
+     else if(e.keyCode == 117){
        who_came_out = window.prompt("ENTER ## OF PLAYER LEAVING");
        who_came_in = window.prompt("ENTER ## OF PLAYER ENTERING");
        if(home == true)
