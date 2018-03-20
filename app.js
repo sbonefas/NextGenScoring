@@ -336,7 +336,7 @@ var app = new Vue({
              // add to home team score
              app.home_score += 2; // add 2 or 3?
              // add to play by play - HOME
-             app.playlist.push({ time: "00:00", team: "Home", playdscrp: "J -> G | Q", score: "" })
+             app.playlist.push({ time: "00:00", team: "Home", playdscrp: "J -> G | Q", score: app.home_score + "-" + app.vis_score })
 
              var total_attempts = 0;
              var total_fgs = 0;
@@ -357,7 +357,7 @@ var app = new Vue({
              // add to home team score
              app.home_score += 3;
              // add to play by play - HOME
-             app.playlist.push({ time: "00:00", team: "Home", playdscrp: "J -> Y", score: "" })
+             app.playlist.push({ time: "00:00", team: "Home", playdscrp: "J -> Y", score: app.home_score + "-" + app.vis_score })
              break;
            }
            // missed shot (rebound)
@@ -365,7 +365,7 @@ var app = new Vue({
              home_team[index].fa += 1;
              home_totals.fa += 1;
              // add to play by play - HOME
-             app.playlist.push({ time: "00:00", team: "Home", playdscrp: "J -> R", score: "" })
+             app.playlist.push({ time: "00:00", team: "Home", playdscrp: "J -> R", score: app.home_score + "-" + app.vis_score })
              var total_attempts = 0;
              var total_fgs = 0;
              for(players = 0; players < home_team.length; players++)
