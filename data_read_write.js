@@ -57,6 +57,11 @@ exports.create_game_file = function(file_name) {
  * @return 3D array containing two 2D arrays with home/away stats.
  */
 exports.read_game_file = function(file_name) {
+	//TODO: throw error if file doesn't exist
+	//
+	//
+	//
+
 	// Get string version of file contents
 	var file_path = get_file_path(file_name);
 	var file_contents = get_game_file_contents(file_path);
@@ -136,150 +141,18 @@ function create_2d_array(num_rows, num_cols) {
 
 /**
  * Writes to the game file with the given filename and adds stats
- * corresponding to the given key inputs.
+ * corresponding to the given stat changes.
  *
- * @param key_inputs String of characters and numbers that correspond
- * to a play taken in by a statkeeper.
- * @param file_name Name of the file to write to. The file name should
- * not include the filetype or directory.
+ * @param stat_changes Array of changes to stats as defined in main.js 
+ * addPlay() function
+ * @param file_name Name of the file we're writing to
  * @return True if write is successful, false otherwise.
  */
-exports.write_to_game_file = function(key_inputs, file_name) {
+exports.write_to_game_file = function(stat_changes, file_name) {
 	var file_path = get_file_path(file_name);
 	if(!fs.existsSync(file_path)) return false;
 
-	switch(key_inputs.charAt(0)) {
-		// Shot:
-		case 'J':
-		case 'D':
-		case 'L':
-		case 'P':
-		case 'Y':
-		case 'W':
-			write_shot(key_inputs, file_path);
-			break;
 
-		// Free Throw:
-		case 'E':
-			write_freethrow(key_inputs, file_path);
-			break;
-
-		// Turnover:
-		case 'T':
-			write_turnover(key_inputs, file_path);
-			break;
-
-		// Rebound:
-		case 'R':
-			write_rebound(key_inputs, file_path);
-			break;
-
-		// Assist:
-		case 'A':
-			write_assist(key_inputs, file_path);
-			break;
-
-		// Steal:
-		case 'S':
-			write_steal(key_inputs, file_path);
-			break;
-
-		// Block:
-		case 'B':
-			write_block(key_inputs, file_path);
-			break;
-
-		default:
-			return false;
-
-	}
 
 	return true;
 }
-
-function write_shot(key_inputs, file_path) {
-	
-}
-
-function write_freethrow(key_inputs, file_path) {
-
-}
-
-function write_turnover(key_inputs, file_path) {
-
-}
-
-function write_rebound(key_inputs, file_path) {
-
-}
-
-function write_assist(key_inputs, file_path) {
-	
-}
-
-function write_steal(key_inputs, file_path) {
-	
-}
-
-function write_block(key_inputs, file_path) {
-	
-}
-
-
-
-
-
-
-
-
-
-
-
-
-/** TEST FUNCTIONS. NOT PRODUCTION CODE */
-
-/** 
- * Reads the data in a given file and prints it to console. Data files
- * are temporarily stored in 'data/'.
- * --USED FOR TESTING--
- */
-exports.readTestData = function(file_path) {	
-	var test_data = fs.readFileSync(file_path, 'utf8');
-	return test_data;
-}
-
-/** 
- * Writes the data in a given file and prints it to console. Data files
- * are temporarily stored in 'data/'.
- * --USED FOR TESTING--
- */
-exports.writeTestData = function(file_path, data) {
-	fs.writeFileSync(file_path, data, 'utf8');
-}
-
-
-/** 
- * Tests readTestData kinda poorly. Delete once readTestData is gone
- */
-exports.test_read = function() {
-	var file_path = './data/test_read_data.txt';
-	var data = exports.readTestData(file_path);
-	if(data === "this is test data") return true;
-	else {
-		console.log(data);
-		return false;
-	}
-}
-
-/** 
- * Tests writeTestData kinda poorly. Delete once writeTestData is gone
- */
-exports.test_write = function() {
-	var file_path = './data/test_write_data.txt';
-	var write_me = "this is test data to write";
-	exports.writeTestData(file_path, write_me);
-	if(exports.readTestData(file_path) === write_me) return true;
-	else return false;
-}
-
-/** END TEST FUNCTIONS */
