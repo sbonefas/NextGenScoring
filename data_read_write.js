@@ -57,10 +57,24 @@ exports.create_game_file = function(file_name) {
  * @return 3D array containing two 2D arrays with home/away stats.
  */
 exports.read_game_file = function(file_name) {
+	// Get string version of file contents
 	var file_path = get_file_path(file_name);
 	var file_contents = get_game_file_contents(file_path);
 
-	//TODO: convert to 2D arrays
+	// Convert to two separate strings. Cut off last newline in home stats.
+	var stats_string_arr = file_contents.split(';');
+	stats_string_arr[0] = stats_string_arr[0].substring(0, stats_string_arr[0].length-1);
+
+	// Create unitialized 2d arrays for stats
+	var home_stats = scrape_stats(stats_string_arr[0]);
+	var away_stats = scrape_stats(stats_string_arr[1]);
+
+	// Combine home and away stats and return
+	var arr_3d = new Array(2);
+	arr_3d[0] = home_stats;
+	arr_3d[1] = away_stats;
+
+	return arr_3d;
 }
 
 /** 
@@ -79,6 +93,45 @@ function get_game_file_contents(file_path) {
 
 	var contents = fs.readFileSync(file_path, 'utf8');
 	return contents;
+}
+
+/**
+ * Takes the stats in a given string of comma-separated stats and organizes
+ * them into a 2d array of stats to return.
+ * 
+ * @param num_players Number of players in the 
+ */
+function scrape_stats(stats_string_arr) {
+	// Get number of stats and players to set 2D array sizes
+	var num_stats = stats_string_arr.split('\n')[1].split(',').length;
+	var num_players = stats_string_arr.split('\n').length-2;
+
+	// Create empty 2d array
+	var arr_stats = create_2d_array(num_players, num_stats);
+
+	// Get stats
+	for(var player = 0; player < num_players; player++) {
+		for(var stat = 0; stat < num_stats; stat++) {
+			arr_stats[player][stat] = stats_string_arr.split('\n')[player+2].split(',')[stat].trim();
+		}
+	}
+
+	return arr_stats
+}
+
+/**
+ * Creates an empty 2d array and returns it.
+ *
+ * @param num_rows Number of rows in the array
+ * @param num_cols Number of columns in the array
+ * @return 2d array with unitialized elements.
+ */
+function create_2d_array(num_rows, num_cols) {
+	var arr = new Array(num_rows);
+	for(var row = 0; row < num_rows; row++) {
+		arr[row] = new Array(num_cols);
+	}
+	return arr;
 }
 
 /**

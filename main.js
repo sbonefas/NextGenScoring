@@ -40,6 +40,8 @@ function createWindow() {
 
 		if(drw.create_game_file('test_create_file')) console.log("test_create_file fail");
 		else console.log("test_create_file success");
+
+		drw.read_game_file('test_read_game_file');
 	}
 
 	win.on('closed', () => {
