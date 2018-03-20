@@ -92,7 +92,7 @@ function launchClockPrompt() { // called when the user clicks on the game clock 
 var app = new Vue({
   el: '#app',
   data: {
-    teams: ["Wisconsin", "Away"],
+    teams: ["WISC", "Away"],
     period: 'Half 1',
     home_score: 0,
     home_fouls: 0,
@@ -132,8 +132,8 @@ var app = new Vue({
     vis_totals: {in_game: " ", number: " ", name: "Totals", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
 
     playlist: [
-                {time: "19:85", team: "WISC", playdscrp: "Ethan Happ made a 3 point jumper", score: "100-2"},
-                {time: "18:45", team: "MINN", playdscrp: "Foul on Nate Mason", score: "2-100"}
+                //{time: "19:85", team: "WISC", playdscrp: "Ethan Happ made a 3 point jumper", score: "100-2"},
+                //{time: "18:45", team: "MINN", playdscrp: "Foul on Nate Mason", score: "2-100"}
               ]
   },
   created() {
@@ -167,7 +167,7 @@ var app = new Vue({
              // add to home team score
              app.home_score += 2;
              // add to play by play - HOME
-             app.playlist.push({ time: "00:00", team: app.teams[0], playdscrp: "J -> G | Q", score: app.home_score + "-" + app.vis_score })
+             app.playlist.push({ time: "00:00", team: app.teams[0], playdscrp: `${app.home_team[index].name} J -> G | Q`, score: app.home_score + "-" + app.vis_score })
 
              var total_attempts = 0;
              var total_fgs = 0;
@@ -188,7 +188,7 @@ var app = new Vue({
              // add to home team score
              app.home_score += 3;
              // add to play by play - HOME
-             app.playlist.push({ time: "00:00", team: app.teams[0], playdscrp: "J -> Y", score: app.home_score + "-" + app.vis_score })
+             app.playlist.push({ time: "00:00", team: app.teams[0], playdscrp: `${app.home_team[index].name} J -> Y`, score: app.home_score + "-" + app.vis_score })
              break;
            }
            // missed shot (rebound)
@@ -196,7 +196,7 @@ var app = new Vue({
              app.home_team[index].fa += 1;
              app.home_totals.fa += 1;
              // add to play by play - HOME
-             app.playlist.push({ time: "00:00", team: app.teams[0], playdscrp: "J -> R", score: app.home_score + "-" + app.vis_score })
+             app.playlist.push({ time: "00:00", team: app.teams[0], playdscrp: `${app.home_team[index].name} J -> R`, score: app.home_score + "-" + app.vis_score })
              var total_attempts = 0;
              var total_fgs = 0;
              for(players = 0; players < app.home_team.length; players++)
