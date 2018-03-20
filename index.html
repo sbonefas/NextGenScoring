@@ -376,10 +376,11 @@
 			})
 			*/
 			
-			let keystrokes = "j 16 g h"
+			let keystrokes = "j 16 g h";
 			<!-- Testing send-data & get-data functions -->
 			ipc.send('send-data', keystrokes);
-			ipc.send('get-data');
+			var data;
+			ipc.send('get-data', data);
 			
 			ipc.on('send-data-failure', function() { 
 				console.log("An error occurred in writing " + keystrokes + " to file : " + e);
