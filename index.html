@@ -26,9 +26,8 @@
 					</div>
 				</div>
 				<div class = "clock" id="clockdiv">
-					<h2 class = "clock" id = "clockh2">20:00</h2>
-					<h3 class = "clock">Half</h3>
-					<h4 class = "clock">1</h4>
+					<h2 class = "clock" id = "clockh2" onclick="launchClockPrompt()">20:00</h2>
+					<h4 class = "clock" onclick="launchClockPrompt()"> {{ period }}</h4>
 					<h3 class = "clock" id="clockisstopped">**Clock is stopped**</h3>
 					<br>
 				</div>
@@ -193,7 +192,7 @@
 			    $('#clockdiv #clockh2').html(timer.getTimeValues().toString());
 			});
 			timer.addEventListener('targetAchieved', function (e) {
-			    $('#clockdiv #clockh2').html('KABOOM!!');
+			    $('#clockdiv #clockh2').html('00:00');
 			});
 
 			document.body.onkeyup = function(e){
