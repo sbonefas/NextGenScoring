@@ -13,7 +13,7 @@ const dialog = electron.dialog;
 
 let win;
 const TESTING = true;
-const file_path = 'data/test_data.txt';
+const file_name = 'test_read_game_file';
 
 function createWindow() {
 	win = new BrowserWindow();
@@ -26,14 +26,7 @@ function createWindow() {
 	/** SIMPLE BACKEND TESTING */
 	/** TODO: DELETE WHEN PUT IN TEST SUITE */
 	if(TESTING) {
-		
-		drw.create_game_file('test_create_file');
-		if(fs.existsSync('data/test_create_file.csv')) console.log("test_create_file success");
-		else console.log("test_create_file fail");
-
-		if(drw.create_game_file('test_create_file')) console.log("test_create_file fail");
-		else console.log("test_create_file success");
-
+		drw.create_game_file(['player_name','player_number','fg','fga','pts'], 'test_create_game.txt');
 		drw.read_game_file('test_read_game_file');
 	}
 
@@ -210,7 +203,7 @@ ipc.on('send-data', function (event,keystrokes){
 ipc.on('get-data', function(event){ 
 	var test_data;
 	try {
-		test_data = drw.readTestData(file_path);
+		test_data = drw.read_game_file(file_path);
 	} catch (e) {
 		//if failure
 		console.log("An error occurred in file reading: " + e);
