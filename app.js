@@ -1,6 +1,6 @@
 var TESTING_MODE = false;  // this signals that you are in testing mode and will disable the annoying password promt that happens every time you load the page. Set this to false when in production mode!
 var home = true;
-var teams = ["Wisconsin"];
+
 result_code_prompt = `
 PRESS A RESULT CODE...
 
@@ -92,7 +92,7 @@ function launchClockPrompt() { // called when the user clicks on the game clock 
 var app = new Vue({
   el: '#app',
   data: {
-    message: 'Hello and welcome!',
+    teams: ["Wisconsin", "Away"],
     period: 'Half 1',
     home_score: 0,
     home_fouls: 0,
@@ -167,7 +167,7 @@ var app = new Vue({
              // add to home team score
              app.home_score += 2;
              // add to play by play - HOME
-             app.playlist.push({ time: "00:00", team: "Home", playdscrp: "J -> G | Q", score: app.home_score + "-" + app.vis_score })
+             app.playlist.push({ time: "00:00", team: app.teams[0], playdscrp: "J -> G | Q", score: app.home_score + "-" + app.vis_score })
 
              var total_attempts = 0;
              var total_fgs = 0;
@@ -188,15 +188,15 @@ var app = new Vue({
              // add to home team score
              app.home_score += 3;
              // add to play by play - HOME
-             app.playlist.push({ time: "00:00", team: "Home", playdscrp: "J -> Y", score: app.home_score + "-" + app.vis_score })
+             app.playlist.push({ time: "00:00", team: app.teams[0], playdscrp: "J -> Y", score: app.home_score + "-" + app.vis_score })
              break;
            }
            // missed shot (rebound)
-           else if (who_did_it == home_team[index].number && (result_code == "r" || result_code == "R")) {
+           else if (who_did_it == app.home_team[index].number && (result_code == "r" || result_code == "R")) {
              app.home_team[index].fa += 1;
              app.home_totals.fa += 1;
              // add to play by play - HOME
-             app.playlist.push({ time: "00:00", team: "Home", playdscrp: "J -> R", score: app.home_score + "-" + app.vis_score })
+             app.playlist.push({ time: "00:00", team: app.teams[0], playdscrp: "J -> R", score: app.home_score + "-" + app.vis_score })
              var total_attempts = 0;
              var total_fgs = 0;
              for(players = 0; players < app.home_team.length; players++)
@@ -206,6 +206,22 @@ var app = new Vue({
              }
              home_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
              break;
+           }
+           // fg in the paint
+           else if (who_did_it == app.home_team[index].number && (result_code == "p" || result_code == "P")) {
+             app.home_team[index].fa += 1;
+             app.home_team[index].fg += 1;
+             app.home_totals.fa += 1;
+             app.home_totals.fg += 1;
+             home_stats.paint += 1;
+             app.home_score += 2;
+             app.playlist.push({ time: "00:00", team: "HOME", playdscrp: `${app.home_team[index].name} J -> P`, score: app.home_score + "-" + app.vis_score })
+             for(players = 0; players < app.home_team.length; players++)
+             {
+               total_attempts += app.home_team[players].fa;
+               total_fgs += app.home_team[players].fg;
+             }
+             home_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
            }
          }
        }
@@ -263,11 +279,22 @@ var app = new Vue({
             }
          }
          // add to play by play - HOME
-         app.playlist.push({ time: "00:00", team: "Home", playdscrp: `${who_came_out} -> ${who_came_in}`, score: app.home_score + "-" + app.vis_score })
+         app.playlist.push({ time: "00:00", team: app.teams[0], playdscrp: `${who_came_out} -> ${who_came_in}`, score: app.home_score + "-" + app.vis_score })
        }
        else {
+         for(index = 0; index < app.vis_team.length; index++)
+         {
+            if(who_came_out == app.vis_team[index].number)
+            {
+              app.vis_team[index].in_game = " "
+            }
+            if(who_came_in == app.vis_team[index].number)
+            {
+              app.vis_team[index].in_game = "*"
+            }
+         }
          // add to play by play - VISITOR
-         app.playlist.push({ time: "00:00", team: "Visitor", playdscrp: `${who_came_out} -> ${who_came_in}`, score: app.home_score + "-" + app.vis_score })
+         app.playlist.push({ time: "00:00", team: app.teams[1], playdscrp: `${who_came_out} -> ${who_came_in}`, score: app.home_score + "-" + app.vis_score })
        }
      }
    }
