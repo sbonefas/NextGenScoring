@@ -47,12 +47,12 @@
 					</div>
 				</div>
 			</div>
-			
 		</div>
 
-		<!-- Stats -->
 		<div id = "app">
-			<div id = "playerstats">
+		<!-- Stats -->
+		<div id = "playerstats">
+			<!--<div id = "app">-->
 				<div id = "ps-home">
 					<h2> Home team: Wisconsin</h2>
 					<table class="playerstatstable" cellpadding="3">
@@ -71,15 +71,22 @@
 							<th>TP</th>
 						</tr>
 					</table>
-					<table class="player">
-						<player></player>
-					</table>
-					<table class="players">
-						<player_2>test</player_2>
-					</table>
-					<home_team_stats>test</home_team_stats>
+
+					<player_h01></player_h01>
+					<player_h02></player_h02>
+					<player_h03></player_h03>
+					<player_h04></player_h04>
+					<player_h05></player_h05>
+					<player_h06></player_h06>
+					<player_h07></player_h07>
+					<player_h08></player_h08>
+					<player_h09></player_h09>
+					<player_h10></player_h10>
+					<player_total></player_total>
+
+					<home_team_stats></home_team_stats>
 				</div>
-			</div>
+			<!--</div> -->
 			<div id = "ps-visitor">
 				<h2> Visiting team: Teamname</h2>
 				<table class="playerstatstable" cellpadding="3">
@@ -258,7 +265,6 @@
 			</div>
 		</div>
 
-		<!-- PLAY BY PLAY BOX -->
 		<div id = "playbyplaybox">
 			<h2>Play-by-Play</h2>
 			<table cellpadding="3">
@@ -268,12 +274,16 @@
 					<th>Play</th>
 					<th>Score</th>
 				</tr>
+			</table>
+			<play_01></play_01>
+			<table cellpadding="3">
 				<tr>
 					<td>19:41</td>
 					<td class="playteam">wis</td>
 					<td>Ethan Happ made a 3 Point Jumper</td>
 					<td>3-0</td>
 				</tr>
+
 				<tr>
 					<td>19:23</td>
 					<td class="playteam">wis</td>
@@ -325,6 +335,8 @@
 
 			</table>
 		</div>
+		</div>
+
 
 		<div id="app">
 			{{ message }}
@@ -347,8 +359,7 @@
 			});
 			timer.addEventListener('targetAchieved', function (e) {
 			    $('#clockdiv #clockh2').html('KABOOM!!');
-			});	
-
+			});
 			document.body.onkeyup = function(e){
     			if(e.keyCode == 32 && e.target == document.body){
        				 if(paused) {
@@ -362,31 +373,6 @@
        				 }
     			}
 			}
-
-
 		</script>
-		<!-- <script>
-			var app = new Vue({
-  				el: '#app',
-  				data: {
-    			message: 'Hello Vue!'
-  				}
-			})
-		</script> -->		
-        
-		<script>
-			//require('./renderer.js');
-			const electron = require("electron");
-			const ipc = electron.ipcRenderer;
-
-			let Data = {
-				message: 'asdf'
-			};
-
-			ipc.send('asdf-message', Data);
-			ipc.on('asdf-reply', function(event,arg){
-				console.log(arg);
-			})
-		</script>
-		</body>
+	</body>
 </html>
