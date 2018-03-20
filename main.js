@@ -26,14 +26,7 @@ function createWindow() {
 	/** SIMPLE BACKEND TESTING */
 	/** TODO: DELETE WHEN PUT IN TEST SUITE */
 	if(TESTING) {
-		drw.readTestData('data/test_data.txt');
-
-		if(drw.test_read()) console.log("test_read success");
-		else console.log("test_read fail");
-
-		if(drw.test_write()) console.log("test_write success");
-		else console.log("test_write fail");
-
+		
 		drw.create_game_file('test_create_file');
 		if(fs.existsSync('data/test_create_file.csv')) console.log("test_create_file success");
 		else console.log("test_create_file fail");
