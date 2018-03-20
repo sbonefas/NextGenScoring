@@ -70,9 +70,37 @@
 								<th>PF</th>
 								<th>TP</th>
 							</tr>
+							<tr v-for="player in home_team">
+								<td>{{ player.in_game }}</td>
+								<td>{{ player.number }}</td>
+								<td>{{ player.name }}</td>
+								<td>{{ player.fg }}</td>
+                                <td>{{ player.fa }}</td>
+                                <td>{{ player.m3 }}</td>
+                                <td>{{ player.ftm }}</td>
+                                <td>{{ player.fta }}</td>
+                                <td>{{ player.rb }}</td>
+                                <td>{{ player.as }}</td>
+                                <td>{{ player.pf }}</td>
+                                <td>{{ player.tp }}</td>
+							</tr>
+                            <tr>
+                                <td>{{ home_totals.in_game }}</td>
+                                <td>{{ home_totals.number }}</td>
+                                <td>{{ home_totals.name }}</td>
+                                <td>{{ home_totals.fg }}</td>
+                                <td>{{ home_totals.fa }}</td>
+                                <td>{{ home_totals.m3 }}</td>
+                                <td>{{ home_totals.ftm }}</td>
+                                <td>{{ home_totals.fta }}</td>
+                                <td>{{ home_totals.rb }}</td>
+                                <td>{{ home_totals.as }}</td>
+                                <td>{{ home_totals.pf }}</td>
+                                <td>{{ home_totals.tp }}</td>
+                            </tr>
 						</table>
 
-						<player_h01></player_h01>
+						<!--<player_h01></player_h01>
 						<player_h02></player_h02>
 						<player_h03></player_h03>
 						<player_h04></player_h04>
@@ -82,7 +110,7 @@
 						<player_h08></player_h08>
 						<player_h09></player_h09>
 						<player_h10></player_h10>
-						<player_total></player_total>
+						<player_total></player_total>-->
 
 						<home_team_stats></home_team_stats>
 					</div>
@@ -277,7 +305,7 @@
 					</tr>
 					<tr v-for="play in playlist">
 						<td>{{ play.time }}</td>
-						<td>{{ play.team }}</td>
+						<td class="playteam">{{ play.team }}</td>
 						<td>{{ play.playdscrp }}</td>
 						<td>{{ play.score }}</td>
 					</tr>
