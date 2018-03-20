@@ -141,7 +141,7 @@ var app = new Vue({
              break;
            }
            // missed shot (rebound)
-           else if (who_did_it == home_team[index].number && (result_code == "r" || result_code == "R")) {
+           else if (who_did_it == app.home_team[index].number && (result_code == "r" || result_code == "R")) {
              app.home_team[index].fa += 1;
              app.home_totals.fa += 1;
              // add to play by play - HOME
@@ -155,6 +155,22 @@ var app = new Vue({
              }
              home_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
              break;
+           }
+           // fg in the paint
+           else if (who_did_it == app.home_team[index].number && (result_code == "p" || result_code == "P")) {
+             app.home_team[index].fa += 1;
+             app.home_team[index].fg += 1;
+             app.home_totals.fa += 1;
+             app.home_totals.fg += 1;
+             home_stats.paint += 1;
+             app.home_score += 2;
+             app.playlist.push({ time: "00:00", team: "HOME", playdscrp: `${app.home_team[index].name} J -> P`, score: app.home_score + "-" + app.vis_score })
+             for(players = 0; players < app.home_team.length; players++)
+             {
+               total_attempts += app.home_team[players].fa;
+               total_fgs += app.home_team[players].fg;
+             }
+             home_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
            }
          }
        }
