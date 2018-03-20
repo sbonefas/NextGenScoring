@@ -323,6 +323,9 @@ var app = new Vue({
              home_team[index].fa += 1;
              home_totals.fg += 1;
              home_totals.fa += 1;
+             // add to play by play - HOME
+             app.playlist.push({ time: "00:00", team: "Home", playdscrp: "J -> G | Q", score: "" })
+
              var total_attempts = 0;
              var total_fgs = 0;
              for(players = 0; players < home_team.length; players++)
@@ -338,11 +341,15 @@ var app = new Vue({
              home_totals.m3 += 1;
              home_team[index].fa += 1;
              home_totals.fa += 1;
+             // add to play by play - HOME
+             app.playlist.push({ time: "00:00", team: "Home", playdscrp: "J -> Y", score: "" })
              break;
            }
            else if (who_did_it == home_team[index].number && (result_code == "r" || result_code == "R")) {
              home_team[index].fa += 1;
              home_totals.fa += 1;
+             // add to play by play - HOME
+             app.playlist.push({ time: "00:00", team: "Home", playdscrp: "J -> R", score: "" })
              var total_attempts = 0;
              var total_fgs = 0;
              for(players = 0; players < home_team.length; players++)
