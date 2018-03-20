@@ -57,7 +57,7 @@
 						<h2 id = "pshometeamname"> Home team: Wisconsin</h2>
 						<table class="playerstatstable" cellpadding="3">
 							<tr>
-								<th>?</th>
+								<th>in</th>
 								<th>##</th>
 								<th>--Name--</th>
 								<th>FG</th>
@@ -70,19 +70,35 @@
 								<th>PF</th>
 								<th>TP</th>
 							</tr>
+							<tr v-for="player in home_team">
+								<td>{{ player.in_game }}</td>
+								<td>{{ player.number }}</td>
+								<td>{{ player.name }}</td>
+								<td>{{ player.fg }}</td>
+                                <td>{{ player.fa }}</td>
+                                <td>{{ player.m3 }}</td>
+                                <td>{{ player.ftm }}</td>
+                                <td>{{ player.fta }}</td>
+                                <td>{{ player.rb }}</td>
+                                <td>{{ player.as }}</td>
+                                <td>{{ player.pf }}</td>
+                                <td>{{ player.tp }}</td>
+							</tr>
+                            <tr>
+                                <td>{{ home_totals.in_game }}</td>
+                                <td>{{ home_totals.number }}</td>
+                                <td>{{ home_totals.name }}</td>
+                                <td>{{ home_totals.fg }}</td>
+                                <td>{{ home_totals.fa }}</td>
+                                <td>{{ home_totals.m3 }}</td>
+                                <td>{{ home_totals.ftm }}</td>
+                                <td>{{ home_totals.fta }}</td>
+                                <td>{{ home_totals.rb }}</td>
+                                <td>{{ home_totals.as }}</td>
+                                <td>{{ home_totals.pf }}</td>
+                                <td>{{ home_totals.tp }}</td>
+                            </tr>
 						</table>
-
-						<player_h01></player_h01>
-						<player_h02></player_h02>
-						<player_h03></player_h03>
-						<player_h04></player_h04>
-						<player_h05></player_h05>
-						<player_h06></player_h06>
-						<player_h07></player_h07>
-						<player_h08></player_h08>
-						<player_h09></player_h09>
-						<player_h10></player_h10>
-						<player_total></player_total>
 
 						<home_team_stats></home_team_stats>
 					</div>
@@ -91,7 +107,7 @@
 					<h2 id = "psvisitorteamname"> Visiting team: Teamname</h2>
 					<table class="playerstatstable" cellpadding="3">
 						<tr>
-							<th>?</th>
+							<th>in</th>
 							<th>##</th>
 							<th>--Name--</th>
 							<th>FG</th>
@@ -104,164 +120,40 @@
 							<th>PF</th>
 							<th>TP</th>
 						</tr>
-						<tr>
-							<td>*</td>
-							<td>01</td>
-							<td>Player_1</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-						</tr>
-						<tr>
-							<td>*</td>
-							<td>02</td>
-							<td>Player_2</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-						</tr>
-						<tr>
-							<td>*</td>
-							<td>03</td>
-							<td>Player_3</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-						</tr>
-						<tr>
-							<td>*</td>
-							<td>04</td>
-							<td>Player_4</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-						</tr>
-						<tr>
-							<td>*</td>
-							<td>05</td>
-							<td>Player_5</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-						</tr>
-						<tr>
-							<td></td>
-							<td>11</td>
-							<td>Bench_1</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-						</tr>
-						<tr>
-							<td></td>
-							<td>12</td>
-							<td>Bench_2</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-						</tr>
-						<tr>
-							<td></td>
-							<td>13</td>
-							<td>Bench_3</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-						</tr>
-						<tr>
-							<td></td>
-							<td>14</td>
-							<td>Bench_4</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-						</tr>
-						<tr>
-							<td></td>
-							<td>15</td>
-							<td>Bench_5</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-						</tr>
-						<tr>
-							<td></td>
-							<td></td>
-							<td>Totals</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-						</tr>
-					</table>
-					<p>FG%: 0.000   3FG%: 0.000   FT%: 0.000</p>
+                        <tr v-for="player in vis_team">
+                            <td>{{ player.in_game }}</td>
+                            <td>{{ player.number }}</td>
+                            <td>{{ player.name }}</td>
+                            <td>{{ player.fg }}</td>
+                            <td>{{ player.fa }}</td>
+                            <td>{{ player.m3 }}</td>
+                            <td>{{ player.ftm }}</td>
+                            <td>{{ player.fta }}</td>
+                            <td>{{ player.rb }}</td>
+                            <td>{{ player.as }}</td>
+                            <td>{{ player.pf }}</td>
+                            <td>{{ player.tp }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ vis_totals.in_game }}</td>
+                            <td>{{ vis_totals.number }}</td>
+                            <td>{{ vis_totals.name }}</td>
+                            <td>{{ vis_totals.fg }}</td>
+                            <td>{{ vis_totals.fa }}</td>
+                            <td>{{ vis_totals.m3 }}</td>
+                            <td>{{ vis_totals.ftm }}</td>
+                            <td>{{ vis_totals.fta }}</td>
+                            <td>{{ vis_totals.rb }}</td>
+                            <td>{{ vis_totals.as }}</td>
+                            <td>{{ vis_totals.pf }}</td>
+                            <td>{{ vis_totals.tp }}</td>
+                        </tr>
+                    </table>
+                    <vis_team_stats></vis_team_stats>
+
+                   <!-- <p>FG%: 0.000   3FG%: 0.000   FT%: 0.000</p>
 					<p>TEAM: TURNOVERS: 00   BLOCKS: 00   STEALS: 00</p>
-					<p>paint: 00   offto: 00   2ndch: 00   fastb: 00</p>
+					<p>paint: 00   offto: 00   2ndch: 00   fastb: 00</p>-->
 				</div>
 			</div> <!-- end stats div -->
 
@@ -277,7 +169,7 @@
 					</tr>
 					<tr v-for="play in playlist">
 						<td>{{ play.time }}</td>
-						<td>{{ play.team }}</td>
+						<td class="playteam">{{ play.team }}</td>
 						<td>{{ play.playdscrp }}</td>
 						<td>{{ play.score }}</td>
 					</tr>
