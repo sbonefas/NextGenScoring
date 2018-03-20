@@ -10,7 +10,7 @@ import unittest
 def run_clock(sleep_time):
     ## Setup the website ##
     driver = webdriver.Firefox()
-    driver.get("file:///C:/Projects/NextGenScoring/index.html")
+    driver.get('file:///C:/Users/damon/Documents/Senior_Yr_Sem2/Software%20Engineering/Project/NextGenScoring/index.html')
 
     ## Get the initial clock value
     initial_clock = driver.find_element_by_id("clockh2").text;
