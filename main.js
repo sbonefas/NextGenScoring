@@ -34,13 +34,6 @@ function createWindow() {
 		if(drw.test_write()) console.log("test_write success");
 		else console.log("test_write fail");
 
-		drw.create_game_file('test_create_file');
-		if(fs.existsSync('data/test_create_file.csv')) console.log("test_create_file success");
-		else console.log("test_create_file fail");
-
-		if(drw.create_game_file('test_create_file')) console.log("test_create_file fail");
-		else console.log("test_create_file success");
-
 		try {
 			drw.read_game_file('test_read_game_file');
 		} catch (e) {
