@@ -10,7 +10,8 @@ import unittest
 def run_clock(sleep_time):
     ## Setup the website ##
     driver = webdriver.Firefox()
-    driver.get('file:///C:/Users/damon/Documents/Senior_Yr_Sem2/Software%20Engineering/Project/NextGenScoring/index.html')
+    ## Convert to CWD - configure to work on all PC's
+    driver.get('file:///C:/Projects/NextGenScoring/index.html')
 
     ## Get the initial clock value
     initial_clock = driver.find_element_by_id("clockh2").text;
@@ -18,7 +19,7 @@ def run_clock(sleep_time):
     # Send the SPACE key to start the clock, wait sleep_time seconds,
     # then send the SPACE key to stop the clock
     driver.find_element_by_id("clockh2").send_keys(Keys.SPACE);
-    time.sleep(sleep_time + .505);
+    time.sleep(sleep_time + .50);
     driver.find_element_by_id("clockh2").send_keys(Keys.SPACE);
 
     # Get the clock value after execution
@@ -30,8 +31,10 @@ def run_clock(sleep_time):
 
     # Get a clock duration from comparing the datetime objects
     duration = datetime.combine(date.min, initial_time) - datetime.combine(date.min, end_time)
+    driver.quit()
+
     return duration
-    
+   
     
 def test_seconds():
     sleep_time = random.randint(1, 59)
