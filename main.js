@@ -23,24 +23,6 @@ function createWindow() {
 		slashes: true		
 	}));
 
-	/** SIMPLE BACKEND TESTING */
-	/** TODO: DELETE WHEN PUT IN TEST SUITE */
-	if(TESTING) {
-		drw.readTestData('data/test_data.txt');
-
-		if(drw.test_read()) console.log("test_read success");
-		else console.log("test_read fail");
-
-		if(drw.test_write()) console.log("test_write success");
-		else console.log("test_write fail");
-
-		try {
-			drw.read_game_file('test_read_game_file');
-		} catch (e) {
-			console.log("could not read file: " + e);
-		}
-	}
-
 	win.on('closed', () => {
 		win = null;
 		app.quit();
