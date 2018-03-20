@@ -38,11 +38,44 @@ Vue.component('vis_team_stats', {
   }
 })
 
+function launchClockPrompt() { // called when the user clicks on the game clock in the scorebar. Is used to edit the clock time and change between half 1, half 2, and OT
+  var period = prompt("Please enter the current period\n1: Period 1\n2: Period 2\nOT: First overtime\n2OT: Second overtime\n30T: Third overtime\n40T: Fourth overtime\n50T: Fifth overtime\n60T: Sixth overtime\n\nWARNING: Changing periods will reset the clock to 20:00 (or 5:00 for OT periods)");
+  if(period == null || period == "") {
+    console.log("User canceleld the clock prompt");
+  } else {
+    if(period == 1) {
+      app.period = 'Half 1';
+      $('#clockdiv #clockh2').html('20:00');
+    } else if(period == 2) {
+      app.period = 'Half 2';
+      $('#clockdiv #clockh2').html('20:00');
+    } else if(period == 'OT' || period == 'ot') {
+      app.period = 'OT';
+      $('#clockdiv #clockh2').html('05:00');
+    } else if(period == '2OT' || period == '2ot') {
+      app.period = '2OT';
+      $('#clockdiv #clockh2').html('05:00');
+    } else if(period == '3OT' || period == '3ot') {
+      app.period = '3OT';
+      $('#clockdiv #clockh2').html('05:00');
+    } else if(period == '4OT' || period == '4ot') {
+      app.period = '4OT';
+      $('#clockdiv #clockh2').html('05:00');
+    } else if(period == '5OT' || period == '5ot') {
+      app.period = '5OT';
+      $('#clockdiv #clockh2').html('05:00');
+    } else if(period == '6OT' || period == '6ot') {
+      app.period = '6OT';
+      $('#clockdiv #clockh2').html('05:00');
+    }
+  }
+}
 
 var app = new Vue({
   el: '#app',
   data: {
     teams: ["Wisconsin", "Away"],
+    period: 'Half 1',
     home_score: 0,
     home_fouls: 0,
     home_full: 0,
@@ -212,7 +245,7 @@ var app = new Vue({
             }
          }
          // add to play by play - HOME
-         app.playlist.push({ time: "00:00", team: app.teams[0], playdscrp: "Sub", score: app.home_score + "-" + app.vis_score })
+         app.playlist.push({ time: "00:00", team: app.teams[0], playdscrp: `${who_came_out} -> ${who_came_in}`, score: app.home_score + "-" + app.vis_score })
        }
        else {
          for(index = 0; index < app.vis_team.length; index++)
@@ -227,7 +260,7 @@ var app = new Vue({
             }
          }
          // add to play by play - VISITOR
-         app.playlist.push({ time: "00:00", team: app.teams[1], playdscrp: "Sub", score: app.home_score + "-" + app.vis_score })
+         app.playlist.push({ time: "00:00", team: app.teams[1], playdscrp: `${who_came_out} -> ${who_came_in}`, score: app.home_score + "-" + app.vis_score })
        }
      }
    }
