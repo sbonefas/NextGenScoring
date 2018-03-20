@@ -287,9 +287,18 @@ var app = new Vue({
   el: '#app',
   data: {
     message: 'Hello and welcome!',
+    home_score: 0,
+    home_fouls: 0,
+    home_full: 0,
+    home_partial: 0,
+    vis_score: 0,
+    vis_fouls: 0,
+    vis_full: 0,
+    vis_partial: 0,
+
     playlist: [
-                {time: "19:85", team: "WISC", playdscrp: "Hi", score: "100-2"},
-                {time: "18:45", team: "MINN", playdscrp: "Bye", score: "2-100"}
+                {time: "19:85", team: "WISC", playdscrp: "Ethan Happ made a 3 point jumper", score: "100-2"},
+                {time: "18:45", team: "MINN", playdscrp: "Foul on Nate Mason", score: "2-100"}
               ]
   },
   created() {
@@ -299,7 +308,7 @@ var app = new Vue({
    keyevent(e) {
      console.log(e.keyCode);
 
-     // alt + h
+     // alt + h - Help menu
      if(e.keyCode == 18) {
         altHeld = true;
      }
@@ -309,7 +318,7 @@ var app = new Vue({
      }
      //BUG: if press alt then not h, altHeld is still true
 
-     // j then (g | q | y | r)
+     // j then (g | q | y | r) - Jump Shots
      else if(e.keyCode == 74) {
        altHeld = false;
        who_did_it = window.prompt("SHOT BY: (Key in a player ##)");
@@ -317,12 +326,15 @@ var app = new Vue({
        if(home == true) {
          for(index = 0; index < home_team.length; index++)
          {
+           // good field goal (2 points?)
            if(who_did_it == home_team[index].number && (result_code == "g" || result_code == "G" || result_code == "q" || result_code == "Q"))
            {
              home_team[index].fg += 1;
              home_team[index].fa += 1;
              home_totals.fg += 1;
              home_totals.fa += 1;
+             // add to home team score
+             app.home_score += 2; // add 2 or 3?
              // add to play by play - HOME
              app.playlist.push({ time: "00:00", team: "Home", playdscrp: "J -> G | Q", score: "" })
 
@@ -336,15 +348,19 @@ var app = new Vue({
              home_stats.fg = (total_fgs/total_attempts)
              break;
            }
+           // good 3pt field goal
            else if((who_did_it == home_team[index].number && (result_code == "y" || result_code == "Y"))) {
              home_team[index].m3 += 1;
              home_totals.m3 += 1;
              home_team[index].fa += 1;
              home_totals.fa += 1;
+             // add to home team score
+             app.home_score += 3;
              // add to play by play - HOME
              app.playlist.push({ time: "00:00", team: "Home", playdscrp: "J -> Y", score: "" })
              break;
            }
+           // missed shot (rebound)
            else if (who_did_it == home_team[index].number && (result_code == "r" || result_code == "R")) {
              home_team[index].fa += 1;
              home_totals.fa += 1;
@@ -364,19 +380,19 @@ var app = new Vue({
        }
      }
 
-     // h
+     // h - home team
      else if(e.keyCode == 72) {
        window.alert("RECORDING HOME TEAM");
        home = true;
      }
 
-     // v
+     // v - Visitor team
      else if(e.keyCode == 86) {
        window.alert("RECORDING VISITING TEAM");
        home = false
      }
 
-     // s
+     // s - Substitution
      else if(e.keyCode == 83){
        who_came_out = window.prompt("ENTER ## OF PLAYER LEAVING");
        who_came_in = window.prompt("ENTER ## OF PLAYER ENTERING");
