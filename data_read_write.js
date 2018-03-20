@@ -47,6 +47,40 @@ exports.create_game_file = function(file_name) {
 	return true;
 }
 
+/** 
+ * Reads the given game file and returns a 3D array, where index 0
+ * contains a 2D array with the stats for the home team, and index 1
+ * has a 2D array with the stats for the away team.
+ *
+ * @param file_name Name of the file to read from. The file name should
+ * not include the filetype or directory.
+ * @return 3D array containing two 2D arrays with home/away stats.
+ */
+exports.read_game_file = function(file_name) {
+	var file_path = get_file_path(file_name);
+	var file_contents = get_game_file_contents(file_path);
+
+	//TODO: convert to 2D arrays
+}
+
+/** 
+ * Gets the contents of the game file with the given filename and 
+ * returns it as a string containing the entire contents of the file. 
+ * Returns null if the given file is not found.
+ *
+ * Warning: will not work on very large files. If this becomes an issue,
+ * we will have to change the way that we read files.
+ *
+ * @param file_path Path to the file to read from
+ * @return String containing contents of the file, or null if file not found.
+ */
+function get_game_file_contents(file_path) {
+	if(!fs.existsSync(file_path)) return null;
+
+	var contents = fs.readFileSync(file_path, 'utf8');
+	return contents;
+}
+
 /**
  * Writes to the game file with the given filename and adds stats
  * corresponding to the given key inputs.
@@ -177,8 +211,11 @@ exports.writeTestData = function(file_path, data) {
 exports.test_read = function() {
 	var file_path = './data/test_read_data.txt';
 	var data = exports.readTestData(file_path);
-	if(data === "this is test data to read") return true;
-	else return false;
+	if(data === "this is test data") return true;
+	else {
+		console.log(data);
+		return false;
+	}
 }
 
 /** 
