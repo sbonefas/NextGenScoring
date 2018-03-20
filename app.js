@@ -283,28 +283,14 @@ Vue.component('home_team_stats', {
   }
 })
 
-// play by play
-var playmsg = {time: "19:85", team: "WISC", playdscrp: "Hi", score: "100-2"}
-var playlist = [];
-Vue.component('play_01', {
-  template: `<table>
-                <tr>
-                    <td> {{time}} </td>
-                    <td> {{team}} </td>
-                    <td> {{playdscrp}} </td>
-                    <td> {{score}} </td>
-                </tr>
-            </table>`,
-  data: function () {
-    return playmsg
-  }
-})
-
-
 var app = new Vue({
   el: '#app',
   data: {
-    message: 'Hello and welcome!'
+    message: 'Hello and welcome!',
+    playlist: [
+                {time: "19:85", team: "WISC", playdscrp: "Hi", score: "100-2"},
+                {time: "18:45", team: "MINN", playdscrp: "Bye", score: "2-100"}
+              ]
   },
   created() {
    document.addEventListener('keydown', this.keyevent);
@@ -321,9 +307,11 @@ var app = new Vue({
         window.alert(help_menu);
         altHeld = false;
      }
+     //BUG: if press alt then not h, altHeld is still true
 
      // j then (g | q | y | r)
      else if(e.keyCode == 74) {
+       altHeld = false;
        who_did_it = window.prompt("SHOT BY: (Key in a player ##)");
        result_code = window.prompt(result_code_prompt);
        if(home == true) {
@@ -398,8 +386,15 @@ var app = new Vue({
               home_team[index].in_game = "*"
             }
          }
+         // add to play by play - HOME
+         app.playlist.push({ time: "00:00", team: "Home", playdscrp: "Sub", score: "" })
+       }
+       else {
+         // add to play by play - VISITOR
+         app.playlist.push({ time: "00:00", team: "Visitor", playdscrp: "Sub", score: "" })
        }
      }
    }
   }
 })
+// try using sort() to make the most recent play at top
