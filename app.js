@@ -394,14 +394,36 @@ var app = new Vue({
 
      // h - home team
      else if(e.keyCode == 72) {
-       window.alert("RECORDING HOME TEAM");
        home = true;
+       var h = document.getElementById("homescoreshowhide");
+       var h2 = document.getElementById("pshometeamname");
+       h.style.color = "red";
+       h.style.textDecoration = "underline";
+       h2.style.color = "red";
+       h2.style.textDecoration = "underline";
+       var v = document.getElementById("visitorscoreshowhide");
+       var v2 = document.getElementById("psvisitorteamname");
+       v.style.color = "white";
+       v.style.textDecoration = "none";
+       v2.style.color = "black";
+       v2.style.textDecoration = "none";
      }
 
      // v - Visitor team
      else if(e.keyCode == 86) {
-       window.alert("RECORDING VISITING TEAM");
        home = false
+       var v = document.getElementById("visitorscoreshowhide");
+       var v2 = document.getElementById("psvisitorteamname");
+       v.style.color = "red";
+       v.style.textDecoration = "underline";
+       v2.style.color = "red";
+       v2.style.textDecoration = "underline";
+       var h = document.getElementById("homescoreshowhide");
+       var h2 = document.getElementById("pshometeamname");
+       h.style.color = "white";
+       h.style.textDecoration = "none";
+       h2.style.color = "black";
+       h2.style.textDecoration = "none";
      }
 
      // s - Substitution

@@ -21,7 +21,7 @@
 						</div>
 					</div>
 					<div class = "score">
-						<h2 class = "score">Home</h2>
+						<h2 class = "score" id="homescoreshowhide">Home</h2>
 						<h2 class = "score">{{ home_score }}</h2>
 					</div>
 				</div>
@@ -34,7 +34,7 @@
 				</div>
 				<div id = "visitor">
 					<div class = "score">
-						<h2 class = "score">Visitor</h2>
+						<h2 class = "score" id="visitorscoreshowhide">Visitor</h2>
 						<h2 class = "score">{{ vis_score }}</h2>
 					</div>
 					<div class = "fouls">
@@ -54,7 +54,7 @@
 			<div id = "playerstats">
 				<!--<div id = "app">-->
 					<div id = "ps-home">
-						<h2> Home team: Wisconsin</h2>
+						<h2 id = "pshometeamname"> Home team: Wisconsin</h2>
 						<table class="playerstatstable" cellpadding="3">
 							<tr>
 								<th>?</th>
@@ -116,7 +116,7 @@
 					</div>
 				<!--</div> -->
 				<div id = "ps-visitor">
-					<h2> Visiting team: Teamname</h2>
+					<h2 id = "psvisitorteamname"> Visiting team: Teamname</h2>
 					<table class="playerstatstable" cellpadding="3">
 						<tr>
 							<th>?</th>
