@@ -1,11 +1,14 @@
 const fs = require("fs");	//node.js filesystem
 
-
-
-
 /** path to the folder where data is kept */
 var game_data_location_path = "data/";
 
+/** 
+ * Returns the filepath of a file with a given name
+ *
+ * @param file_name Name of the file
+ * @return Filepath of the file
+ */
 function get_file_path(file_name) {
 	return game_data_location_path + file_name + '.txt';
 }
@@ -30,21 +33,51 @@ exports.edit_game_data_location_path = function(new_path) {
  * @param file_name Name of the file to create. The file name should
  * not include a filetype, and should follow standard naming procedures
  * for the user's operating system.
+ * @param labels Array of labels to be used in the stat file
  * @return True if game successfully created, false if file_name exists
  * or if the path to the data folder is invalid.
  */
-exports.create_game_file = function(file_name) {
+exports.create_game_file = function(labels, file_name) {
 	// Check if file exists
 	var file_path = get_file_path(file_name);
 	if(fs.existsSync(file_path)) return false;
 
 	// Create file. Return false on errors
+	var file_contents = get_initial_game_file_contents(labels);
 	try {
-    	fs.writeFileSync(file_path, '');
+    	fs.writeFileSync(file_path, file_contents);
 	} catch (e) {
     	return false;
 	}
 	return true;
+}
+
+/** 
+ * Creates the content of the game file when initially created.
+ * Game files are organized as follows:
+ *
+ * HOME
+ * [stat labels]
+ * [home player stats]
+ * ;AWAY
+ * [stat labels]
+ * [home player stats]
+ *
+ * @param labels Array of stat labels to be used in the stat file
+ * @return String of initial file contents.
+ */
+function get_initial_game_file_contents(labels) {
+	var contents = "HOME\n";
+	for(var label_idx = 0; label_idx < labels.length; label_idx++) {
+		if(label_idx != 0) contents += ",";
+		contents += labels[label_idx];
+	}
+	contents += "\n;AWAY\n";
+	for(var label_idx = 0; label_idx < labels.length; label_idx++) {
+		if(label_idx != 0) contents += ",";
+		contents += labels[label_idx];
+	}
+	return contents;
 }
 
 /** 
@@ -152,7 +185,9 @@ exports.write_to_game_file = function(stat_changes, file_name) {
 	var file_path = get_file_path(file_name);
 	if(!fs.existsSync(file_path)) return false;
 
+	var is_home = stat_changes[0];
 
+	//TODO
 
 	return true;
 }
