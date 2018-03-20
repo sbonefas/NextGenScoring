@@ -41,7 +41,11 @@ function createWindow() {
 		if(drw.create_game_file('test_create_file')) console.log("test_create_file fail");
 		else console.log("test_create_file success");
 
-		drw.read_game_file('test_read_game_file');
+		try {
+			drw.read_game_file('test_read_game_file');
+		} catch (e) {
+			console.log("could not read file: " + e);
+		}
 	}
 
 	win.on('closed', () => {
@@ -92,7 +96,7 @@ function addPlay(keystrokes){
 	if(TESTING) console.log(keyArray);
 		
 	//input parsing
-	statArray[0] = 
+	team = statArray[0]; 	
 	statArray[1] = keyArray[1];	//add player's number
 	switch(keyArray[0]){
 		case 'y':
@@ -170,17 +174,17 @@ function addPlay(keystrokes){
  
 function rebound(team, player_number){
 	var statArray = [team, player_number,0,0,0,0,0,1,0,0,0,0,0];
-	drw.write_to_game_file(statArray, file_path);
+	drw.write_to_game_file(statArray, 'test_data');
 }
  
 function assist(team, player_number){
 	var statArray = [team, player_number,0,0,0,0,0,0,1,0,0,0,0];
-	drw.write_to_game_file(statArray, file_path);	
+	drw.write_to_game_file(statArray, 'test_data');	
 }
 
 function block(team, player_number){
 	var statArray = [team, player_number,0,0,0,0,0,0,0,0,1,0,0];
-	drw.write_to_game_file(statArray, file_path);	
+	drw.write_to_game_file(statArray, 'test_data');	
 }
 
 /*
@@ -214,17 +218,18 @@ ipc.on('send-data', function (event,keystrokes){
  * Dummy function for the front end. Temporary
  * --USED FOR TESTING--
  */
-ipc.on('get-data', function(event){ 
-	var test_data;
+ipc.on('get-data', function(event,data){ 
+	//var test_data;
 	try {
-		test_data = drw.readTestData(file_path);
+		//test_data = drw.readTestData(file_path);
+		data = "Hello";
 	} catch (e) {
 		//if failure
 		console.log("An error occurred in file reading: " + e);
 		event.sender.send('get-data-failure');
 		return;
 	}
-	event.sender.send('get-data-success', test_data);
+	event.sender.send('get-data-success', /*test_data*/data);
 
 })
 
