@@ -33,14 +33,13 @@ RESULT CODES
 
 SPECIAL KEYS
     H or V - Select the home team or the visiting team
+    C - Change time, period, stats
     F2 - Make "quick" roster changes to player numbers and names
-    F3 - Create new period
     F6 - Make player substitutions
     F7 - Change the clock time
-    F9 - Display plays; make corrections, additions, deletions
     F10 - Clear and do not complete any partially keyed action
     SPACEBAR - Start or Stop the Clock
-    ESC - Exit the GAMETIME or Client function
+    ESC - Return to Main Menu
 `;
 
 var home_stats = {fg: 0.0, tfg: 0.0, ftp: 0.0, tvs: 0, blocks: 0, steals: 0, paint: 0, offto: 0, sndch: 0, fastb: 0, fga: 0, tfga: 0}
@@ -181,7 +180,7 @@ var app = new Vue({
         altHeld = false;
      }
 
-     // j then (g | q | y | r) - Jump Shots
+     // J then (G | Q | Y | R | P) - Jump Shots
      else if(e.keyCode == 74) {
        altHeld = false;
        who_did_it = window.prompt("SHOT BY: (Key in a player ##)");
@@ -189,7 +188,7 @@ var app = new Vue({
        if(home == true) {
          for(index = 0; index < app.home_team.length; index++)
          {
-           // good field goal (2 points)
+           // J then G or Q - good field goal (2 points)
            if(who_did_it == app.home_team[index].number && (result_code == "g" || result_code == "G" || result_code == "q" || result_code == "Q"))
            {
              app.home_team[index].fg += 1;
@@ -209,9 +208,11 @@ var app = new Vue({
                total_fgs += (app.home_team[players].fg + app.home_team[players].m3);
              }
              home_stats.fg = (total_fgs/total_attempts)
+             // change possession
+             app.vis_possession();
              break;
            }
-           // good 3pt field goal
+           // J then Y - good 3pt field goal
            else if((who_did_it == app.home_team[index].number && (result_code == "y" || result_code == "Y"))) {
              app.home_team[index].m3 += 1;
              app.home_team[index].a3 += 1;
@@ -237,9 +238,11 @@ var app = new Vue({
              app.home_score += 3;
              // add to play by play - HOME
              app.playlist.unshift({ time: document.getElementById('clockh2').innerText, team: app.teams[0], playdscrp: `${app.home_team[index].name} hit a 3-point jumper`, score: app.home_score + "-" + app.vis_score })
+             // change possession
+             app.vis_possession();
              break;
            }
-           // missed shot (rebound)
+           // J then R - missed shot (rebound)
            else if (who_did_it == app.home_team[index].number && (result_code == "r" || result_code == "R")) {
              app.home_team[index].fa += 1;
              app.home_totals.fa += 1;
@@ -255,7 +258,7 @@ var app = new Vue({
              home_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
              break;
            }
-           // field goal in the paint
+           // J then P - field goal in the paint
            else if (who_did_it == app.home_team[index].number && (result_code == "p" || result_code == "P")) {
              app.home_team[index].fa += 1;
              app.home_team[index].fg += 1;
@@ -272,41 +275,19 @@ var app = new Vue({
                total_fgs += (app.home_team[players].fg + app.home_team[players].m3);
              }
              home_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
+             // change possession
+             app.vis_possession();
            }
          }
        }
      }
-     // H - home team
-     else if(e.keyCode == 72) {
-       home = true;
-       var h = document.getElementById("homescoreshowhide");
-       var h2 = document.getElementById("pshometeamname");
-       h.style.color = "red";
-       h.style.textDecoration = "underline";
-       h2.style.color = "red";
-       h2.style.textDecoration = "underline";
-       var v = document.getElementById("visitorscoreshowhide");
-       var v2 = document.getElementById("psvisitorteamname");
-       v.style.color = "white";
-       v.style.textDecoration = "none";
-       v2.style.color = "black";
-       v2.style.textDecoration = "none";
+     // H or left arrow - home team
+     else if(e.keyCode == 72 || e.keyCode == 37) {
+        app.home_possession();
      }
-     // V - Visitor team
-     else if(e.keyCode == 86) {
-       home = false
-       var v = document.getElementById("visitorscoreshowhide");
-       var v2 = document.getElementById("psvisitorteamname");
-       v.style.color = "red";
-       v.style.textDecoration = "underline";
-       v2.style.color = "red";
-       v2.style.textDecoration = "underline";
-       var h = document.getElementById("homescoreshowhide");
-       var h2 = document.getElementById("pshometeamname");
-       h.style.color = "white";
-       h.style.textDecoration = "none";
-       h2.style.color = "black";
-       h2.style.textDecoration = "none";
+     // V or right arrow - Visitor team
+     else if(e.keyCode == 86 || e.keyCode == 39) {
+        app.vis_possession();
      }
      // F6 - Substitution
      else if(e.keyCode == 117){
@@ -344,6 +325,36 @@ var app = new Vue({
          app.playlist.push({ time: document.getElementById('clockh2').innerText, team: app.teams[1], playdscrp: `${who_came_out} is out and ${who_came_in} is in`, score: app.home_score + "-" + app.vis_score })
        }
      }
+   }, //end keycode method
+   home_possession() {
+       home = true;
+       var h = document.getElementById("homescoreshowhide");
+       var h2 = document.getElementById("pshometeamname");
+       h.style.color = "red";
+       h.style.textDecoration = "underline";
+       h2.style.color = "red";
+       h2.style.textDecoration = "underline";
+       var v = document.getElementById("visitorscoreshowhide");
+       var v2 = document.getElementById("psvisitorteamname");
+       v.style.color = "white";
+       v.style.textDecoration = "none";
+       v2.style.color = "black";
+       v2.style.textDecoration = "none";
+   },
+   vis_possession() {
+       home = false
+       var v = document.getElementById("visitorscoreshowhide");
+       var v2 = document.getElementById("psvisitorteamname");
+       v.style.color = "red";
+       v.style.textDecoration = "underline";
+       v2.style.color = "red";
+       v2.style.textDecoration = "underline";
+       var h = document.getElementById("homescoreshowhide");
+       var h2 = document.getElementById("pshometeamname");
+       h.style.color = "white";
+       h.style.textDecoration = "none";
+       h2.style.color = "black";
+       h2.style.textDecoration = "none";
    }
   }
 })
