@@ -1,19 +1,6 @@
-var home_1 = {in_game: "*", number: "01", name: "Player_1", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0}
-var home_2 = {in_game: "*", number: "02", name: "Player_2", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0}
-var home_3 = {in_game: "*", number: "03", name: "Player_3", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0}
-var home_4 = {in_game: "*", number: "04", name: "Player_4", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0}
-var home_5 = {in_game: "*", number: "05", name: "Player_5", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0}
-var home_6 = {in_game: " ", number: "06", name: "Bench_1", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0}
-var home_7 = {in_game: " ", number: "07", name: "Bench_2", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0}
-var home_8 = {in_game: " ", number: "08", name: "Bench_3", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0}
-var home_9 = {in_game: " ", number: "09", name: "Bench_4", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0}
-var home_10 = {in_game: " ", number: "10", name: "Bench_5", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0}
-var home_totals = {in_game: " ", number: " ", name: "Totals", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0}
-
-var home_team = [home_1, home_2, home_3, home_4, home_5, home_6, home_7, home_8, home_9, home_10];
+var TESTING_MODE = true;  // this signals that you are in testing mode and will disable the annoying password promt that happens every time you load the page. Set this to false when in production mode!
 var home = true;
-var altHeld = false;
-var teams = ["Wisconsin"];
+
 result_code_prompt = `
 PRESS A RESULT CODE...
 
@@ -22,252 +9,39 @@ Y - GOOD 3PT FIELD GOAL                  R - MISSED SHOT (REBOUND)
 P - GOOD FG IN THE PAINT                  X - MISSED 3PT SHOT (REBOUND)
 Z - GOOD FG- FAST BREAK & PAINT   K - BLOCKED SHOT
 `;
-help_menu = `HELP!!!!!`;
 
-// Vue components for home players
-Vue.component('player_h01', {
-  template: `<table cellpadding="3" class="playerstats">
-                <tr>
-                    <td> {{in_game}} </td>
-                    <td> {{number}} </td>
-                    <td> {{name}} </td>
-                    <td> {{fg}} </td>
-                    <td> {{fa}} </td>
-                    <td> {{m3}} </td>
-                    <td> {{ftm}} </td>
-                    <td> {{fta}} </td>
-                    <td> {{rb}} </td>
-                    <td> {{as}} </td>
-                    <td> {{pf}} </td>
-                    <td> {{tp}} </td>
-                </tr>
-             </table>`,
-  data: function () {
-    return home_1
-  }
-})
-Vue.component('player_h02', {
-  template: `
-           <table cellpadding="3">
-             <tr>
-               <td> {{in_game}} </td>
-               <td> {{number}} </td>
-               <td> {{name}} </td>
-               <td> {{fg}} </td>
-               <td> {{fa}} </td>
-               <td> {{m3}} </td>
-               <td> {{ftm}} </td>
-               <td> {{fta}} </td>
-               <td> {{rb}} </td>
-               <td> {{as}} </td>
-               <td> {{pf}} </td>
-               <td> {{tp}} </td>
-             </tr>
-           </table>`,
-  data: function () {
-    return home_2
-  }
-})
-Vue.component('player_h03', {
-  template: `
-           <table cellpadding="3">
-             <tr>
-               <td> {{in_game}} </td>
-               <td> {{number}} </td>
-               <td> {{name}} </td>
-               <td> {{fg}} </td>
-               <td> {{fa}} </td>
-               <td> {{m3}} </td>
-               <td> {{ftm}} </td>
-               <td> {{fta}} </td>
-               <td> {{rb}} </td>
-               <td> {{as}} </td>
-               <td> {{pf}} </td>
-               <td> {{tp}} </td>
-             </tr>
-           </table>`,
-  data: function () {
-    return home_3
-  }
-})
-Vue.component('player_h04', {
-  template: `
-           <table cellpadding="3">
-             <tr>
-               <td> {{in_game}} </td>
-               <td> {{number}} </td>
-               <td> {{name}} </td>
-               <td> {{fg}} </td>
-               <td> {{fa}} </td>
-               <td> {{m3}} </td>
-               <td> {{ftm}} </td>
-               <td> {{fta}} </td>
-               <td> {{rb}} </td>
-               <td> {{as}} </td>
-               <td> {{pf}} </td>
-               <td> {{tp}} </td>
-             </tr>
-           </table>`,
-  data: function () {
-    return home_4
-  }
-})
-Vue.component('player_h05', {
-  template: `
-           <table cellpadding="3">
-             <tr>
-               <td> {{in_game}} </td>
-               <td> {{number}} </td>
-               <td> {{name}} </td>
-               <td> {{fg}} </td>
-               <td> {{fa}} </td>
-               <td> {{m3}} </td>
-               <td> {{ftm}} </td>
-               <td> {{fta}} </td>
-               <td> {{rb}} </td>
-               <td> {{as}} </td>
-               <td> {{pf}} </td>
-               <td> {{tp}} </td>
-             </tr>
-           </table>`,
-  data: function () {
-    return home_5
-  }
-})
-Vue.component('player_h06', {
-  template: `
-           <table cellpadding="3">
-             <tr>
-               <td> {{in_game}} </td>
-               <td> {{number}} </td>
-               <td> {{name}} </td>
-               <td> {{fg}} </td>
-               <td> {{fa}} </td>
-               <td> {{m3}} </td>
-               <td> {{ftm}} </td>
-               <td> {{fta}} </td>
-               <td> {{rb}} </td>
-               <td> {{as}} </td>
-               <td> {{pf}} </td>
-               <td> {{tp}} </td>
-             </tr>
-           </table>`,
-  data: function () {
-    return home_6
-  }
-})
-Vue.component('player_h07', {
-  template: `
-           <table cellpadding="3">
-             <tr>
-               <td> {{in_game}} </td>
-               <td> {{number}} </td>
-               <td> {{name}} </td>
-               <td> {{fg}} </td>
-               <td> {{fa}} </td>
-               <td> {{m3}} </td>
-               <td> {{ftm}} </td>
-               <td> {{fta}} </td>
-               <td> {{rb}} </td>
-               <td> {{as}} </td>
-               <td> {{pf}} </td>
-               <td> {{tp}} </td>
-             </tr>
-           </table>`,
-  data: function () {
-    return home_7
-  }
-})
-Vue.component('player_h08', {
-  template: `
-           <table cellpadding="3">
-             <tr>
-               <td> {{in_game}} </td>
-               <td> {{number}} </td>
-               <td> {{name}} </td>
-               <td> {{fg}} </td>
-               <td> {{fa}} </td>
-               <td> {{m3}} </td>
-               <td> {{ftm}} </td>
-               <td> {{fta}} </td>
-               <td> {{rb}} </td>
-               <td> {{as}} </td>
-               <td> {{pf}} </td>
-               <td> {{tp}} </td>
-             </tr>
-           </table>`,
-  data: function () {
-    return home_8
-  }
-})
-Vue.component('player_h09', {
-  template: `
-           <table cellpadding="3">
-             <tr>
-               <td> {{in_game}} </td>
-               <td> {{number}} </td>
-               <td> {{name}} </td>
-               <td> {{fg}} </td>
-               <td> {{fa}} </td>
-               <td> {{m3}} </td>
-               <td> {{ftm}} </td>
-               <td> {{fta}} </td>
-               <td> {{rb}} </td>
-               <td> {{as}} </td>
-               <td> {{pf}} </td>
-               <td> {{tp}} </td>
-             </tr>
-           </table>`,
-  data: function () {
-    return home_9
-  }
-})
-Vue.component('player_h10', {
-  template: `
-           <table cellpadding="3">
-             <tr>
-               <td> {{in_game}} </td>
-               <td> {{number}} </td>
-               <td> {{name}} </td>
-               <td> {{fg}} </td>
-               <td> {{fa}} </td>
-               <td> {{m3}} </td>
-               <td> {{ftm}} </td>
-               <td> {{fta}} </td>
-               <td> {{rb}} </td>
-               <td> {{as}} </td>
-               <td> {{pf}} </td>
-               <td> {{tp}} </td>
-             </tr>
-           </table>`,
-  data: function () {
-    return home_10
-  }
-})
-Vue.component('player_total', {
-  template: `
-           <table cellpadding="3">
-             <tr>
-               <td> {{in_game}} </td>
-               <td> {{number}} </td>
-               <td> {{name}} </td>
-               <td> {{fg}} </td>
-               <td> {{fa}} </td>
-               <td> {{m3}} </td>
-               <td> {{ftm}} </td>
-               <td> {{fta}} </td>
-               <td> {{rb}} </td>
-               <td> {{as}} </td>
-               <td> {{pf}} </td>
-               <td> {{tp}} </td>
-             </tr>
-           </table>`,
-  data: function () {
-    return home_totals
-  }
-})
+help_menu = `HELP MENU: GAMETIME INPUT CODES AND KEYS
 
+FIELD GOAL CODES                NON-FIELD GOAL CODES
+    J - 2- or 3- point shot              E - Free Throw  K - Block
+    Y - 3-point shot                        R - Rebound     T - Turnover
+    D - Dunk                                    A - Assist          S - Steal
+    L - Layup                                   F - Foul            O - Timeout
+    P - Tip-in
+    W - Wrong basket (defensive team scores in offensive team basket)
 
+RESULT CODES
+    G or Q - Good field goal (2- or 3-pointer)
+    Y - Good 3-point field goal
+    R - Missed field goal (followed by a rebound)
+    X - Missed 3-point field goal (followed by a rebound)
+    K - Missed field goal (due to a blocked shot)
+    P - Made field goal in the paint
+    F - Made field goal on a fast break
+    Z - Made field goal in the paint on a fast break
+    E - Made free throw
+
+SPECIAL KEYS
+    H or V - Select the home team or the visiting team
+    F2 - Make "quick" roster changes to player numbers and names
+    F3 - Create new period
+    F6 - Make player substitutions
+    F7 - Change the clock time
+    F9 - Display plays; make corrections, additions, deletions
+    F10 - Clear and do not complete any partially keyed action
+    SPACEBAR - Start or Stop the Clock
+    ESC - Exit the GAMETIME or Client function
+`;
 
 var home_stats = {fg: 0.0, tfg: 0.0, ftp: 0.0, tvs: 0, blocks: 0, steals: 0, paint: 0, offto: 0, sndch: 0, fastb: 0, fga: 0, tfga: 0}
 Vue.component('home_team_stats', {
@@ -283,28 +57,117 @@ Vue.component('home_team_stats', {
   }
 })
 
-// play by play
-var playmsg = {time: "19:85", team: "WISC", playdscrp: "Hi", score: "100-2"}
-var playlist = [];
-Vue.component('play_01', {
-  template: `<table>
-                <tr>
-                    <td> {{time}} </td>
-                    <td> {{team}} </td>
-                    <td> {{playdscrp}} </td>
-                    <td> {{score}} </td>
-                </tr>
-            </table>`,
+var vis_stats = {fg: 0.0, tfg: 0.0, ftp: 0.0, tvs: 0, blocks: 0, steals: 0, paint: 0, offto: 0, sndch: 0, fastb: 0, fga: 0, tfga: 0}
+Vue.component('vis_team_stats', {
+  template: `
+  <div>
+    <p>FG%: {{fg}}   3FG%: {{tfg}}   FT%: {{ftp}}</p>
+    <p>TEAM: TURNVRS: {{tvs}}   BLOCKS: {{blocks}}   STEALS: {{steals}}</p>
+    <p>paint: {{paint}}   offto: {{offto}}   2ndch: {{sndch}}   fastb: {{fastb}}</p>
+  </div>
+  `,
   data: function () {
-    return playmsg
+    return vis_stats
   }
 })
 
+window.onload = function () {
+  if(!TESTING_MODE) {
+
+    $(document.body).hide();
+   var password = "";
+   while(password != "123") {
+    var password = prompt("Please enter the password to access this site.");
+    if(password != "123") {
+      alert("Incorrect password");
+    }
+   }
+   if(password == "123") {
+      $(document.body).show();
+   }
+  }
+
+}
+
+function launchClockPrompt() { // called when the user clicks on the game clock in the scorebar. Is used to edit the clock time and change between half 1, half 2, and OT
+  var period = prompt("Please enter the current period\n1: Period 1\n2: Period 2\nOT: First overtime\n2OT: Second overtime\n30T: Third overtime\n40T: Fourth overtime\n50T: Fifth overtime\n60T: Sixth overtime\n\nWARNING: Changing periods will reset the clock to 20:00 (or 5:00 for OT periods)");
+  if(period == null || period == "") {
+    console.log("User canceleld the clock prompt");
+  } else {
+    if(period == 1) {
+      app.period = 'Half 1';
+      $('#clockdiv #clockh2').html('20:00');
+    } else if(period == 2) {
+      app.period = 'Half 2';
+      $('#clockdiv #clockh2').html('20:00');
+    } else if(period == 'OT' || period == 'ot') {
+      app.period = 'OT';
+      $('#clockdiv #clockh2').html('05:00');
+    } else if(period == '2OT' || period == '2ot') {
+      app.period = '2OT';
+      $('#clockdiv #clockh2').html('05:00');
+    } else if(period == '3OT' || period == '3ot') {
+      app.period = '3OT';
+      $('#clockdiv #clockh2').html('05:00');
+    } else if(period == '4OT' || period == '4ot') {
+      app.period = '4OT';
+      $('#clockdiv #clockh2').html('05:00');
+    } else if(period == '5OT' || period == '5ot') {
+      app.period = '5OT';
+      $('#clockdiv #clockh2').html('05:00');
+    } else if(period == '6OT' || period == '6ot') {
+      app.period = '6OT';
+      $('#clockdiv #clockh2').html('05:00');
+    }
+  }
+}
 
 var app = new Vue({
   el: '#app',
   data: {
-    message: 'Hello and welcome!'
+    teams: ["WISC", "AWAY"],
+    period: 'Half 1',
+    home_score: 0,
+    home_fouls: 0,
+    home_full: 0,
+    home_partial: 0,
+    vis_score: 0,
+    vis_fouls: 0,
+    vis_full: 0,
+    vis_partial: 0,
+
+    home_team: [
+                {in_game: "*", number: "01", name: "Player_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "02", name: "Player_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "03", name: "Player_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "04", name: "Player_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "05", name: "Player_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "06", name: "Bench_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "07", name: "Bench_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "08", name: "Bench_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "09", name: "Bench_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "10", name: "Bench_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0}
+              ],
+    home_totals: {in_game: " ", number: " ", name: "Totals", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+
+    vis_team: [
+                {in_game: "*", number: "01", name: "Player_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "02", name: "Player_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "03", name: "Player_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "04", name: "Player_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "05", name: "Player_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "06", name: "Bench_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "07", name: "Bench_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "08", name: "Bench_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "09", name: "Bench_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "10", name: "Bench_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0}
+              ],
+    vis_totals: {in_game: " ", number: " ", name: "Totals", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+
+    playlist: [
+                //{time: "19:85", team: "WISC", playdscrp: "Ethan Happ made a 3 point jumper", score: "100-2"},
+                //{time: "18:45", team: "MINN", playdscrp: "Foul on Nate Mason", score: "2-100"}
+              ]
   },
   created() {
    document.addEventListener('keydown', this.keyevent);
@@ -313,91 +176,173 @@ var app = new Vue({
    keyevent(e) {
      console.log(e.keyCode);
 
-     // alt + h
-     if(e.keyCode == 18) {
-        altHeld = true;
-     }
-     if(altHeld && e.keyCode == 72) {
+     // alt + h - Help menu
+     if(e.altKey && e.keyCode == 72) {
         window.alert(help_menu);
         altHeld = false;
      }
 
-     // j then (g | q | y | r)
+     // j then (g | q | y | r) - Jump Shots
      else if(e.keyCode == 74) {
+       altHeld = false;
        who_did_it = window.prompt("SHOT BY: (Key in a player ##)");
        result_code = window.prompt(result_code_prompt);
        if(home == true) {
-         for(index = 0; index < home_team.length; index++)
+         for(index = 0; index < app.home_team.length; index++)
          {
-           if(who_did_it == home_team[index].number && (result_code == "g" || result_code == "G" || result_code == "q" || result_code == "Q"))
+           // good field goal (2 points)
+           if(who_did_it == app.home_team[index].number && (result_code == "g" || result_code == "G" || result_code == "q" || result_code == "Q"))
            {
-             home_team[index].fg += 1;
-             home_team[index].fa += 1;
-             home_totals.fg += 1;
-             home_totals.fa += 1;
+             app.home_team[index].fg += 1;
+             app.home_team[index].fa += 1;
+             app.home_totals.fg += 1;
+             app.home_totals.fa += 1;
+             // add to home team score
+             app.home_score += 2;
+             // add to play by play - HOME
+             app.playlist.unshift({ time: document.getElementById('clockh2').innerText, team: app.teams[0], playdscrp: `${app.home_team[index].name} made a jump shot`, score: app.home_score + "-" + app.vis_score })
+
              var total_attempts = 0;
              var total_fgs = 0;
-             for(players = 0; players < home_team.length; players++)
+             for(players = 0; players < app.home_team.length; players++)
              {
-               total_attempts += home_team[players].fa
-               total_fgs += home_team[players].fg
+               total_attempts += app.home_team[players].fa
+               total_fgs += (app.home_team[players].fg + app.home_team[players].m3);
              }
              home_stats.fg = (total_fgs/total_attempts)
              break;
            }
-           else if((who_did_it == home_team[index].number && (result_code == "y" || result_code == "Y"))) {
-             home_team[index].m3 += 1;
-             home_totals.m3 += 1;
-             home_team[index].fa += 1;
-             home_totals.fa += 1;
-             break;
-           }
-           else if (who_did_it == home_team[index].number && (result_code == "r" || result_code == "R")) {
-             home_team[index].fa += 1;
-             home_totals.fa += 1;
+           // good 3pt field goal
+           else if((who_did_it == app.home_team[index].number && (result_code == "y" || result_code == "Y"))) {
+             app.home_team[index].m3 += 1;
+             app.home_team[index].a3 += 1;
+             app.home_totals.m3 += 1;
+             app.home_totals.a3 += 1;
+             app.home_team[index].fa += 1;
+             app.home_team[index].fg += 1;
+             app.home_totals.fa += 1;
              var total_attempts = 0;
              var total_fgs = 0;
-             for(players = 0; players < home_team.length; players++)
+             var total_threes_attmept = 0;
+             var total_threes = 0;
+             for(players = 0; players < app.home_team.length; players++)
              {
-               total_attempts += home_team[players].fa;
-               total_fgs += home_team[players].fg;
+               total_attempts += (app.home_team[players].fa + app.home_team[players].a3);
+               total_fgs += (app.home_team[players].fg + app.home_team[players].m3);
+               total_threes += app.home_team[players].m3;
+               total_threes_attmept += app.home_team[players].a3;
+             }
+             home_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
+             home_stats.tfg = Number.parseFloat(total_threes/total_threes_attmept).toFixed(2);
+             // add to home team score
+             app.home_score += 3;
+             // add to play by play - HOME
+             app.playlist.unshift({ time: document.getElementById('clockh2').innerText, team: app.teams[0], playdscrp: `${app.home_team[index].name} hit a 3-point jumper`, score: app.home_score + "-" + app.vis_score })
+             break;
+           }
+           // missed shot (rebound)
+           else if (who_did_it == app.home_team[index].number && (result_code == "r" || result_code == "R")) {
+             app.home_team[index].fa += 1;
+             app.home_totals.fa += 1;
+             // add to play by play - HOME
+             app.playlist.unshift({ time: document.getElementById('clockh2').innerText, team: app.teams[0], playdscrp: `${app.home_team[index].name} J -> R`, score: app.home_score + "-" + app.vis_score })
+             var total_attempts = 0;
+             var total_fgs = 0;
+             for(players = 0; players < app.home_team.length; players++)
+             {
+               total_attempts += app.home_team[players].fa;
+               total_fgs += (app.home_team[players].fg + app.home_team[players].m3);
              }
              home_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
              break;
            }
+           // field goal in the paint
+           else if (who_did_it == app.home_team[index].number && (result_code == "p" || result_code == "P")) {
+             app.home_team[index].fa += 1;
+             app.home_team[index].fg += 1;
+             app.home_totals.fa += 1;
+             app.home_totals.fg += 1;
+             home_stats.paint += 1;
+             app.home_score += 2;
+             app.playlist.unshift({ time: document.getElementById('clockh2').innerText, team: app.teams[0], playdscrp: `${app.home_team[index].name} made a shot in the paint`, score: app.home_score + "-" + app.vis_score })
+             var total_attempts = 0;
+             var total_fgs = 0;
+             for(players = 0; players < app.home_team.length; players++)
+             {
+               total_attempts += app.home_team[players].fa;
+               total_fgs += (app.home_team[players].fg + app.home_team[players].m3);
+             }
+             home_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
+           }
          }
        }
      }
-
-     // h
+     // H - home team
      else if(e.keyCode == 72) {
-       window.alert("RECORDING HOME TEAM");
        home = true;
+       var h = document.getElementById("homescoreshowhide");
+       var h2 = document.getElementById("pshometeamname");
+       h.style.color = "red";
+       h.style.textDecoration = "underline";
+       h2.style.color = "red";
+       h2.style.textDecoration = "underline";
+       var v = document.getElementById("visitorscoreshowhide");
+       var v2 = document.getElementById("psvisitorteamname");
+       v.style.color = "white";
+       v.style.textDecoration = "none";
+       v2.style.color = "black";
+       v2.style.textDecoration = "none";
      }
-
-     // v
+     // V - Visitor team
      else if(e.keyCode == 86) {
-       window.alert("RECORDING VISITING TEAM");
        home = false
+       var v = document.getElementById("visitorscoreshowhide");
+       var v2 = document.getElementById("psvisitorteamname");
+       v.style.color = "red";
+       v.style.textDecoration = "underline";
+       v2.style.color = "red";
+       v2.style.textDecoration = "underline";
+       var h = document.getElementById("homescoreshowhide");
+       var h2 = document.getElementById("pshometeamname");
+       h.style.color = "white";
+       h.style.textDecoration = "none";
+       h2.style.color = "black";
+       h2.style.textDecoration = "none";
      }
-
-     // s
-     else if(e.keyCode == 83){
+     // F6 - Substitution
+     else if(e.keyCode == 117){
        who_came_out = window.prompt("ENTER ## OF PLAYER LEAVING");
        who_came_in = window.prompt("ENTER ## OF PLAYER ENTERING");
        if(home == true)
        {
-         for(index = 0; index < home_team.length; index++)
+         for(index = 0; index < app.home_team.length; index++)
          {
-            if(who_came_out == home_team[index].number)
+            if(who_came_out == app.home_team[index].number)
             {
-              home_team[index].in_game = " "
+              app.home_team[index].in_game = " "
             }
-            if(who_came_in == home_team[index].number)
+            if(who_came_in == app.home_team[index].number)
             {
-              home_team[index].in_game = "*"
+              app.home_team[index].in_game = "*"
             }
          }
+         // add to play by play - HOME
+         app.playlist.push({ time: document.getElementById('clockh2').innerText, team: app.teams[0], playdscrp: `${who_came_out} is out and ${who_came_in} is in`, score: app.home_score + "-" + app.vis_score })
+       }
+       else {
+         for(index = 0; index < app.vis_team.length; index++)
+         {
+            if(who_came_out == app.vis_team[index].number)
+            {
+              app.vis_team[index].in_game = " "
+            }
+            if(who_came_in == app.vis_team[index].number)
+            {
+              app.vis_team[index].in_game = "*"
+            }
+         }
+         // add to play by play - VISITOR
+         app.playlist.push({ time: document.getElementById('clockh2').innerText, team: app.teams[1], playdscrp: `${who_came_out} is out and ${who_came_in} is in`, score: app.home_score + "-" + app.vis_score })
        }
      }
    }
