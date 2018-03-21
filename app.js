@@ -53,7 +53,7 @@ window.onload = function () {
       $(document.body).show();
    }
   }
-  
+
 }
 
 function launchClockPrompt() { // called when the user clicks on the game clock in the scorebar. Is used to edit the clock time and change between half 1, half 2, and OT
@@ -92,7 +92,7 @@ function launchClockPrompt() { // called when the user clicks on the game clock 
 var app = new Vue({
   el: '#app',
   data: {
-    teams: ["WISC", "Away"],
+    teams: ["WISC", "AWAY"],
     period: 'Half 1',
     home_score: 0,
     home_fouls: 0,
@@ -104,32 +104,32 @@ var app = new Vue({
     vis_partial: 0,
 
     home_team: [
-                {in_game: "*", number: "01", name: "Player_1", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "02", name: "Player_2", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "03", name: "Player_3", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "04", name: "Player_4", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "05", name: "Player_5", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "06", name: "Bench_1", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "07", name: "Bench_2", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "08", name: "Bench_3", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "09", name: "Bench_4", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "10", name: "Bench_5", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0}
+                {in_game: "*", number: "01", name: "Player_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "02", name: "Player_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "03", name: "Player_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "04", name: "Player_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "05", name: "Player_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "06", name: "Bench_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "07", name: "Bench_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "08", name: "Bench_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "09", name: "Bench_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "10", name: "Bench_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0}
               ],
-    home_totals: {in_game: " ", number: " ", name: "Totals", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+    home_totals: {in_game: " ", number: " ", name: "Totals", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
 
     vis_team: [
-                {in_game: "*", number: "01", name: "Player_1", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "02", name: "Player_2", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "03", name: "Player_3", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "04", name: "Player_4", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "05", name: "Player_5", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "06", name: "Bench_1", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "07", name: "Bench_2", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "08", name: "Bench_3", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "09", name: "Bench_4", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "10", name: "Bench_5", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0}
+                {in_game: "*", number: "01", name: "Player_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "02", name: "Player_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "03", name: "Player_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "04", name: "Player_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "05", name: "Player_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "06", name: "Bench_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "07", name: "Bench_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "08", name: "Bench_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "09", name: "Bench_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "10", name: "Bench_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0}
               ],
-    vis_totals: {in_game: " ", number: " ", name: "Totals", fg: 0, fa: 0, m3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+    vis_totals: {in_game: " ", number: " ", name: "Totals", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
 
     playlist: [
                 //{time: "19:85", team: "WISC", playdscrp: "Ethan Happ made a 3 point jumper", score: "100-2"},
@@ -167,14 +167,14 @@ var app = new Vue({
              // add to home team score
              app.home_score += 2;
              // add to play by play - HOME
-             app.playlist.push({ time: "00:00", team: app.teams[0], playdscrp: `${app.home_team[index].name} J -> G | Q`, score: app.home_score + "-" + app.vis_score })
+             app.playlist.unshift({ time: document.getElementById('clockh2').innerText, team: app.teams[0], playdscrp: `${app.home_team[index].name} made a jump shot`, score: app.home_score + "-" + app.vis_score })
 
              var total_attempts = 0;
              var total_fgs = 0;
              for(players = 0; players < app.home_team.length; players++)
              {
                total_attempts += app.home_team[players].fa
-               total_fgs += app.home_team[players].fg
+               total_fgs += (app.home_team[players].fg + app.home_team[players].m3);
              }
              home_stats.fg = (total_fgs/total_attempts)
              break;
@@ -182,13 +182,29 @@ var app = new Vue({
            // good 3pt field goal
            else if((who_did_it == app.home_team[index].number && (result_code == "y" || result_code == "Y"))) {
              app.home_team[index].m3 += 1;
+             app.home_team[index].a3 += 1;
              app.home_totals.m3 += 1;
+             app.home_totals.a3 += 1;
              app.home_team[index].fa += 1;
+             app.home_team[index].fg += 1;
              app.home_totals.fa += 1;
+             var total_attempts = 0;
+             var total_fgs = 0;
+             var total_threes_attmept = 0;
+             var total_threes = 0;
+             for(players = 0; players < app.home_team.length; players++)
+             {
+               total_attempts += (app.home_team[players].fa + app.home_team[players].a3);
+               total_fgs += (app.home_team[players].fg + app.home_team[players].m3);
+               total_threes += app.home_team[players].m3;
+               total_threes_attmept += app.home_team[players].a3;
+             }
+             home_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
+             home_stats.tfg = Number.parseFloat(total_threes/total_threes_attmept).toFixed(2);
              // add to home team score
              app.home_score += 3;
              // add to play by play - HOME
-             app.playlist.push({ time: "00:00", team: app.teams[0], playdscrp: `${app.home_team[index].name} J -> Y`, score: app.home_score + "-" + app.vis_score })
+             app.playlist.unshift({ time: document.getElementById('clockh2').innerText, team: app.teams[0], playdscrp: `${app.home_team[index].name} hit a 3-point jumper`, score: app.home_score + "-" + app.vis_score })
              break;
            }
            // missed shot (rebound)
@@ -196,18 +212,18 @@ var app = new Vue({
              app.home_team[index].fa += 1;
              app.home_totals.fa += 1;
              // add to play by play - HOME
-             app.playlist.push({ time: "00:00", team: app.teams[0], playdscrp: `${app.home_team[index].name} J -> R`, score: app.home_score + "-" + app.vis_score })
+             app.playlist.unshift({ time: document.getElementById('clockh2').innerText, team: app.teams[0], playdscrp: `${app.home_team[index].name} J -> R`, score: app.home_score + "-" + app.vis_score })
              var total_attempts = 0;
              var total_fgs = 0;
              for(players = 0; players < app.home_team.length; players++)
              {
                total_attempts += app.home_team[players].fa;
-               total_fgs += app.home_team[players].fg;
+               total_fgs += (app.home_team[players].fg + app.home_team[players].m3);
              }
              home_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
              break;
            }
-           // fg in the paint
+           // field goal in the paint
            else if (who_did_it == app.home_team[index].number && (result_code == "p" || result_code == "P")) {
              app.home_team[index].fa += 1;
              app.home_team[index].fg += 1;
@@ -215,19 +231,20 @@ var app = new Vue({
              app.home_totals.fg += 1;
              home_stats.paint += 1;
              app.home_score += 2;
-             app.playlist.push({ time: "00:00", team: "HOME", playdscrp: `${app.home_team[index].name} J -> P`, score: app.home_score + "-" + app.vis_score })
+             app.playlist.unshift({ time: document.getElementById('clockh2').innerText, team: app.teams[0], playdscrp: `${app.home_team[index].name} made a shot in the paint`, score: app.home_score + "-" + app.vis_score })
+             var total_attempts = 0;
+             var total_fgs = 0;
              for(players = 0; players < app.home_team.length; players++)
              {
                total_attempts += app.home_team[players].fa;
-               total_fgs += app.home_team[players].fg;
+               total_fgs += (app.home_team[players].fg + app.home_team[players].m3);
              }
              home_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
            }
          }
        }
      }
-
-     // h - home team
+     // H - home team
      else if(e.keyCode == 72) {
        home = true;
        var h = document.getElementById("homescoreshowhide");
@@ -243,8 +260,7 @@ var app = new Vue({
        v2.style.color = "black";
        v2.style.textDecoration = "none";
      }
-
-     // v - Visitor team
+     // V - Visitor team
      else if(e.keyCode == 86) {
        home = false
        var v = document.getElementById("visitorscoreshowhide");
@@ -260,7 +276,6 @@ var app = new Vue({
        h2.style.color = "black";
        h2.style.textDecoration = "none";
      }
-
      // F6 - Substitution
      else if(e.keyCode == 117){
        who_came_out = window.prompt("ENTER ## OF PLAYER LEAVING");
@@ -279,7 +294,7 @@ var app = new Vue({
             }
          }
          // add to play by play - HOME
-         app.playlist.push({ time: "00:00", team: app.teams[0], playdscrp: `${who_came_out} -> ${who_came_in}`, score: app.home_score + "-" + app.vis_score })
+         app.playlist.push({ time: document.getElementById('clockh2').innerText, team: app.teams[0], playdscrp: `${who_came_out} -> ${who_came_in}`, score: app.home_score + "-" + app.vis_score })
        }
        else {
          for(index = 0; index < app.vis_team.length; index++)
@@ -294,10 +309,9 @@ var app = new Vue({
             }
          }
          // add to play by play - VISITOR
-         app.playlist.push({ time: "00:00", team: app.teams[1], playdscrp: `${who_came_out} -> ${who_came_in}`, score: app.home_score + "-" + app.vis_score })
+         app.playlist.push({ time: document.getElementById('clockh2').innerText, team: app.teams[1], playdscrp: `${who_came_out} -> ${who_came_in}`, score: app.home_score + "-" + app.vis_score })
        }
      }
    }
   }
 })
-// try using sort() to make the most recent play at top
