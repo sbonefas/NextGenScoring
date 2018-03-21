@@ -41,6 +41,7 @@ Vue.component('vis_team_stats', {
 
 window.onload = function () {
   if(!TESTING_MODE) {
+
     $(document.body).hide();
    var password = "";
    while(password != "123") {
