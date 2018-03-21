@@ -37,6 +37,14 @@ div.clock {
 	height:8%;
 	text-transform: uppercase;
 }
+#homescoreshowhide {
+	color: red;
+	text-decoration: underline;
+}
+#pshometeamname {
+	color: red;
+	text-decoration: underline;
+}
 #visitor {
 	float: right;
 	text-align: right;
@@ -105,4 +113,5 @@ div.clock {
 
 .playteam {
     text-transform: uppercase;
+    text-align: center;
 }
