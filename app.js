@@ -205,7 +205,7 @@ var app = new Vue({
              var total_fgs = 0;
              for(players = 0; players < app.home_team.length; players++)
              {
-               total_attempts += app.home_team[players].fa
+               total_attempts += (app.home_team[players].fa + app.home_team[players].a3);
                total_fgs += (app.home_team[players].fg + app.home_team[players].m3);
              }
              home_stats.fg = (total_fgs/total_attempts)
@@ -253,7 +253,7 @@ var app = new Vue({
              var total_fgs = 0;
              for(players = 0; players < app.home_team.length; players++)
              {
-               total_attempts += app.home_team[players].fa;
+               total_attempts += (app.home_team[players].fa + app.home_team[players].a3);
                total_fgs += (app.home_team[players].fg + app.home_team[players].m3);
              }
              home_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
@@ -301,14 +301,16 @@ var app = new Vue({
             if(who_came_out == app.home_team[index].number)
             {
               app.home_team[index].in_game = " "
+              var came_out = index;
             }
             if(who_came_in == app.home_team[index].number)
             {
               app.home_team[index].in_game = "*"
+              var came_in = index;
             }
          }
          // add to play by play - HOME
-         app.playlist.push({ time: document.getElementById('clockh2').innerText, team: app.teams[0], playdscrp: `${who_came_out} is out and ${who_came_in} is in`, score: app.home_score + "-" + app.vis_score })
+         app.playlist.unshift({ time: document.getElementById('clockh2').innerText, team: app.teams[0], playdscrp: `${app.home_team[came_in].name} subbed in for ${app.home_team[came_out].name}`, score: app.home_score + "-" + app.vis_score })
        }
        else {
          for(index = 0; index < app.vis_team.length; index++)
@@ -316,14 +318,16 @@ var app = new Vue({
             if(who_came_out == app.vis_team[index].number)
             {
               app.vis_team[index].in_game = " "
+              var came_out = index;
             }
             if(who_came_in == app.vis_team[index].number)
             {
               app.vis_team[index].in_game = "*"
+              var came_in = index;
             }
          }
          // add to play by play - VISITOR
-         app.playlist.push({ time: document.getElementById('clockh2').innerText, team: app.teams[1], playdscrp: `${who_came_out} is out and ${who_came_in} is in`, score: app.home_score + "-" + app.vis_score })
+         app.playlist.unshift({ time: document.getElementById('clockh2').innerText, team: app.teams[1], playdscrp: `${app.vis_team[came_in].name} subbed in for ${app.vis_team[came_out].name}`, score: app.home_score + "-" + app.vis_score })
        }
      }
    }, //end keycode method
