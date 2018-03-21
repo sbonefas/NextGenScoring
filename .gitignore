@@ -4,4 +4,4 @@
 .idea
 package-lock.json
 node_modules
-data
+jquery.min.js

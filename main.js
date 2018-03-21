@@ -13,7 +13,7 @@ const dialog = electron.dialog;
 
 let win;
 const TESTING = true;
-const file_path = 'data/test_data.txt';
+const file_name = 'test_read_game_file';
 
 function createWindow() {
 	win = new BrowserWindow();
@@ -26,20 +26,8 @@ function createWindow() {
 	/** SIMPLE BACKEND TESTING */
 	/** TODO: DELETE WHEN PUT IN TEST SUITE */
 	if(TESTING) {
-		drw.readTestData('data/test_data.txt');
-
-		if(drw.test_read()) console.log("test_read success");
-		else console.log("test_read fail");
-
-		if(drw.test_write()) console.log("test_write success");
-		else console.log("test_write fail");
-
-		drw.create_game_file('test_create_file');
-		if(fs.existsSync('data/test_create_file.csv')) console.log("test_create_file success");
-		else console.log("test_create_file fail");
-
-		if(drw.create_game_file('test_create_file')) console.log("test_create_file fail");
-		else console.log("test_create_file success");
+		drw.create_game_file(['player_name','player_number','fg','fga','pts'], 'test_create_game.txt');
+		drw.read_game_file('test_read_game_file');
 	}
 
 	win.on('closed', () => {
@@ -73,8 +61,10 @@ function createWindow() {
  * FORMAT:
  *
  *	 (1)/(0)
+ *
  * [HOME/AWAY, PLAYER_NUMBER, FIELDGOAL, FIELDGOAL_ATTEMPT, MADE_3, 3_ATTEMPT, FREETHROW, FREETHROW_ATTEMPT, REBOUND, ASSIST, PERSONAL FOUL, BLOCK, TURNOVER, STEAL]
  * [    0    ,       1      ,     2    ,         3        ,    4  ,     5    ,     6    ,         7        ,    8   ,   9   ,       10     ,  11  ,    12   ,  13  ]
+ *
  *
  * [7]-[12] ARE EDITED IN SUBPLAY FUNCTIONS BELOW
  *
@@ -94,6 +84,10 @@ function addPlay(keystrokes){
 	statArray[1] = input[1];	//add player's number
 	
 	switch(input[0]){
+	team = statArray[0]; 	
+	statArray[1] = keyArray[1];	//add player's number
+	switch(keyArray[0]){
+>>>>>>> e716ca0f8b424a40277ff49e90e9d1ce73063d26
 		case 'y':
 		case 'w':
 		case 'j':
@@ -171,17 +165,17 @@ function addPlay(keystrokes){
  
 function rebound(team, player_number){
 	var statArray = [team, player_number,0,0,0,0,0,1,0,0,0,0,0];
-	drw.write_to_game_file(statArray, file_path);
+	drw.write_to_game_file(statArray, 'test_data');
 }
  
 function assist(team, player_number){
 	var statArray = [team, player_number,0,0,0,0,0,0,1,0,0,0,0];
-	drw.write_to_game_file(statArray, file_path);	
+	drw.write_to_game_file(statArray, 'test_data');	
 }
 
 function block(team, player_number){
 	var statArray = [team, player_number,0,0,0,0,0,0,0,0,1,0,0];
-	drw.write_to_game_file(statArray, file_path);	
+	drw.write_to_game_file(statArray, 'test_data');	
 }
 
 function chg (team, player_number, new_player_number){
@@ -223,28 +217,19 @@ ipc.on('send-data', function (event,keystrokes){
  */
  
 ipc.on('get-data', function(event){ 
-		try {
+var manData;
+	try {
 		test_data = drw.readTestData(file_path);
+		var manData = [1,2,3,4,5];
 	} catch (e) {
 		//if failure
 		console.log("An error occurred in file reading: " + e);
 		event.sender.send('get-data-failure');
 		return;
 	}
-	event.sender.send('get-data-success', test_data);
+	event.sender.send('get-data-success', manData);
+});
 
-})
-
-
-/**
- * Example for using IPC to communicate between frontend & backend
- * (see corresponding script in index.html)
- *
- */
-
-ipc.on('async-message', function(event){
-	event.sender.send('async-reply', 'Main process opened the error dialog'); 
-})
 
 app.on('ready', createWindow);
 
