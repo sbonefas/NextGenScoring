@@ -335,6 +335,10 @@
 		<script type="text/javascript" src="./app.js"></script>
 		<script src="./easytimer.min.js"></script>
 		<script src="./jquery.min.js"></script>
+		<script src="vex.combined.min.js"></script>
+		<script>vex.defaultOptions.className = 'vex-theme-os'</script>
+		<link rel="stylesheet" href="vex.css" />
+		<link rel="stylesheet" href="vex-theme-os.css" />
 		<script>
 			//Keep clock functionality on the frontend
 			// Uses EasyTimer.js from Github https://albert-gonzalez.github.io/easytimer.js/
@@ -363,7 +367,27 @@
        				 }
     			}
 			}
-				
+
+			var input;
+			vex.dialog.open({
+					message: 'Enter your username and password:',
+					input: [
+							'<input name="command" type="text" placeholder="Command" required />',
+					].join(''),
+					buttons: [
+							$.extend({}, vex.dialog.buttons.YES, { text: 'Send' }),
+							$.extend({}, vex.dialog.buttons.NO, { text: 'Back' })
+					],
+					callback: function (data) {
+							if (!data) {
+									console.log('Cancelled');
+							} else {
+									console.log('Command:' + data.command);
+									input = data.command;
+									sendData(input);
+							}
+					}
+			})
 			const electron = require("electron");
 			const ipc = electron.ipcRenderer;
 			/*	
@@ -375,30 +399,30 @@
 				console.log(arg);
 			})
 			*/
-			
-			let keystrokes = "j 16 g h"
-			<!-- Testing send-data & get-data functions -->
-			ipc.send('send-data', keystrokes);
-			ipc.send('get-data');
-			
-			ipc.on('send-data-failure', function() { 
-				console.log("An error occurred in writing " + keystrokes + " to file : " + e);
-			});
-			
-			ipc.on('send-data-success', function() { 
-				console.log("Successfully recorded keystroke: " + keystrokes);
-			});
-			
-			ipc.on('get-data-failure', function() { 
-				console.log("An error occurred in reading from file")
-			
-			});
-			
-			ipc.on('get-data-success', function(test_data) { 
-				console.log("Successfully retrieved data: " + test_data);
-			
-			});
+			function sendData(input){
+				let keystrokes = input;
+				<!-- Testing send-data & get-data functions -->
+				ipc.send('send-data', keystrokes);
+				ipc.send('get-data');
 				
+				ipc.on('send-data-failure', function() { 
+					console.log("An error occurred in writing " + keystrokes + " to file");
+				});
+				
+				ipc.on('send-data-success', function() { 
+					console.log("Successfully recorded keystroke: " + keystrokes);
+				});
+				
+				ipc.on('get-data-failure', function() { 
+					console.log("An error occurred in reading from file")
+				
+				});
+				
+				ipc.on('get-data-success', function(test_data) { 
+					console.log(test_data);
+				
+				});
+			};	
 		</script>
 	</body>
 </html>
