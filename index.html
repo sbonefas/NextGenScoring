@@ -1,4 +1,10 @@
-</html>
+<html>
+	<head>
+		<link rel="icon" href="img/favicon.ico">
+		<link rel="stylesheet" href="style.css">
+		<title>NextGen Scoring</title>
+	</head>
+
 	<body>
 		<div id = "app">
 			<!-- SCORE BAR AND CLOCK -->
@@ -307,40 +313,32 @@
 			</div><!-- end play by play div -->
 		</div> <!-- end app div -->
 
+
+			<!-- Play By Play -->
+			<div id = "playbyplaybox">
+				<h2>Play-by-Play</h2>
+				<table cellpadding="3">
+					<tr>
+						<th>Time</th>
+						<th>Team</th>
+						<th>Play</th>
+						<th>Score (Home-Visitor)</th>
+					</tr>
+					<tr v-for="play in playlist">
+						<td>{{ play.time }}</td>
+						<td class="playteam">{{ play.team }}</td>
+						<td>{{ play.playdscrp }}</td>
+						<td>{{ play.score }}</td>
+					</tr>
+				</table>
+			</div><!-- end play by play div -->
+		</div> <!-- end app div -->
+
 		<script type="text/javascript" src="./vue.js"></script>
 		<script type="text/javascript" src="./app.js"></script>
 		<script src="./easytimer.min.js"></script>
 		<script src="./jquery.min.js"></script>
-		<script>
-			//Keep clock functionality on the frontend
-			// Uses EasyTimer.js from Github https://albert-gonzalez.github.io/easytimer.js/
-			var timer = new Timer();
-			timer.start({countdown: true, startValues: {seconds: 1200}});
-			timer.pause();
-			var paused = true;
-			$('#clockdiv #clockh2').html(timer.getTimeValues().toString());
-			timer.addEventListener('secondsUpdated', function (e) {
-			    $('#clockdiv #clockh2').html(timer.getTimeValues().toString());
-			});
-			timer.addEventListener('targetAchieved', function (e) {
-			    $('#clockdiv #clockh2').html('KABOOM!!');
-			});
-
-			document.body.onkeyup = function(e){
-    			if(e.keyCode == 32 && e.target == document.body){
-       				 if(paused) {
-       				 	timer.start();
-       				 	paused = false;
-       				 	$("#clockisstopped").toggle();
-       				 } else {
-       				 	timer.pause();
-       				 	paused = true;
-       				 	$("#clockisstopped").toggle();
-       				 }
-    			}
-			}
-			
-			
+		<script>			
 			//Keep clock functionality on the frontend
 			// Uses EasyTimer.js from Github https://albert-gonzalez.github.io/easytimer.js/
 			var timer = new Timer();
@@ -384,8 +382,8 @@
 			let keystrokes = "j 16 g h";
 			<!-- Testing send-data & get-data functions -->
 			ipc.send('send-data', keystrokes);
-			var data;
-			ipc.send('get-data', data);
+			
+			ipc.send('get-data');
 			
 			ipc.on('send-data-failure', function() { 
 				console.log("An error occurred in writing " + keystrokes + " to file : " + e);
@@ -400,8 +398,8 @@
 			
 			});
 			
-			ipc.on('get-data-success', function(test_data) { 
-				console.log("Successfully retrieved data: " + test_data);
+			ipc.on('get-data-success', function(event, arg) { 
+				console.log("Successfully retrieved data: " + arg);
 			
 			});
 				

@@ -60,8 +60,8 @@ function createWindow() {
  * FORMAT:
  *
  *	 (1)/(0)
- * [HOME/AWAY, PLAYER_NUMBER, FIELDGOAL, FIELDGOAL_ATTEMPT, MADE_3, FREETHROW, FREETHROW_ATTEMPT, REBOUND, ASSIST, PERSONAL FOUL, BLOCK, TURNOVER, STEAL]
- * [    0    ,       1      ,     2    ,         3        ,    4  ,     5    ,         6        ,    7   ,   8   ,        9     ,   10 ,    11   ,   12 ]
+ * [HOME/AWAY, PLAYER_NUMBER, FIELDGOAL, FIELDGOAL_ATTEMPT, MADE_3, 3_ATTEMPT, FREETHROW, FREETHROW_ATTEMPT, REBOUND, ASSIST, PERSONAL_FOUL, BLOCK, TURNOVER, STEAL]
+ * [    0    ,       1      ,     2    ,         3        ,    4  ,     5    ,     6    ,         7        ,    8   ,   9   ,      10      ,  11  ,   12    ,  13  ]
  *
  * [7]-[12] ARE EDITED IN SUBPLAY FUNCTIONS BELOW
  *
@@ -200,31 +200,26 @@ ipc.on('send-data', function (event,keystrokes){
  * Dummy function for the front end. Temporary
  * --USED FOR TESTING--
  */
-ipc.on('get-data', function(event,data){ 
-	//var test_data;
+ipc.on('get-data', function(event){ 
+  //console.log(arg);
+  //do child process or other data manipulation and name it manData
+  var manData = [1,2,3,4,5];
+  event.sender.send('get-data-success', manData);
+	/*
 	try {
-		data = "Hello";
-		test_data = drw.read_game_file(file_path);
+		var data = 'Hello';
+		event.returnValue = data;
+		//test_data = drw.read_game_file(file_path);
 	} catch (e) {
 		//if failure
 		console.log("An error occurred in file reading: " + e);
 		event.sender.send('get-data-failure');
 		return;
 	}
-	event.sender.send('get-data-success', /*test_data*/data);
+	*/
+	//event.sender.send('get-data-success', /*test_data*/data);
+});
 
-})
-
-
-/**
- * Example for using IPC to communicate between frontend & backend
- * (see corresponding script in index.html)
- *
- */
-
-ipc.on('async-message', function(event){
-	event.sender.send('async-reply', 'Main process opened the error dialog'); 
-})
 
 app.on('ready', createWindow);
 
