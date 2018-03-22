@@ -171,8 +171,7 @@ var app = new Vue({
     vis_totals: {in_game: " ", number: " ", name: "Totals", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
 
     playlist: [
-                //{time: "19:85", team: "WISC", playdscrp: "Ethan Happ made a 3 point jumper", score: "100-2"},
-                //{time: "18:45", team: "MINN", playdscrp: "Foul on Nate Mason", score: "2-100"}
+                //example: {time: "19:85", team: "WISC", playdscrp: "Ethan Happ made a 3 point jumper", score: "100-2"},
               ]
   },
   created() {
@@ -213,7 +212,7 @@ var app = new Vue({
              // add to home team score
              app.home_score += 2;
              // add to play by play - HOME
-             app.playlist.unshift({ time: document.getElementById('clockh2').innerText, team: app.teams[0], playdscrp: `${app.home_team[index].name} made a jump shot`, score: app.home_score + "-" + app.vis_score })
+             app.playlist.unshift({ time: document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText, team: app.teams[0], playdscrp: `${app.home_team[index].name} made a jump shot`, score: app.home_score + "-" + app.vis_score })
 
              var total_attempts = 0;
              var total_fgs = 0;
@@ -252,7 +251,7 @@ var app = new Vue({
              // add to home team score
              app.home_score += 3;
              // add to play by play - HOME
-             app.playlist.unshift({ time: document.getElementById('clockh2').innerText, team: app.teams[0], playdscrp: `${app.home_team[index].name} hit a 3-point jumper`, score: app.home_score + "-" + app.vis_score })
+             app.playlist.unshift({ time: document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText, team: app.teams[0], playdscrp: `${app.home_team[index].name} hit a 3-point jumper`, score: app.home_score + "-" + app.vis_score })
              // change possession
              app.vis_possession();
              break;
@@ -262,7 +261,7 @@ var app = new Vue({
              app.home_team[index].fa += 1;
              app.home_totals.fa += 1;
              // add to play by play - HOME
-             app.playlist.unshift({ time: document.getElementById('clockh2').innerText, team: app.teams[0], playdscrp: `${app.home_team[index].name} J -> R`, score: app.home_score + "-" + app.vis_score })
+             app.playlist.unshift({ time: document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText, team: app.teams[0], playdscrp: `${app.home_team[index].name} J -> R`, score: app.home_score + "-" + app.vis_score })
              var total_attempts = 0;
              var total_fgs = 0;
              for(players = 0; players < app.home_team.length; players++)
@@ -282,7 +281,7 @@ var app = new Vue({
              app.home_totals.fg += 1;
              home_stats.paint += 1;
              app.home_score += 2;
-             app.playlist.unshift({ time: document.getElementById('clockh2').innerText, team: app.teams[0], playdscrp: `${app.home_team[index].name} made a shot in the paint`, score: app.home_score + "-" + app.vis_score })
+             app.playlist.unshift({ time: document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText, team: app.teams[0], playdscrp: `${app.home_team[index].name} made a shot in the paint`, score: app.home_score + "-" + app.vis_score })
              var total_attempts = 0;
              var total_fgs = 0;
              for(players = 0; players < app.home_team.length; players++)
@@ -297,6 +296,7 @@ var app = new Vue({
            // J then Z - GOOD FG-FAST BREAK & PAINT
            else if (who_did_it == app.home_team[index].number && (result_code == "z" || result_code == "Z")) {
                 console.log("J->Z");
+                app.add_play();
            }
            // J then F - GOOD FG ON A FAST BREAK
            else if (who_did_it == app.home_team[index].number && (result_code == "f" || result_code == "F")) {
@@ -330,7 +330,7 @@ var app = new Vue({
        // check if player is in game, and let them re-enter number if wrong
        while(!app.check_in_game(who_came_out)) {
            if(who_came_out == null) {
-                return
+                return;
            }
            who_came_out = window.prompt("Player " + who_came_out + " is not in game\n\nENTER ## OF PLAYER LEAVING");
        }
@@ -360,7 +360,7 @@ var app = new Vue({
             }
          }
          // add to play by play - HOME
-         app.playlist.unshift({ time: document.getElementById('clockh2').innerText, team: app.teams[0], playdscrp: `${app.home_team[came_in].name} subbed in for ${app.home_team[came_out].name}`, score: app.home_score + "-" + app.vis_score })
+         app.playlist.unshift({ time: document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText, team: app.teams[0], playdscrp: `${app.home_team[came_in].name} subbed in for ${app.home_team[came_out].name}`, score: app.home_score + "-" + app.vis_score })
        }
        else {
          for(index = 0; index < app.vis_team.length; index++)
@@ -377,9 +377,63 @@ var app = new Vue({
             }
          }
          // add to play by play - VISITOR
-         app.playlist.unshift({ time: document.getElementById('clockh2').innerText, team: app.teams[1], playdscrp: `${app.vis_team[came_in].name} subbed in for ${app.vis_team[came_out].name}`, score: app.home_score + "-" + app.vis_score })
+         app.playlist.unshift({ time: document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText, team: app.teams[1], playdscrp: `${app.vis_team[came_in].name} subbed in for ${app.vis_team[came_out].name}`, score: app.home_score + "-" + app.vis_score })
        }
      }
+     // F2 - change player jersey number
+     else if(e.keyCode == 174) {
+
+     }
+     // F10 - clear and do not complete any partially keyed action
+     else if(e.keyCode == 121) {
+
+     }
+
+     // E - Free Throw
+     else if(e.keyCode == 69) {
+
+     }
+
+     // T - turnover
+     else if(e.keyCode == 84) {
+
+     }
+
+     // R - rebound
+     else if(e.keyCode == 82) {
+
+     }
+
+     // A - assist
+     else if(e.keyCode == 65) {
+
+     }
+
+     // S - steal
+     else if(e.keyCode == 83) {
+
+     }
+
+     // K - blocked shot
+     else if(e.keyCode == 75) {
+
+     }
+
+     // O - timeout
+     else if(e.keyCode == 79) {
+
+     }
+
+     // C - Change time, period, stats
+     else if(e.keyCode == 67) {
+
+     }
+
+     // Esc - Return to main menu
+     else if(e.keyCode == 27) {
+
+     }
+
    }, //end keycode method
    home_possession() {
        home = true;
@@ -437,6 +491,10 @@ var app = new Vue({
          return false;
        }
    },
+   add_play() {
+
+        app.playlist.unshift({ time: document.getElementById('clockh2').innerText, team: app.teams[0], playdscrp: `${app.home_team[index].name} J -> R`, score: app.home_score + "-" + app.vis_score })
+   },
    rebound() { //WHEN WOULD POSSESSION CHANGE?
         who_got_it = window.prompt("REBOUNDED BY: \n\n OFFENSIVE: Key in a player ## \n OFFENSIVE TEAM REBOUND: M \n OFFENSIVE DEADBALL: B \n" +
             "DEFENSIVE: D \n DEFENSIVE TEAM REBOUND: DM \n DEFENSIVE DEADBALL: DB");
@@ -472,11 +530,13 @@ var app = new Vue({
         }
         //offensive team rebound
         else if(who_got_it == "m" || who_got_it == "M") {
-            // what does this increment?
+            // add to play by play
+            // no possession change
         }
         //offensive deadball
         else if(who_got_it == "b" || who_got_it == "B") {
-            // what does this increment?
+            // add to play by play
+            // change possession
         }
         // defensive
         else if(who_got_it == "d" || who_got_it == "D") {
@@ -510,12 +570,14 @@ var app = new Vue({
         }
         //defensive team rebound
         else if(who_got_it == "dm" || who_got_it == "dM" || who_got_it == "DM" || who_got_it == "Dm") {
-            // what does this increment?
+            // add to play by play
+            // change posession
         }
         //defensive deadball
         else if(who_got_it == "db" || who_got_it == "dB" || who_got_it == "DB" || who_got_it == "Db") {
-            // what does this increment?
+            // add to play by play
+            // no change in posession
         }
-   }
+   } //end rebound method
   }
 })
