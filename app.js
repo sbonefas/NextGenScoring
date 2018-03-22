@@ -95,30 +95,37 @@ function launchClockPrompt() { // called when the user clicks on the game clock 
   } else {
     if(period == 1) {
       app.period = 'Half 1';
-      $('#clockdiv #clockh2').html('20:00');
+      // $('#clockdiv #clockh2').html('20:00');
     } else if(period == 2) {
       app.period = 'Half 2';
-      $('#clockdiv #clockh2').html('20:00');
+      // $('#clockdiv #clockh2').html('20:00');
     } else if(period == 'OT' || period == 'ot') {
       app.period = 'OT';
-      $('#clockdiv #clockh2').html('05:00');
+      // $('#clockdiv #clockh2').html('05:00');
     } else if(period == '2OT' || period == '2ot') {
       app.period = '2OT';
-      $('#clockdiv #clockh2').html('05:00');
+      // $('#clockdiv #clockh2').html('05:00');
     } else if(period == '3OT' || period == '3ot') {
       app.period = '3OT';
-      $('#clockdiv #clockh2').html('05:00');
+      // $('#clockdiv #clockh2').html('05:00');
     } else if(period == '4OT' || period == '4ot') {
       app.period = '4OT';
-      $('#clockdiv #clockh2').html('05:00');
+      // $('#clockdiv #clockh2').html('05:00');
     } else if(period == '5OT' || period == '5ot') {
       app.period = '5OT';
-      $('#clockdiv #clockh2').html('05:00');
+      // $('#clockdiv #clockh2').html('05:00');
     } else if(period == '6OT' || period == '6ot') {
       app.period = '6OT';
-      $('#clockdiv #clockh2').html('05:00');
+      // $('#clockdiv #clockh2').html('05:00');
     }
   }
+}
+
+function startClock(startingTime) {
+  var timer = new Timer();
+  timer.start({countdown: true, startValues: {seconds: 1200}});
+  timer.pause();
+  var paused = true;
 }
 
 var app = new Vue({
