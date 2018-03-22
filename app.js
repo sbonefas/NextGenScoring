@@ -171,8 +171,7 @@ var app = new Vue({
     vis_totals: {in_game: " ", number: " ", name: "Totals", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
 
     playlist: [
-                //{time: "19:85", team: "WISC", playdscrp: "Ethan Happ made a 3 point jumper", score: "100-2"},
-                //{time: "18:45", team: "MINN", playdscrp: "Foul on Nate Mason", score: "2-100"}
+                //example: {time: "19:85", team: "WISC", playdscrp: "Ethan Happ made a 3 point jumper", score: "100-2"},
               ]
   },
   created() {
@@ -385,9 +384,9 @@ var app = new Vue({
 
      }
      // F10 - clear and do not complete any partially keyed action
-//     else if(e.keyCode == 0) { // F10 keycode??
-//
-//     }
+     else if(e.keyCode == 121) {
+
+     }
 
      // E - Free Throw
      else if(e.keyCode == 69) {
@@ -430,9 +429,9 @@ var app = new Vue({
      }
 
      // Esc - Return to main menu
-//     else if(e.keyCode == 0) { //ESC keycode?
-//
-//     }
+     else if(e.keyCode == 27) {
+
+     }
 
    }, //end keycode method
    home_possession() {
