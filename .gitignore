@@ -5,4 +5,4 @@
 package-lock.json
 node_modules
 geckodriver.log
-
+.DS_Store
