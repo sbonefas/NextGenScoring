@@ -26,7 +26,7 @@ function createWindow() {
 	/** SIMPLE BACKEND TESTING */
 	/** TODO: DELETE WHEN PUT IN TEST SUITE */
 	if(TESTING) {
-		drw.create_game_file(['player_name','player_number','fg','fga','pts'], 'test_create_game.txt');
+		drw.create_game_file(['player_name','player_number','fg','fga','m3','3a','ft','fta','reb','ast','pf','blk','trn','stl'], 'test_create_game.txt');
 		drw.read_game_file('test_read_game_file');
 	}
 
@@ -87,7 +87,6 @@ function addPlay(keystrokes){
 	team = statArray[0]; 	
 	statArray[1] = keyArray[1];	//add player's number
 	switch(keyArray[0]){
->>>>>>> e716ca0f8b424a40277ff49e90e9d1ce73063d26
 		case 'y':
 		case 'w':
 		case 'j':
