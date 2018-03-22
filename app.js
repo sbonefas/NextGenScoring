@@ -302,7 +302,6 @@ var app = new Vue({
            // J then Z - GOOD FG-FAST BREAK & PAINT
            else if (who_did_it == app.home_team[index].number && (result_code == "z" || result_code == "Z")) {
                 console.log("J->Z");
-                app.add_play();
            }
            // J then F - GOOD FG ON A FAST BREAK
            else if (who_did_it == app.home_team[index].number && (result_code == "f" || result_code == "F")) {
@@ -318,8 +317,125 @@ var app = new Vue({
            }
          }
        }
-       else {
-            //visitor calculations
+       else {  // Visitor calculations
+            for(index = 0; index < app.vis_team.length; index++)
+         {
+         console.log(who_did_it);
+           // J then G or Q - good field goal (2 points)
+           if(who_did_it == app.vis_team[index].number && (result_code == "g" || result_code == "G" || result_code == "q" || result_code == "Q"))
+           {
+             app.vis_team[index].fg += 1;
+             app.vis_team[index].fa += 1;
+             app.vis_team[index].tp += 2;
+             app.vis_totals.fg += 1;
+             app.vis_totals.fa += 1;
+             // add to vis team score
+             app.vis_score += 2;
+             app.vis_totals.tp = app.vis_score;
+             // add to play by play - VIS
+             app.add_play(`${app.vis_team[index].name} made a jump shot`);
+
+             var total_attempts = 0;
+             var total_fgs = 0;
+             for(players = 0; players < app.vis_team.length; players++)
+             {
+               total_attempts += (app.vis_team[players].fa + app.vis_team[players].a3);
+               total_fgs += (app.vis_team[players].fg + app.vis_team[players].m3);
+             }
+             vis_stats.fg = (total_fgs/total_attempts)
+             // change possession
+             app.home_possession();
+             break;
+           }
+           // J then Y - good 3pt field goal
+           else if((who_did_it == app.vis_team[index].number && (result_code == "y" || result_code == "Y"))) {
+             app.vis_team[index].m3 += 1;
+             app.vis_team[index].a3 += 1;
+             app.vis_team[index].tp += 3;
+             app.vis_totals.m3 += 1;
+             app.vis_totals.a3 += 1;
+             app.vis_team[index].fa += 1;
+             app.vis_team[index].fg += 1;
+             app.vis_totals.fa += 1;
+             var total_attempts = 0;
+             var total_fgs = 0;
+             var total_threes_attmept = 0;
+             var total_threes = 0;
+             for(players = 0; players < app.vis_team.length; players++)
+             {
+               total_attempts += (app.vis_team[players].fa + app.vis_team[players].a3);
+               total_fgs += (app.vis_team[players].fg + app.vis_team[players].m3);
+               total_threes += app.vis_team[players].m3;
+               total_threes_attmept += app.vis_team[players].a3;
+             }
+             vis_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
+             vis_stats.tfg = Number.parseFloat(total_threes/total_threes_attmept).toFixed(2);
+             // add to vis team score
+             app.vis_score += 3;
+             app.vis_totals.tp = app.vis_score;
+             // add to play by play - VIS
+             app.add_play(`${app.vis_team[index].name} hit a 3-point jumper`);
+             // change possession
+             app.home_possession();
+             break;
+           }
+           // J then R - missed shot (rebound)
+           else if (who_did_it == app.vis_team[index].number && (result_code == "r" || result_code == "R")) {
+             app.vis_team[index].fa += 1;
+             app.vis_totals.fa += 1;
+             // add to play by play - VIS
+             app.add_play(`${app.vis_team[index].name} J -> R`);
+             var total_attempts = 0;
+             var total_fgs = 0;
+             for(players = 0; players < app.vis_team.length; players++)
+             {
+               total_attempts += (app.vis_team[players].fa + app.vis_team[players].a3);
+               total_fgs += (app.vis_team[players].fg + app.vis_team[players].m3);
+             }
+             vis_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
+             app.rebound();
+             break;
+           }
+           // J then P - field goal in the paint
+           else if (who_did_it == app.vis_team[index].number && (result_code == "p" || result_code == "P")) {
+             app.vis_team[index].fa += 1;
+             app.vis_team[index].fg += 1;
+             app.vis_team[index].tp += 2;
+             app.vis_totals.fa += 1;
+             app.vis_totals.fg += 1;
+             vis_stats.paint += 1;
+             app.vis_score += 2;
+             app.vis_totals.tp = app.vis_score;
+             app.add_play(`${app.vis_team[index].name} made a shot in the paint`);
+             var total_attempts = 0;
+             var total_fgs = 0;
+             for(players = 0; players < app.vis_team.length; players++)
+             {
+               total_attempts += app.vis_team[players].fa;
+               total_fgs += (app.vis_team[players].fg + app.vis_team[players].m3);
+             }
+             vis_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
+             // change possession
+             app.home_possession();
+           }
+           // J then Z - GOOD FG-FAST BREAK & PAINT
+           else if (who_did_it == app.vis_team[index].number && (result_code == "z" || result_code == "Z")) {
+                console.log("J->Z");
+           }
+           // J then F - GOOD FG ON A FAST BREAK
+           else if (who_did_it == app.vis_team[index].number && (result_code == "f" || result_code == "F")) {
+                console.log("J->F");
+           }
+           // J then X - MISSED 3PT SHOT (REBOUND)
+           else if (who_did_it == app.vis_team[index].number && (result_code == "x" || result_code == "X")) {
+                console.log("J->X");
+           }
+           // J then K - BLOCKED SHOT
+           else if (who_did_it == app.vis_team[index].number && (result_code == "k" || result_code == "K")) {
+                console.log("J->K");
+           }
+         }
+
        }
      }
      // H or left arrow - home team
