@@ -23,13 +23,6 @@ function createWindow() {
 		slashes: true		
 	}));
 
-	/** SIMPLE BACKEND TESTING */
-	/** TODO: DELETE WHEN PUT IN TEST SUITE */
-	if(TESTING) {
-		drw.create_game_file(['player_name','player_number','fg','fga','pts'], 'test_create_game.txt');
-		drw.read_game_file('test_read_game_file');
-	}
-
 	win.on('closed', () => {
 		win = null;
 		app.quit();
