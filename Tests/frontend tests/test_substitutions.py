@@ -199,10 +199,33 @@ class TestSubs(unittest.TestCase):
         play_by_play = __class__.driver.find_element_by_id("playbyplaybox").find_element_by_xpath("table/tbody/tr[2]").text.split(" ")
         
         assert(clock == play_by_play[0])
+        assert("WISC" == play_by_play[1])
         assert(numB_name == play_by_play[2])
         assert(numA_name == play_by_play[6])
         assert(home_score + "-" + away_score == play_by_play[7])
         
+    ## WILL FAIL UNTIL VISITING TEAM IS ABLE TO UPDATE PLAY BY PLAY ##
+    def test_play_by_play_away(self):
+        print("test_play_by_play_away")
+        ## Prepare comparison variables
+        numA_name = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[3]").text
+        numB_name = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[7]/td[3]").text
+
+        home_score = __class__.driver.find_element_by_id("home").find_element_by_class_name("score").find_element_by_xpath("h2[2]").text;
+        away_score = __class__.driver.find_element_by_id("visitor").find_element_by_class_name("score").find_element_by_xpath("h2[2]").text;
+        clock = (__class__.driver.find_element_by_id("clockminutes").text + ":" + 
+                 __class__.driver.find_element_by_id("clockseconds").text)
+        
+        ## SUB PLAYER 01 out for 06
+        sub1Player(__class__.driver, "01", "06")
+        
+        play_by_play = __class__.driver.find_element_by_id("playbyplaybox").find_element_by_xpath("table/tbody/tr[2]").text.split(" ")
+        
+        assert(clock == play_by_play[0])
+        assert("AWAY" == play_by_play[1])
+        assert(numB_name == play_by_play[2])
+        assert(numA_name == play_by_play[6])
+        assert(home_score + "-" + away_score == play_by_play[7])        
         
 if __name__ == '__main__':
     unittest.main()
