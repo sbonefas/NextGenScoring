@@ -380,6 +380,60 @@ var app = new Vue({
          app.playlist.unshift({ time: document.getElementById('clockh2').innerText, team: app.teams[1], playdscrp: `${app.vis_team[came_in].name} subbed in for ${app.vis_team[came_out].name}`, score: app.home_score + "-" + app.vis_score })
        }
      }
+     // F2 - change player jersey number
+     else if(e.keyCode == 174) {
+
+     }
+     // F10 - clear and do not complete any partially keyed action
+//     else if(e.keyCode == 0) { // F10 keycode??
+//
+//     }
+
+     // E - Free Throw
+     else if(e.keyCode == 69) {
+
+     }
+
+     // T - turnover
+     else if(e.keyCode == 84) {
+
+     }
+
+     // R - rebound
+     else if(e.keyCode == 82) {
+
+     }
+
+     // A - assist
+     else if(e.keyCode == 65) {
+
+     }
+
+     // S - steal
+     else if(e.keyCode == 83) {
+
+     }
+
+     // K - blocked shot
+     else if(e.keyCode == 75) {
+
+     }
+
+     // O - timeout
+     else if(e.keyCode == 79) {
+
+     }
+
+     // C - Change time, period, stats
+     else if(e.keyCode == 67) {
+
+     }
+
+     // Esc - Return to main menu
+//     else if(e.keyCode == 0) { //ESC keycode?
+//
+//     }
+
    }, //end keycode method
    home_possession() {
        home = true;
