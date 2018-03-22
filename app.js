@@ -380,8 +380,8 @@ var app = new Vue({
        }
      }
      // F2 - change player jersey number
-     else if(e.keyCode == 174) {
-
+     else if(e.keyCode == 113) {
+       app.change_player_number();
      }
      // F10 - clear and do not complete any partially keyed action
      else if(e.keyCode == 121) {
@@ -568,6 +568,50 @@ var app = new Vue({
         //defensive deadball
         else if(who_got_it == "db" || who_got_it == "dB" || who_got_it == "DB" || who_got_it == "Db") {
             // what does this increment?
+        }
+   },
+   change_player_number() {
+      var team = window.prompt("ENTER TEAM TO CHANGE PLAYER NUMBER (H: HOME   V: VISITOR)");
+      team_numbers = [];
+      var number = window.prompt("ENTER PLAYER ## TO CHANGE");
+      if(team == 'h' || team == 'H')
+      {
+          for(index = 0; index < app.home_team.length; index++)
+          {
+            team_numbers.push(app.home_team[index].number);
+          }
+          for(index = 0; index < app.home_team.length; index++)
+          {
+              if(app.home_team[index].number == number)
+              {
+                var new_number;
+                while(team_numbers.includes(new_number) || new_number == null)
+                {
+                  new_number = window.prompt("ENTER NEW PLAYER ##");
+                }
+                app.home_team[index].number = new_number;
+                break;
+              }
+          }
+      }
+      else if(team == 'v' || team == 'V')
+      {
+        for(index = 0; index < app.vis_team.length; index++)
+        {
+          team_numbers.push(app.vis_team[index].number);
+        }
+        for(index = 0; index < app.vis_team.length; index++)
+        {
+            if(app.vis_team[index].number == number)
+            {
+              var new_number;
+              while(team_numbers.includes(new_number) || new_number == null)
+              {
+                new_number = window.prompt("ENTER NEW PLAYER ##");
+              }
+              app.vis_team[index].number = new_number;
+              break;
+            }
         }
    }
   }
