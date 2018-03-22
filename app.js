@@ -181,11 +181,14 @@ var app = new Vue({
         altHeld = false;
      }
 
-     // J then (G | Q | Y | R | P) - Jump Shots
+     // J then (G | Q | Y | R | P | Z | F | X | K) - Jump Shots
      else if(e.keyCode == 74) {
        altHeld = false;
        who_did_it = window.prompt("SHOT BY: (Key in a player ##)");
        while(!app.check_in_game(who_did_it)) {
+           if(who_did_it == null) {
+                return
+           }
             who_did_it = window.prompt("Player " + who_did_it + " is not in the game!\n\nSHOT BY: (Key in a player ##)");
        }
        result_code = window.prompt(result_code_prompt);
@@ -284,6 +287,22 @@ var app = new Vue({
              // change possession
              app.vis_possession();
            }
+           // J then Z - GOOD FG-FAST BREAK & PAINT
+           else if (who_did_it == app.home_team[index].number && (result_code == "z" || result_code == "Z")) {
+                console.log("J->Z");
+           }
+           // J then F - GOOD FG ON A FAST BREAK
+           else if (who_did_it == app.home_team[index].number && (result_code == "f" || result_code == "F")) {
+                console.log("J->F");
+           }
+           // J then X - MISSED 3PT SHOT (REBOUND)
+           else if (who_did_it == app.home_team[index].number && (result_code == "x" || result_code == "X")) {
+                console.log("J->X");
+           }
+           // J then K - BLOCKED SHOT
+           else if (who_did_it == app.home_team[index].number && (result_code == "k" || result_code == "K")) {
+                console.log("J->K");
+           }
          }
        }
        else {
@@ -303,12 +322,18 @@ var app = new Vue({
        who_came_out = window.prompt("ENTER ## OF PLAYER LEAVING");
        // check if player is in game, and let them re-enter number if wrong
        while(!app.check_in_game(who_came_out)) {
+           if(who_came_out == null) {
+                return
+           }
            who_came_out = window.prompt("Player " + who_came_out + " is not in game\n\nENTER ## OF PLAYER LEAVING");
        }
        who_came_in = window.prompt("ENTER ## OF PLAYER ENTERING");
 
        // check if player is in game, and let them re-enter number if wrong
        while(app.check_in_game(who_came_in)) {
+           if(who_came_in == null) {
+                return
+           }
            who_came_in = window.prompt("Player " + who_came_in + " is already in game\n\nENTER ## OF PLAYER ENTERING");
        }
 
@@ -405,7 +430,7 @@ var app = new Vue({
          return false;
        }
    },
-   rebound() {
+   rebound() { //WHEN WOULD POSSESSION CHANGE?
         who_got_it = window.prompt("REBOUNDED BY: \n\n OFFENSIVE: Key in a player ## \n OFFENSIVE TEAM REBOUND: M \n OFFENSIVE DEADBALL: B \n" +
             "DEFENSIVE: D \n DEFENSIVE TEAM REBOUND: DM \n DEFENSIVE DEADBALL: DB");
 
@@ -414,6 +439,9 @@ var app = new Vue({
         //offensive
         if(who_got_it.isNumber()) {
            while(!app.check_in_game(who_got_it)) {
+               if(who_got_it == null) {
+                    return
+               }
                 who_got_it = window.prompt("Player " + who_got_it + " is not in the game!\n\n REBOUNDED BY OFFENSIVE: Key in a player ##");
            }
            if(home) {
@@ -448,6 +476,9 @@ var app = new Vue({
             who_got_it = window.prompt("REBOUNDED BY: \n\n DEFENSIVE: Key in a player ##");
             if(who_got_it.isNumber()) {
                while(!app.check_in_game(who_got_it)) {
+                   if(who_got_it == null) {
+                        return
+                   }
                     who_got_it = window.prompt("Player " + who_got_it + " is not in the game!\n\n REBOUNDED BY OFFENSIVE: Key in a player ##");
                }
                if(!home) {
