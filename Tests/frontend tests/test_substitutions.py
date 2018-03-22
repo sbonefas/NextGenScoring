@@ -22,7 +22,39 @@ def sub1Player(driver, player1, player2):
     # Player being added
     Alert(driver).send_keys(player2)
     Alert(driver).accept()
+    
 
+def subOutBenchPlayer(driver, player_out1, player_out2, player_in1):
+    driver.find_element_by_id("ps-home").send_keys(Keys.F6)
+    
+    # Player being removed
+    Alert(driver).send_keys(player_out1)
+    Alert(driver).accept()
+    
+    # New alert for player being removed not being in game
+    Alert(driver).send_keys(player_out2)
+    Alert(driver).accept()
+    
+    # Player being added
+    Alert(driver).send_keys(player_in1)
+    Alert(driver).accept()
+    
+    
+def subInPlayerInGame(driver, player_out, player_in1, player_in2):
+    driver.find_element_by_id("ps-home").send_keys(Keys.F6)
+    
+    # Player being removed
+    Alert(driver).send_keys(player_out)
+    Alert(driver).accept()
+    
+    # Player being added
+    Alert(driver).send_keys(player_in1)
+    Alert(driver).accept()
+
+    # New alert for player being subbed in already being in
+    Alert(driver).send_keys(player_in2)
+    Alert(driver).accept()
+    
 
 def validSub(player1, player2):
     if (player1 == '*' and player2 == ''):
@@ -59,8 +91,7 @@ class TestSubs(unittest.TestCase):
         __class__.driver.get(path)
         
     def tearDown(self):
-	     #__class__.driver.quit()
-         pass
+	     __class__.driver.quit()
          
     def test_sub1Player(self):
         print("test_sub1Player")
@@ -115,42 +146,42 @@ class TestSubs(unittest.TestCase):
         assert(numB_star != numB_star_after)
         assert(numA_star == '*')
         assert(numB_star == '')
-        
-    
-    def test_invalid_sub(self):
-        print("test_invalid_sub")
-        ## SUB NUMBER 08 out for 09 (Invalid)
-        numA_star = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[8]/td[1]").text
-        numB_star = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[10]/td[1]").text
-         
-        if(validSub(numA_star, numB_star)):
-            self.fail("Tried an invalid substitution. Ensure one player is in the game " + 
-                      "and one is not")
-            sub1Player(__class__.driver, "08", "09")
-        else:
-            print("EXPECTED FAILURE, TEST PASSED!")
-        
-        numA_star_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[8]/td[1]").text
-        numB_star_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[10]/td[1]").text
-    
+            
 
-    ## WE WANT THIS TEST TO FAIL, AS OF 3/20 WE ALLOW MORE THAN 5 PLAYERS IN THE GAME ##
-    def test_5inGame(self):
-        print("test_allow_invalid_sub")
-        playerList = __class__.driver.find_element_by_id("ps-home").find_elements_by_xpath("table/tbody/tr")
-
-        ## SUB PLAYER 08 out for 09 (Invalid)
-        numA_star = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[8]/td[1]").text
-        numB_star = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[10]/td[1]").text
+    def test_sub_bench_player(self):
+        print("test_sub_bench_player")
+       
+        # Attempt to sub out player 08 for player 09, but 08 is not in the game so sub out 01    
+        subOutBenchPlayer(__class__.driver, "08", "01", "09")
         
-        sub1Player(__class__.driver, "08", "09")
-        
+        playerList = __class__.driver.find_element_by_id("ps-home").find_elements_by_xpath("table/tbody/tr")    
         num_in_game = numberInGame(playerList)
-        
-        if (num_in_game > 5):
-            self.fail("More than 5 players allowed in game. An active player was not subbed out")
-    
+        assert(num_in_game == 5)
 
+        num09_status = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[10]/td[1]").text
+        num01_status = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[1]").text
+        assert(num01_status == '')
+        assert(num09_status == '*')
+        
+        
+    def test_player_out_for_player_curr_in(self):
+        print("test_player_out_for_player_curr_in")
+       
+        # Attempt to sub out player 01 for player 02, but 02 is currently in game
+        # so sub in 09    
+        subInPlayerInGame(__class__.driver, "01", "02", "09")
+        
+        playerList = __class__.driver.find_element_by_id("ps-home").find_elements_by_xpath("table/tbody/tr")
+        num_in_game = numberInGame(playerList)
+        assert(num_in_game == 5)  
+        
+        num09_status = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[10]/td[1]").text
+        num01_status = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[1]").text
+        num02_status = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[3]/td[1]").text
+        assert(num01_status == '')
+        assert(num02_status == '*')
+        assert(num09_status == '*')
+    
     def test_play_by_play(self):
         print("test_play_by_play")
         ## Prepare comparison variables
