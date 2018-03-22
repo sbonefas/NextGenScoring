@@ -224,6 +224,7 @@ var app = new Vue({
                total_fgs += (app.home_team[players].fg + app.home_team[players].m3);
              }
              home_stats.fg = (total_fgs/total_attempts)
+             app.assist()
              // change possession
              app.vis_possession();
              break;
@@ -256,6 +257,7 @@ var app = new Vue({
              app.home_totals.tp = app.home_score;
              // add to play by play - HOME
              app.add_play(`${app.home_team[index].name} hit a 3-point jumper`);
+             app.assist()
              // change possession
              app.vis_possession();
              break;
@@ -296,6 +298,7 @@ var app = new Vue({
                total_fgs += (app.home_team[players].fg + app.home_team[players].m3);
              }
              home_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
+             app.assist()
              // change possession
              app.vis_possession();
            }
@@ -412,7 +415,7 @@ var app = new Vue({
 
      // A - assist
      else if(e.keyCode == 65) {
-
+        app.assist();
      }
 
      // S - steal
@@ -506,9 +509,46 @@ var app = new Vue({
         }
         app.playlist.unshift({ time: document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText, team: currTeam, playdscrp: myPlayDcsrp, score: app.home_score + "-" + app.vis_score })
    },
+   assist() {
+        who_assist = window.prompt("ASSIST BY: \n\n Key in a player ## or press ENTER for no assist");
+
+        String.prototype.isNumber = function(){return /^\d+$/.test(this);}
+
+        if(who_assist.isNumber()) {
+           while(!app.check_in_game(who_assist)) {
+               if(who_assist == null) {
+                    return
+               }
+                who_assist = window.prompt("Player " + who_assist + " is not in the game!\n\n ASSIST BY OFFENSIVE: Key in a player ## or press ENTER for no assist");
+           }
+           if(home) {
+             for(index = 0; index < app.home_team.length; index++)
+             {
+                if(who_assist == app.home_team[index].number)
+                {
+                    app.home_team[index].as += 1;
+                    app.add_play("Assist by " + app.home_team[index].name);
+                }
+             }
+           }
+           else {
+             for(index = 0; index < app.vis_team.length; index++)
+             {
+                if(who_assist == app.vis_team[index].number)
+                {
+                    app.vis_team[index].as += 1;
+                    app.add_play("Assist by " + app.vis_team[index].name);
+                }
+             }
+           }
+        }
+        else if(who_assist == "") {
+            // Enter - no assist
+        }
+   },
    rebound() {
-        who_got_it = window.prompt("REBOUNDED BY: \n\n OFFENSIVE: Key in a player ## \n OFFENSIVE TEAM REBOUND: M \n OFFENSIVE DEADBALL: B \n" +
-            "DEFENSIVE: D \n DEFENSIVE TEAM REBOUND: DM \n DEFENSIVE DEADBALL: DB");
+        who_got_it = window.prompt("REBOUNDED-- \n\n OFFENSIVE: Key in a player ## or M for team rebound or B for deadball" +
+            "DEFENSIVE: D then player ## or DM for team rebound or DB for deadball");
 
         String.prototype.isNumber = function(){return /^\d+$/.test(this);}
 
