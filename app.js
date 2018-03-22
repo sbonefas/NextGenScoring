@@ -428,6 +428,7 @@ var app = new Vue({
 
      // s - Substitution
      else if(e.keyCode == 117){
+		 
        who_came_out = window.prompt("ENTER ## OF PLAYER LEAVING");
        who_came_in = window.prompt("ENTER ## OF PLAYER ENTERING");
        if(home == true)
@@ -453,5 +454,6 @@ var app = new Vue({
      }
    }
   }
+  
 })
 // try using sort() to make the most recent play at top
