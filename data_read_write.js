@@ -122,14 +122,12 @@ exports.read_game_file = function(file_name) {
 	// Get string version of file contents
 	var file_path = get_file_path(file_name);
 	var file_contents = get_game_file_contents(file_path);
-	console.log(file_contents);
 	if(file_contents == null) {
 		throw "File Read Error: File " + file_name + " does not exist!";
 	}
 
 	// Convert to two separate strings. Cut off last newline in home stats.
 	var stats_string_arr = file_contents.split(';');
-	console.log("yay");
 	stats_string_arr[0] = stats_string_arr[0].substring(0, stats_string_arr[0].length-1);
 
 	// Create unitialized 2d arrays for stats
