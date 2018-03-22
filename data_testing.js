@@ -35,7 +35,7 @@ const test_empty_team_stats_array = [[ 'number', 'fg', 'fga', 'pts' ]];
 //data
 
 
-exports.test();
+test();
 
 function test_success(test_name) {
 	console.log("SUCCESS " + test_name);
@@ -49,7 +49,7 @@ function clean() {
 	if(fs.existsSync(file_path)) drw.delete_file(file_name);
 }
 
-exports.test = function() {
+function test() {
 	test_get_file_path();
 	test_create_file();
 	test_delete_file();
@@ -64,10 +64,6 @@ exports.test = function() {
 	test_overwrite_game_file();
 	test_read_game_file_full();
 	test_write_to_game_file();
-
-	clean();
-
-	integration_test();
 
 	clean();
 }
@@ -197,12 +193,5 @@ function test_read_game_file_full() {
 	if(drw.read_game_file(file_name).toString() == result_array.toString()) test_success("test_read_game_file (full)");
 	else test_fail("test_read_game_file (full)");
 }
-
-function integration_test() {
-	drw.create_game_file(labels, file_name);
-	for(var i = 0; i < 5; i++) drw.write_to_game_file(test_stat_changes_exist, file_name);
-	for(var i = 0; i < 5; i++) drw.write_to_game_file()
-}
-
 
 
