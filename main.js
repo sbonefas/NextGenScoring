@@ -26,8 +26,10 @@ function createWindow() {
 	/** SIMPLE BACKEND TESTING */
 	/** TODO: DELETE WHEN PUT IN TEST SUITE */
 	if(TESTING) {
-		drw.create_game_file(['player_name','player_number','fg','fga','m3','3a','ft','fta','reb','ast','pf','blk','trn','stl'], 'test_create_game.txt');
-		drw.read_game_file('test_read_game_file');
+		var test_file_name = "test_drw_file";
+		drw.create_game_file(['player_name','player_number','fg','fga','m3','3a','ft','fta','reb','ast','pf','blk','trn','stl'], test_file_name);
+		drw.read_game_file(test_file_name);
+		drw.delete_file(test_file_name);
 	}
 	win.on('closed', () => {
 		win = null;
