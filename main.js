@@ -81,11 +81,7 @@ function addPlay(keystrokes){
 		
 	//input parsing
 	statArray[1] = input[1];	//add player's number
-	
 	switch(input[0]){
-	team = statArray[0]; 	
-	statArray[1] = keyArray[1];	//add player's number
-	switch(keyArray[0]){
 		case 'y':
 		case 'w':
 		case 'j':
