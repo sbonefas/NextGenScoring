@@ -171,8 +171,7 @@ var app = new Vue({
     vis_totals: {in_game: " ", number: " ", name: "Totals", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
 
     playlist: [
-                //{time: "19:85", team: "WISC", playdscrp: "Ethan Happ made a 3 point jumper", score: "100-2"},
-                //{time: "18:45", team: "MINN", playdscrp: "Foul on Nate Mason", score: "2-100"}
+                //example: {time: "19:85", team: "WISC", playdscrp: "Ethan Happ made a 3 point jumper", score: "100-2"},
               ]
   },
   created() {
@@ -188,11 +187,14 @@ var app = new Vue({
         altHeld = false;
      }
 
-     // J then (G | Q | Y | R | P) - Jump Shots
+     // J then (G | Q | Y | R | P | Z | F | X | K) - Jump Shots
      else if(e.keyCode == 74) {
        altHeld = false;
        who_did_it = window.prompt("SHOT BY: (Key in a player ##)");
        while(!app.check_in_game(who_did_it)) {
+           if(who_did_it == null) {
+                return
+           }
             who_did_it = window.prompt("Player " + who_did_it + " is not in the game!\n\nSHOT BY: (Key in a player ##)");
        }
        result_code = window.prompt(result_code_prompt);
@@ -291,6 +293,22 @@ var app = new Vue({
              // change possession
              app.vis_possession();
            }
+           // J then Z - GOOD FG-FAST BREAK & PAINT
+           else if (who_did_it == app.home_team[index].number && (result_code == "z" || result_code == "Z")) {
+                console.log("J->Z");
+           }
+           // J then F - GOOD FG ON A FAST BREAK
+           else if (who_did_it == app.home_team[index].number && (result_code == "f" || result_code == "F")) {
+                console.log("J->F");
+           }
+           // J then X - MISSED 3PT SHOT (REBOUND)
+           else if (who_did_it == app.home_team[index].number && (result_code == "x" || result_code == "X")) {
+                console.log("J->X");
+           }
+           // J then K - BLOCKED SHOT
+           else if (who_did_it == app.home_team[index].number && (result_code == "k" || result_code == "K")) {
+                console.log("J->K");
+           }
          }
        }
        else {
@@ -310,12 +328,18 @@ var app = new Vue({
        who_came_out = window.prompt("ENTER ## OF PLAYER LEAVING");
        // check if player is in game, and let them re-enter number if wrong
        while(!app.check_in_game(who_came_out)) {
+           if(who_came_out == null) {
+                return
+           }
            who_came_out = window.prompt("Player " + who_came_out + " is not in game\n\nENTER ## OF PLAYER LEAVING");
        }
        who_came_in = window.prompt("ENTER ## OF PLAYER ENTERING");
 
        // check if player is in game, and let them re-enter number if wrong
        while(app.check_in_game(who_came_in)) {
+           if(who_came_in == null) {
+                return
+           }
            who_came_in = window.prompt("Player " + who_came_in + " is already in game\n\nENTER ## OF PLAYER ENTERING");
        }
 
@@ -355,6 +379,60 @@ var app = new Vue({
          app.playlist.unshift({ time: document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText, team: app.teams[1], playdscrp: `${app.vis_team[came_in].name} subbed in for ${app.vis_team[came_out].name}`, score: app.home_score + "-" + app.vis_score })
        }
      }
+     // F2 - change player jersey number
+     else if(e.keyCode == 174) {
+
+     }
+     // F10 - clear and do not complete any partially keyed action
+     else if(e.keyCode == 121) {
+
+     }
+
+     // E - Free Throw
+     else if(e.keyCode == 69) {
+
+     }
+
+     // T - turnover
+     else if(e.keyCode == 84) {
+
+     }
+
+     // R - rebound
+     else if(e.keyCode == 82) {
+
+     }
+
+     // A - assist
+     else if(e.keyCode == 65) {
+
+     }
+
+     // S - steal
+     else if(e.keyCode == 83) {
+
+     }
+
+     // K - blocked shot
+     else if(e.keyCode == 75) {
+
+     }
+
+     // O - timeout
+     else if(e.keyCode == 79) {
+
+     }
+
+     // C - Change time, period, stats
+     else if(e.keyCode == 67) {
+
+     }
+
+     // Esc - Return to main menu
+     else if(e.keyCode == 27) {
+
+     }
+
    }, //end keycode method
    home_possession() {
        home = true;
@@ -412,7 +490,7 @@ var app = new Vue({
          return false;
        }
    },
-   rebound() {
+   rebound() { //WHEN WOULD POSSESSION CHANGE?
         who_got_it = window.prompt("REBOUNDED BY: \n\n OFFENSIVE: Key in a player ## \n OFFENSIVE TEAM REBOUND: M \n OFFENSIVE DEADBALL: B \n" +
             "DEFENSIVE: D \n DEFENSIVE TEAM REBOUND: DM \n DEFENSIVE DEADBALL: DB");
 
@@ -421,6 +499,9 @@ var app = new Vue({
         //offensive
         if(who_got_it.isNumber()) {
            while(!app.check_in_game(who_got_it)) {
+               if(who_got_it == null) {
+                    return
+               }
                 who_got_it = window.prompt("Player " + who_got_it + " is not in the game!\n\n REBOUNDED BY OFFENSIVE: Key in a player ##");
            }
            if(home) {
@@ -455,6 +536,9 @@ var app = new Vue({
             who_got_it = window.prompt("REBOUNDED BY: \n\n DEFENSIVE: Key in a player ##");
             if(who_got_it.isNumber()) {
                while(!app.check_in_game(who_got_it)) {
+                   if(who_got_it == null) {
+                        return
+                   }
                     who_got_it = window.prompt("Player " + who_got_it + " is not in the game!\n\n REBOUNDED BY OFFENSIVE: Key in a player ##");
                }
                if(!home) {
