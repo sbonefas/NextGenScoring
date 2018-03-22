@@ -207,12 +207,14 @@ var app = new Vue({
            {
              app.home_team[index].fg += 1;
              app.home_team[index].fa += 1;
+             app.home_team[index].tp += 2;
              app.home_totals.fg += 1;
              app.home_totals.fa += 1;
              // add to home team score
              app.home_score += 2;
+             app.home_totals.tp = app.home_score;
              // add to play by play - HOME
-             app.playlist.unshift({ time: document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText, team: app.teams[0], playdscrp: `${app.home_team[index].name} made a jump shot`, score: app.home_score + "-" + app.vis_score })
+             app.add_play(`${app.home_team[index].name} made a jump shot`);
 
              var total_attempts = 0;
              var total_fgs = 0;
@@ -222,6 +224,7 @@ var app = new Vue({
                total_fgs += (app.home_team[players].fg + app.home_team[players].m3);
              }
              home_stats.fg = (total_fgs/total_attempts)
+             app.assist()
              // change possession
              app.vis_possession();
              break;
@@ -230,6 +233,7 @@ var app = new Vue({
            else if((who_did_it == app.home_team[index].number && (result_code == "y" || result_code == "Y"))) {
              app.home_team[index].m3 += 1;
              app.home_team[index].a3 += 1;
+             app.home_team[index].tp += 3;
              app.home_totals.m3 += 1;
              app.home_totals.a3 += 1;
              app.home_team[index].fa += 1;
@@ -250,8 +254,10 @@ var app = new Vue({
              home_stats.tfg = Number.parseFloat(total_threes/total_threes_attmept).toFixed(2);
              // add to home team score
              app.home_score += 3;
+             app.home_totals.tp = app.home_score;
              // add to play by play - HOME
-             app.playlist.unshift({ time: document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText, team: app.teams[0], playdscrp: `${app.home_team[index].name} hit a 3-point jumper`, score: app.home_score + "-" + app.vis_score })
+             app.add_play(`${app.home_team[index].name} hit a 3-point jumper`);
+             app.assist()
              // change possession
              app.vis_possession();
              break;
@@ -261,7 +267,7 @@ var app = new Vue({
              app.home_team[index].fa += 1;
              app.home_totals.fa += 1;
              // add to play by play - HOME
-             app.playlist.unshift({ time: document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText, team: app.teams[0], playdscrp: `${app.home_team[index].name} J -> R`, score: app.home_score + "-" + app.vis_score })
+             app.add_play(`${app.home_team[index].name} J -> R`);
              var total_attempts = 0;
              var total_fgs = 0;
              for(players = 0; players < app.home_team.length; players++)
@@ -277,11 +283,13 @@ var app = new Vue({
            else if (who_did_it == app.home_team[index].number && (result_code == "p" || result_code == "P")) {
              app.home_team[index].fa += 1;
              app.home_team[index].fg += 1;
+             app.home_team[index].tp += 2;
              app.home_totals.fa += 1;
              app.home_totals.fg += 1;
              home_stats.paint += 1;
              app.home_score += 2;
-             app.playlist.unshift({ time: document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText, team: app.teams[0], playdscrp: `${app.home_team[index].name} made a shot in the paint`, score: app.home_score + "-" + app.vis_score })
+             app.home_totals.tp = app.home_score;
+             app.add_play(`${app.home_team[index].name} made a shot in the paint`);
              var total_attempts = 0;
              var total_fgs = 0;
              for(players = 0; players < app.home_team.length; players++)
@@ -290,6 +298,7 @@ var app = new Vue({
                total_fgs += (app.home_team[players].fg + app.home_team[players].m3);
              }
              home_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
+             app.assist()
              // change possession
              app.vis_possession();
            }
@@ -311,8 +320,125 @@ var app = new Vue({
            }
          }
        }
-       else {
-            //visitor calculations
+       else {  // Visitor calculations
+            for(index = 0; index < app.vis_team.length; index++)
+         {
+         console.log(who_did_it);
+           // J then G or Q - good field goal (2 points)
+           if(who_did_it == app.vis_team[index].number && (result_code == "g" || result_code == "G" || result_code == "q" || result_code == "Q"))
+           {
+             app.vis_team[index].fg += 1;
+             app.vis_team[index].fa += 1;
+             app.vis_team[index].tp += 2;
+             app.vis_totals.fg += 1;
+             app.vis_totals.fa += 1;
+             // add to vis team score
+             app.vis_score += 2;
+             app.vis_totals.tp = app.vis_score;
+             // add to play by play - VIS
+             app.add_play(`${app.vis_team[index].name} made a jump shot`);
+
+             var total_attempts = 0;
+             var total_fgs = 0;
+             for(players = 0; players < app.vis_team.length; players++)
+             {
+               total_attempts += (app.vis_team[players].fa + app.vis_team[players].a3);
+               total_fgs += (app.vis_team[players].fg + app.vis_team[players].m3);
+             }
+             vis_stats.fg = (total_fgs/total_attempts)
+             // change possession
+             app.home_possession();
+             break;
+           }
+           // J then Y - good 3pt field goal
+           else if((who_did_it == app.vis_team[index].number && (result_code == "y" || result_code == "Y"))) {
+             app.vis_team[index].m3 += 1;
+             app.vis_team[index].a3 += 1;
+             app.vis_team[index].tp += 3;
+             app.vis_totals.m3 += 1;
+             app.vis_totals.a3 += 1;
+             app.vis_team[index].fa += 1;
+             app.vis_team[index].fg += 1;
+             app.vis_totals.fa += 1;
+             var total_attempts = 0;
+             var total_fgs = 0;
+             var total_threes_attmept = 0;
+             var total_threes = 0;
+             for(players = 0; players < app.vis_team.length; players++)
+             {
+               total_attempts += (app.vis_team[players].fa + app.vis_team[players].a3);
+               total_fgs += (app.vis_team[players].fg + app.vis_team[players].m3);
+               total_threes += app.vis_team[players].m3;
+               total_threes_attmept += app.vis_team[players].a3;
+             }
+             vis_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
+             vis_stats.tfg = Number.parseFloat(total_threes/total_threes_attmept).toFixed(2);
+             // add to vis team score
+             app.vis_score += 3;
+             app.vis_totals.tp = app.vis_score;
+             // add to play by play - VIS
+             app.add_play(`${app.vis_team[index].name} hit a 3-point jumper`);
+             // change possession
+             app.home_possession();
+             break;
+           }
+           // J then R - missed shot (rebound)
+           else if (who_did_it == app.vis_team[index].number && (result_code == "r" || result_code == "R")) {
+             app.vis_team[index].fa += 1;
+             app.vis_totals.fa += 1;
+             // add to play by play - VIS
+             app.add_play(`${app.vis_team[index].name} J -> R`);
+             var total_attempts = 0;
+             var total_fgs = 0;
+             for(players = 0; players < app.vis_team.length; players++)
+             {
+               total_attempts += (app.vis_team[players].fa + app.vis_team[players].a3);
+               total_fgs += (app.vis_team[players].fg + app.vis_team[players].m3);
+             }
+             vis_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
+             app.rebound();
+             break;
+           }
+           // J then P - field goal in the paint
+           else if (who_did_it == app.vis_team[index].number && (result_code == "p" || result_code == "P")) {
+             app.vis_team[index].fa += 1;
+             app.vis_team[index].fg += 1;
+             app.vis_team[index].tp += 2;
+             app.vis_totals.fa += 1;
+             app.vis_totals.fg += 1;
+             vis_stats.paint += 1;
+             app.vis_score += 2;
+             app.vis_totals.tp = app.vis_score;
+             app.add_play(`${app.vis_team[index].name} made a shot in the paint`);
+             var total_attempts = 0;
+             var total_fgs = 0;
+             for(players = 0; players < app.vis_team.length; players++)
+             {
+               total_attempts += app.vis_team[players].fa;
+               total_fgs += (app.vis_team[players].fg + app.vis_team[players].m3);
+             }
+             vis_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
+             // change possession
+             app.home_possession();
+           }
+           // J then Z - GOOD FG-FAST BREAK & PAINT
+           else if (who_did_it == app.vis_team[index].number && (result_code == "z" || result_code == "Z")) {
+                console.log("J->Z");
+           }
+           // J then F - GOOD FG ON A FAST BREAK
+           else if (who_did_it == app.vis_team[index].number && (result_code == "f" || result_code == "F")) {
+                console.log("J->F");
+           }
+           // J then X - MISSED 3PT SHOT (REBOUND)
+           else if (who_did_it == app.vis_team[index].number && (result_code == "x" || result_code == "X")) {
+                console.log("J->X");
+           }
+           // J then K - BLOCKED SHOT
+           else if (who_did_it == app.vis_team[index].number && (result_code == "k" || result_code == "K")) {
+                console.log("J->K");
+           }
+         }
+
        }
      }
      // H or left arrow - home team
@@ -329,7 +455,7 @@ var app = new Vue({
        // check if player is in game, and let them re-enter number if wrong
        while(!app.check_in_game(who_came_out)) {
            if(who_came_out == null) {
-                return
+                return;
            }
            who_came_out = window.prompt("Player " + who_came_out + " is not in game\n\nENTER ## OF PLAYER LEAVING");
        }
@@ -359,7 +485,7 @@ var app = new Vue({
             }
          }
          // add to play by play - HOME
-         app.playlist.unshift({ time: document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText, team: app.teams[0], playdscrp: `${app.home_team[came_in].name} subbed in for ${app.home_team[came_out].name}`, score: app.home_score + "-" + app.vis_score })
+         app.add_play(`${app.home_team[came_in].name} subbed in for ${app.home_team[came_out].name}`);
        }
        else {
          for(index = 0; index < app.vis_team.length; index++)
@@ -376,7 +502,7 @@ var app = new Vue({
             }
          }
          // add to play by play - VISITOR
-         app.playlist.unshift({ time: document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText, team: app.teams[1], playdscrp: `${app.vis_team[came_in].name} subbed in for ${app.vis_team[came_out].name}`, score: app.home_score + "-" + app.vis_score })
+         app.add_play(`${app.vis_team[came_in].name} subbed in for ${app.vis_team[came_out].name}`);
        }
      }
      // F2 - change player jersey number
@@ -400,12 +526,12 @@ var app = new Vue({
 
      // R - rebound
      else if(e.keyCode == 82) {
-
+        app.rebound();
      }
 
      // A - assist
      else if(e.keyCode == 65) {
-
+        app.assist();
      }
 
      // S - steal
@@ -490,9 +616,55 @@ var app = new Vue({
          return false;
        }
    },
-   rebound() { //WHEN WOULD POSSESSION CHANGE?
-        who_got_it = window.prompt("REBOUNDED BY: \n\n OFFENSIVE: Key in a player ## \n OFFENSIVE TEAM REBOUND: M \n OFFENSIVE DEADBALL: B \n" +
-            "DEFENSIVE: D \n DEFENSIVE TEAM REBOUND: DM \n DEFENSIVE DEADBALL: DB");
+   add_play(myPlayDcsrp) {
+        if(home) {
+            currTeam = app.teams[0];
+        }
+        else {
+            currTeam = app.teams[1]
+        }
+        app.playlist.unshift({ time: document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText, team: currTeam, playdscrp: myPlayDcsrp, score: app.home_score + "-" + app.vis_score })
+   },
+   assist() {
+        who_assist = window.prompt("ASSIST BY: \n\n Key in a player ## or press ENTER for no assist");
+
+        String.prototype.isNumber = function(){return /^\d+$/.test(this);}
+
+        if(who_assist.isNumber()) {
+           while(!app.check_in_game(who_assist)) {
+               if(who_assist == null) {
+                    return
+               }
+                who_assist = window.prompt("Player " + who_assist + " is not in the game!\n\n ASSIST BY OFFENSIVE: Key in a player ## or press ENTER for no assist");
+           }
+           if(home) {
+             for(index = 0; index < app.home_team.length; index++)
+             {
+                if(who_assist == app.home_team[index].number)
+                {
+                    app.home_team[index].as += 1;
+                    app.add_play("Assist by " + app.home_team[index].name);
+                }
+             }
+           }
+           else {
+             for(index = 0; index < app.vis_team.length; index++)
+             {
+                if(who_assist == app.vis_team[index].number)
+                {
+                    app.vis_team[index].as += 1;
+                    app.add_play("Assist by " + app.vis_team[index].name);
+                }
+             }
+           }
+        }
+        else if(who_assist == "") {
+            // Enter - no assist
+        }
+   },
+   rebound() {
+        who_got_it = window.prompt("REBOUNDED-- \n\n OFFENSIVE: Key in a player ## or M for team rebound or B for deadball" +
+            "DEFENSIVE: D then player ## or DM for team rebound or DB for deadball");
 
         String.prototype.isNumber = function(){return /^\d+$/.test(this);}
 
@@ -510,6 +682,7 @@ var app = new Vue({
                 if(who_got_it == app.home_team[index].number)
                 {
                     app.home_team[index].rb += 1;
+                    app.add_play("Offensive rebound by " + app.home_team[index].name);
                 }
              }
            }
@@ -519,17 +692,28 @@ var app = new Vue({
                 if(who_got_it == app.vis_team[index].number)
                 {
                     app.vis_team[index].rb += 1;
+                    app.add_play("Offensive rebound by " + app.vis_team[index].name);
                 }
              }
            }
         }
         //offensive team rebound
         else if(who_got_it == "m" || who_got_it == "M") {
-            // what does this increment?
+            // add to play by play
+            app.add_play("Offensive Team Rebound");
+            // no possession change
         }
         //offensive deadball
         else if(who_got_it == "b" || who_got_it == "B") {
-            // what does this increment?
+            // add to play by play
+            app.add_play("Offensive Deadball");
+            // change possession
+            if(home) {
+                app.vis_possession();
+            }
+            else {
+                app.home_possession();
+            }
         }
         // defensive
         else if(who_got_it == "d" || who_got_it == "D") {
@@ -541,12 +725,21 @@ var app = new Vue({
                    }
                     who_got_it = window.prompt("Player " + who_got_it + " is not in the game!\n\n REBOUNDED BY OFFENSIVE: Key in a player ##");
                }
-               if(!home) {
+                // change possession
+                if(home) {
+                    app.vis_possession();
+                }
+                else {
+                    app.home_possession();
+                }
+
+               if(home) {
                  for(index = 0; index < app.home_team.length; index++)
                  {
                     if(who_got_it == app.home_team[index].number)
                     {
                         app.home_team[index].rb += 1;
+                        app.add_play("Defensive rebound by " + app.home_team[index].name);
                     }
                  }
                }
@@ -556,6 +749,7 @@ var app = new Vue({
                     if(who_got_it == app.vis_team[index].number)
                     {
                         app.vis_team[index].rb += 1;
+                        app.add_play("Defensive rebound by " + app.vis_team[index].name);
                     }
                  }
                }
@@ -563,56 +757,67 @@ var app = new Vue({
         }
         //defensive team rebound
         else if(who_got_it == "dm" || who_got_it == "dM" || who_got_it == "DM" || who_got_it == "Dm") {
-            // what does this increment?
+            // add to play by play
+            app.add_play("Defensive Team Rebound");
+            // change posession
+            if(home) {
+                app.vis_possession();
+            }
+            else {
+                app.home_possession();
+            }
         }
         //defensive deadball
         else if(who_got_it == "db" || who_got_it == "dB" || who_got_it == "DB" || who_got_it == "Db") {
-            // what does this increment?
+            // add to play by play
+            app.add_play("Defensive Deadball");
+            // no change in posession
         }
-   },
-   change_player_number() {
-      var team = window.prompt("ENTER TEAM TO CHANGE PLAYER NUMBER (H: HOME   V: VISITOR)");
-      team_numbers = [];
-      var number = window.prompt("ENTER PLAYER ## TO CHANGE");
-      if(team == 'h' || team == 'H')
-      {
-          for(index = 0; index < app.home_team.length; index++)
-          {
-            team_numbers.push(app.home_team[index].number);
-          }
-          for(index = 0; index < app.home_team.length; index++)
-          {
-              if(app.home_team[index].number == number)
-              {
-                var new_number;
-                while(team_numbers.includes(new_number) || new_number == null)
-                {
-                  new_number = window.prompt("ENTER NEW PLAYER ##");
-                }
-                app.home_team[index].number = new_number;
-                break;
-              }
-          }
-      }
-      else if(team == 'v' || team == 'V')
-      {
-        for(index = 0; index < app.vis_team.length; index++)
-        {
-          team_numbers.push(app.vis_team[index].number);
-        }
-        for(index = 0; index < app.vis_team.length; index++)
-        {
-            if(app.vis_team[index].number == number)
-            {
-              var new_number;
-              while(team_numbers.includes(new_number) || new_number == null)
-              {
-                new_number = window.prompt("ENTER NEW PLAYER ##");
-              }
-              app.vis_team[index].number = new_number;
-              break;
-            }
-        }
+    }, //end rebound method
+    change_player_number() {
+       var team = window.prompt("ENTER TEAM TO CHANGE PLAYER NUMBER (H: HOME   V: VISITOR)");
+       team_numbers = [];
+       var number = window.prompt("ENTER PLAYER ## TO CHANGE");
+       if(team == 'h' || team == 'H')
+       {
+           for(index = 0; index < app.home_team.length; index++)
+           {
+             team_numbers.push(app.home_team[index].number);
+           }
+           for(index = 0; index < app.home_team.length; index++)
+           {
+               if(app.home_team[index].number == number)
+               {
+                 var new_number;
+                 while(team_numbers.includes(new_number) || new_number == null)
+                 {
+                   new_number = window.prompt("ENTER NEW PLAYER ##");
+                 }
+                 app.home_team[index].number = new_number;
+                 break;
+               }
+           }
+       }
+       else if(team == 'v' || team == 'V')
+       {
+         for(index = 0; index < app.vis_team.length; index++)
+         {
+           team_numbers.push(app.vis_team[index].number);
+         }
+         for(index = 0; index < app.vis_team.length; index++)
+         {
+             if(app.vis_team[index].number == number)
+             {
+               var new_number;
+               while(team_numbers.includes(new_number) || new_number == null)
+               {
+                 new_number = window.prompt("ENTER NEW PLAYER ##");
+               }
+               app.vis_team[index].number = new_number;
+               break;
+             }
+         }
+    }
+  }    
    }
-  }
 })
