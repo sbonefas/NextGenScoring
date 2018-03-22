@@ -15,8 +15,16 @@ html {
 	vertical-align: center;
 }
 .clock h2 {
-	display: inline-block;
 	vertical-align: center;
+}
+#clockminutes {
+	font-size: 36px;
+}
+#clockseconds {
+	font-size: 36px;
+}
+#clockseparator {
+	font-size: 36px;
 }
 div.clock {
 	margin: 0 auto;

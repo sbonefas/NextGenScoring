@@ -95,30 +95,37 @@ function launchClockPrompt() { // called when the user clicks on the game clock 
   } else {
     if(period == 1) {
       app.period = 'Half 1';
-      $('#clockdiv #clockh2').html('20:00');
+      // $('#clockdiv #clockh2').html('20:00');
     } else if(period == 2) {
       app.period = 'Half 2';
-      $('#clockdiv #clockh2').html('20:00');
+      // $('#clockdiv #clockh2').html('20:00');
     } else if(period == 'OT' || period == 'ot') {
       app.period = 'OT';
-      $('#clockdiv #clockh2').html('05:00');
+      // $('#clockdiv #clockh2').html('05:00');
     } else if(period == '2OT' || period == '2ot') {
       app.period = '2OT';
-      $('#clockdiv #clockh2').html('05:00');
+      // $('#clockdiv #clockh2').html('05:00');
     } else if(period == '3OT' || period == '3ot') {
       app.period = '3OT';
-      $('#clockdiv #clockh2').html('05:00');
+      // $('#clockdiv #clockh2').html('05:00');
     } else if(period == '4OT' || period == '4ot') {
       app.period = '4OT';
-      $('#clockdiv #clockh2').html('05:00');
+      // $('#clockdiv #clockh2').html('05:00');
     } else if(period == '5OT' || period == '5ot') {
       app.period = '5OT';
-      $('#clockdiv #clockh2').html('05:00');
+      // $('#clockdiv #clockh2').html('05:00');
     } else if(period == '6OT' || period == '6ot') {
       app.period = '6OT';
-      $('#clockdiv #clockh2').html('05:00');
+      // $('#clockdiv #clockh2').html('05:00');
     }
   }
+}
+
+function startClock(startingTime) {
+  var timer = new Timer();
+  timer.start({countdown: true, startValues: {seconds: 1200}});
+  timer.pause();
+  var paused = true;
 }
 
 var app = new Vue({
@@ -181,14 +188,21 @@ var app = new Vue({
         altHeld = false;
      }
 
-     // J then (G | Q | Y | R | P) - Jump Shots
+     // J then (G | Q | Y | R | P | Z | F | X | K) - Jump Shots
      else if(e.keyCode == 74) {
        altHeld = false;
        who_did_it = window.prompt("SHOT BY: (Key in a player ##)");
+       while(!app.check_in_game(who_did_it)) {
+           if(who_did_it == null) {
+                return
+           }
+            who_did_it = window.prompt("Player " + who_did_it + " is not in the game!\n\nSHOT BY: (Key in a player ##)");
+       }
        result_code = window.prompt(result_code_prompt);
        if(home == true) {
          for(index = 0; index < app.home_team.length; index++)
          {
+         console.log(who_did_it);
            // J then G or Q - good field goal (2 points)
            if(who_did_it == app.home_team[index].number && (result_code == "g" || result_code == "G" || result_code == "q" || result_code == "Q"))
            {
@@ -257,6 +271,7 @@ var app = new Vue({
                total_fgs += (app.home_team[players].fg + app.home_team[players].m3);
              }
              home_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
+             app.rebound();
              break;
            }
            // J then P - field goal in the paint
@@ -279,7 +294,26 @@ var app = new Vue({
              // change possession
              app.vis_possession();
            }
+           // J then Z - GOOD FG-FAST BREAK & PAINT
+           else if (who_did_it == app.home_team[index].number && (result_code == "z" || result_code == "Z")) {
+                console.log("J->Z");
+           }
+           // J then F - GOOD FG ON A FAST BREAK
+           else if (who_did_it == app.home_team[index].number && (result_code == "f" || result_code == "F")) {
+                console.log("J->F");
+           }
+           // J then X - MISSED 3PT SHOT (REBOUND)
+           else if (who_did_it == app.home_team[index].number && (result_code == "x" || result_code == "X")) {
+                console.log("J->X");
+           }
+           // J then K - BLOCKED SHOT
+           else if (who_did_it == app.home_team[index].number && (result_code == "k" || result_code == "K")) {
+                console.log("J->K");
+           }
          }
+       }
+       else {
+            //visitor calculations
        }
      }
      // H or left arrow - home team
@@ -293,7 +327,23 @@ var app = new Vue({
      // F6 - Substitution
      else if(e.keyCode == 117){
        who_came_out = window.prompt("ENTER ## OF PLAYER LEAVING");
+       // check if player is in game, and let them re-enter number if wrong
+       while(!app.check_in_game(who_came_out)) {
+           if(who_came_out == null) {
+                return
+           }
+           who_came_out = window.prompt("Player " + who_came_out + " is not in game\n\nENTER ## OF PLAYER LEAVING");
+       }
        who_came_in = window.prompt("ENTER ## OF PLAYER ENTERING");
+
+       // check if player is in game, and let them re-enter number if wrong
+       while(app.check_in_game(who_came_in)) {
+           if(who_came_in == null) {
+                return
+           }
+           who_came_in = window.prompt("Player " + who_came_in + " is already in game\n\nENTER ## OF PLAYER ENTERING");
+       }
+
        if(home == true)
        {
          for(index = 0; index < app.home_team.length; index++)
@@ -360,6 +410,112 @@ var app = new Vue({
        h.style.textDecoration = "none";
        h2.style.color = "black";
        h2.style.textDecoration = "none";
+   },
+   check_in_game(number) {
+       if(home) {
+         for(index = 0; index < app.home_team.length; index++)
+         {
+            if(number == app.home_team[index].number)
+            {
+                if(app.home_team[index].in_game == "*") {
+                    return true;
+                }
+            }
+         }
+         return false;
+       }
+       else {
+         for(index = 0; index < app.vis_team.length; index++)
+         {
+            if(number == app.vis_team[index].number)
+            {
+                if(app.vis_team[index].in_game == "*") {
+                    return true;
+                }
+            }
+         }
+         return false;
+       }
+   },
+   rebound() { //WHEN WOULD POSSESSION CHANGE?
+        who_got_it = window.prompt("REBOUNDED BY: \n\n OFFENSIVE: Key in a player ## \n OFFENSIVE TEAM REBOUND: M \n OFFENSIVE DEADBALL: B \n" +
+            "DEFENSIVE: D \n DEFENSIVE TEAM REBOUND: DM \n DEFENSIVE DEADBALL: DB");
+
+        String.prototype.isNumber = function(){return /^\d+$/.test(this);}
+
+        //offensive
+        if(who_got_it.isNumber()) {
+           while(!app.check_in_game(who_got_it)) {
+               if(who_got_it == null) {
+                    return
+               }
+                who_got_it = window.prompt("Player " + who_got_it + " is not in the game!\n\n REBOUNDED BY OFFENSIVE: Key in a player ##");
+           }
+           if(home) {
+             for(index = 0; index < app.home_team.length; index++)
+             {
+                if(who_got_it == app.home_team[index].number)
+                {
+                    app.home_team[index].rb += 1;
+                }
+             }
+           }
+           else {
+             for(index = 0; index < app.vis_team.length; index++)
+             {
+                if(who_got_it == app.vis_team[index].number)
+                {
+                    app.vis_team[index].rb += 1;
+                }
+             }
+           }
+        }
+        //offensive team rebound
+        else if(who_got_it == "m" || who_got_it == "M") {
+            // what does this increment?
+        }
+        //offensive deadball
+        else if(who_got_it == "b" || who_got_it == "B") {
+            // what does this increment?
+        }
+        // defensive
+        else if(who_got_it == "d" || who_got_it == "D") {
+            who_got_it = window.prompt("REBOUNDED BY: \n\n DEFENSIVE: Key in a player ##");
+            if(who_got_it.isNumber()) {
+               while(!app.check_in_game(who_got_it)) {
+                   if(who_got_it == null) {
+                        return
+                   }
+                    who_got_it = window.prompt("Player " + who_got_it + " is not in the game!\n\n REBOUNDED BY OFFENSIVE: Key in a player ##");
+               }
+               if(!home) {
+                 for(index = 0; index < app.home_team.length; index++)
+                 {
+                    if(who_got_it == app.home_team[index].number)
+                    {
+                        app.home_team[index].rb += 1;
+                    }
+                 }
+               }
+               else {
+                 for(index = 0; index < app.vis_team.length; index++)
+                 {
+                    if(who_got_it == app.vis_team[index].number)
+                    {
+                        app.vis_team[index].rb += 1;
+                    }
+                 }
+               }
+            }
+        }
+        //defensive team rebound
+        else if(who_got_it == "dm" || who_got_it == "dM" || who_got_it == "DM" || who_got_it == "Dm") {
+            // what does this increment?
+        }
+        //defensive deadball
+        else if(who_got_it == "db" || who_got_it == "dB" || who_got_it == "DB" || who_got_it == "Db") {
+            // what does this increment?
+        }
    }
   }
 })

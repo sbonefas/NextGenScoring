@@ -28,8 +28,9 @@
 					</div>
 				</div>
 				<div class = "clock" id="clockdiv">
-					<h2 class = "clock" id = "clockh2" onclick="launchClockPrompt()">20:00</h2>
-					<h4 class = "clock" onclick="launchClockPrompt()"> {{ period }}</h4>
+					<!--<h2 class = "clock" id = "clockh2" onclick="launchClockPrompt()">20:00</h2>-->
+					<span onclick="launchClockPrompt()" id = "clockminutes">20</span><span onclick="launchClockPrompt()" id = "clockseparator">:</span><span onclick="launchClockPrompt()" id = "clockseconds">00</span>
+					<h2 class = "clock" onclick="launchClockPrompt()"> {{ period }}</h2>
 					<h3 class = "clock" id="clockisstopped">**Clock is stopped**</h3>
 					<br>
 				</div>
@@ -58,18 +59,18 @@
 						<h2 id = "pshometeamname" class="playteam">{{ teams[0] }}</h2>
 						<table class="playerstatstable" cellpadding="3">
 							<tr>
-								<th>in</th>
-								<th>##</th>
-								<th>--Name--</th>
-								<th>FG</th>
-								<th>FA</th>
-								<th>3M</th>
-								<th>FT</th>
-								<th>FA</th>
-								<th>RB</th>
-								<th>AS</th>
-								<th>PF</th>
-								<th>TP</th>
+								<th>in</th> <!-- "*" if in game -->
+								<th>##</th> <!-- player number -->
+								<th>--Name--</th> <!-- player name -->
+								<th>FG</th> <!-- field goals -->
+								<th>FA</th> <!-- field goal attempts -->
+								<th>3M</th> <!-- 3 pointers -->
+								<th>FT</th> <!-- free throw -->
+								<th>FA</th> <!-- ?? -->
+								<th>RB</th> <!-- rebound -->
+								<th>AS</th> <!-- assist -->
+								<th>PF</th> <!-- ?? -->
+								<th>TP</th> <!-- total points -->
 							</tr>
 							<tr v-for="player in home_team">
 								<td>{{ player.in_game }}</td>
@@ -187,15 +188,24 @@
 			//Keep clock functionality on the frontend
 			// Uses EasyTimer.js from Github https://albert-gonzalez.github.io/easytimer.js/
 			var timer = new Timer();
-			timer.start({countdown: true, startValues: {seconds: 1200}});
-			timer.pause();
-			var paused = true;
+  			timer.start({countdown: true, startValues: {seconds: 1200}});
+  			timer.pause();
+  			var paused = true;
 			$('#clockdiv #clockh2').html(timer.getTimeValues().toString());
 			timer.addEventListener('secondsUpdated', function (e) {
-			    $('#clockdiv #clockh2').html(timer.getTimeValues().toString());
+			    //$('#clockdiv #clockh2').html(timer.getTimeValues().toString());
+			    $('#clockdiv #clockminutes').html(timer.getTimeValues().minutes);
+			    if(timer.getTimeValues().seconds < 10) {
+			    	$('#clockdiv #clockseconds').html('0' + timer.getTimeValues().seconds);  // add leading zero because EasyTimer doesn't do it :-/
+			    } else {
+			    	$('#clockdiv #clockseconds').html(timer.getTimeValues().seconds);
+			    }
+			    
 			});
 			timer.addEventListener('targetAchieved', function (e) {
-			    $('#clockdiv #clockh2').html('00:00');
+			    //$('#clockdiv #clockh2').html('00:00');
+			    $('#clockdiv #clockminutes').html('00');
+			    $('#clockdiv #clockseconds').html('00');
 			});
 			document.body.onkeyup = function(e){
     			if(e.keyCode == 32 && e.target == document.body){

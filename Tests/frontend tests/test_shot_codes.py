@@ -22,7 +22,8 @@ class TestShotCodes(unittest.TestCase):
         pass
 	
     def tearDown(self):
-        pass
+        # Switches to V after all keycodes except R. All tests designed for home team to score
+        __class__.driver.find_element_by_id("app").send_keys("H")
 	     
     """Helper/test sub-methods"""
     def handle_player_stats(self, index):
@@ -120,7 +121,7 @@ class TestShotCodes(unittest.TestCase):
 
     def test_make_3pt_fg_team_percentages(self):	
         fg_percentage = 100 * (__class__.list[0] / __class__.list[1])
-        three_pt_fg_percentage = 100 * (__class__.list[2] / (__class__.list[1] - (__class__.list[1] - __class__.list[2])))		
+        three_pt_fg_percentage = 100 * (__class__.list[2] / (__class__.list[1] - 3))		
         self.assertEqual(__class__.driver.find_element_by_xpath("//*[@id='ps-home']/div/p[1]").text, "FG%: "+str(fg_percentage)+" 3FG%: "+str(three_pt_fg_percentage)+" FT%: 0")
 
     '''
@@ -134,7 +135,7 @@ class TestShotCodes(unittest.TestCase):
     
     def test_miss_2pt_fg_team_percentages(self):
         fg_percentage = 100 * (__class__.list[0] / __class__.list[1])
-        three_pt_fg_percentage = 100 * (__class__.list[2] / (__class__.list[1] - (__class__.list[1] - __class__.list[2])))		
+        three_pt_fg_percentage = 100 * (__class__.list[2] / (__class__.list[1] - 4))		
         self.assertEqual(__class__.driver.find_element_by_xpath("//*[@id='ps-home']/div/p[1]").text, "FG%: "+str(fg_percentage)+" 3FG%: "+str(three_pt_fg_percentage)+" FT%: 0")
 		
     '''
