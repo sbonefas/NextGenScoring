@@ -29,7 +29,8 @@ def validSub(player1, player2):
         return True
     else:
         return False
-        
+       
+       
 def numberInGame(playerList):
     #print(playerList)
     numPlayers = 0
@@ -40,7 +41,6 @@ def numberInGame(playerList):
     return numPlayers
     
     
-
 class TestSubs(unittest.TestCase):
     driver = None
     
@@ -49,8 +49,8 @@ class TestSubs(unittest.TestCase):
         pass
 		
     @classmethod
-    #def tearDownClass(cls):
-	#    __class__.driver.quit()
+    def tearDownClass(cls):
+        pass
         
     def setUp(cls):
         ## Setup the website ##

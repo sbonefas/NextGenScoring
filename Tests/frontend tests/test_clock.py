@@ -21,19 +21,27 @@ def run_clock(sleep_time, driver):
     # Send the SPACE key to start the clock, wait sleep_time seconds,
     # then send the SPACE key to stop the clock
     driver.find_element_by_id("clockh2").send_keys(Keys.SPACE);
-    time.sleep(sleep_time + .45);
-    driver.find_element_by_id("clockh2").send_keys(Keys.SPACE);
+    
+    wait = True
+    tic = time.clock()
+    while(wait):
+        toc = time.clock()
+        time.sleep(.25)
+        # Get the clock value after execution
+        end_clock = driver.find_element_by_id("clockh2").text;
 
-    # Get the clock value after execution
-    clock = driver.find_element_by_id("clockh2").text;
-
-    # Convert clock strings to datetime object for comparison
-    initial_time = datetime.strptime(initial_clock, "%H:%M:%S").time()
-    end_time = datetime.strptime(clock, "%H:%M:%S").time()
-
-    # Get a clock duration from comparing the datetime objects
-    duration = datetime.combine(date.min, initial_time) - datetime.combine(date.min, end_time)
-    driver.quit()
+        # Convert clock strings to datetime object for comparison
+        initial_time = datetime.strptime(initial_clock, "%H:%M:%S").time()
+        end_time = datetime.strptime(end_clock, "%H:%M:%S").time()
+        # Get a clock duration from comparing the datetime objects
+        duration = datetime.combine(date.min, initial_time) - datetime.combine(date.min, end_time)
+        
+        if (duration.seconds == sleep_time):
+            driver.find_element_by_id("clockh2").send_keys(Keys.SPACE)
+            wait = False
+    
+    
+    print(toc - tic, sleep_time, duration.seconds)
 
     return duration
     
@@ -53,7 +61,7 @@ class TestClock(unittest.TestCase):
         __class__.driver.get(path)
         
     def tearDown(self):
-	     __class__.driver.quit()
+         __class__.driver.quit()
    
     
     def test_seconds(self):
