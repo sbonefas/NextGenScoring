@@ -1,3 +1,25 @@
+/***************************************************************
+ *																*	
+ *					DATA READING AND WRITING 					*
+ *																*
+ * This js file controls all reading/writing to data files		*												*
+ *																*
+ *																*
+ * public functions: 											*
+ * 		1. delete_file(file_name)								*
+ *			- deletes the file with the given filename 			*
+ *		2. edit_game_data_location_path(new_path)				*
+ *			- changes the directory that game files are stored	*
+ *		3. create_game_file(labels, file_name)					*
+ *			- makes an empty game file 							*
+ *		4. read_game_file(file_name)							*
+ *			- gets a 3D array representation of a game file 	*
+ *		5. write_to_game_file(stat_changes, file_name)			*
+ *			- writes given changes to a game file 				*
+ *																*	
+  ***************************************************************/
+
+
 const fs = require("fs");	//node.js filesystem
 
 /** path to the folder where data is kept */
