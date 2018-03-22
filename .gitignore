@@ -2,6 +2,10 @@
 /.idea/
 *.idea
 .idea
+<<<<<<< HEAD
 package-lock.json
 node_modules
 jquery.min.js
+=======
+.DS_Store
+>>>>>>> develop

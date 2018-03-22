@@ -14,6 +14,7 @@ const dialog = electron.dialog;
 let win;
 const TESTING = true;
 const file_name = 'test_read_game_file';
+const test_file_name = "test_drw_file";
 
 function createWindow() {
 	win = new BrowserWindow();
@@ -26,13 +27,13 @@ function createWindow() {
 	/** SIMPLE BACKEND TESTING */
 	/** TODO: DELETE WHEN PUT IN TEST SUITE */
 	if(TESTING) {
-		var test_file_name = "test_drw_file";
-		drw.create_game_file(['player_name','player_number','fg','fga','m3','3a','ft','fta','reb','ast','pf','blk','trn','stl'], test_file_name);
+		//var test_file_name = "test_drw_file";
+		drw.create_game_file(['player_number','fg','fga','m3','3a','ft','fta','reb','ast','pf','blk','trn','stl'], test_file_name);
 		drw.read_game_file(test_file_name);
-		drw.delete_file(test_file_name);
 	}
 	win.on('closed', () => {
 		win = null;
+		drw.delete_file(test_file_name);	
 		app.quit();
 	})
 }
@@ -77,12 +78,18 @@ function createWindow() {
 
  
 function addPlay(keystrokes){ 
-	var statArray = [0,0,0,0,0,0,0,0,0,0,0,0,0];
+	var statArray = [0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 	var input = keystrokes.split(/ /);
 	if(TESTING) console.log(input);
 		
 	//input parsing
 	statArray[1] = input[1];	//add player's number
+	var team = input[input.length-1];
+	console.log("team:" + team);
+	if (team === 'h')
+		statArray[0] = 1;
+	else if (team === 'v')
+		statArray[0] = 0;
 	switch(input[0]){
 		case 'y':
 		case 'w':
@@ -91,26 +98,24 @@ function addPlay(keystrokes){
 		case 'l':
 		case 'd':
 			var actingPlayer = input[3];
-			var team = input[4];
-			statArray[0] = team;	//store team info
 			statArray[3] = 1;	//fieldgoal attempt
 			switch(input[2]){
 				case 'g' || 'G' || 'q' || 'Q':
 					statArray[2] = 1;	//fieldgoal
-					if (input[3] != '') assist(team, actingPlayer);	//If there's an assist, record it
+					if (input[3] != '') assist(statArray[0], actingPlayer);	//If there's an assist, record it
 					break;
 				case 'y':
 					statArray[4] = 1;	//made 3-pointer
-					if (input[3] != '') assist(team, actingPlayer);	//If there's an assist, record it
+					if (input[3] != '') assist(statArray[0], actingPlayer);	//If there's an assist, record it
 					break;
 				case 'r':
-					if (input[3] != '') rebound(team, actingPlayer);	//If there's a rebound, record it
+					if (input[3] != '') rebound(statArray[0], actingPlayer);	//If there's a rebound, record it
 					break;
 				case 'x':
-					if (input[3] != '') rebound(team, actingPlayer);	//If there's a rebound, record it
+					if (input[3] != '') rebound(statArray[0], actingPlayer);	//If there's a rebound, record it
 					break;
 				case 'k':
-					block(team, actingPlayer);
+					block(statArray[0], actingPlayer);
 					break;
 				case 'p':
 					//in the paint
@@ -128,10 +133,10 @@ function addPlay(keystrokes){
 			if (input[2] == 'g') statArray[4] = 1;
 			break;
 		case 'r':
-			rebound(team, input[1]);
+			rebound(statArray[0], input[1]);
 			return;
 		case 'a':
-			assist(team, input[1]); 
+			assist(statArray[0], input[1]); 
 			return;
 		case 'f':
 			statArray[9] = 1;	//foul
@@ -145,11 +150,11 @@ function addPlay(keystrokes){
 			statArray[12] = 1;	//steal
 			break;
 		case 'f2':
-			chg(input[3], input[1], input[2]);
+			chg(input[input.length-1], input[1], input[2]);
 			return;
 	}
 	console.log(statArray);
-	drw.write_to_game_file(statArray, file_path);
+	drw.write_to_game_file(statArray, test_file_name);
 } 
  
  
@@ -159,24 +164,25 @@ function addPlay(keystrokes){
  *
  */ 
  
-function rebound(team, player_number){
-	var statArray = [team, player_number,0,0,0,0,0,1,0,0,0,0,0];
-	drw.write_to_game_file(statArray, 'test_data');
+function rebound(t, player_number){
+	var statArray = [t, player_number,0,0,0,0,0,1,0,0,0,0,0,0];
+	drw.write_to_game_file(statArray, test_file_name);
 }
  
-function assist(team, player_number){
-	var statArray = [team, player_number,0,0,0,0,0,0,1,0,0,0,0];
-	drw.write_to_game_file(statArray, 'test_data');	
+function assist(t, player_number){
+	console.log("assist");
+	var statArray = [t, player_number,0,0,0,0,0,0,1,0,0,0,0,0];
+	drw.write_to_game_file(statArray, test_file_name);	
 }
 
-function block(team, player_number){
-	var statArray = [team, player_number,0,0,0,0,0,0,0,0,1,0,0];
-	drw.write_to_game_file(statArray, 'test_data');	
+function block(t, player_number){
+	var statArray = [t, player_number,0,0,0,0,0,0,0,0,1,0,0,0];
+	drw.write_to_game_file(statArray, test_file_name);	
 }
 
-function chg (team, player_number, new_player_number){
-	var playerSub = [team, "CHG", player_number, new_player_number];
-	drw.write_to_game_file(statArray, file_path);	
+function chg (t, player_number, new_player_number){
+	var playerSub = [t, "CHG", player_number, new_player_number];
+	drw.write_to_game_file(statArray, test_file_name);	
 }
 
 
@@ -215,7 +221,7 @@ ipc.on('send-data', function (event,keystrokes){
 ipc.on('get-data', function(event){ 
 var manData;
 	try {
-		test_data = drw.readTestData(file_path);
+		//test_data = drw.readTestData(file_path);
 		var manData = [1,2,3,4,5];
 	} catch (e) {
 		//if failure

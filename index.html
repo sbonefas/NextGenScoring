@@ -2,6 +2,8 @@
 	<head>
 		<link rel="icon" href="img/favicon.ico">
 		<link rel="stylesheet" href="style.css">
+		<link rel="stylesheet" href="vex.css">
+		<link rel="stylesheet" href="vex-theme-os.css">
 		<title>NextGen Scoring</title>
 	</head>
 	<body>
@@ -25,9 +27,9 @@
 					</div>
 				</div>
 				<div class = "clock" id="clockdiv">
-					<h2 class = "clock" id = "clockh2">20:00</h2>
-					<h3 class = "clock">Half</h3>
-					<h4 class = "clock">1</h4>
+					<!--<h2 class = "clock" id = "clockh2" onclick="launchClockPrompt()">20:00</h2>-->
+					<span onclick="launchClockPrompt()" id = "clockminutes">20</span><span onclick="launchClockPrompt()" id = "clockseparator">:</span><span onclick="launchClockPrompt()" id = "clockseconds">00</span>
+					<h2 class = "clock" onclick="launchClockPrompt()"> {{ period }}</h2>
 					<h3 class = "clock" id="clockisstopped">**Clock is stopped**</h3>
 					<br>
 				</div>
@@ -53,21 +55,21 @@
 			<div id = "playerstats">
 				<!--<div id = "app">-->
 					<div id = "ps-home">
-						<h2 id = "pshometeamname"> Home team: Wisconsin</h2>
+						<h2 id = "pshometeamname" class="playteam">{{ teams[0] }}</h2>
 						<table class="playerstatstable" cellpadding="3">
 							<tr>
-								<th>?</th>
-								<th>##</th>
-								<th>--Name--</th>
-								<th>FG</th>
-								<th>FA</th>
-								<th>3M</th>
-								<th>FT</th>
-								<th>FA</th>
-								<th>RB</th>
-								<th>AS</th>
-								<th>PF</th>
-								<th>TP</th>
+								<th>in</th> <!-- "*" if in game -->
+								<th>##</th> <!-- player number -->
+								<th>--Name--</th> <!-- player name -->
+								<th>FG</th> <!-- field goals -->
+								<th>FA</th> <!-- field goal attempts -->
+								<th>3M</th> <!-- 3 pointers -->
+								<th>FT</th> <!-- ?? -->
+								<th>FA</th> <!-- ?? -->
+								<th>RB</th> <!-- rebound -->
+								<th>AS</th> <!-- assist -->
+								<th>PF</th> <!-- ?? -->
+								<th>TP</th> <!-- ?? -->
 							</tr>
 							<tr v-for="player in home_team">
 								<td>{{ player.in_game }}</td>
@@ -99,26 +101,14 @@
                             </tr>
 						</table>
 
-						<!--<player_h01></player_h01>
-						<player_h02></player_h02>
-						<player_h03></player_h03>
-						<player_h04></player_h04>
-						<player_h05></player_h05>
-						<player_h06></player_h06>
-						<player_h07></player_h07>
-						<player_h08></player_h08>
-						<player_h09></player_h09>
-						<player_h10></player_h10>
-						<player_total></player_total>-->
-
 						<home_team_stats></home_team_stats>
 					</div>
 				<!--</div> -->
 				<div id = "ps-visitor">
-					<h2 id = "psvisitorteamname"> Visiting team: Teamname</h2>
+					<h2 id = "psvisitorteamname" class="playteam">{{ teams[1] }}</h2>
 					<table class="playerstatstable" cellpadding="3">
 						<tr>
-							<th>?</th>
+							<th>in</th>
 							<th>##</th>
 							<th>--Name--</th>
 							<th>FG</th>
@@ -131,164 +121,40 @@
 							<th>PF</th>
 							<th>TP</th>
 						</tr>
-						<tr>
-							<td>*</td>
-							<td>01</td>
-							<td>Player_1</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-						</tr>
-						<tr>
-							<td>*</td>
-							<td>02</td>
-							<td>Player_2</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-						</tr>
-						<tr>
-							<td>*</td>
-							<td>03</td>
-							<td>Player_3</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-						</tr>
-						<tr>
-							<td>*</td>
-							<td>04</td>
-							<td>Player_4</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-						</tr>
-						<tr>
-							<td>*</td>
-							<td>05</td>
-							<td>Player_5</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-						</tr>
-						<tr>
-							<td></td>
-							<td>11</td>
-							<td>Bench_1</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-						</tr>
-						<tr>
-							<td></td>
-							<td>12</td>
-							<td>Bench_2</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-						</tr>
-						<tr>
-							<td></td>
-							<td>13</td>
-							<td>Bench_3</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-						</tr>
-						<tr>
-							<td></td>
-							<td>14</td>
-							<td>Bench_4</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-						</tr>
-						<tr>
-							<td></td>
-							<td>15</td>
-							<td>Bench_5</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-						</tr>
-						<tr>
-							<td></td>
-							<td></td>
-							<td>Totals</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-							<td>0</td>
-						</tr>
-					</table>
-					<p>FG%: 0.000   3FG%: 0.000   FT%: 0.000</p>
+                        <tr v-for="player in vis_team">
+                            <td>{{ player.in_game }}</td>
+                            <td>{{ player.number }}</td>
+                            <td>{{ player.name }}</td>
+                            <td>{{ player.fg }}</td>
+                            <td>{{ player.fa }}</td>
+                            <td>{{ player.m3 }}</td>
+                            <td>{{ player.ftm }}</td>
+                            <td>{{ player.fta }}</td>
+                            <td>{{ player.rb }}</td>
+                            <td>{{ player.as }}</td>
+                            <td>{{ player.pf }}</td>
+                            <td>{{ player.tp }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ vis_totals.in_game }}</td>
+                            <td>{{ vis_totals.number }}</td>
+                            <td>{{ vis_totals.name }}</td>
+                            <td>{{ vis_totals.fg }}</td>
+                            <td>{{ vis_totals.fa }}</td>
+                            <td>{{ vis_totals.m3 }}</td>
+                            <td>{{ vis_totals.ftm }}</td>
+                            <td>{{ vis_totals.fta }}</td>
+                            <td>{{ vis_totals.rb }}</td>
+                            <td>{{ vis_totals.as }}</td>
+                            <td>{{ vis_totals.pf }}</td>
+                            <td>{{ vis_totals.tp }}</td>
+                        </tr>
+                    </table>
+                    <vis_team_stats></vis_team_stats>
+
+                   <!-- <p>FG%: 0.000   3FG%: 0.000   FT%: 0.000</p>
 					<p>TEAM: TURNOVERS: 00   BLOCKS: 00   STEALS: 00</p>
-					<p>paint: 00   offto: 00   2ndch: 00   fastb: 00</p>
+					<p>paint: 00   offto: 00   2ndch: 00   fastb: 00</p>-->
 				</div>
 			</div> <!-- end stats div -->
 
@@ -335,21 +201,31 @@
 
 		<script type="text/javascript" src="./vue.js"></script>
 		<script type="text/javascript" src="./app.js"></script>
+		<script src="vex.combined.min.js"></script>
 		<script src="./easytimer.min.js"></script>
 		<script src="./jquery.min.js"></script>
 		<script>			
 			//Keep clock functionality on the frontend
 			// Uses EasyTimer.js from Github https://albert-gonzalez.github.io/easytimer.js/
 			var timer = new Timer();
-			timer.start({countdown: true, startValues: {seconds: 1200}});
-			timer.pause();
-			var paused = true;
+  			timer.start({countdown: true, startValues: {seconds: 1200}});
+  			timer.pause();
+  			var paused = true;
 			$('#clockdiv #clockh2').html(timer.getTimeValues().toString());
 			timer.addEventListener('secondsUpdated', function (e) {
-			    $('#clockdiv #clockh2').html(timer.getTimeValues().toString());
+			    //$('#clockdiv #clockh2').html(timer.getTimeValues().toString());
+			    $('#clockdiv #clockminutes').html(timer.getTimeValues().minutes);
+			    if(timer.getTimeValues().seconds < 10) {
+			    	$('#clockdiv #clockseconds').html('0' + timer.getTimeValues().seconds);  // add leading zero because EasyTimer doesn't do it :-/
+			    } else {
+			    	$('#clockdiv #clockseconds').html(timer.getTimeValues().seconds);
+			    }
+			    
 			});
 			timer.addEventListener('targetAchieved', function (e) {
-			    $('#clockdiv #clockh2').html('KABOOM!!');
+			    //$('#clockdiv #clockh2').html('00:00');
+			    $('#clockdiv #clockminutes').html('00');
+			    $('#clockdiv #clockseconds').html('00');
 			});
 
 			document.body.onkeyup = function(e){
