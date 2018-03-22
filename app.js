@@ -268,6 +268,7 @@ var app = new Vue({
                total_fgs += (app.home_team[players].fg + app.home_team[players].m3);
              }
              home_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
+             app.rebound();
              break;
            }
            // J then P - field goal in the paint
@@ -410,6 +411,80 @@ var app = new Vue({
          }
          return false;
        }
+   },
+   rebound() {
+        who_got_it = window.prompt("REBOUNDED BY: \n\n OFFENSIVE: Key in a player ## \n OFFENSIVE TEAM REBOUND: M \n OFFENSIVE DEADBALL: B \n" +
+            "DEFENSIVE: D \n DEFENSIVE TEAM REBOUND: DM \n DEFENSIVE DEADBALL: DB");
+
+        String.prototype.isNumber = function(){return /^\d+$/.test(this);}
+
+        //offensive
+        if(who_got_it.isNumber()) {
+           while(!app.check_in_game(who_got_it)) {
+                who_got_it = window.prompt("Player " + who_got_it + " is not in the game!\n\n REBOUNDED BY OFFENSIVE: Key in a player ##");
+           }
+           if(home) {
+             for(index = 0; index < app.home_team.length; index++)
+             {
+                if(who_got_it == app.home_team[index].number)
+                {
+                    app.home_team[index].rb += 1;
+                }
+             }
+           }
+           else {
+             for(index = 0; index < app.vis_team.length; index++)
+             {
+                if(who_got_it == app.vis_team[index].number)
+                {
+                    app.vis_team[index].rb += 1;
+                }
+             }
+           }
+        }
+        //offensive team rebound
+        else if(who_got_it == "m" || who_got_it == "M") {
+            // what does this increment?
+        }
+        //offensive deadball
+        else if(who_got_it == "b" || who_got_it == "B") {
+            // what does this increment?
+        }
+        // defensive
+        else if(who_got_it == "d" || who_got_it == "D") {
+            who_got_it = window.prompt("REBOUNDED BY: \n\n DEFENSIVE: Key in a player ##");
+            if(who_got_it.isNumber()) {
+               while(!app.check_in_game(who_got_it)) {
+                    who_got_it = window.prompt("Player " + who_got_it + " is not in the game!\n\n REBOUNDED BY OFFENSIVE: Key in a player ##");
+               }
+               if(!home) {
+                 for(index = 0; index < app.home_team.length; index++)
+                 {
+                    if(who_got_it == app.home_team[index].number)
+                    {
+                        app.home_team[index].rb += 1;
+                    }
+                 }
+               }
+               else {
+                 for(index = 0; index < app.vis_team.length; index++)
+                 {
+                    if(who_got_it == app.vis_team[index].number)
+                    {
+                        app.vis_team[index].rb += 1;
+                    }
+                 }
+               }
+            }
+        }
+        //defensive team rebound
+        else if(who_got_it == "dm" || who_got_it == "dM" || who_got_it == "DM" || who_got_it == "Dm") {
+            // what does this increment?
+        }
+        //defensive deadball
+        else if(who_got_it == "db" || who_got_it == "dB" || who_got_it == "DB" || who_got_it == "Db") {
+            // what does this increment?
+        }
    }
   }
 })
