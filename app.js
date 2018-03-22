@@ -513,7 +513,7 @@ var app = new Vue({
 
      // E - Free Throw
      else if(e.keyCode == 69) {
-        app.add_play("E");
+
      }
 
      // T - turnover
@@ -523,7 +523,7 @@ var app = new Vue({
 
      // R - rebound
      else if(e.keyCode == 82) {
-
+        app.rebound();
      }
 
      // A - assist
@@ -642,6 +642,7 @@ var app = new Vue({
                 if(who_got_it == app.home_team[index].number)
                 {
                     app.home_team[index].rb += 1;
+                    app.add_play("Offensive rebound by " + app.home_team[index].name);
                 }
              }
            }
@@ -651,6 +652,7 @@ var app = new Vue({
                 if(who_got_it == app.vis_team[index].number)
                 {
                     app.vis_team[index].rb += 1;
+                    app.add_play("Offensive rebound by " + app.vis_team[index].name);
                 }
              }
            }
@@ -658,12 +660,20 @@ var app = new Vue({
         //offensive team rebound
         else if(who_got_it == "m" || who_got_it == "M") {
             // add to play by play
+            app.add_play("Offensive Team Rebound");
             // no possession change
         }
         //offensive deadball
         else if(who_got_it == "b" || who_got_it == "B") {
             // add to play by play
+            app.add_play("Offensive Deadball");
             // change possession
+            if(home) {
+                app.vis_possession();
+            }
+            else {
+                app.home_possession();
+            }
         }
         // defensive
         else if(who_got_it == "d" || who_got_it == "D") {
@@ -675,12 +685,21 @@ var app = new Vue({
                    }
                     who_got_it = window.prompt("Player " + who_got_it + " is not in the game!\n\n REBOUNDED BY OFFENSIVE: Key in a player ##");
                }
-               if(!home) {
+                // change possession
+                if(home) {
+                    app.vis_possession();
+                }
+                else {
+                    app.home_possession();
+                }
+
+               if(home) {
                  for(index = 0; index < app.home_team.length; index++)
                  {
                     if(who_got_it == app.home_team[index].number)
                     {
                         app.home_team[index].rb += 1;
+                        app.add_play("Defensive rebound by " + app.home_team[index].name);
                     }
                  }
                }
@@ -690,6 +709,7 @@ var app = new Vue({
                     if(who_got_it == app.vis_team[index].number)
                     {
                         app.vis_team[index].rb += 1;
+                        app.add_play("Defensive rebound by " + app.vis_team[index].name);
                     }
                  }
                }
@@ -698,11 +718,19 @@ var app = new Vue({
         //defensive team rebound
         else if(who_got_it == "dm" || who_got_it == "dM" || who_got_it == "DM" || who_got_it == "Dm") {
             // add to play by play
+            app.add_play("Defensive Team Rebound");
             // change posession
+            if(home) {
+                app.vis_possession();
+            }
+            else {
+                app.home_possession();
+            }
         }
         //defensive deadball
         else if(who_got_it == "db" || who_got_it == "dB" || who_got_it == "DB" || who_got_it == "Db") {
             // add to play by play
+            app.add_play("Defensive Deadball");
             // no change in posession
         }
    } //end rebound method
