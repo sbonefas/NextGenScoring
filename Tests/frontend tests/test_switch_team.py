@@ -5,18 +5,20 @@ from switch_team import SwitchTeam
 
 class TestSwitchTeam(unittest.TestCase):
     driver = None
-
+    
     @classmethod
     def setUpClass(cls):
 	    ## Setup the website ##
         __class__.driver = webdriver.Firefox()
         __class__.driver.get("file:///C:/Users/damon/Documents/Senior_Yr_Sem2/Software%20Engineering/Project/NextGenScoring/index.html") 
-		
+        #__class__.driver.find_element_by_id("scorebar").text
+        #__class__.driver.find_element_by_id("clockh2").text
     @classmethod
     def tearDownClass(cls):
 	    __class__.driver.quit()
 
     def setUp(self):
+	    # set attribute to something this entire time
 	    self.team = SwitchTeam()
 	
     def tearDown(self):
@@ -71,6 +73,7 @@ class TestSwitchTeam(unittest.TestCase):
 
     # starts at home and switches to home again
     def test_switch_to_home(self):
+	    __class__.driver.find_element_by_id("scorebar").send_keys("H");
 	    self.team.switch_to_home()
 	    self.assertEqual(self.team.curr_team, "H")
 	
