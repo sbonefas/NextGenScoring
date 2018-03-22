@@ -207,10 +207,12 @@ var app = new Vue({
            {
              app.home_team[index].fg += 1;
              app.home_team[index].fa += 1;
+             app.home_team[index].tp += 2;
              app.home_totals.fg += 1;
              app.home_totals.fa += 1;
              // add to home team score
              app.home_score += 2;
+             app.home_totals.tp = app.home_score;
              // add to play by play - HOME
              app.add_play(`${app.home_team[index].name} made a jump shot`);
 
@@ -230,6 +232,7 @@ var app = new Vue({
            else if((who_did_it == app.home_team[index].number && (result_code == "y" || result_code == "Y"))) {
              app.home_team[index].m3 += 1;
              app.home_team[index].a3 += 1;
+             app.home_team[index].tp += 3;
              app.home_totals.m3 += 1;
              app.home_totals.a3 += 1;
              app.home_team[index].fa += 1;
@@ -250,6 +253,7 @@ var app = new Vue({
              home_stats.tfg = Number.parseFloat(total_threes/total_threes_attmept).toFixed(2);
              // add to home team score
              app.home_score += 3;
+             app.home_totals.tp = app.home_score;
              // add to play by play - HOME
              app.add_play(`${app.home_team[index].name} hit a 3-point jumper`);
              // change possession
@@ -277,10 +281,12 @@ var app = new Vue({
            else if (who_did_it == app.home_team[index].number && (result_code == "p" || result_code == "P")) {
              app.home_team[index].fa += 1;
              app.home_team[index].fg += 1;
+             app.home_team[index].tp += 2;
              app.home_totals.fa += 1;
              app.home_totals.fg += 1;
              home_stats.paint += 1;
              app.home_score += 2;
+             app.home_totals.tp = app.home_score;
              app.add_play(`${app.home_team[index].name} made a shot in the paint`);
              var total_attempts = 0;
              var total_fgs = 0;
