@@ -16,8 +16,8 @@ class TestShotCodes(unittest.TestCase):
 		
     @classmethod
     def tearDownClass(cls):
-        #pass
-	    __class__.driver.quit()
+        pass
+	    #__class__.driver.quit()
 
     def setUp(self):
         pass
@@ -45,7 +45,7 @@ class TestShotCodes(unittest.TestCase):
         __class__.alert.accept()
 
     """Test methods"""
-    def test_add_2pt_fg_scoreboard_and_player_stats(self):
+    def test_make_2pt_fg_scoreboard_and_player_stats(self):
 	    #id element doesn't actually matter
         __class__.driver.find_element_by_id("app").send_keys("J")
         # Give home team's player 1 a made 2 pointer
@@ -60,19 +60,19 @@ class TestShotCodes(unittest.TestCase):
         # Ensure that total team stats have been updated
         __class__.handle_player_stats(self, 12)
     
-    def test_add_2pt_fg_team_percentages(self):
+    def test_make_2pt_fg_team_percentages(self):
         # Ensure that field goal percentage has been updated
         fg_percentage = 100 * (__class__.list[0] / __class__.list[1])	
         self.assertEqual(__class__.driver.find_element_by_xpath("//*[@id='ps-home']/div/p[1]").text, "FG%: "+ str(fg_percentage) + " 3FG%: 0 FT%: 0")
 	
-    '''def test_add_2pt_fg_play_by_play(self):
+    def test_make_2pt_fg_paint_zplay_by_play(self):
 		# Check that play-by-play has been updated
         self.assertEqual(__class__.driver.find_element_by_xpath("/html/body/div/div[3]/table/tbody/tr[2]/td[1]").text, __class__.driver.find_element_by_id("clockh2").text)
         self.assertEqual(__class__.driver.find_element_by_xpath("/html/body/div/div[3]/table/tbody/tr[2]/td[2]").text, "WISC")
-        self.assertEqual(__class__.driver.find_element_by_xpath("/html/body/div/div[3]/table/tbody/tr[2]/td[3]").text, "Player_1 made a jump shot")
-        self.assertEqual(__class__.driver.find_element_by_xpath("/html/body/div/div[3]/table/tbody/tr[2]/td[4]").text, "2-0")'''
+        self.assertEqual(__class__.driver.find_element_by_xpath("/html/body/div/div[3]/table/tbody/tr[2]/td[3]").text, "Player_1 made a shot in the paint")
+        self.assertEqual(__class__.driver.find_element_by_xpath("/html/body/div/div[3]/table/tbody/tr[2]/td[4]").text, "2-0")
     
-    def test_add_2pt_fg_scoreboard_and_player_stats_alt(self):
+    def test_make_2pt_fg_scoreboard_and_player_stats_alt(self):
         __class__.driver.find_element_by_id("app").send_keys("J")		
         # Give home team's player 1 a made 2 pointer - alternate key binding
         __class__.input_keys(self, "01", "Q")
@@ -83,9 +83,9 @@ class TestShotCodes(unittest.TestCase):
         __class__.handle_player_stats(self, 2)
         __class__.handle_player_stats(self, 12)
 		
-    def test_add_2pt_fg_paint_scoreboard_and_player_stats(self):
+    def test_make_2pt_fg_paint_scoreboard_and_player_stats(self):
         __class__.driver.find_element_by_id("app").send_keys("J")	
-        # Give home team's player 2 a made 2 point shot in the paint
+        # Give home team's player 1 a made 2 point shot in the paint
         __class__.input_keys(self, "01", "P")
         __class__.score += 2
         self.assertEqual(__class__.driver.find_element_by_xpath("//*[@id='home']/div[2]/h2[2]").text, str(__class__.score))
@@ -95,11 +95,11 @@ class TestShotCodes(unittest.TestCase):
         #__class__.handle_player_stats(self, 3, tup02)
         __class__.handle_player_stats(self, 12)
 
-    def test_add_2pt_fg_paint_team_percentages(self):
+    def test_make_2pt_fg_paint_team_percentages(self):
         fg_percentage = 100 * (__class__.list[0] / __class__.list[1])	
         self.assertEqual(__class__.driver.find_element_by_xpath("//*[@id='ps-home']/div/p[1]").text, "FG%: "+str(fg_percentage)+" 3FG%: 0 FT%: 0")
-		
-    '''def test_add_2pt_fg_paint_play_by_play(self):
+        self.assertEqual(__class__.driver.find_element_by_xpath("//*[@id='ps-home']/div/p[3]").text, "paint: 2 offto: 0 2ndch: 0 fastb: 0")
+    '''def test_make_2pt_fg_paint_play_by_play(self):
         # Check that play-by-play has been updated
         self.assertEqual(__class__.driver.find_element_by_xpath("/html/body/div/div[3]/table/tbody/tr[2]/td[1]").text, __class__.driver.find_element_by_id("clockh2").text)
         self.assertEqual(__class__.driver.find_element_by_xpath("/html/body/div/div[3]/table/tbody/tr[2]/td[2]").text, "WISC")
@@ -114,7 +114,7 @@ class TestShotCodes(unittest.TestCase):
         self.assertEqual(__class__.driver.find_element_by_xpath("/html/body/div/div[3]/table/tbody/tr[4]/td[3]").text, "Player_1 made a jump shot")
         self.assertEqual(__class__.driver.find_element_by_xpath("/html/body/div/div[3]/table/tbody/tr[4]/td[4]").text, "2-0")'''
 
-    def test_add_3pt_fg_scoreboard_and_player_stats(self):
+    def test_make_3pt_fg_scoreboard_and_player_stats(self):
         __class__.driver.find_element_by_id("app").send_keys("J")
         # Give home team's player 2 a made 3 pointer
         __class__.input_keys(self, "01", "Y")
@@ -126,12 +126,12 @@ class TestShotCodes(unittest.TestCase):
         __class__.handle_player_stats(self, 2)
         __class__.handle_player_stats(self, 12)
 
-    def test_add_3pt_fg_team_percentages(self):	
+    def test_make_3pt_fg_team_percentages(self):	
         fg_percentage = 100 * (__class__.list[0] / __class__.list[1])
-        three_pt_fg_percentage = 100 * (__class__.list[2] / (__class__.list[1] - 3))		
+        three_pt_fg_percentage = 100 * (__class__.list[2] / (__class__.list[1] - (__class__.list[1] - __class__.list[2])))		
         self.assertEqual(__class__.driver.find_element_by_xpath("//*[@id='ps-home']/div/p[1]").text, "FG%: "+str(fg_percentage)+" 3FG%: "+str(three_pt_fg_percentage)+" FT%: 0")
 
-    '''def test_add_3pt_fg_play_by_play(self):
+    '''def test_make_3pt_fg_play_by_play(self):
 		# Check that play-by-play has been updated
         self.assertEqual(__class__.driver.find_element_by_xpath("/html/body/div/div[3]/table/tbody/tr[2]/td[1]").text, __class__.driver.find_element_by_id("clockh2").text)
         self.assertEqual(__class__.driver.find_element_by_xpath("/html/body/div/div[3]/table/tbody/tr[2]/td[2]").text, "WISC")
@@ -145,5 +145,22 @@ class TestShotCodes(unittest.TestCase):
         self.assertEqual(__class__.driver.find_element_by_xpath("/html/body/div/div[3]/table/tbody/tr[4]/td[2]").text, "WISC")
         self.assertEqual(__class__.driver.find_element_by_xpath("/html/body/div/div[3]/table/tbody/tr[4]/td[3]").text, "Player_1 made a jump shot")
         self.assertEqual(__class__.driver.find_element_by_xpath("/html/body/div/div[3]/table/tbody/tr[4]/td[4]").text, "2-0") '''
+
+    def test_miss_2pt_fg_scoreboard_and_player_stats(self):
+        __class__.driver.find_element_by_id("app").send_keys("J")	
+        __class__.input_keys(self, "01", "R")
+        self.assertEqual(__class__.driver.find_element_by_xpath("//*[@id='home']/div[2]/h2[2]").text, str(__class__.score))
+        __class__.list[1] += 1
+        __class__.handle_player_stats(self, 2)
+        __class__.handle_player_stats(self, 12)
+    
+    def test_miss_2pt_fg_team_percentages(self):
+        fg_percentage = 100 * (__class__.list[0] / __class__.list[1])
+        three_pt_fg_percentage = 100 * (__class__.list[2] / (__class__.list[1] - (__class__.list[1] - __class__.list[2])))		
+        self.assertEqual(__class__.driver.find_element_by_xpath("//*[@id='ps-home']/div/p[1]").text, "FG%: "+str(fg_percentage)+" 3FG%: "+str(three_pt_fg_percentage)+" FT%: 0")
+
+    def test_miss_2pt_fg_play_by_play(self):
+	    pass
+
 if __name__ == '__main__':
     unittest.main()
