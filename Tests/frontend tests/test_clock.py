@@ -60,9 +60,8 @@ class TestClock(unittest.TestCase):
         __class__.driver.get(path)
         
     def tearDown(self):
-         #__class__.driver.quit()
-         pass
-    
+         __class__.driver.quit()
+         
     def test_seconds(self):
         sleep_time = random.randint(1, 59)
         duration = run_clock(sleep_time, __class__.driver)
