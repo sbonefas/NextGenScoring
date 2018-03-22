@@ -185,10 +185,14 @@ var app = new Vue({
      else if(e.keyCode == 74) {
        altHeld = false;
        who_did_it = window.prompt("SHOT BY: (Key in a player ##)");
+       while(!app.check_in_game(who_did_it)) {
+            who_did_it = window.prompt("Player " + who_did_it + " is not in the game!\n\nSHOT BY: (Key in a player ##)");
+       }
        result_code = window.prompt(result_code_prompt);
        if(home == true) {
          for(index = 0; index < app.home_team.length; index++)
          {
+         console.log(who_did_it);
            // J then G or Q - good field goal (2 points)
            if(who_did_it == app.home_team[index].number && (result_code == "g" || result_code == "G" || result_code == "q" || result_code == "Q"))
            {
@@ -281,6 +285,9 @@ var app = new Vue({
            }
          }
        }
+       else {
+            //visitor calculations
+       }
      }
      // H or left arrow - home team
      else if(e.keyCode == 72 || e.keyCode == 37) {
@@ -293,7 +300,17 @@ var app = new Vue({
      // F6 - Substitution
      else if(e.keyCode == 117){
        who_came_out = window.prompt("ENTER ## OF PLAYER LEAVING");
+       // check if player is in game, and let them re-enter number if wrong
+       while(!app.check_in_game(who_came_out)) {
+           who_came_out = window.prompt("Player " + who_came_out + " is not in game\n\nENTER ## OF PLAYER LEAVING");
+       }
        who_came_in = window.prompt("ENTER ## OF PLAYER ENTERING");
+
+       // check if player is in game, and let them re-enter number if wrong
+       while(app.check_in_game(who_came_in)) {
+           who_came_in = window.prompt("Player " + who_came_in + " is already in game\n\nENTER ## OF PLAYER ENTERING");
+       }
+
        if(home == true)
        {
          for(index = 0; index < app.home_team.length; index++)
@@ -360,6 +377,32 @@ var app = new Vue({
        h.style.textDecoration = "none";
        h2.style.color = "black";
        h2.style.textDecoration = "none";
+   },
+   check_in_game(number) {
+       if(home) {
+         for(index = 0; index < app.home_team.length; index++)
+         {
+            if(number == app.home_team[index].number)
+            {
+                if(app.home_team[index].in_game == "*") {
+                    return true;
+                }
+            }
+         }
+         return false;
+       }
+       else {
+         for(index = 0; index < app.vis_team.length; index++)
+         {
+            if(number == app.vis_team[index].number)
+            {
+                if(app.vis_team[index].in_game == "*") {
+                    return true;
+                }
+            }
+         }
+         return false;
+       }
    }
   }
 })
