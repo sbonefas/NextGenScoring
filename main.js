@@ -53,8 +53,8 @@ function createWindow() {
  * FORMAT:
  *
  *	 (1)/(0)
- * [HOME/AWAY, PLAYER_NUMBER, FIELDGOAL, FIELDGOAL_ATTEMPT, MADE_3, FREETHROW, FREETHROW_ATTEMPT, REBOUND, ASSIST, PERSONAL FOUL, BLOCK, TURNOVER, STEAL]
- * [    0    ,       1      ,     2    ,         3        ,    4  ,     5    ,         6        ,    7   ,   8   ,        9     ,   10 ,    11   ,   12 ]
+ * [HOME/AWAY, PLAYER_NUMBER, FIELDGOAL, FIELDGOAL_ATTEMPT, MADE_3, 3_ATTEMPT, FREETHROW, FREETHROW_ATTEMPT, REBOUND, ASSIST, PERSONAL_FOUL, BLOCK, TURNOVER, STEAL]
+ * [    0    ,       1      ,     2    ,         3        ,    4  ,     5    ,     6    ,         7        ,    8   ,   9   ,      10      ,  11  ,   12    ,  13  ]
  *
  * [7]-[12] ARE EDITED IN SUBPLAY FUNCTIONS BELOW
  *
@@ -71,7 +71,7 @@ function addPlay(keystrokes){
 	if(TESTING) console.log(keyArray);
 		
 	//input parsing
-	statArray[0] = 
+	team = statArray[0]; 	
 	statArray[1] = keyArray[1];	//add player's number
 	switch(keyArray[0]){
 		case 'y':
@@ -149,17 +149,17 @@ function addPlay(keystrokes){
  
 function rebound(team, player_number){
 	var statArray = [team, player_number,0,0,0,0,0,1,0,0,0,0,0];
-	drw.write_to_game_file(statArray, file_path);
+	drw.write_to_game_file(statArray, 'test_data');
 }
  
 function assist(team, player_number){
 	var statArray = [team, player_number,0,0,0,0,0,0,1,0,0,0,0];
-	drw.write_to_game_file(statArray, file_path);	
+	drw.write_to_game_file(statArray, 'test_data');	
 }
 
 function block(team, player_number){
 	var statArray = [team, player_number,0,0,0,0,0,0,0,0,1,0,0];
-	drw.write_to_game_file(statArray, file_path);	
+	drw.write_to_game_file(statArray, 'test_data');	
 }
 
 /*
@@ -194,29 +194,25 @@ ipc.on('send-data', function (event,keystrokes){
  * --USED FOR TESTING--
  */
 ipc.on('get-data', function(event){ 
-	var test_data;
+  //console.log(arg);
+  //do child process or other data manipulation and name it manData
+  var manData = [1,2,3,4,5];
+  event.sender.send('get-data-success', manData);
+	/*
 	try {
-		test_data = drw.read_game_file(file_path);
+		var data = 'Hello';
+		event.returnValue = data;
+		//test_data = drw.read_game_file(file_path);
 	} catch (e) {
 		//if failure
 		console.log("An error occurred in file reading: " + e);
 		event.sender.send('get-data-failure');
 		return;
 	}
-	event.sender.send('get-data-success', test_data);
+	*/
+	//event.sender.send('get-data-success', /*test_data*/data);
+});
 
-})
-
-
-/**
- * Example for using IPC to communicate between frontend & backend
- * (see corresponding script in index.html)
- *
- */
-
-ipc.on('async-message', function(event){
-	event.sender.send('async-reply', 'Main process opened the error dialog'); 
-})
 
 app.on('ready', createWindow);
 
