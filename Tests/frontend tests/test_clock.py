@@ -16,32 +16,31 @@ def configure_index():
 def run_clock(sleep_time, driver):
 
     ## Get the initial clock value
-    initial_clock = driver.find_element_by_id("clockh2").text;
-
+    initial_clock = driver.find_element_by_id("clockminutes").text + ":" + driver.find_element_by_id('clockseconds').text
+    
     # Send the SPACE key to start the clock, wait sleep_time seconds,
     # then send the SPACE key to stop the clock
-    driver.find_element_by_id("clockh2").send_keys(Keys.SPACE);
+    driver.find_element_by_id("clockminutes").send_keys(Keys.SPACE);
     
     wait = True
     tic = time.clock()
     while(wait):
         toc = time.clock()
         time.sleep(.25)
-        # Get the clock value after execution
-        end_clock = driver.find_element_by_id("clockh2").text;
+        # Get the countdown clock value
+        end_clock = driver.find_element_by_id("clockminutes").text + ":" + driver.find_element_by_id('clockseconds').text
 
         # Convert clock strings to datetime object for comparison
-        initial_time = datetime.strptime(initial_clock, "%H:%M:%S").time()
-        end_time = datetime.strptime(end_clock, "%H:%M:%S").time()
+        initial_time = datetime.strptime(initial_clock, "%M:%S").time()
+        end_time = datetime.strptime(end_clock, "%M:%S").time()
         # Get a clock duration from comparing the datetime objects
         duration = datetime.combine(date.min, initial_time) - datetime.combine(date.min, end_time)
         
         if (duration.seconds == sleep_time):
-            driver.find_element_by_id("clockh2").send_keys(Keys.SPACE)
+            driver.find_element_by_id("clockminutes").send_keys(Keys.SPACE)
             wait = False
     
-    
-    print(toc - tic, sleep_time, duration.seconds)
+    #print(toc - tic, sleep_time, duration.seconds)
 
     return duration
     
@@ -61,8 +60,8 @@ class TestClock(unittest.TestCase):
         __class__.driver.get(path)
         
     def tearDown(self):
-         __class__.driver.quit()
-   
+         #__class__.driver.quit()
+         pass
     
     def test_seconds(self):
         sleep_time = random.randint(1, 59)
@@ -77,15 +76,14 @@ class TestClock(unittest.TestCase):
         
         self.assertEqual(sleep_time, duration.seconds)      
 
-    # def test_whole_clock(self):
-        # sleep_time = 1200
-        # duration = run_clock(sleep_time, __class__.driver)
         
-        # # Verification that duration is expected value
-        # if (duration.seconds != sleep_time):
-            # print("TEST FAILED: EXPECTED DURATION OF %s, GOT %s", sleep_time, duration.seconds)
-        # else:
-            # print("TEST PASSED EXPECTED:%s, GOT:%s", sleep_time, duration.seconds)   
+    def test_whole_clock(self):
+        sleep_time = 1200
+        duration = run_clock(sleep_time, __class__.driver)
+        
+        # Verification that duration is expected value
+        self.assertEqual(sleep_time, duration.seconds)
  
 if __name__ == '__main__':
     unittest.main()
+    

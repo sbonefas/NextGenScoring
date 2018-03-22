@@ -91,7 +91,7 @@ class TestSubs(unittest.TestCase):
         __class__.driver.get(path)
         
     def tearDown(self):
-	     __class__.driver.quit()
+	    __class__.driver.quit()
          
     def test_sub1Player(self):
         print("test_sub1Player")
@@ -190,7 +190,8 @@ class TestSubs(unittest.TestCase):
 
         home_score = __class__.driver.find_element_by_id("home").find_element_by_class_name("score").find_element_by_xpath("h2[2]").text;
         away_score = __class__.driver.find_element_by_id("visitor").find_element_by_class_name("score").find_element_by_xpath("h2[2]").text;
-        clock = __class__.driver.find_element_by_id("clockh2").text;
+        clock = (__class__.driver.find_element_by_id("clockminutes").text + ":" + 
+                 __class__.driver.find_element_by_id("clockseconds").text)
         
         ## SUB PLAYER 01 out for 06
         sub1Player(__class__.driver, "01", "06")
