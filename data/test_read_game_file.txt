@@ -1,12 +1,1 @@
-HOME
-player name, number, fg, fga, pts
-john lastname, 30, 2, 4, 6
-jerry, 31, 3, 3, 7
-becky, 44, 5, 7, 12
-harold, 02, 1, 5, 2
-;AWAY
-player name, number, fg, fga, pts
-john1, 35, 1, 4, 2
-jerry1, 36, 2, 3, 6
-becky1, 45, 6, 7, 12
-harold1, 03, 4, 5, 8
+blululululululu

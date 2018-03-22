@@ -29,7 +29,6 @@ function createWindow() {
 		drw.create_game_file(['player_name','player_number','fg','fga','m3','3a','ft','fta','reb','ast','pf','blk','trn','stl'], 'test_create_game.txt');
 		drw.read_game_file('test_read_game_file');
 	}
-
 	win.on('closed', () => {
 		win = null;
 		app.quit();
