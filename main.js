@@ -219,17 +219,17 @@ ipc.on('send-data', function (event,keystrokes){
  */
  
 ipc.on('get-data', function(event){ 
-var manData;
 	try {
-		//test_data = drw.readTestData(file_path);
-		var manData = [1,2,3,4,5];
+		var data = [];
+		data = drw.read_game_file(test_file_name);
+		console.log(data);
 	} catch (e) {
 		//if failure
 		console.log("An error occurred in file reading: " + e);
 		event.sender.send('get-data-failure');
 		return;
 	}
-	event.sender.send('get-data-success', manData);
+	event.sender.send('get-data-success', data);
 });
 
 

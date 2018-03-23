@@ -207,6 +207,7 @@
 		<script>			
 			//Keep clock functionality on the frontend
 			// Uses EasyTimer.js from Github https://albert-gonzalez.github.io/easytimer.js/
+			callBackend();
 			var timer = new Timer();
   			timer.start({countdown: true, startValues: {seconds: 1200}});
   			timer.pause();
@@ -227,7 +228,7 @@
 			    $('#clockdiv #clockminutes').html('00');
 			    $('#clockdiv #clockseconds').html('00');
 			});
-
+			
 			document.body.onkeyup = function(e){
     			if(e.keyCode == 32 && e.target == document.body){
        				 if(paused) {
