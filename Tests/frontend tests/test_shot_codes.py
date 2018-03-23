@@ -133,9 +133,10 @@ class TestShotCodes(unittest.TestCase):
     def test_make_3pt_fg_play_by_play(self):
     '''
 
+    '''
     def test_miss_2pt_fg_scoreboard_and_player_stats(self):
 	    # Offensive rebound by player 1
-        __class__.add_score(self, "01", "R", "01", 2)
+        #__class__.add_score(self, "01", "R", "01", 2)
         #__class__.add_score(self, "01", "R", "M", 2)
         #__class__.add_score(self, "01", "R", "B", 2) Another prompt needed
         #__class__.add_score(self, "01", "R", "D", 2) Another prompt needed
@@ -148,7 +149,8 @@ class TestShotCodes(unittest.TestCase):
         fg_percentage = 100 * (__class__.list[0] / __class__.list[1])
         three_pt_fg_percentage = 100 * (__class__.list[2] / (__class__.list[1] - 4))		
         self.assertEqual(__class__.driver.find_element_by_xpath("//*[@id='ps-home']/div/p[1]").text, "FG%: "+str(fg_percentage)+" 3FG%: "+str(three_pt_fg_percentage)+" FT%: 0")
-		
+    '''
+	
     '''
     def test_miss_2pt_fg_play_by_play(self):
 	    pass
