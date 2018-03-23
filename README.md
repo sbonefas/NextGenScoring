@@ -40,7 +40,7 @@ The password to enter the frontend application is:
 
 >123
 
-To run our frontend tests, download Python 3.6.4 [here](https://www.python.org/downloads/). You also need to download Mozilla Firefox 57.0 [here](https://filehippo.com/download_firefox/79535/). Finally, you need to install geckodriver 0.20.0 [here](https://github.com/mozilla/geckodriver/releases) and edit your environmental variables to ensure that your computer can find the geckodriver.
+To run our frontend tests, download Python 3.6.4 [here](https://www.python.org/downloads/). You also need to download Mozilla Firefox 57.0 [here](https://filehippo.com/download_firefox/79535/). Finally, you need to install geckodriver 0.20.0 [here](https://github.com/mozilla/geckodriver/releases) and edit your environmental variables to ensure that your computer can find the geckodriver. Also be sure to set the testing variable in app.js to be true.
 
 In the terminal run
 
