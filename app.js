@@ -391,7 +391,20 @@ var app = new Vue({
            }
            // J then K - BLOCKED SHOT
            else if (who_did_it == app.home_team[index].number && (result_code == "k" || result_code == "K")) {
-                console.log("J->K");
+             app.home_team[index].fa += 1;
+             app.home_totals.fa += 1;
+             // add to play by play - HOME
+             app.add_play(`${app.home_team[index].name} J -> K`);
+             var total_attempts = 0;
+             var total_fgs = 0;
+             for(players = 0; players < app.home_team.length; players++)
+             {
+               total_attempts += (app.home_team[players].fa + app.home_team[players].a3);
+               total_fgs += (app.home_team[players].fg + app.home_team[players].m3);
+             }
+             home_stats.fg = Number.parseFloat((total_fgs/total_attempts)*100).toFixed(2);;
+             app.blocked_shot();
+             break;
            }
          }
        } //end home calculations
@@ -585,7 +598,20 @@ var app = new Vue({
            }
            // J then K - BLOCKED SHOT
            else if (who_did_it == app.vis_team[index].number && (result_code == "k" || result_code == "K")) {
-                console.log("J->K");
+             app.vis_team[index].fa += 1;
+             app.vis_totals.fa += 1;
+             // add to play by play - HOME
+             app.add_play(`${app.vis_team[index].name} J -> K`);
+             var total_attempts = 0;
+             var total_fgs = 0;
+             for(players = 0; players < app.vis_team.length; players++)
+             {
+               total_attempts += (app.vis_team[players].fa + app.vis_team[players].a3);
+               total_fgs += (app.vis_team[players].fg + app.vis_team[players].m3);
+             }
+             vis_stats.fg = Number.parseFloat((total_fgs/total_attempts)*100).toFixed(2);;
+             app.blocked_shot();
+             break;
            }
          }
        }//end visitor calculations
@@ -660,7 +686,7 @@ var app = new Vue({
      }
      // F10 - clear and do not complete any partially keyed action
      else if(e.keyCode == 121) {
-
+        // currently, pressing ESC completes this task. After integrating with the backend we may need this function
      }
 
      // E - Free Throw
@@ -710,7 +736,7 @@ var app = new Vue({
 
      // Esc - Return to main menu
      else if(e.keyCode == 27) {
-
+        // currently there is no main menu. This will be implemented in iteration 2
      }
 
    }, //end keycode method
