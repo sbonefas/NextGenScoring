@@ -19,7 +19,7 @@ const test_file_name = "test_drw_file";
 function createWindow() {
 	win = new BrowserWindow();
 	win.loadURL(url.format({
-		pathname: path.join(__dirname, 'index.html'),
+		pathname: path.join(__dirname, 'backend_index.html'),
 		protocol: 'file',
 		slashes: true		
 	}));

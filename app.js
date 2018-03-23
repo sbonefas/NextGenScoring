@@ -117,35 +117,6 @@ function launchClockPrompt() { // called when the user clicks on the game clock 
   }
 }
 
-function callBackend(){
-	const electron = require("electron");
-	const ipc = electron.ipcRenderer;
-
-	let keystrokes = "j 15 g  h";
-	<!-- Testing send-data & get-data functions -->
-	ipc.send('send-data', keystrokes);
-
-	ipc.send('get-data');
-
-	ipc.on('send-data-failure', function() { 
-		console.log("An error occurred in writing " + keystrokes + " to file");
-	});
-
-	ipc.on('send-data-success', function() { 
-		console.log("Successfully recorded keystroke: " + keystrokes);
-	});
-
-	ipc.on('get-data-failure', function() { 
-		console.log("An error occurred in reading from file")
-
-	});
-
-	ipc.on('get-data-success', function(event, arg) { 
-		console.log("Successfully retrieved data: " + arg);
-
-	});
-}
-
 function startClock(startingTime) {
   var timer = new Timer();
   timer.start({countdown: true, startValues: {seconds: 1200}});
