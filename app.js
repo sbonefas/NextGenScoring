@@ -223,7 +223,7 @@ var app = new Vue({
                total_attempts += (app.home_team[players].fa + app.home_team[players].a3);
                total_fgs += (app.home_team[players].fg + app.home_team[players].m3);
              }
-             home_stats.fg = (total_fgs/total_attempts)
+             home_stats.fg = Number.parseFloat((total_fgs/total_attempts)*100).toFixed(2);
              app.assist()
              // change possession
              app.vis_possession();
@@ -250,8 +250,8 @@ var app = new Vue({
                total_threes += app.home_team[players].m3;
                total_threes_attmept += app.home_team[players].a3;
              }
-             home_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
-             home_stats.tfg = Number.parseFloat(total_threes/total_threes_attmept).toFixed(2);
+             home_stats.fg = Number.parseFloat((total_fgs/total_attempts)*100).toFixed(2);;
+             home_stats.tfg = Number.parseFloat((total_threes/total_threes_attmept)*100).toFixed(2);
              // add to home team score
              app.home_score += 3;
              app.home_totals.tp = app.home_score;
@@ -275,7 +275,7 @@ var app = new Vue({
                total_attempts += (app.home_team[players].fa + app.home_team[players].a3);
                total_fgs += (app.home_team[players].fg + app.home_team[players].m3);
              }
-             home_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
+             home_stats.fg = Number.parseFloat((total_fgs/total_attempts)*100).toFixed(2);;
              app.rebound();
              break;
            }
@@ -297,7 +297,7 @@ var app = new Vue({
                total_attempts += app.home_team[players].fa;
                total_fgs += (app.home_team[players].fg + app.home_team[players].m3);
              }
-             home_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
+             home_stats.fg = Number.parseFloat((total_fgs/total_attempts)*100).toFixed(2);;
              app.assist()
              // change possession
              app.vis_possession();
@@ -345,7 +345,7 @@ var app = new Vue({
                total_attempts += (app.vis_team[players].fa + app.vis_team[players].a3);
                total_fgs += (app.vis_team[players].fg + app.vis_team[players].m3);
              }
-             vis_stats.fg = (total_fgs/total_attempts)
+             vis_stats.fg = Number.parseFloat((total_fgs/total_attempts)*100).toFixed(2);
              // change possession
              app.home_possession();
              break;
@@ -395,7 +395,7 @@ var app = new Vue({
                total_attempts += (app.vis_team[players].fa + app.vis_team[players].a3);
                total_fgs += (app.vis_team[players].fg + app.vis_team[players].m3);
              }
-             vis_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
+             vis_stats.fg = Number.parseFloat((total_fgs/total_attempts)*100).toFixed(2);
              app.rebound();
              break;
            }
@@ -516,7 +516,7 @@ var app = new Vue({
 
      // E - Free Throw
      else if(e.keyCode == 69) {
-
+        app.log_free_throw();
      }
 
      // T - turnover
@@ -818,6 +818,80 @@ var app = new Vue({
              }
          }
     }
-  }    
+  },
+  log_free_throw()
+  {
+    //Home free throw
+    if(home)
+    {
+      ft_player_num = window.prompt("FREE THROW BY PLAYER ##");
+      result = window.prompt(`PRESS E FOR A MADE FREE THROW\nPRESS M FOR A MISS AND NO REBOUND\nPRESS R FOR A MISS WITH A REBOUND`);
+      for(index = 0; index < app.home_team.length; index++)
+      {
+        if(ft_player_num == app.home_team[index].number)
+          {
+            if(result == 'e' || result == 'E')
+            {
+                app.home_team[index].ftm += 1;
+                app.home_team[index].fta += 1;
+                app.home_team[index].tp += 1;
+                app.home_totals.ftm += 1;
+                app.home_totals.fta += 1;
+                app.home_totals.tp += 1;
+                home_stats.ftp = Number.parseFloat((app.home_totals.ftm/app.home_totals.fta)*100).toFixed(2);
+            }
+            else if(result == 'm' || result == 'M')
+            {
+                app.home_team[index].fta += 1;
+                app.home_totals.fta += 1;
+                home_stats.ftp = Number.parseFloat((app.home_totals.ftm/app.home_totals.fta)*100).toFixed(2);
+            }
+            else if(result == 'r' || result == 'R')
+            {
+                app.home_team[index].fta += 1;
+                app.home_totals.fta += 1;
+                home_stats.ftp = Number.parseFloat((app.home_totals.ftm/app.home_totals.fta)*100).toFixed(2);
+                app.rebound();
+            }
+          }
+      }
+
+    }
+    //away free throw
+    else
+    {
+      ft_player_num = window.prompt("FREE THROW BY PLAYER ##");
+      result = window.prompt(`PRESS E FOR A MADE FREE THROW\nPRESS M FOR A MISS AND NO REBOUND\nPRESS R FOR A MISS WITH A REBOUND`);
+      for(index = 0; index < app.vis_team.length; index++)
+      {
+        if(ft_player_num == app.vis_team[index].number)
+          {
+            if(result == 'e' || result == 'E')
+            {
+                app.vis_team[index].ftm += 1;
+                app.vis_team[index].fta += 1;
+                app.vis_team[index].tp += 1;
+                app.vis_totals.ftm += 1;
+                app.vis_totals.fta += 1;
+                app.vis_totals.tp += 1;
+                vis_stats.ftp = Number.parseFloat((app.vis_totals.ftm/app.vis_totals.fta)*100).toFixed(2);
+            }
+            else if(result == 'm' || result == 'M')
+            {
+                app.vis_team[index].fta += 1;
+                app.vis_totals.fta += 1;
+                vis_stats.ftp = Number.parseFloat((app.vis_totals.ftm/app.vis_totals.fta)*100).toFixed(2);
+            }
+            else if(result == 'r' || result == 'R')
+            {
+                app.vis_team[index].fta += 1;
+                app.vis_totals.fta += 1;
+                vis_stats.ftp = Number.parseFloat((app.vis_totals.ftm/app.vis_totals.fta)*100).toFixed(2);
+                app.rebound();
+            }
+          }
+      }
+    }
+  }
    }
 })
