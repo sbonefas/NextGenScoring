@@ -222,7 +222,7 @@ class TestSubs(unittest.TestCase):
         play_by_play = __class__.driver.find_element_by_id("playbyplaybox").find_element_by_xpath("table/tbody/tr[2]").text.split(" ")
         
         assert(clock == play_by_play[0])
-        assert("AWAY" == play_by_play[1])
+        assert("VISITOR" == play_by_play[1])
         assert(numB_name == play_by_play[2])
         assert(numA_name == play_by_play[6])
         assert(home_score + "-" + away_score == play_by_play[7])        
