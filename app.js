@@ -304,7 +304,32 @@ var app = new Vue({
            }
            // J then Z - GOOD FG-FAST BREAK & PAINT
            else if (who_did_it == app.home_team[index].number && (result_code == "z" || result_code == "Z")) {
-                console.log("J->Z");
+                //update boxscore
+                app.home_team[index].fg += 1;
+                app.home_team[index].fa += 1;
+                app.home_team[index].tp += 2;
+                app.home_score += 2;
+                app.home_totals.tp = app.home_score;
+                app.home_totals.fg += 1;
+                app.home_totals.fa += 1;
+
+                // update fast break and in the paint
+                home_stats.fastb += 1;
+                home_stats.paint += 1;
+
+                // add to playby play
+                 app.add_play(`Fast Break: ${app.home_team[index].name} made a shot in the paint`);
+                 var total_attempts = 0;
+                 var total_fgs = 0;
+                 for(players = 0; players < app.home_team.length; players++)
+                 {
+                   total_attempts += app.home_team[players].fa;
+                   total_fgs += (app.home_team[players].fg + app.home_team[players].m3);
+                 }
+                 home_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
+                 app.assist()
+                 // change possession
+                 app.vis_possession();
            }
            // J then F - GOOD FG ON A FAST BREAK
            else if (who_did_it == app.home_team[index].number && (result_code == "f" || result_code == "F")) {
@@ -319,9 +344,9 @@ var app = new Vue({
                 console.log("J->K");
            }
          }
-       }
+       } //end home calculations
        else {  // Visitor calculations
-            for(index = 0; index < app.vis_team.length; index++)
+         for(index = 0; index < app.vis_team.length; index++)
          {
          console.log(who_did_it);
            // J then G or Q - good field goal (2 points)
@@ -422,8 +447,33 @@ var app = new Vue({
              app.home_possession();
            }
            // J then Z - GOOD FG-FAST BREAK & PAINT
-           else if (who_did_it == app.vis_team[index].number && (result_code == "z" || result_code == "Z")) {
-                console.log("J->Z");
+           else if (who_did_it == app.home_team[index].number && (result_code == "z" || result_code == "Z")) {
+                //update boxscore
+                app.vis_team[index].fg += 1;
+                app.vis_team[index].fa += 1;
+                app.vis_team[index].tp += 2;
+                app.vis_score += 2;
+                app.vis_totals.tp = app.home_score;
+                app.vis_totals.fg += 1;
+                app.vis_totals.fa += 1;
+
+                // update fast break and in the paint
+                vis_stats.fastb += 1;
+                vis_stats.paint += 1;
+
+                // add to playby play
+                 app.add_play(`Fast Break: ${app.vis_team[index].name} made a shot in the paint`);
+                 var total_attempts = 0;
+                 var total_fgs = 0;
+                 for(players = 0; players < app.vis_team.length; players++)
+                 {
+                   total_attempts += app.vis_team[players].fa;
+                   total_fgs += (app.vise_team[players].fg + app.vis_team[players].m3);
+                 }
+                 home_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
+                 app.assist()
+                 // change possession
+                 app.home_possession();
            }
            // J then F - GOOD FG ON A FAST BREAK
            else if (who_did_it == app.vis_team[index].number && (result_code == "f" || result_code == "F")) {
@@ -438,9 +488,8 @@ var app = new Vue({
                 console.log("J->K");
            }
          }
-
-       }
-     }
+       }//end visitor calculations
+     }// end J
      // H or left arrow - home team
      else if(e.keyCode == 72 || e.keyCode == 37) {
         app.home_possession();
@@ -643,6 +692,7 @@ var app = new Vue({
                 if(who_assist == app.home_team[index].number)
                 {
                     app.home_team[index].as += 1;
+                    app.home_totals.as += 1;
                     app.add_play("Assist by " + app.home_team[index].name);
                 }
              }
@@ -653,6 +703,7 @@ var app = new Vue({
                 if(who_assist == app.vis_team[index].number)
                 {
                     app.vis_team[index].as += 1;
+                    app.vis_totals.as += 1;
                     app.add_play("Assist by " + app.vis_team[index].name);
                 }
              }
@@ -682,6 +733,7 @@ var app = new Vue({
                 if(who_got_it == app.home_team[index].number)
                 {
                     app.home_team[index].rb += 1;
+                    app.home_totals.rb += 1;
                     app.add_play("Offensive rebound by " + app.home_team[index].name);
                 }
              }
@@ -692,6 +744,7 @@ var app = new Vue({
                 if(who_got_it == app.vis_team[index].number)
                 {
                     app.vis_team[index].rb += 1;
+                    app.vis_totals.rb += 1;
                     app.add_play("Offensive rebound by " + app.vis_team[index].name);
                 }
              }
@@ -739,6 +792,7 @@ var app = new Vue({
                     if(who_got_it == app.home_team[index].number)
                     {
                         app.home_team[index].rb += 1;
+                        app.home_totals.rb += 1;
                         app.add_play("Defensive rebound by " + app.home_team[index].name);
                     }
                  }
@@ -749,6 +803,7 @@ var app = new Vue({
                     if(who_got_it == app.vis_team[index].number)
                     {
                         app.vis_team[index].rb += 1;
+                        app.vis_totals.rb += 1;
                         app.add_play("Defensive rebound by " + app.vis_team[index].name);
                     }
                  }
