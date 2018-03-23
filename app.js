@@ -301,6 +301,7 @@ var app = new Vue({
              app.assist()
              // change possession
              app.vis_possession();
+             break;
            }
            // J then Z - GOOD FG-FAST BREAK & PAINT
            else if (who_did_it == app.home_team[index].number && (result_code == "z" || result_code == "Z")) {
@@ -330,6 +331,7 @@ var app = new Vue({
                  app.assist()
                  // change possession
                  app.vis_possession();
+                 break;
            }
            // J then F - GOOD FG ON A FAST BREAK
            else if (who_did_it == app.home_team[index].number && (result_code == "f" || result_code == "F")) {
@@ -358,6 +360,7 @@ var app = new Vue({
                  app.assist()
                  // change possession
                  app.vis_possession();
+                 break;
            }
            // J then X - MISSED 3PT SHOT (REBOUND)
            else if (who_did_it == app.home_team[index].number && (result_code == "x" || result_code == "X")) {
@@ -469,6 +472,7 @@ var app = new Vue({
              vis_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
              // change possession
              app.home_possession();
+             break;
            }
            // J then Z - GOOD FG-FAST BREAK & PAINT
            else if (who_did_it == app.home_team[index].number && (result_code == "z" || result_code == "Z")) {
@@ -498,6 +502,7 @@ var app = new Vue({
                  app.assist()
                  // change possession
                  app.home_possession();
+                 break;
            }
            // J then F - GOOD FG ON A FAST BREAK
            else if (who_did_it == app.vis_team[index].number && (result_code == "f" || result_code == "F")) {
@@ -526,6 +531,7 @@ var app = new Vue({
                  app.assist()
                  // change possession
                  app.home_possession();
+                 break;
            }
            // J then X - MISSED 3PT SHOT (REBOUND)
            else if (who_did_it == app.vis_team[index].number && (result_code == "x" || result_code == "X")) {
