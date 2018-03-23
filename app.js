@@ -135,12 +135,12 @@ var app = new Vue({
     period: 'Half 1',
     home_score: 0,
     home_fouls: 0,
-    home_full: 0,
-    home_partial: 0,
+    home_full: 1,
+    home_partial: 4,
     vis_score: 0,
     vis_fouls: 0,
-    vis_full: 0,
-    vis_partial: 0,
+    vis_full: 1,
+    vis_partial: 4,
 
     home_team: [
                 {in_game: "*", number: "01", name: "Player_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, pf: 0, tp: 0},
@@ -726,6 +726,35 @@ var app = new Vue({
 
      // O - timeout
      else if(e.keyCode == 79) {
+        which_timeout = window.prompt("TIMEOUT--\n\nT for media timout or H/V for team timeout");
+        if(which_timeout == "T" || which_timeout == "t") {
+            // media timeout (4 per game)
+        }
+        else if(which_timeout == "H" || which_timeout == "h") {
+            // home team timeout
+            timeout_length = window.prompt("M for full timeout or 3 for 30 second timeout");
+            if(timeout_length == "M" || timeout_length == "m") {
+                app.home_full -= 1;
+            }
+            else if(timeout_length == "3") {
+                app.home_partial -= 1;
+            }
+        }
+        else if(which_timeout == "V" || which_timeout == "v") {
+            // away team timeout
+            timeout_length = window.prompt("M for full timeout or 3 for 30 second timeout");
+            if(timeout_length == "M" || timeout_length == "m") {
+                app.vis_full -= 1;
+            }
+            else if(timeout_length == "3") {
+                app.vis_partial -= 1;
+            }
+        }
+
+//1 60 and 4 30
+    //H/V - Team timeout (home/visitor)
+        //M - full timeout
+        //3 - 30 second timeout
 
      }
 
