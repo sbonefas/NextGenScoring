@@ -333,7 +333,31 @@ var app = new Vue({
            }
            // J then F - GOOD FG ON A FAST BREAK
            else if (who_did_it == app.home_team[index].number && (result_code == "f" || result_code == "F")) {
-                console.log("J->F");
+                //update boxscore
+                app.home_team[index].fg += 1;
+                app.home_team[index].fa += 1;
+                app.home_team[index].tp += 2;
+                app.home_score += 2;
+                app.home_totals.tp = app.vis_score;
+                app.home_totals.fg += 1;
+                app.home_totals.fa += 1;
+
+                // update fast break
+                home_stats.fastb += 1;
+
+                // add to playby play
+                 app.add_play(`Fast Break: ${app.home_team[index].name} made a shot`);
+                 var total_attempts = 0;
+                 var total_fgs = 0;
+                 for(players = 0; players < app.home_team.length; players++)
+                 {
+                   total_attempts += app.home_team[players].fa;
+                   total_fgs += (app.home_team[players].fg + app.home_team[players].m3);
+                 }
+                 home_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
+                 app.assist()
+                 // change possession
+                 app.vis_possession();
            }
            // J then X - MISSED 3PT SHOT (REBOUND)
            else if (who_did_it == app.home_team[index].number && (result_code == "x" || result_code == "X")) {
