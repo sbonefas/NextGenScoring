@@ -12,7 +12,7 @@ const ipc = electron.ipcMain;
 const dialog = electron.dialog;
 
 let win;
-const TESTING = true;
+const TESTING = false;
 const file_name = 'test_read_game_file';
 const test_file_name = "test_drw_file";
 
