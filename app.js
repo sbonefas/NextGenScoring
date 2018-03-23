@@ -453,7 +453,7 @@ var app = new Vue({
                 app.vis_team[index].fa += 1;
                 app.vis_team[index].tp += 2;
                 app.vis_score += 2;
-                app.vis_totals.tp = app.home_score;
+                app.vis_totals.tp = app.vis_score;
                 app.vis_totals.fg += 1;
                 app.vis_totals.fa += 1;
 
@@ -468,16 +468,40 @@ var app = new Vue({
                  for(players = 0; players < app.vis_team.length; players++)
                  {
                    total_attempts += app.vis_team[players].fa;
-                   total_fgs += (app.vise_team[players].fg + app.vis_team[players].m3);
+                   total_fgs += (app.vis_team[players].fg + app.vis_team[players].m3);
                  }
-                 home_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
+                 vis_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
                  app.assist()
                  // change possession
                  app.home_possession();
            }
            // J then F - GOOD FG ON A FAST BREAK
            else if (who_did_it == app.vis_team[index].number && (result_code == "f" || result_code == "F")) {
-                console.log("J->F");
+                //update boxscore
+                app.vis_team[index].fg += 1;
+                app.vis_team[index].fa += 1;
+                app.vis_team[index].tp += 2;
+                app.vis_score += 2;
+                app.vis_totals.tp = app.vis_score;
+                app.vis_totals.fg += 1;
+                app.vis_totals.fa += 1;
+
+                // update fast break
+                vis_stats.fastb += 1;
+
+                // add to playby play
+                 app.add_play(`Fast Break: ${app.vis_team[index].name} made a shot`);
+                 var total_attempts = 0;
+                 var total_fgs = 0;
+                 for(players = 0; players < app.vis_team.length; players++)
+                 {
+                   total_attempts += app.vis_team[players].fa;
+                   total_fgs += (app.vis_team[players].fg + app.vis_team[players].m3);
+                 }
+                 vis_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
+                 app.assist()
+                 // change possession
+                 app.home_possession();
            }
            // J then X - MISSED 3PT SHOT (REBOUND)
            else if (who_did_it == app.vis_team[index].number && (result_code == "x" || result_code == "X")) {
