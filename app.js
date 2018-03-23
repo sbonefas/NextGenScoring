@@ -1224,9 +1224,18 @@ var app = new Vue({
   },
   blocked_shot()
   {
+      if(home)
+      {
+        app.vis_possession();
+      }
+      else
+      {
+        app.home_possession();
+      }
       blocker = window.prompt("SHOT BLOCKED BY PLAYER ##");
       if(home)
       {
+          //app.vis_possession();
           for(index = 0; index < app.home_team.length; index++)
           {
               if(blocker == app.home_team[index].number)
@@ -1234,13 +1243,13 @@ var app = new Vue({
                 app.home_team[index].blk += 1;
                 home_stats.blocks += 1;
                 app.rebound();
-                app.vis_possession();
                 break;
               }
           }
       }
       else
       {
+        //app.home_possession();
         for(index = 0; index < app.vis_team.length; index++)
         {
             if(blocker == app.vis_team[index].number)
@@ -1248,7 +1257,6 @@ var app = new Vue({
               app.vis_team[index].blk += 1;
               vis_stats.blocks += 1;
               app.rebound();
-              app.home_possession();
               break;
             }
       }
