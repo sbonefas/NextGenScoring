@@ -519,6 +519,11 @@ var app = new Vue({
 
      }
 
+     // F - Foul
+     else if(e.keyCode == 70) {
+      app.foul();
+     }
+
      // T - turnover
      else if(e.keyCode == 84) {
 
@@ -661,6 +666,76 @@ var app = new Vue({
         else if(who_assist == "") {
             // Enter - no assist
         }
+   },
+   foul() {
+        var team = window.prompt("Foul on Home or Visiting team?\nEnter H for Home or V for Visitor"); // team will be h or v
+        var valid_team = false;
+        if(team == 'h' || team == 'H' || team == 'v' || team == 'V') {
+          valid_team = true;
+        }
+        if(!valid_team) {
+          window.alert("Please select H or V");
+        }
+        if(valid_team) {
+          var player = window.prompt("Foul on: (Key in a player ##:\nFor a technical, press T and a player ## or B for bench");
+        }
+        if(team == 'h' || team == 'H') {
+          home = true;
+          if(player.charAt(0) == 't' || player.charAt(0) == 'T') { // technical foul TODO figure out if we have to store any info on technicals
+            var player_number = player.substring(1,3);
+            for(index = 0; index < app.home_team.length; index++)
+             {
+                if(player_number == app.home_team[index].number)
+                {
+                    app.home_team[index].pf += 1;
+                    app.add_play("Foul on " + app.home_team[index].name);
+                }
+             }
+          }
+          if(player.charAt(0) == 'b' || player.charAt(0) == 'B') { // bench foul
+            
+          }
+          var player_number = player.substring(0,2);
+            for(index = 0; index < app.home_team.length; index++)
+             {
+                if(player_number == app.home_team[index].number)
+                {
+                    app.home_team[index].pf += 1;
+                    app.add_play("Foul on " + app.home_team[index].name);
+                }
+             }
+             app.home_totals.pf += 1
+             app.vis_possession(); // switch possession
+        }
+        if(team == 'v' || team == 'V') {
+          home = false;
+          if(player.charAt(0) == 't' || player.charAt(0) == 'T') { // technical foul TODO figure out if we have to store any info on technicals
+            var player_number = player.substring(1,3);
+            for(index = 0; index < app.vis_team.length; index++)
+             {
+                if(player_number == app.vis_team[index].number)
+                {
+                    app.vis_team[index].pf += 1;
+                    app.add_play("Foul on " + app.vis_team[index].name);
+                }
+             }
+          }
+          if(player.charAt(0) == 'b' || player.charAt(0) == 'B') { // bench foul
+            
+          }
+          var player_number = player.substring(0,2);
+            for(index = 0; index < app.vis_team.length; index++)
+             {
+                if(player_number == app.vis_team[index].number)
+                {
+                    app.vis_team[index].pf += 1;
+                    app.add_play("Foul on " + app.vis_team[index].name);
+                }
+             }
+             app.vis_totals.pf += 1
+             app.home_possession(); // switch possession
+        }
+
    },
    rebound() {
         who_got_it = window.prompt("REBOUNDED-- \n\n OFFENSIVE: Key in a player ## or M for team rebound or B for deadball" +
