@@ -1,3 +1,9 @@
+html {
+	background-color: #c5050c; /*UW Red*/
+	font-family: "Verlag", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	overflow: hidden;
+}
+/*Scorebar*/
 .fouls {
 	display: inline-block;
 }
@@ -6,37 +12,55 @@
 }
 .clock {
 	display: inline-block;
+	vertical-align: center;
+}
+.clock h2 {
+	vertical-align: center;
+}
+#clockminutes {
+	font-size: 36px;
+}
+#clockseconds {
+	font-size: 36px;
+}
+#clockseparator {
+	font-size: 36px;
 }
 div.clock {
 	margin: 0 auto;
 	width: 300px;
 	margin-left: 300px;
-	margin-right: 300px
+	margin-right: 300px;
+	position: relative;
+	text-align: center;
 }
 #scorebar {
 	/*
 	width: 100%;
-	*/
-	background-color: #b3b3b3;
+    */
+    width: auto;
+	background-color: #282728; /*UW Grey*/
+	color: #f9f9f9;
 	padding: 40px;
+	height:8%;
+	text-transform: uppercase;
+}
+#homescoreshowhide {
+	color: red;
+	text-decoration: underline;
+}
+#pshometeamname {
+	color: red;
+	text-decoration: underline;
 }
 #visitor {
 	float: right;
+	text-align: right;
 	display: inline-block;
 }
 #home {
 	float: left;
 	display: inline-block;
-}
-
-/* play by plays */
-#playbyplaybox {
-    width: 100%;
-    background-color: #b3b3b3;
-}
-
-.playbyplayheader {
-    text-align: center;
 }
 
 #home .score {
@@ -46,3 +70,56 @@ div.clock {
 	padding-right: 20px;
 }
 
+/*Player Stats*/
+#playerstats {
+	width: 100%;
+	height: 58%;
+	background-color: #dadfe1;
+}
+#ps-home {
+	display: inline-block;
+	float: left;
+}
+#ps-visitor {
+	display: inline-block;
+	float: right;
+}
+
+/* play by plays */
+#playbyplaybox {
+    width: 60%;
+    height: 30%;
+    background-color: #282728; /*UW Grey*/
+    color: #f9f9f9;
+    margin: auto;
+    vertical-align: center;
+}
+
+#playbyplaybox h2 {
+    text-align: center;
+}
+
+#playbyplaybox table {
+    border-collapse: collapse;
+    width: 100%;
+    text-align: center;
+    font-size: 16px;
+}
+
+#playbyplaybox th {
+    border-bottom: 1px solid black;
+    text-align: center;
+    text-transform: uppercase;
+    background-color: #282728; /*UW Grey*/
+    color: #f9f9f9;
+}
+
+#playbyplaybox tr {
+    border-bottom: 1px solid black;
+    background-color: #dadfe1; /*uw-gray-blue*/
+}
+
+.playteam {
+    text-transform: uppercase;
+    text-align: center;
+}
