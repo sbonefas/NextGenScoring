@@ -131,7 +131,7 @@ function startClock(startingTime) {
 var app = new Vue({
   el: '#app',
   data: {
-    teams: ["WISC", "AWAY"],
+    teams: ["WISC", "VISITOR"],
     period: 'Half 1',
     home_score: 0,
     home_fouls: 0,
