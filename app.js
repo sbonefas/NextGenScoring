@@ -3,7 +3,6 @@ var home = true;
 
 result_code_prompt = `
 PRESS A RESULT CODE...
-
 G (or Q) - GOOD FIELD GOAL               F - GOOD FG ON A FAST BREAK
 Y - GOOD 3PT FIELD GOAL                  R - MISSED SHOT (REBOUND)
 P - GOOD FG IN THE PAINT                  X - MISSED 3PT SHOT (REBOUND)
@@ -11,7 +10,6 @@ Z - GOOD FG- FAST BREAK & PAINT   K - BLOCKED SHOT
 `;
 
 help_menu = `HELP MENU: GAMETIME INPUT CODES AND KEYS
-
 FIELD GOAL CODES                NON-FIELD GOAL CODES
     J - 2- or 3- point shot              E - Free Throw  K - Block
     Y - 3-point shot                        R - Rebound     T - Turnover
@@ -19,7 +17,6 @@ FIELD GOAL CODES                NON-FIELD GOAL CODES
     L - Layup                                   F - Foul            O - Timeout
     P - Tip-in
     W - Wrong basket (defensive team scores in offensive team basket)
-
 RESULT CODES
     G or Q - Good field goal (2- or 3-pointer)
     Y - Good 3-point field goal
@@ -30,7 +27,6 @@ RESULT CODES
     F - Made field goal on a fast break
     Z - Made field goal in the paint on a fast break
     E - Made free throw
-
 SPECIAL KEYS
     H or V - Select the home team or the visiting team
     C - Change time, period, stats
