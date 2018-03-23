@@ -364,7 +364,30 @@ var app = new Vue({
            }
            // J then X - MISSED 3PT SHOT (REBOUND)
            else if (who_did_it == app.home_team[index].number && (result_code == "x" || result_code == "X")) {
-                console.log("J->X");
+             app.home_team[index].fa += 1;
+             app.home_team[index].a3 += 1;
+             app.home_totals.fa += 1;
+             app.home_totals.a3 += 1;
+
+             // add to play by play - HOME
+             app.add_play(`${app.home_team[index].name} missed a 3-point jumper`);
+
+             var total_attempts = 0;
+             var total_fgs = 0;
+             var total_threes_attmept = 0;
+             var total_threes = 0;
+             for(players = 0; players < app.home_team.length; players++)
+             {
+               total_attempts += (app.home_team[players].fa + app.home_team[players].a3);
+               total_fgs += (app.home_team[players].fg + app.home_team[players].m3);
+               total_threes += app.home_team[players].m3;
+               total_threes_attmept += app.home_team[players].a3;
+             }
+             home_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
+             home_stats.tfg = Number.parseFloat(total_threes/total_threes_attmept).toFixed(2);
+
+             app.rebound();
+             break;
            }
            // J then K - BLOCKED SHOT
            else if (who_did_it == app.home_team[index].number && (result_code == "k" || result_code == "K")) {
@@ -535,7 +558,30 @@ var app = new Vue({
            }
            // J then X - MISSED 3PT SHOT (REBOUND)
            else if (who_did_it == app.vis_team[index].number && (result_code == "x" || result_code == "X")) {
-                console.log("J->X");
+             app.vis_team[index].fa += 1;
+             app.vis_team[index].a3 += 1;
+             app.vis_totals.fa += 1;
+             app.vis_totals.a3 += 1;
+
+             // add to play by play - HOME
+             app.add_play(`${app.vis_team[index].name} missed a 3-point jumper`);
+
+             var total_attempts = 0;
+             var total_fgs = 0;
+             var total_threes_attmept = 0;
+             var total_threes = 0;
+             for(players = 0; players < app.vis_team.length; players++)
+             {
+               total_attempts += (app.vis_team[players].fa + app.vis_team[players].a3);
+               total_fgs += (app.vis_team[players].fg + app.vis_team[players].m3);
+               total_threes += app.vis_team[players].m3;
+               total_threes_attmept += app.vis_team[players].a3;
+             }
+             vis_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
+             vis_stats.tfg = Number.parseFloat(total_threes/total_threes_attmept).toFixed(2);
+
+             app.rebound();
+             break;
            }
            // J then K - BLOCKED SHOT
            else if (who_did_it == app.vis_team[index].number && (result_code == "k" || result_code == "K")) {
