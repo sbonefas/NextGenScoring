@@ -143,32 +143,32 @@ var app = new Vue({
     vis_partial: 0,
 
     home_team: [
-                {in_game: "*", number: "01", name: "Player_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "02", name: "Player_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "03", name: "Player_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "04", name: "Player_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "05", name: "Player_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "06", name: "Bench_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "07", name: "Bench_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "08", name: "Bench_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "09", name: "Bench_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "10", name: "Bench_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0}
+                {in_game: "*", number: "01", name: "Player_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, to: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "02", name: "Player_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, to: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "03", name: "Player_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, to: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "04", name: "Player_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, to: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "05", name: "Player_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, to: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "06", name: "Bench_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, to: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "07", name: "Bench_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, to: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "08", name: "Bench_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, to: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "09", name: "Bench_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, to: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "10", name: "Bench_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, to: 0, pf: 0, tp: 0}
               ],
-    home_totals: {in_game: " ", number: " ", name: "Totals", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+    home_totals: {in_game: " ", number: " ", name: "Totals", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, to: 0, pf: 0, tp: 0},
 
     vis_team: [
-                {in_game: "*", number: "01", name: "Player_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "02", name: "Player_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "03", name: "Player_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "04", name: "Player_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "05", name: "Player_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "06", name: "Bench_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "07", name: "Bench_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "08", name: "Bench_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "09", name: "Bench_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "10", name: "Bench_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0}
+                {in_game: "*", number: "01", name: "Player_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, to: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "02", name: "Player_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, to: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "03", name: "Player_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, to: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "04", name: "Player_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, to: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "05", name: "Player_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, to: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "06", name: "Bench_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, to: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "07", name: "Bench_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, to: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "08", name: "Bench_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, to: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "09", name: "Bench_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, to: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "10", name: "Bench_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, to: 0, pf: 0, tp: 0}
               ],
-    vis_totals: {in_game: " ", number: " ", name: "Totals", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, pf: 0, tp: 0},
+    vis_totals: {in_game: " ", number: " ", name: "Totals", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, to: 0, pf: 0, tp: 0},
 
     playlist: [
                 //example: {time: "19:85", team: "WISC", playdscrp: "Ethan Happ made a 3 point jumper", score: "100-2"},
@@ -575,7 +575,7 @@ var app = new Vue({
 
      // T - turnover
      else if(e.keyCode == 84) {
-
+      app.turnover();
      }
 
      // R - rebound
@@ -717,6 +717,50 @@ var app = new Vue({
         else if(who_assist == "") {
             // Enter - no assist
         }
+   },
+   turnover() {
+      console.log('turnover');
+      var response = window.prompt("Turnover by: (Key in a player ## or M for team turnover");
+      if(response.charAt(0) == 'm' || response.charAt(0) == 'M') {
+        if(home) {
+          home_stats.tvs += 1;
+          app.home_totals.to += 1
+          app.vis_possession(); // switch possession
+        } else {
+          vis_stats.tvs += 1;
+          app.vis_totals.to += 1
+          app.home_possession(); // switch possession
+        }
+      } else {
+        var player_number = response.substring(0,2);
+        if(app.check_in_game(player_number)) {
+          if(home) {
+          for(index = 0; index < app.home_team.length; index++)
+             {
+                if(player_number == app.home_team[index].number)
+                {
+                    app.home_team[index].to += 1;
+                    app.add_play("Turnover by " + app.home_team[index].name);
+                }
+             }
+             home_stats.tvs += 1;
+             app.home_totals.to += 1
+             app.vis_possession(); // switch possession
+        } else {
+          for(index = 0; index < app.vis_team.length; index++)
+             {
+                if(player_number == app.vis_team[index].number)
+                {
+                    app.vis_team[index].to += 1;
+                    app.add_play("Turnover by " + app.vis_team[index].name);
+                }
+             }
+             vis_stats.tvs += 1;
+             app.vis_totals.to += 1
+             app.home_possession(); // switch possession
+        }
+        }
+      }
    },
    foul() {
         var team = window.prompt("Foul on Home or Visiting team?\nEnter H for Home or V for Visitor"); // team will be h or v
