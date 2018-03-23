@@ -15,8 +15,8 @@ class TestShotCodes(unittest.TestCase):
 		
     @classmethod
     def tearDownClass(cls):
-	    #__class__.driver.quit()
-        pass
+	    __class__.driver.quit()
+        #pass
 
     def setUp(self):
         pass
