@@ -6,7 +6,6 @@
 		<link rel="stylesheet" href="vex-theme-os.css">
 		<title>NextGen Scoring</title>
 	</head>
-
 	<body>
 		<div id = "app">
 			<!-- SCORE BAR AND CLOCK -->
@@ -59,20 +58,18 @@
 						<h2 id = "pshometeamname" class="playteam">{{ teams[0] }}</h2>
 						<table class="playerstatstable" cellpadding="3">
 							<tr>
-								<th>IN</th> <!-- "*" if in game -->
+								<th>in</th> <!-- "*" if in game -->
 								<th>##</th> <!-- player number -->
 								<th>--Name--</th> <!-- player name -->
 								<th>FG</th> <!-- field goals -->
 								<th>FA</th> <!-- field goal attempts -->
-								<th>3M</th> <!-- 3 pointer made -->
-								<th>3A</th> <!-- 3 pointer attempts -->
-								<th>FT</th> <!-- free throw made -->
-								<th>FTA</th> <!-- free throw attempted -->
+								<th>3M</th> <!-- 3 pointers -->
+								<th>FT</th> <!-- ?? -->
+								<th>FA</th> <!-- ?? -->
 								<th>RB</th> <!-- rebound -->
 								<th>AS</th> <!-- assist -->
-								<th>TO</th> <!-- turnovers -->
-								<th>PF</th> <!-- personal foul -->
-								<th>TP</th> <!-- total points -->
+								<th>PF</th> <!-- ?? -->
+								<th>TP</th> <!-- ?? -->
 							</tr>
 							<tr v-for="player in home_team">
 								<td>{{ player.in_game }}</td>
@@ -81,12 +78,10 @@
 								<td>{{ player.fg }}</td>
                                 <td>{{ player.fa }}</td>
                                 <td>{{ player.m3 }}</td>
-                                <td>{{ player.a3 }}</td>
                                 <td>{{ player.ftm }}</td>
                                 <td>{{ player.fta }}</td>
                                 <td>{{ player.rb }}</td>
                                 <td>{{ player.as }}</td>
-                                <td>{{ player.to }}</td>
                                 <td>{{ player.pf }}</td>
                                 <td>{{ player.tp }}</td>
 							</tr>
@@ -97,12 +92,10 @@
                                 <td>{{ home_totals.fg }}</td>
                                 <td>{{ home_totals.fa }}</td>
                                 <td>{{ home_totals.m3 }}</td>
-                                <td>{{ home_totals.a3 }}</td>
                                 <td>{{ home_totals.ftm }}</td>
                                 <td>{{ home_totals.fta }}</td>
                                 <td>{{ home_totals.rb }}</td>
                                 <td>{{ home_totals.as }}</td>
-                                <td>{{ home_totals.to }}</td>
                                 <td>{{ home_totals.pf }}</td>
                                 <td>{{ home_totals.tp }}</td>
                             </tr>
@@ -115,20 +108,18 @@
 					<h2 id = "psvisitorteamname" class="playteam">{{ teams[1] }}</h2>
 					<table class="playerstatstable" cellpadding="3">
 						<tr>
-                            <th>IN</th> <!-- "*" if in game -->
-                            <th>##</th> <!-- player number -->
-                            <th>--Name--</th> <!-- player name -->
-                            <th>FG</th> <!-- field goals -->
-                            <th>FA</th> <!-- field goal attempts -->
-                            <th>3M</th> <!-- 3 pointer made -->
-                            <th>3A</th> <!-- 3 pointer attempts -->
-                            <th>FT</th> <!-- free throw made -->
-                            <th>FTA</th> <!-- free throw attempted -->
-                            <th>RB</th> <!-- rebound -->
-                            <th>AS</th> <!-- assist -->
-                            <th>TO</th> <!-- turnovers -->
-                            <th>PF</th> <!-- personal foul -->
-                            <th>TP</th> <!-- total points -->
+							<th>in</th>
+							<th>##</th>
+							<th>--Name--</th>
+							<th>FG</th>
+							<th>FA</th>
+							<th>3M</th>
+							<th>FT</th>
+							<th>FA</th>
+							<th>RB</th>
+							<th>AS</th>
+							<th>PF</th>
+							<th>TP</th>
 						</tr>
                         <tr v-for="player in vis_team">
                             <td>{{ player.in_game }}</td>
@@ -137,12 +128,10 @@
                             <td>{{ player.fg }}</td>
                             <td>{{ player.fa }}</td>
                             <td>{{ player.m3 }}</td>
-                            <td>{{ player.a3 }}</td>
                             <td>{{ player.ftm }}</td>
                             <td>{{ player.fta }}</td>
                             <td>{{ player.rb }}</td>
                             <td>{{ player.as }}</td>
-                            <td>{{ player.to }}</td>
                             <td>{{ player.pf }}</td>
                             <td>{{ player.tp }}</td>
                         </tr>
@@ -153,12 +142,10 @@
                             <td>{{ vis_totals.fg }}</td>
                             <td>{{ vis_totals.fa }}</td>
                             <td>{{ vis_totals.m3 }}</td>
-                            <td>{{ vis_totals.a3 }}</td>
                             <td>{{ vis_totals.ftm }}</td>
                             <td>{{ vis_totals.fta }}</td>
                             <td>{{ vis_totals.rb }}</td>
                             <td>{{ vis_totals.as }}</td>
-                            <td>{{ vis_totals.to }}</td>
                             <td>{{ vis_totals.pf }}</td>
                             <td>{{ vis_totals.tp }}</td>
                         </tr>
@@ -191,12 +178,33 @@
 			</div><!-- end play by play div -->
 		</div> <!-- end app div -->
 
+
+			<!-- Play By Play -->
+			<div id = "playbyplaybox">
+				<h2>Play-by-Play</h2>
+				<table cellpadding="3">
+					<tr>
+						<th>Time</th>
+						<th>Team</th>
+						<th>Play</th>
+						<th>Score (Home-Visitor)</th>
+					</tr>
+					<tr v-for="play in playlist">
+						<td>{{ play.time }}</td>
+						<td class="playteam">{{ play.team }}</td>
+						<td>{{ play.playdscrp }}</td>
+						<td>{{ play.score }}</td>
+					</tr>
+				</table>
+			</div><!-- end play by play div -->
+		</div> <!-- end app div -->
+
 		<script type="text/javascript" src="./vue.js"></script>
-		<script src="vex.combined.min.js"></script>
 		<script type="text/javascript" src="./app.js"></script>
-		<script src="easytimer.min.js"></script>
-		<script src="jquery.min.js"></script>
-		<script>
+		<script src="vex.combined.min.js"></script>
+		<script src="./easytimer.min.js"></script>
+		<script src="./jquery.min.js"></script>
+		<script>			
 			//Keep clock functionality on the frontend
 			// Uses EasyTimer.js from Github https://albert-gonzalez.github.io/easytimer.js/
 			var timer = new Timer();
@@ -219,6 +227,7 @@
 			    $('#clockdiv #clockminutes').html('00');
 			    $('#clockdiv #clockseconds').html('00');
 			});
+			
 			document.body.onkeyup = function(e){
     			if(e.keyCode == 32 && e.target == document.body){
        				 if(paused) {
@@ -232,6 +241,34 @@
        				 }
     			}
 			}
+	
+			const electron = require("electron");
+			const ipc = electron.ipcRenderer;
+			
+			let keystrokes = "j 16 g h";
+			<!-- Testing send-data & get-data functions -->
+			ipc.send('send-data', keystrokes);
+			
+			ipc.send('get-data');
+			
+			ipc.on('send-data-failure', function() { 
+				console.log("An error occurred in writing " + keystrokes + " to file : " + e);
+			});
+			
+			ipc.on('send-data-success', function() { 
+				console.log("Successfully recorded keystroke: " + keystrokes);
+			});
+			
+			ipc.on('get-data-failure', function() { 
+				console.log("An error occurred in reading from file")
+			
+			});
+			
+			ipc.on('get-data-success', function(event, arg) { 
+				console.log("Successfully retrieved data: " + arg);
+			
+			});
+	
 		</script>
 	</body>
 </html>
