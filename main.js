@@ -228,7 +228,7 @@ ipc.on('add-play', function (event,keystrokes){
 	event.sender.send('add-play-success');
 });
 
-ipc.on('initialize-game', function (event,args){ 
+ipc.on('init-game', function (event,args){ 
 	try {
 		initGame(args);
 	} catch (e) {
