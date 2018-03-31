@@ -246,10 +246,22 @@
 			const ipc = electron.ipcRenderer;
 			
 			let keystrokes = "j 16 g h";
+			let args = ["Wisconsin", "Ohio State", "796", "518", "100/0", "0/100", "3/12/19", "4pm", "Kohl Center", "Kohl-Center-code", "conf game?", ["schedule notes"], "quarters", "15", "15", ["Official Names"], ["Box comments"]];
+
 			<!-- Testing send-data & get-data functions -->
 			ipc.send('send-data', keystrokes);
+			ipc.send('init-game', args);
 			
 			ipc.send('get-data');
+			
+			
+			ipc.on('init-game-failure', function() { 
+				console.log("An error occurred in initializing game " + args + " to file : " + e);
+			});
+			
+			ipc.on('init-game-success', function() { 
+				console.log("Successfully recorded keystroke: " + keystrokes);
+			});		
 			
 			ipc.on('send-data-failure', function() { 
 				console.log("An error occurred in writing " + keystrokes + " to file : " + e);

@@ -193,30 +193,52 @@ function turnover(team, player_number){
 }
 */
 
+
+/*
+ *  INITIALIZE GAME FUNCTION
+ *
+ *	ARGS FORMAT:
+ *	[HOME_TEAM, AWAY_TEAM, HOME_TEAM_CODE, AWAY_TEAM_CODE, HOME_TEAM_RECORD, AWAY_TEAM_RECORD, START_TIME, STADIUM, STADIUM_CODE, CONF_GAME?, [SCHEDULE_NOTES], QUARTERS/HALVES?, MIN_PER_PERIOD, MIN_IN_OT, [OFFICIALS], [BOX_COMMENTS]]
+ *	[    0    ,     1    ,       2       ,        3      ,        4        ,        5        ,      6    ,    7   ,      8      ,     9     ,        10       ,        11       ,        12     ,     13   ,      14    ,       15      ] 
+ * 
+ */
+ 
+function initGame(args){
+	throw "initGame not implemented";
+	
+}
+ 
+ 
+ 
 /*
  *	IPC EVENT HANDLER
  *
  */
  
-ipc.on('send-data', function (event,keystrokes){ 
+
+ipc.on('add-play', function (event,keystrokes){ 
 	try {
 		addPlay(keystrokes);
 	} catch (e) {
 		//if failure
 		console.log("An error occurred in file writing: " + e);
-		event.sender.send('send-data-failure');
+		event.sender.send('add-play-failure');
 		return;
 	}
-	event.sender.send('send-data-success');
+	event.sender.send('add-play-success');
 });
 
-
-
-/**
- * Sends data from the back end to the front end.
- * Dummy function for the front end. Temporary
- * --USED FOR TESTING--
- */
+ipc.on('initialize-game', function (event,args){ 
+	try {
+		initGame(args);
+	} catch (e) {
+		//if failure
+		console.log("An error occurred in game initializing: " + e);
+		event.sender.send('init-game-failure');
+		return;
+	}
+	event.sender.send('init-game-success');
+});
  
 ipc.on('get-data', function(event){ 
 	try {

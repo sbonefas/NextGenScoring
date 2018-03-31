@@ -73,7 +73,7 @@ exports.create_game_file = function(labels, file_name) {
 	try {
     	fs.writeFileSync(file_path, file_contents);
 	} catch (e) {
-		console.log("CREATE GAME FILE ERROR");
+		console.log("CREATE GAME FILE ERROR:", e);
     	return false;
 	}
 	return true;
