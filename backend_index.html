@@ -245,11 +245,13 @@
 			const electron = require("electron");
 			const ipc = electron.ipcRenderer;
 			
-			let keystrokes = "j 16 g h";
+			let keystrokes = "j 16 g  h";
+			let keystrokes2 = "j 16 k 7 h";
 			let args = ["Wisconsin", "Ohio State", "796", "518", "100/0", "0/100", "3/12/19", "4pm", "Kohl Center", "Kohl-Center-code", 1, ["schedule notes"], "quarters", "15", "15", ["Official Names"], ["Box comments"]];
 
 			<!-- Testing send-data & get-data functions -->
 			ipc.send('add-play', keystrokes);
+			ipc.send('add-play', keystrokes2);
 			ipc.send('init-game', args);
 			
 			ipc.send('get-data');
