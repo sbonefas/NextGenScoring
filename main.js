@@ -43,8 +43,6 @@ function createWindow() {
 
 /**
  * Sends data from the front end to the back end. 
- * Dummy function for the front end. Temporary
- * --USED FOR TESTING--
  * 
  * INPUT HOLDS ARGUMENTS FROM FRONTEND
  * FORMAT:
@@ -54,7 +52,7 @@ function createWindow() {
  * 
  * FOR FREETHROWS: [E, PLAYER_NUMBER, RESULT_CODE, HOME/AWAY]
  *
- * FOR REBOUNDS/ASSISTS/FOULS/BLOCKS/TURNOVERS/STEALS: [PLAY_CODE, PLAYER_NUMBER, HOME/AWAY]
+ * FOR REBOUNDS/ASSISTS/FOULS/TURNOVERS/STEALS: [PLAY_CODE, PLAYER_NUMBER, HOME/AWAY]
  *  
  * FOR CHANGING JERSEY: [F2, PLAYER_NUMBER, NEW_PLAYER_NUMBER, HOME/AWAY]
  *
@@ -130,7 +128,7 @@ function addPlay(keystrokes){
 			break;
 		case 'e':
 			statArray[6] = 1; //freethrow attempt
-			if (input[2] == 'g') statArray[4] = 1;
+			if (input[2] === 'g') statArray[4] = 1;
 			break;
 		case 'r':
 			rebound(statArray[0], input[1]);
@@ -176,7 +174,12 @@ function assist(t, player_number){
 }
 
 function block(t, player_number){
-	var statArray = [t, player_number,0,0,0,0,0,0,0,0,1,0,0,0];
+	//team to block will be opposite of team who attempted shot
+	var activeTeam;
+	if (t === 1) activeTeam = 0;
+	else if (t === 0) activeTeam = 1;
+	
+	var statArray = [activeTeam, player_number,0,0,0,0,0,0,0,0,1,0,0,0];
 	drw.write_to_game_file(statArray, test_file_name);	
 }
 
