@@ -47,7 +47,7 @@ Vue.component('home_team_stats', {
   template: `
   <div>
     <p>FG%: {{fg}}   3FG%: {{tfg}}   FT%: {{ftp}}</p>
-    <p>TEAM: TURNVRS: {{tvs}}   BLOCKS: {{blocks}}   STEALS: {{steals}}</p>
+    <p>TEAM: TURNOVRS: {{tvs}}   BLOCKS: {{blocks}}   STEALS: {{steals}}</p>
     <p>paint: {{paint}}   offto: {{offto}}   2ndch: {{sndch}}   fastb: {{fastb}}</p>
   </div>
   `,
@@ -61,7 +61,7 @@ Vue.component('vis_team_stats', {
   template: `
   <div>
     <p>FG%: {{fg}}   3FG%: {{tfg}}   FT%: {{ftp}}</p>
-    <p>TEAM: TURNVRS: {{tvs}}   BLOCKS: {{blocks}}   STEALS: {{steals}}</p>
+    <p>TEAM: TURNOVRS: {{tvs}}   BLOCKS: {{blocks}}   STEALS: {{steals}}</p>
     <p>paint: {{paint}}   offto: {{offto}}   2ndch: {{sndch}}   fastb: {{fastb}}</p>
   </div>
   `,
@@ -364,34 +364,12 @@ var app = new Vue({
            }
            // J then X - MISSED 3PT SHOT (REBOUND)
            else if (who_did_it == app.home_team[index].number && (result_code == "x" || result_code == "X")) {
-             app.home_team[index].fa += 1;
-             app.home_team[index].a3 += 1;
-             app.home_totals.fa += 1;
-             app.home_totals.a3 += 1;
-
-             // add to play by play - HOME
-             app.add_play(`${app.home_team[index].name} missed a 3-point jumper`);
-
-             var total_attempts = 0;
-             var total_fgs = 0;
-             var total_threes_attmept = 0;
-             var total_threes = 0;
-             for(players = 0; players < app.home_team.length; players++)
-             {
-               total_attempts += (app.home_team[players].fa + app.home_team[players].a3);
-               total_fgs += (app.home_team[players].fg + app.home_team[players].m3);
-               total_threes += app.home_team[players].m3;
-               total_threes_attmept += app.home_team[players].a3;
-             }
-             home_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
-             home_stats.tfg = Number.parseFloat(total_threes/total_threes_attmept).toFixed(2);
-
-             app.rebound();
-             break;
+               app.j_missed_3(app.home_team[index], app.home_team, app.home_totals, home_stats);
+               break;
            }
            // J then K - BLOCKED SHOT
            else if (who_did_it == app.home_team[index].number && (result_code == "k" || result_code == "K")) {
-               app.j_blocked_shot(app.home_team[index], app.home_team, app.home_totals);
+               app.j_blocked_shot(app.home_team[index], app.home_team, app.home_totals, home_stats);
                break;
            }
          }
@@ -559,34 +537,12 @@ var app = new Vue({
            }
            // J then X - MISSED 3PT SHOT (REBOUND)
            else if (who_did_it == app.vis_team[index].number && (result_code == "x" || result_code == "X")) {
-             app.vis_team[index].fa += 1;
-             app.vis_team[index].a3 += 1;
-             app.vis_totals.fa += 1;
-             app.vis_totals.a3 += 1;
-
-             // add to play by play - HOME
-             app.add_play(`${app.vis_team[index].name} missed a 3-point jumper`);
-
-             var total_attempts = 0;
-             var total_fgs = 0;
-             var total_threes_attmept = 0;
-             var total_threes = 0;
-             for(players = 0; players < app.vis_team.length; players++)
-             {
-               total_attempts += (app.vis_team[players].fa + app.vis_team[players].a3);
-               total_fgs += (app.vis_team[players].fg + app.vis_team[players].m3);
-               total_threes += app.vis_team[players].m3;
-               total_threes_attmept += app.vis_team[players].a3;
-             }
-             vis_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
-             vis_stats.tfg = Number.parseFloat(total_threes/total_threes_attmept).toFixed(2);
-
-             app.rebound();
-             break;
+               app.j_missed_3(app.vis_team[index], app.vis_team, app.vis_totals, vis_stats);
+               break;
            }
            // J then K - BLOCKED SHOT
            else if (who_did_it == app.vis_team[index].number && (result_code == "k" || result_code == "K")) {
-               app.j_blocked_shot(app.vis_team[index], app.vis_team, app.vis_totals);
+               app.j_blocked_shot(app.vis_team[index], app.vis_team, app.vis_totals, vis_stats);
                break;
            }
          }
@@ -660,7 +616,7 @@ var app = new Vue({
 
      // C - Change time, period, stats
      else if(e.keyCode == 67) {
-
+        //can change clock
      }
 
      // Esc - Return to main menu
@@ -765,7 +721,32 @@ var app = new Vue({
             }
         }
    },
-   j_blocked_shot(person, team, totals) {
+   j_missed_3(person, team, totals, stats) {
+         person.fa += 1;
+         person.a3 += 1;
+         totals.fa += 1;
+         totals.a3 += 1;
+
+         // add to play by play
+         app.add_play(`${person.name} missed a 3-point jumper`);
+
+         var total_attempts = 0;
+         var total_fgs = 0;
+         var total_threes_attmept = 0;
+         var total_threes = 0;
+         for(players = 0; players < team.length; players++)
+         {
+           total_attempts += (team[players].fa + app.vis_team[players].a3);
+           total_fgs += (team[players].fg + team[players].m3);
+           total_threes += team[players].m3;
+           total_threes_attmept += team[players].a3;
+         }
+         stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
+         stats.tfg = Number.parseFloat(total_threes/total_threes_attmept).toFixed(2);
+
+         app.rebound();
+   },
+   j_blocked_shot(person, team, totals, stats) {
          person.fa += 1;
          totals.fa += 1;
          // add to play by play
@@ -777,7 +758,7 @@ var app = new Vue({
            total_attempts += (team[players].fa + team[players].a3);
            total_fgs += (team[players].fg + team[players].m3);
          }
-         vis_stats.fg = Number.parseFloat((total_fgs/total_attempts)*100).toFixed(2);
+         stats.fg = Number.parseFloat((total_fgs/total_attempts)*100).toFixed(2);
          app.blocked_shot();
    },
    subs() {
