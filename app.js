@@ -1,6 +1,6 @@
 var TESTING_MODE = true;  // this signals that you are in testing mode and will disable the annoying password promt that happens every time you load the page. Set this to false when in production mode!
 var home = true;
-
+var inputtext = "";
 result_code_prompt = `
 PRESS A RESULT CODE...
 
@@ -72,7 +72,6 @@ Vue.component('vis_team_stats', {
 
 window.onload = function () {
   if(!TESTING_MODE) {
-
     $(document.body).hide();
    var password = "";
    while(password != "123") {
@@ -180,6 +179,42 @@ var app = new Vue({
   methods: {
    keyevent(e) {
      console.log(e.keyCode);
+     if(e.keyCode == 13) { // Enter key pressed
+        inputtext = ""; // clears inputtext variable that stores the key code sequence
+        inputvalidator.innerText = "Enter input...";  // sets inputvalidator h3 equal to the initial text (Enter input...)
+        userinput.value = "";  // clears the text box
+     }
+     if(e.keyCode == 8) { // Backspace key pressed
+        inputtext = inputtext.slice(0, -1);
+     }
+     if(e.keyCode == 27) { // Esc key pressed
+        inputtext = ""; // clears inputtext variable that stores the key code sequence
+        inputvalidator.innerText = "Enter input...";  // sets inputvalidator h3 equal to the initial text (Enter input...)
+        userinput.value = "";  // clears the text box
+     }
+     if(inputtext.length > 0) {
+        if(inputtext.charAt(0) == 'Z') {
+          if(inputtext.length < 3) {
+            inputtext = inputtext + String.fromCharCode(e.keyCode);
+            console.log("inputtext: " + inputtext);
+            if(inputtext.length == 3) {
+              inputvalidator.innerText = "Jumper by " + inputtext.substring(1,3) + ". Enter a result code";
+            }
+          } else if(inputtext.length == 3) {
+            if(e.keyCode == 73) {// 73 is the key code for 'I' 
+                inputtext = inputtext + String.fromCharCode(e.keyCode);
+                inputvalidator.innerText = "Good jumper by " + inputtext.substring(1,3) + ". Press ENTER to save play.";
+                // Send data to backend
+            }
+          }
+        }
+     }
+     if(e.keyCode == 90) { // Z key pressed
+        inputvalidator.innerText = "Enter player number";
+        inputtext = inputtext + "Z";  // add Z to the inputtext variable
+        console.log("inputtext: " + inputtext);
+     }
+
 
      // alt + h - Help menu
      if(e.altKey && e.keyCode == 72) {
@@ -754,6 +789,9 @@ var app = new Vue({
        v.style.textDecoration = "none";
        v2.style.color = "black";
        v2.style.textDecoration = "none";
+       localStorage.setItem("team", "Wisconsin");
+       var data = localStorage.getItem("team");
+       console.log(data);
    },
    vis_possession() {
        home = false

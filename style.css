@@ -1,7 +1,7 @@
 html {
 	background-color: #c5050c; /*UW Red*/
 	font-family: "Verlag", "Helvetica Neue", Helvetica, Arial, sans-serif;
-	overflow: hidden;
+	overflow: hidden
 }
 /*Scorebar*/
 .fouls {
@@ -41,7 +41,10 @@ div.clock {
     width: auto;
 	background-color: #282728; /*UW Grey*/
 	color: #f9f9f9;
-	padding: 40px;
+	padding-left: 40px;
+	padding-right: 40px;
+	padding-bottom: 40px;
+	padding-top: 0px;
 	height:8%;
 	text-transform: uppercase;
 }
@@ -85,6 +88,27 @@ div.clock {
 	float: right;
 }
 
+/* Input Modal */
+#inputmodal {
+	width: 60%;
+	height: 5%;
+	vertical-align: center;
+	margin: auto;
+}
+#userinput {
+	height: 30px;
+	width: 50%;
+	font-size: 20px;
+	display: inline-block;
+	cursor: auto;
+}
+#inputvalidator {
+	margin: 5px;
+	margin-left: 20px;
+	display: inline-block;
+	color: white;
+}
+
 /* play by plays */
 #playbyplaybox {
     width: 60%;
@@ -97,6 +121,8 @@ div.clock {
 
 #playbyplaybox h2 {
     text-align: center;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 #playbyplaybox table {
