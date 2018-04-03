@@ -391,27 +391,15 @@ var app = new Vue({
            }
            // J then K - BLOCKED SHOT
            else if (who_did_it == app.home_team[index].number && (result_code == "k" || result_code == "K")) {
-             app.home_team[index].fa += 1;
-             app.home_totals.fa += 1;
-             // add to play by play - HOME
-             app.add_play(`${app.home_team[index].name} J -> K`);
-             var total_attempts = 0;
-             var total_fgs = 0;
-             for(players = 0; players < app.home_team.length; players++)
-             {
-               total_attempts += (app.home_team[players].fa + app.home_team[players].a3);
-               total_fgs += (app.home_team[players].fg + app.home_team[players].m3);
-             }
-             home_stats.fg = Number.parseFloat((total_fgs/total_attempts)*100).toFixed(2);;
-             app.blocked_shot();
-             break;
+               app.j_blocked_shot(app.home_team[index], app.home_team, app.home_totals);
+               break;
            }
          }
        } //end home calculations
        else {  // Visitor calculations
          for(index = 0; index < app.vis_team.length; index++)
          {
-         console.log(who_did_it);
+         console.log("who did it: " + who_did_it);
            // J then G or Q - good field goal (2 points)
            if(who_did_it == app.vis_team[index].number && (result_code == "g" || result_code == "G" || result_code == "q" || result_code == "Q"))
            {
@@ -598,92 +586,33 @@ var app = new Vue({
            }
            // J then K - BLOCKED SHOT
            else if (who_did_it == app.vis_team[index].number && (result_code == "k" || result_code == "K")) {
-             app.vis_team[index].fa += 1;
-             app.vis_totals.fa += 1;
-             // add to play by play - HOME
-             app.add_play(`${app.vis_team[index].name} J -> K`);
-             var total_attempts = 0;
-             var total_fgs = 0;
-             for(players = 0; players < app.vis_team.length; players++)
-             {
-               total_attempts += (app.vis_team[players].fa + app.vis_team[players].a3);
-               total_fgs += (app.vis_team[players].fg + app.vis_team[players].m3);
-             }
-             vis_stats.fg = Number.parseFloat((total_fgs/total_attempts)*100).toFixed(2);;
-             app.blocked_shot();
-             break;
+               app.j_blocked_shot(app.vis_team[index], app.vis_team, app.vis_totals);
+               break;
            }
          }
        }//end visitor calculations
      }// end J
+
      // H or left arrow - home team
      else if(e.keyCode == 72 || e.keyCode == 37) {
         app.home_possession();
      }
+
      // V or right arrow - Visitor team
      else if(e.keyCode == 86 || e.keyCode == 39) {
         app.vis_possession();
      }
+
      // F6 - Substitution
      else if(e.keyCode == 117){
-       who_came_out = window.prompt("ENTER ## OF PLAYER LEAVING");
-       // check if player is in game, and let them re-enter number if wrong
-       while(!app.check_in_game(who_came_out)) {
-           if(who_came_out == null) {
-                return;
-           }
-           who_came_out = window.prompt("Player " + who_came_out + " is not in game\n\nENTER ## OF PLAYER LEAVING");
-       }
-       who_came_in = window.prompt("ENTER ## OF PLAYER ENTERING");
-
-       // check if player is in game, and let them re-enter number if wrong
-       while(app.check_in_game(who_came_in)) {
-           if(who_came_in == null) {
-                return
-           }
-           who_came_in = window.prompt("Player " + who_came_in + " is already in game\n\nENTER ## OF PLAYER ENTERING");
-       }
-
-       if(home == true)
-       {
-         for(index = 0; index < app.home_team.length; index++)
-         {
-            if(who_came_out == app.home_team[index].number)
-            {
-              app.home_team[index].in_game = " "
-              var came_out = index;
-            }
-            if(who_came_in == app.home_team[index].number)
-            {
-              app.home_team[index].in_game = "*"
-              var came_in = index;
-            }
-         }
-         // add to play by play - HOME
-         app.add_play(`${app.home_team[came_in].name} subbed in for ${app.home_team[came_out].name}`);
-       }
-       else {
-         for(index = 0; index < app.vis_team.length; index++)
-         {
-            if(who_came_out == app.vis_team[index].number)
-            {
-              app.vis_team[index].in_game = " "
-              var came_out = index;
-            }
-            if(who_came_in == app.vis_team[index].number)
-            {
-              app.vis_team[index].in_game = "*"
-              var came_in = index;
-            }
-         }
-         // add to play by play - VISITOR
-         app.add_play(`${app.vis_team[came_in].name} subbed in for ${app.vis_team[came_out].name}`);
-       }
+        app.subs();
      }
+
      // F2 - change player jersey number
      else if(e.keyCode == 113) {
-       app.change_player_number();
+         app.change_player_number();
      }
+
      // F10 - clear and do not complete any partially keyed action
      else if(e.keyCode == 121) {
         // currently, pressing ESC completes this task. After integrating with the backend we may need this function
@@ -726,30 +655,7 @@ var app = new Vue({
 
      // O - timeout
      else if(e.keyCode == 79) {
-        which_timeout = window.prompt("TIMEOUT--\n\nT for media timout or H/V for team timeout");
-        if(which_timeout == "T" || which_timeout == "t") {
-            // media timeout (4 per game)
-        }
-        else if(which_timeout == "H" || which_timeout == "h") {
-            // home team timeout
-            timeout_length = window.prompt("M for full timeout or 3 for 30 second timeout");
-            if(timeout_length == "M" || timeout_length == "m") {
-                app.home_full -= 1;
-            }
-            else if(timeout_length == "3") {
-                app.home_partial -= 1;
-            }
-        }
-        else if(which_timeout == "V" || which_timeout == "v") {
-            // away team timeout
-            timeout_length = window.prompt("M for full timeout or 3 for 30 second timeout");
-            if(timeout_length == "M" || timeout_length == "m") {
-                app.vis_full -= 1;
-            }
-            else if(timeout_length == "3") {
-                app.vis_partial -= 1;
-            }
-        }
+        app.timeout();
      }
 
      // C - Change time, period, stats
@@ -827,6 +733,107 @@ var app = new Vue({
             currTeam = app.teams[1]
         }
         app.playlist.unshift({ time: document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText, team: currTeam, playdscrp: myPlayDcsrp, score: app.home_score + "-" + app.vis_score })
+   },
+   timeout() {
+        which_timeout = window.prompt("TIMEOUT--\n\nT for media timout or H/V for team timeout");
+        if(which_timeout == "T" || which_timeout == "t") {
+            // media timeout (4 per game)
+            app.add_play("Media timeout");
+        }
+        else if(which_timeout == "H" || which_timeout == "h") {
+            // home team timeout
+            timeout_length = window.prompt("M for full timeout or 3 for 30 second timeout");
+            if(timeout_length == "M" || timeout_length == "m") {
+                app.home_full -= 1;
+                app.add_play(app.teams[0] + " full timeout");
+            }
+            else if(timeout_length == "3") {
+                app.home_partial -= 1;
+                app.add_play(app.teams[0] + " partial timeout");
+            }
+        }
+        else if(which_timeout == "V" || which_timeout == "v") {
+            // away team timeout
+            timeout_length = window.prompt("M for full timeout or 3 for 30 second timeout");
+            if(timeout_length == "M" || timeout_length == "m") {
+                app.vis_full -= 1;
+                app.add_play(app.teams[1] + " full timeout");
+            }
+            else if(timeout_length == "3") {
+                app.vis_partial -= 1;
+                app.add_play(app.teams[1] + " partial timeout");
+            }
+        }
+   },
+   j_blocked_shot(person, team, totals) {
+         person.fa += 1;
+         totals.fa += 1;
+         // add to play by play
+         app.add_play(`${person.name} J -> K`);
+         var total_attempts = 0;
+         var total_fgs = 0;
+         for(players = 0; players < team.length; players++)
+         {
+           total_attempts += (team[players].fa + team[players].a3);
+           total_fgs += (team[players].fg + team[players].m3);
+         }
+         vis_stats.fg = Number.parseFloat((total_fgs/total_attempts)*100).toFixed(2);
+         app.blocked_shot();
+   },
+   subs() {
+       who_came_out = window.prompt("ENTER ## OF PLAYER LEAVING");
+       // check if player is in game, and let them re-enter number if wrong
+       while(!app.check_in_game(who_came_out)) {
+           if(who_came_out == null) {
+                return;
+           }
+           who_came_out = window.prompt("Player " + who_came_out + " is not in game\n\nENTER ## OF PLAYER LEAVING");
+       }
+       who_came_in = window.prompt("ENTER ## OF PLAYER ENTERING");
+
+       // check if player is in game, and let them re-enter number if wrong
+       while(app.check_in_game(who_came_in)) {
+           if(who_came_in == null) {
+                return
+           }
+           who_came_in = window.prompt("Player " + who_came_in + " is already in game\n\nENTER ## OF PLAYER ENTERING");
+       }
+
+       if(home == true)
+       {
+         for(index = 0; index < app.home_team.length; index++)
+         {
+            if(who_came_out == app.home_team[index].number)
+            {
+              app.home_team[index].in_game = " "
+              var came_out = index;
+            }
+            if(who_came_in == app.home_team[index].number)
+            {
+              app.home_team[index].in_game = "*"
+              var came_in = index;
+            }
+         }
+         // add to play by play - HOME
+         app.add_play(`${app.home_team[came_in].name} subbed in for ${app.home_team[came_out].name}`);
+       }
+       else {
+         for(index = 0; index < app.vis_team.length; index++)
+         {
+            if(who_came_out == app.vis_team[index].number)
+            {
+              app.vis_team[index].in_game = " "
+              var came_out = index;
+            }
+            if(who_came_in == app.vis_team[index].number)
+            {
+              app.vis_team[index].in_game = "*"
+              var came_in = index;
+            }
+         }
+         // add to play by play - VISITOR
+         app.add_play(`${app.vis_team[came_in].name} subbed in for ${app.vis_team[came_out].name}`);
+       }
    },
    assist() {
         who_assist = window.prompt("ASSIST BY: \n\n Key in a player ## or press ENTER for no assist");
