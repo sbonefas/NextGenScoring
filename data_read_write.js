@@ -141,10 +141,8 @@ exports.read_game_file = function(file_name) {
 
 	// Convert to two separate strings. Cut off last newline in home stats and away stats.
 	var stats_string_arr = file_contents.split(';');
-	if(stats_string_arr[0].substring(stats_string_arr[0].length - 1) == '\n')
-		stats_string_arr[0] = stats_string_arr[0].substring(0, stats_string_arr[0].length-1);
-	if(stats_string_arr[1].substring(stats_string_arr[1].length - 1) == '\n')
-		stats_string_arr[1] = stats_string_arr[1].substring(0, stats_string_arr[1].length-1);
+	stats_string_arr[0] = stats_string_arr[0].substring(0, stats_string_arr[0].length-1);
+	stats_string_arr[1] = stats_string_arr[1].substring(0, stats_string_arr[1].length-1);
 
 	// Create unitialized 2d arrays for stats
 	var home_stats = scrape_stats(stats_string_arr[0]);
@@ -253,7 +251,7 @@ exports.write_to_game_file = function(stat_changes, file_name) {
 	var current_team_stats = edit_current_stats(current_game_stats[1-is_home], stat_changes);
 
 	current_game_stats[1-is_home] = current_team_stats;
-	return overwrite_game_file(game_array_to_string(current_game_stats) + ";" +
+	return overwrite_game_file(game_array_to_string(current_game_stats) + "\n;" +
 							   get_game_information_string(file_name), file_name);
 }
 
