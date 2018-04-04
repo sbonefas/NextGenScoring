@@ -10,9 +10,10 @@ const url = require("url");
 const fs = require("fs");	//node.js filesystem
 const ipc = electron.ipcMain;
 const dialog = electron.dialog;
+const stat_headers = ['player_number','fg','fga','m3','3a','ft','fta','reb','ast','pf','blk','trn','stl'];
 
 let win;
-const TESTING = true;
+const TESTING = false;
 const file_name = 'test_read_game_file';
 const test_file_name = "test_drw_file";
 
@@ -27,8 +28,7 @@ function createWindow() {
 	/** SIMPLE BACKEND TESTING */
 	/** TODO: DELETE WHEN PUT IN TEST SUITE */
 	if(TESTING) {
-		//var test_file_name = "test_drw_file";
-		drw.create_game_file(['player_number','fg','fga','m3','3a','ft','fta','reb','ast','pf','blk','trn','stl'], test_file_name);
+		drw.create_game_file(stat_headers, test_file_name, args);
 		drw.read_game_file(test_file_name);
 	}
 	win.on('closed', () => {
@@ -47,8 +47,8 @@ function createWindow() {
  * INPUT HOLDS ARGUMENTS FROM FRONTEND
  * FORMAT:
  *	 
- * FOR FIELD GOALS: [PLAY_CODE, PLAYER_NUMBER, RESULT_CODE, REBOUND/ASSIST/BLOCK_PLAYER (REBOUND IF RESULT_CODE = 'R or X' / BLOCK IF RESULT_CODE = 'K' / ASSIST IF ANYTHING ELSE), HOME/AWAY]
- *                  [    0    ,       1      ,      2     ,                                                       3                                                               ,     4    ]	
+ * FOR FIELD GOALS: [PLAY_CODE, PLAYER_NUMBER, RESULT_CODE, REBOUND/ASSIST/BLOCK_PLAYER (REBOUND IF RESULT_CODE = 'R or X' / BLOCK IF RESULT_CODE = 'K' / ASSIST IF ANYTHING ELSE), DEFENSIVE REBOUND? ('' IF NO), HOME/AWAY]
+ *                  [    0    ,       1      ,      2     ,                                                       3                                                               ,               4              ,     5    ]	
  * 
  * FOR FREETHROWS: [E, PLAYER_NUMBER, RESULT_CODE, HOME/AWAY]
  *
@@ -62,8 +62,8 @@ function createWindow() {
  *
  *	 (1)/(0)
  *
- * [HOME/AWAY, PLAYER_NUMBER, FIELDGOAL, FIELDGOAL_ATTEMPT, MADE_3, 3_ATTEMPT, FREETHROW, FREETHROW_ATTEMPT, REBOUND, ASSIST, PERSONAL FOUL, BLOCK, TURNOVER, STEAL]
- * [    0    ,       1      ,     2    ,         3        ,    4  ,     5    ,     6    ,         7        ,    8   ,   9   ,       10     ,  11  ,    12   ,  13  ]
+ * [HOME/AWAY, PLAYER_NUMBER, FIELDGOAL, FIELDGOAL_ATTEMPT, MADE_3, 3_ATTEMPT, FREETHROW, FREETHROW_ATTEMPT, REBOUND, ASSIST, PERSONAL FOUL, TECHNICAL FOUL, BLOCK, TURNOVER, STEAL]
+ * [    0    ,       1      ,     2    ,         3        ,    4  ,     5    ,     6    ,         7        ,    8   ,   9   ,       10     ,      11       ,  12  ,    13   ,  14  ]
  *
  *
  * [7]-[12] ARE EDITED IN SUBPLAY FUNCTIONS BELOW
@@ -76,7 +76,7 @@ function createWindow() {
 
  
 function addPlay(keystrokes){ 
-	var statArray = [0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+	var statArray = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 	var input = keystrokes.split(/ /);
 	if(TESTING) console.log(input);
 		
@@ -90,6 +90,7 @@ function addPlay(keystrokes){
 		statArray[0] = 0;
 	switch(input[0]){
 		case 'y':
+			statArray[5] = 1;	//3 attempt
 		case 'w':
 		case 'j':
 		case 'p':
@@ -107,10 +108,12 @@ function addPlay(keystrokes){
 					if (input[3] != '') assist(statArray[0], actingPlayer);	//If there's an assist, record it
 					break;
 				case 'r':
-					if (input[3] != '') rebound(statArray[0], actingPlayer);	//If there's a rebound, record it
+					var def_rebound = input[4];
+					if (input[3] != '') rebound(statArray[0], actingPlayer, def_rebound);	//If there's a rebound, record it
 					break;
 				case 'x':
-					if (input[3] != '') rebound(statArray[0], actingPlayer);	//If there's a rebound, record it
+					var def_rebound = input[4];
+					if (input[3] != '') rebound(statArray[0], actingPlayer, def_rebound);	//If there's a rebound, record it
 					break;
 				case 'k':
 					block(statArray[0], actingPlayer);
@@ -162,14 +165,17 @@ function addPlay(keystrokes){
  *
  */ 
  
-function rebound(t, player_number){
-	var statArray = [t, player_number,0,0,0,0,0,1,0,0,0,0,0,0];
+function rebound(t, player_number, def_rebound){
+	if (def_rebound != ''){
+		if (t === 1) t = 0;
+		else if (t === 0) t = 1;
+	}
+	var statArray = [t, player_number,0,0,0,0,0,0,1,0,0,0,0,0,0];
 	drw.write_to_game_file(statArray, test_file_name);
 }
  
 function assist(t, player_number){
-	console.log("assist");
-	var statArray = [t, player_number,0,0,0,0,0,0,1,0,0,0,0,0];
+	var statArray = [t, player_number,0,0,0,0,0,0,0,1,0,0,0,0,0];
 	drw.write_to_game_file(statArray, test_file_name);	
 }
 
@@ -179,7 +185,7 @@ function block(t, player_number){
 	if (t === 1) activeTeam = 0;
 	else if (t === 0) activeTeam = 1;
 	
-	var statArray = [activeTeam, player_number,0,0,0,0,0,0,0,0,1,0,0,0];
+	var statArray = [activeTeam, player_number,0,0,0,0,0,0,0,0,0,1,0,0,0];
 	drw.write_to_game_file(statArray, test_file_name);	
 }
 
@@ -207,7 +213,12 @@ function turnover(team, player_number){
  */
  
 function initGame(args){
-	throw "initGame not implemented";
+	try {
+		drw.create_game_file(stat_headers, test_file_name, args);
+	} catch (e){
+		console.log("Exception in creating game file: " + e);
+	}
+	
 	
 }
  
