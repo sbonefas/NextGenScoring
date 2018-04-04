@@ -4,5 +4,6 @@
 .idea
 package-lock.json
 node_modules
-jquery.min.js
+geckodriver.log
 .DS_Store
+jquery.min.js

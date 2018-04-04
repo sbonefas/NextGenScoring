@@ -1,0 +1,237 @@
+<html>
+	<head>
+		<link rel="icon" href="img/favicon.ico">
+		<link rel="stylesheet" href="style.css">
+		<link rel="stylesheet" href="vex.css">
+		<link rel="stylesheet" href="vex-theme-os.css">
+		<title>NextGen Scoring</title>
+	</head>
+
+	<body>
+		<div id = "app">
+			<!-- SCORE BAR AND CLOCK -->
+			<div id = "scorebar">
+				<div id = "home">
+					<div class = "fouls">
+						<div class = "fouls-top">
+							<h3 class = "fouls">Fouls</h3>
+							<h3 class = "fouls">{{ home_fouls }}</h3>
+						</div>
+						<div class = "fouls-bottom">
+							<h4 class = "fouls">Full: {{ home_full }}</h4>
+							<h4 class = "fouls">Partial: {{ home_partial }}</h4>
+						</div>
+					</div>
+					<div class = "score">
+						<h2 class = "score" id="homescoreshowhide">Home</h2>
+						<h2 class = "score">{{ home_score }}</h2>
+					</div>
+				</div>
+				<div class = "clock" id="clockdiv">
+					<!--<h2 class = "clock" id = "clockh2" onclick="launchClockPrompt()">20:00</h2>-->
+					<span onclick="launchClockPrompt()" id = "clockminutes">20</span><span onclick="launchClockPrompt()" id = "clockseparator">:</span><span onclick="launchClockPrompt()" id = "clockseconds">00</span>
+					<h2 class = "clock" onclick="launchClockPrompt()"> {{ period }}</h2>
+					<h3 class = "clock" id="clockisstopped">**Clock is stopped**</h3>
+					<br>
+				</div>
+				<div id = "visitor">
+					<div class = "score">
+						<h2 class = "score" id="visitorscoreshowhide">Visitor</h2>
+						<h2 class = "score">{{ vis_score }}</h2>
+					</div>
+					<div class = "fouls">
+						<div class = "fouls-top">
+							<h3 class = "fouls">Fouls</h3>
+							<h3 class = "fouls">{{ vis_fouls }}</h3>
+						</div>
+						<div class = "fouls-bottom">
+							<h4 class = "fouls">Full: {{ vis_full }}</h4>
+							<h4 class = "fouls">Partial: {{ vis_partial }}</h4>
+						</div>
+					</div>
+				</div>
+			</div> <!-- end scorebar div -->
+
+			<!-- Stats -->
+			<div id = "playerstats">
+				<!--<div id = "app">-->
+					<div id = "ps-home">
+						<h2 id = "pshometeamname" class="playteam">{{ teams[0] }}</h2>
+						<table class="playerstatstable" cellpadding="3">
+							<tr>
+								<th>IN</th> <!-- "*" if in game -->
+								<th>##</th> <!-- player number -->
+								<th>--Name--</th> <!-- player name -->
+								<th>FG</th> <!-- field goals -->
+								<th>FA</th> <!-- field goal attempts -->
+								<th>3M</th> <!-- 3 pointer made -->
+								<th>3A</th> <!-- 3 pointer attempts -->
+								<th>FT</th> <!-- free throw made -->
+								<th>FTA</th> <!-- free throw attempted -->
+								<th>RB</th> <!-- rebound -->
+								<th>AS</th> <!-- assist -->
+								<th>TO</th> <!-- turnovers -->
+								<th>PF</th> <!-- personal foul -->
+								<th>TP</th> <!-- total points -->
+							</tr>
+							<tr v-for="player in home_team">
+								<td>{{ player.in_game }}</td>
+								<td>{{ player.number }}</td>
+								<td>{{ player.name }}</td>
+								<td>{{ player.fg }}</td>
+                                <td>{{ player.fa }}</td>
+                                <td>{{ player.m3 }}</td>
+                                <td>{{ player.a3 }}</td>
+                                <td>{{ player.ftm }}</td>
+                                <td>{{ player.fta }}</td>
+                                <td>{{ player.rb }}</td>
+                                <td>{{ player.as }}</td>
+                                <td>{{ player.to }}</td>
+                                <td>{{ player.pf }}</td>
+                                <td>{{ player.tp }}</td>
+							</tr>
+                            <tr>
+                                <td>{{ home_totals.in_game }}</td>
+                                <td>{{ home_totals.number }}</td>
+                                <td>{{ home_totals.name }}</td>
+                                <td>{{ home_totals.fg }}</td>
+                                <td>{{ home_totals.fa }}</td>
+                                <td>{{ home_totals.m3 }}</td>
+                                <td>{{ home_totals.a3 }}</td>
+                                <td>{{ home_totals.ftm }}</td>
+                                <td>{{ home_totals.fta }}</td>
+                                <td>{{ home_totals.rb }}</td>
+                                <td>{{ home_totals.as }}</td>
+                                <td>{{ home_totals.to }}</td>
+                                <td>{{ home_totals.pf }}</td>
+                                <td>{{ home_totals.tp }}</td>
+                            </tr>
+						</table>
+
+						<home_team_stats></home_team_stats>
+					</div>
+				<!--</div> -->
+				<div id = "ps-visitor">
+					<h2 id = "psvisitorteamname" class="playteam">{{ teams[1] }}</h2>
+					<table class="playerstatstable" cellpadding="3">
+						<tr>
+                            <th>IN</th> <!-- "*" if in game -->
+                            <th>##</th> <!-- player number -->
+                            <th>--Name--</th> <!-- player name -->
+                            <th>FG</th> <!-- field goals -->
+                            <th>FA</th> <!-- field goal attempts -->
+                            <th>3M</th> <!-- 3 pointer made -->
+                            <th>3A</th> <!-- 3 pointer attempts -->
+                            <th>FT</th> <!-- free throw made -->
+                            <th>FTA</th> <!-- free throw attempted -->
+                            <th>RB</th> <!-- rebound -->
+                            <th>AS</th> <!-- assist -->
+                            <th>TO</th> <!-- turnovers -->
+                            <th>PF</th> <!-- personal foul -->
+                            <th>TP</th> <!-- total points -->
+						</tr>
+                        <tr v-for="player in vis_team">
+                            <td>{{ player.in_game }}</td>
+                            <td>{{ player.number }}</td>
+                            <td>{{ player.name }}</td>
+                            <td>{{ player.fg }}</td>
+                            <td>{{ player.fa }}</td>
+                            <td>{{ player.m3 }}</td>
+                            <td>{{ player.a3 }}</td>
+                            <td>{{ player.ftm }}</td>
+                            <td>{{ player.fta }}</td>
+                            <td>{{ player.rb }}</td>
+                            <td>{{ player.as }}</td>
+                            <td>{{ player.to }}</td>
+                            <td>{{ player.pf }}</td>
+                            <td>{{ player.tp }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ vis_totals.in_game }}</td>
+                            <td>{{ vis_totals.number }}</td>
+                            <td>{{ vis_totals.name }}</td>
+                            <td>{{ vis_totals.fg }}</td>
+                            <td>{{ vis_totals.fa }}</td>
+                            <td>{{ vis_totals.m3 }}</td>
+                            <td>{{ vis_totals.a3 }}</td>
+                            <td>{{ vis_totals.ftm }}</td>
+                            <td>{{ vis_totals.fta }}</td>
+                            <td>{{ vis_totals.rb }}</td>
+                            <td>{{ vis_totals.as }}</td>
+                            <td>{{ vis_totals.to }}</td>
+                            <td>{{ vis_totals.pf }}</td>
+                            <td>{{ vis_totals.tp }}</td>
+                        </tr>
+                    </table>
+                    <vis_team_stats></vis_team_stats>
+
+                   <!-- <p>FG%: 0.000   3FG%: 0.000   FT%: 0.000</p>
+					<p>TEAM: TURNOVERS: 00   BLOCKS: 00   STEALS: 00</p>
+					<p>paint: 00   offto: 00   2ndch: 00   fastb: 00</p>-->
+				</div>
+			</div> <!-- end stats div -->
+
+			<!-- Play By Play -->
+			<div id = "playbyplaybox">
+				<h2>Play-by-Play</h2>
+				<table cellpadding="3">
+					<tr>
+						<th>Time</th>
+						<th>Team</th>
+						<th>Play</th>
+						<th>Score (Home-Visitor)</th>
+					</tr>
+					<tr v-for="play in playlist">
+						<td>{{ play.time }}</td>
+						<td class="playteam">{{ play.team }}</td>
+						<td>{{ play.playdscrp }}</td>
+						<td>{{ play.score }}</td>
+					</tr>
+				</table>
+			</div><!-- end play by play div -->
+		</div> <!-- end app div -->
+
+		<script type="text/javascript" src="./vue.js"></script>
+		<script src="vex.combined.min.js"></script>
+		<script type="text/javascript" src="./app.js"></script>
+		<script src="easytimer.min.js"></script>
+		<script src="jquery.min.js"></script>
+		<script>
+			//Keep clock functionality on the frontend
+			// Uses EasyTimer.js from Github https://albert-gonzalez.github.io/easytimer.js/
+			var timer = new Timer();
+  			timer.start({countdown: true, startValues: {seconds: 1200}});
+  			timer.pause();
+  			var paused = true;
+			$('#clockdiv #clockh2').html(timer.getTimeValues().toString());
+			timer.addEventListener('secondsUpdated', function (e) {
+			    //$('#clockdiv #clockh2').html(timer.getTimeValues().toString());
+			    $('#clockdiv #clockminutes').html(timer.getTimeValues().minutes);
+			    if(timer.getTimeValues().seconds < 10) {
+			    	$('#clockdiv #clockseconds').html('0' + timer.getTimeValues().seconds);  // add leading zero because EasyTimer doesn't do it :-/
+			    } else {
+			    	$('#clockdiv #clockseconds').html(timer.getTimeValues().seconds);
+			    }
+			    
+			});
+			timer.addEventListener('targetAchieved', function (e) {
+			    //$('#clockdiv #clockh2').html('00:00');
+			    $('#clockdiv #clockminutes').html('00');
+			    $('#clockdiv #clockseconds').html('00');
+			});
+			document.body.onkeyup = function(e){
+    			if(e.keyCode == 32 && e.target == document.body){
+       				 if(paused) {
+       				 	timer.start();
+       				 	paused = false;
+       				 	$("#clockisstopped").toggle();
+       				 } else {
+       				 	timer.pause();
+       				 	paused = true;
+       				 	$("#clockisstopped").toggle();
+       				 }
+    			}
+			}
+		</script>
+	</body>
+</html>
