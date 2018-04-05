@@ -1,6 +1,11 @@
+//const electron = require("electron");
+//const ipc = electron.ipcRenderer;
+
+
 var TESTING_MODE = true;  // this signals that you are in testing mode and will disable the annoying password promt that happens every time you load the page. Set this to false when in production mode!
 var home = true;
 var inputtext = "";
+var currentlyInputtingPlay = "";
 result_code_prompt = `
 PRESS A RESULT CODE...
 
@@ -180,17 +185,17 @@ var app = new Vue({
    keyevent(e) {
      console.log(e.keyCode);
      if(e.keyCode == 13) { // Enter key pressed
-        inputtext = ""; // clears inputtext variable that stores the key code sequence
-        inputvalidator.innerText = "Enter input...";  // sets inputvalidator h3 equal to the initial text (Enter input...)
-        userinput.value = "";  // clears the text box
+        if(currentlyInputtingPlay == "timeout") {
+          app.timeout(false, e.keyCode);
+        }
+        app.clear_input();
+        //save play
      }
      if(e.keyCode == 8) { // Backspace key pressed
         inputtext = inputtext.slice(0, -1);
      }
      if(e.keyCode == 27) { // Esc key pressed
-        inputtext = ""; // clears inputtext variable that stores the key code sequence
-        inputvalidator.innerText = "Enter input...";  // sets inputvalidator h3 equal to the initial text (Enter input...)
-        userinput.value = "";  // clears the text box
+        app.clear_input();
      }
      if(inputtext.length > 0) {
         if(inputtext.charAt(0) == 'Z') {
@@ -210,6 +215,7 @@ var app = new Vue({
         }
      }
      if(e.keyCode == 90) { // Z key pressed
+        userinput.value = "";
         inputvalidator.innerText = "Enter player number";
         inputtext = inputtext + "Z";  // add Z to the inputtext variable
         console.log("inputtext: " + inputtext);
@@ -586,12 +592,22 @@ var app = new Vue({
 
      // H or left arrow - home team
      else if(e.keyCode == 72 || e.keyCode == 37) {
-        app.home_possession();
+        if(currentlyInputtingPlay == "") {
+          app.home_possession();
+          userinput.value = "";
+        } else if(currentlyInputtingPlay == "timeout") {
+          app.timeout(false, e.keyCode);
+      }
      }
 
      // V or right arrow - Visitor team
      else if(e.keyCode == 86 || e.keyCode == 39) {
-        app.vis_possession();
+        if(currentlyInputtingPlay == "") {
+          app.vis_possession();
+          userinput.value = "";
+        } else if(currentlyInputtingPlay == "timeout") {
+          app.timeout(false, e.keyCode);
+      }
      }
 
      // F6 - Substitution
@@ -621,7 +637,11 @@ var app = new Vue({
 
      // T - turnover
      else if(e.keyCode == 84) {
-      app.turnover();
+      if(currentlyInputtingPlay == "") {
+        app.turnover();
+      } else if(currentlyInputtingPlay == "timeout") {
+        app.timeout(false, e.keyCode);
+      }
      }
 
      // R - rebound
@@ -646,7 +666,27 @@ var app = new Vue({
 
      // O - timeout
      else if(e.keyCode == 79) {
-        app.timeout();
+        currentlyInputtingPlay = "timeout";
+        if(inputtext == "") {
+          app.timeout(true, e.keyCode);
+        } else{
+          app.timeout(false, e.keyCode);
+        }
+        
+     }
+
+     // M - used in timeout function (M is a full timeout)
+     else if(e.keyCode == 77) {
+        if(currentlyInputtingPlay == "timeout") {
+          app.timeout(false, e.keyCode);
+        }
+     }
+
+     // 3 - used in timeout function (3 is a 30 second timeout)
+     else if(e.keyCode == 51) {
+        if(currentlyInputtingPlay == "timeout") {
+          app.timeout(false, e.keyCode);
+        }
      }
 
      // C - Change time, period, stats
@@ -660,6 +700,12 @@ var app = new Vue({
      }
 
    }, //end keycode method
+   clear_input() {
+        inputtext = ""; // clears inputtext variable that stores the key code sequence
+        inputvalidator.innerText = "Enter input...";  // sets inputvalidator h3 equal to the initial text (Enter input...)
+        userinput.value = "";  // clears the text box
+        currentlyInputtingPlay = "";
+   },
    home_possession() {
        home = true;
        var h = document.getElementById("homescoreshowhide");
@@ -674,9 +720,6 @@ var app = new Vue({
        v.style.textDecoration = "none";
        v2.style.color = "black";
        v2.style.textDecoration = "none";
-       localStorage.setItem("team", "Wisconsin");
-       var data = localStorage.getItem("team");
-       console.log(data);
    },
    vis_possession() {
        home = false
@@ -727,37 +770,50 @@ var app = new Vue({
             currTeam = app.teams[1]
         }
         app.playlist.unshift({ time: document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText, team: currTeam, playdscrp: myPlayDcsrp, score: app.home_score + "-" + app.vis_score })
+        //let keystrokes = "O T";
+        //let keystroke2 = "j 16 g   h";
+        //ipc.send('add-play',keystrokes);
    },
-   timeout() {
-        which_timeout = window.prompt("TIMEOUT--\n\nT for media timout or H/V for team timeout");
-        if(which_timeout == "T" || which_timeout == "t") {
-            // media timeout (4 per game)
-            app.add_play("Media timeout");
+   timeout(first_input, keyCode) {
+        if(first_input == true) {
+          inputtext = "O";
+          inputvalidator.innerText = "Enter T for media timeout or H for home timeout or V for visitor timeout";
+        } else {
+          var char_entered = String.fromCharCode(keyCode);  // will be upper case
+          if(keyCode == 13) char_entered = "ENTER";
+          console.log("char entered: *" + char_entered + "*");
+          inputtext = inputtext + char_entered;
+          if(char_entered == 'T') {
+            inputvalidator.innerText = "Media timeout. Press ENTER to save play";
+          } else if(char_entered == 'H') {
+            inputvalidator.innerText = "Home timeout. Enter M for full timeout or 3 for 30 second timeout";
+          } else if(char_entered == 'V') {
+            inputvalidator.innerText = "Visitor timeout. Enter M for full timeout or 3 for 30 second timeout";
+          } else if(char_entered == 'M') {
+            inputvalidator.innerText = "Full timeout. Press ENTER to save play";
+          } else if(char_entered == '3') {
+            inputvalidator.innerText = "30 second timeout. Press ENTER to save play";
+          } else if(char_entered == 'ENTER') {
+            if(inputtext.substring(1,2) == 'T') { // media timeout
+              app.add_play("Media timeout");
+            } else if(inputtext.substring(1,2) == 'H' && inputtext.substring(2,3) == 'M') { // home full timeout
+              app.home_full -= 1;
+              app.add_play(app.teams[0] + " full timeout");
+            } else if(inputtext.substring(1,2) == 'H' && inputtext.substring(2,3) == '3') { // home 30 sec timeout
+              app.home_partial -= 1;
+              app.add_play(app.teams[0] + " partial timeout");
+            } else if(inputtext.substring(1,2) == 'V' && inputtext.substring(2,3) == 'M') { // visitor full timeout
+              app.vis_full -= 1;
+              app.add_play(app.teams[1] + " full timeout");
+            } else if(inputtext.substring(1,2) == 'V' && inputtext.substring(2,3) == '3') { // visitor 30 sec timeout
+              app.vis_partial -= 1;
+              app.add_play(app.teams[1] + " partial timeout");
+            }
+          } else {
+            inputvalidator.innerText = "Input not recognized";
+          }
         }
-        else if(which_timeout == "H" || which_timeout == "h") {
-            // home team timeout
-            timeout_length = window.prompt("M for full timeout or 3 for 30 second timeout");
-            if(timeout_length == "M" || timeout_length == "m") {
-                app.home_full -= 1;
-                app.add_play(app.teams[0] + " full timeout");
-            }
-            else if(timeout_length == "3") {
-                app.home_partial -= 1;
-                app.add_play(app.teams[0] + " partial timeout");
-            }
-        }
-        else if(which_timeout == "V" || which_timeout == "v") {
-            // away team timeout
-            timeout_length = window.prompt("M for full timeout or 3 for 30 second timeout");
-            if(timeout_length == "M" || timeout_length == "m") {
-                app.vis_full -= 1;
-                app.add_play(app.teams[1] + " full timeout");
-            }
-            else if(timeout_length == "3") {
-                app.vis_partial -= 1;
-                app.add_play(app.teams[1] + " partial timeout");
-            }
-        }
+        
    },
    j_missed_3(person, team, totals, stats) {
          person.fa += 1;
