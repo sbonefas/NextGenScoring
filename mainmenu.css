@@ -1,0 +1,50 @@
+html {
+	background-color: #c5050c; /*UW Red*/
+	font-family: "Verlag", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	overflow: hidden;
+}
+
+/*Main Menu*/
+#welcome {
+	margin: auto;
+	text-align: center;
+	padding: 3%;
+    width: 70%;
+    height: 30%;
+    background-color: #282728; /*UW Grey*/
+    color: #f9f9f9;
+    vertical-align: center;
+}
+
+#menu {
+	margin: auto;
+	text-align: left;
+	padding: 3%;
+    width: 70%;
+    height: 30%;
+    background-color: #dadfe1; /*UW Grey-Blue*/
+    vertical-align: center;
+}
+
+.menutext {
+    margin: auto;
+    font-size: 1.2em;
+    width: max-content;
+    vertical-align: center;
+}
+
+a {
+    color: #000;
+    text-decoration: none;
+    display: block;
+}
+
+a:hover {
+    color: #c5050c; /*UW Red*/
+    text-decoration: none;
+    display: block;
+}
+
+#menu p {
+    text-align: center;
+}
