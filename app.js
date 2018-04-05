@@ -246,171 +246,42 @@ var app = new Vue({
            // J then G or Q - good field goal (2 points)
            if(who_did_it == app.home_team[index].number && (result_code == "g" || result_code == "G" || result_code == "q" || result_code == "Q"))
            {
-             app.home_team[index].fg += 1;
-             app.home_team[index].fa += 1;
-             app.home_team[index].tp += 2;
-             app.home_totals.fg += 1;
-             app.home_totals.fa += 1;
-             // add to home team score
-             app.home_score += 2;
-             app.home_totals.tp = app.home_score;
-             // add to play by play - HOME
-             app.add_play(`${app.home_team[index].name} made a jump shot`);
-
-             var total_attempts = 0;
-             var total_fgs = 0;
-             for(players = 0; players < app.home_team.length; players++)
-             {
-               total_attempts += (app.home_team[players].fa + app.home_team[players].a3);
-               total_fgs += (app.home_team[players].fg + app.home_team[players].m3);
-             }
-             home_stats.fg = Number.parseFloat((total_fgs/total_attempts)*100).toFixed(2);
-             app.assist()
-             // change possession
-             app.vis_possession();
-             break;
+               app.jgq_good(app.home_team[index], app.home_team, app.home_totals, home_stats);
+               break;
            }
            // J then Y - good 3pt field goal
            else if((who_did_it == app.home_team[index].number && (result_code == "y" || result_code == "Y"))) {
-             app.home_team[index].m3 += 1;
-             app.home_team[index].a3 += 1;
-             app.home_team[index].tp += 3;
-             app.home_totals.m3 += 1;
-             app.home_totals.a3 += 1;
-             app.home_team[index].fa += 1;
-             app.home_team[index].fg += 1;
-             app.home_totals.fa += 1;
-             var total_attempts = 0;
-             var total_fgs = 0;
-             var total_threes_attmept = 0;
-             var total_threes = 0;
-             for(players = 0; players < app.home_team.length; players++)
-             {
-               total_attempts += (app.home_team[players].fa + app.home_team[players].a3);
-               total_fgs += (app.home_team[players].fg + app.home_team[players].m3);
-               total_threes += app.home_team[players].m3;
-               total_threes_attmept += app.home_team[players].a3;
-             }
-             home_stats.fg = Number.parseFloat((total_fgs/total_attempts)*100).toFixed(2);;
-             home_stats.tfg = Number.parseFloat((total_threes/total_threes_attmept)*100).toFixed(2);
-             // add to home team score
-             app.home_score += 3;
-             app.home_totals.tp = app.home_score;
-             // add to play by play - HOME
-             app.add_play(`${app.home_team[index].name} hit a 3-point jumper`);
-             app.assist()
-             // change possession
-             app.vis_possession();
-             break;
+               app.jy_good_3(app.home_team[index], app.home_team, app.home_totals, home_stats);
+               break;
            }
            // J then R - missed shot (rebound)
            else if (who_did_it == app.home_team[index].number && (result_code == "r" || result_code == "R")) {
-             app.home_team[index].fa += 1;
-             app.home_totals.fa += 1;
-             // add to play by play - HOME
-             app.add_play(`${app.home_team[index].name} J -> R`);
-             var total_attempts = 0;
-             var total_fgs = 0;
-             for(players = 0; players < app.home_team.length; players++)
-             {
-               total_attempts += (app.home_team[players].fa + app.home_team[players].a3);
-               total_fgs += (app.home_team[players].fg + app.home_team[players].m3);
-             }
-             home_stats.fg = Number.parseFloat((total_fgs/total_attempts)*100).toFixed(2);;
-             app.rebound();
-             break;
+               app.jr_missed(app.home_team[index], app.home_team, app.home_totals, home_stats);
+               break;
            }
            // J then P - field goal in the paint
            else if (who_did_it == app.home_team[index].number && (result_code == "p" || result_code == "P")) {
-             app.home_team[index].fa += 1;
-             app.home_team[index].fg += 1;
-             app.home_team[index].tp += 2;
-             app.home_totals.fa += 1;
-             app.home_totals.fg += 1;
-             home_stats.paint += 1;
-             app.home_score += 2;
-             app.home_totals.tp = app.home_score;
-             app.add_play(`${app.home_team[index].name} made a shot in the paint`);
-             var total_attempts = 0;
-             var total_fgs = 0;
-             for(players = 0; players < app.home_team.length; players++)
-             {
-               total_attempts += app.home_team[players].fa;
-               total_fgs += (app.home_team[players].fg + app.home_team[players].m3);
-             }
-             home_stats.fg = Number.parseFloat((total_fgs/total_attempts)*100).toFixed(2);;
-             app.assist()
-             // change possession
-             app.vis_possession();
-             break;
+               app.jp_good_paint(app.home_team[index], app.home_team, app.home_totals, home_stats);
+               break;
            }
            // J then Z - GOOD FG-FAST BREAK & PAINT
            else if (who_did_it == app.home_team[index].number && (result_code == "z" || result_code == "Z")) {
-                //update boxscore
-                app.home_team[index].fg += 1;
-                app.home_team[index].fa += 1;
-                app.home_team[index].tp += 2;
-                app.home_score += 2;
-                app.home_totals.tp = app.home_score;
-                app.home_totals.fg += 1;
-                app.home_totals.fa += 1;
-
-                // update fast break and in the paint
-                home_stats.fastb += 1;
-                home_stats.paint += 1;
-
-                // add to playby play
-                 app.add_play(`Fast Break: ${app.home_team[index].name} made a shot in the paint`);
-                 var total_attempts = 0;
-                 var total_fgs = 0;
-                 for(players = 0; players < app.home_team.length; players++)
-                 {
-                   total_attempts += app.home_team[players].fa;
-                   total_fgs += (app.home_team[players].fg + app.home_team[players].m3);
-                 }
-                 home_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
-                 app.assist()
-                 // change possession
-                 app.vis_possession();
-                 break;
+               app.jz_good_fastb_paint(app.home_team[index], app.home_team, app.home_totals, home_stats);
+               break;
            }
            // J then F - GOOD FG ON A FAST BREAK
            else if (who_did_it == app.home_team[index].number && (result_code == "f" || result_code == "F")) {
-                //update boxscore
-                app.home_team[index].fg += 1;
-                app.home_team[index].fa += 1;
-                app.home_team[index].tp += 2;
-                app.home_score += 2;
-                app.home_totals.tp = app.vis_score;
-                app.home_totals.fg += 1;
-                app.home_totals.fa += 1;
-
-                // update fast break
-                home_stats.fastb += 1;
-
-                // add to playby play
-                 app.add_play(`Fast Break: ${app.home_team[index].name} made a shot`);
-                 var total_attempts = 0;
-                 var total_fgs = 0;
-                 for(players = 0; players < app.home_team.length; players++)
-                 {
-                   total_attempts += app.home_team[players].fa;
-                   total_fgs += (app.home_team[players].fg + app.home_team[players].m3);
-                 }
-                 home_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
-                 app.assist()
-                 // change possession
-                 app.vis_possession();
+                 app.jf_good_fastb(app.home_team[index], app.home_team, app.home_totals, home_stats);
                  break;
            }
            // J then X - MISSED 3PT SHOT (REBOUND)
            else if (who_did_it == app.home_team[index].number && (result_code == "x" || result_code == "X")) {
-               app.j_missed_3(app.home_team[index], app.home_team, app.home_totals, home_stats);
+               app.jx_missed_3(app.home_team[index], app.home_team, app.home_totals, home_stats);
                break;
            }
            // J then K - BLOCKED SHOT
            else if (who_did_it == app.home_team[index].number && (result_code == "k" || result_code == "K")) {
-               app.j_blocked_shot(app.home_team[index], app.home_team, app.home_totals, home_stats);
+               app.jk_blocked_shot(app.home_team[index], app.home_team, app.home_totals, home_stats);
                break;
            }
          }
@@ -422,168 +293,42 @@ var app = new Vue({
            // J then G or Q - good field goal (2 points)
            if(who_did_it == app.vis_team[index].number && (result_code == "g" || result_code == "G" || result_code == "q" || result_code == "Q"))
            {
-             app.vis_team[index].fg += 1;
-             app.vis_team[index].fa += 1;
-             app.vis_team[index].tp += 2;
-             app.vis_totals.fg += 1;
-             app.vis_totals.fa += 1;
-             // add to vis team score
-             app.vis_score += 2;
-             app.vis_totals.tp = app.vis_score;
-             // add to play by play - VIS
-             app.add_play(`${app.vis_team[index].name} made a jump shot`);
-
-             var total_attempts = 0;
-             var total_fgs = 0;
-             for(players = 0; players < app.vis_team.length; players++)
-             {
-               total_attempts += (app.vis_team[players].fa + app.vis_team[players].a3);
-               total_fgs += (app.vis_team[players].fg + app.vis_team[players].m3);
-             }
-             vis_stats.fg = Number.parseFloat((total_fgs/total_attempts)*100).toFixed(2);
-             // change possession
-             app.home_possession();
-             break;
+               app.jgq_good(app.vis_team[index], app.vis_team, app.vis_totals, vis_stats);
+               break;
            }
            // J then Y - good 3pt field goal
            else if((who_did_it == app.vis_team[index].number && (result_code == "y" || result_code == "Y"))) {
-             app.vis_team[index].m3 += 1;
-             app.vis_team[index].a3 += 1;
-             app.vis_team[index].tp += 3;
-             app.vis_totals.m3 += 1;
-             app.vis_totals.a3 += 1;
-             app.vis_team[index].fa += 1;
-             app.vis_team[index].fg += 1;
-             app.vis_totals.fa += 1;
-             var total_attempts = 0;
-             var total_fgs = 0;
-             var total_threes_attmept = 0;
-             var total_threes = 0;
-             for(players = 0; players < app.vis_team.length; players++)
-             {
-               total_attempts += (app.vis_team[players].fa + app.vis_team[players].a3);
-               total_fgs += (app.vis_team[players].fg + app.vis_team[players].m3);
-               total_threes += app.vis_team[players].m3;
-               total_threes_attmept += app.vis_team[players].a3;
-             }
-             vis_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
-             vis_stats.tfg = Number.parseFloat(total_threes/total_threes_attmept).toFixed(2);
-             // add to vis team score
-             app.vis_score += 3;
-             app.vis_totals.tp = app.vis_score;
-             // add to play by play - VIS
-             app.add_play(`${app.vis_team[index].name} hit a 3-point jumper`);
-             // change possession
-             app.home_possession();
-             break;
+               app.jy_good_3(app.vis_team[index], app.vis_team, app.vis_totals, vis_stats);
+               break;
            }
            // J then R - missed shot (rebound)
            else if (who_did_it == app.vis_team[index].number && (result_code == "r" || result_code == "R")) {
-             app.vis_team[index].fa += 1;
-             app.vis_totals.fa += 1;
-             // add to play by play - VIS
-             app.add_play(`${app.vis_team[index].name} J -> R`);
-             var total_attempts = 0;
-             var total_fgs = 0;
-             for(players = 0; players < app.vis_team.length; players++)
-             {
-               total_attempts += (app.vis_team[players].fa + app.vis_team[players].a3);
-               total_fgs += (app.vis_team[players].fg + app.vis_team[players].m3);
-             }
-             vis_stats.fg = Number.parseFloat((total_fgs/total_attempts)*100).toFixed(2);
-             app.rebound();
-             break;
+               app.jr_missed(app.vis_team[index], app.vis_team, app.vis_totals, vis_stats);
+               break;
            }
            // J then P - field goal in the paint
            else if (who_did_it == app.vis_team[index].number && (result_code == "p" || result_code == "P")) {
-             app.vis_team[index].fa += 1;
-             app.vis_team[index].fg += 1;
-             app.vis_team[index].tp += 2;
-             app.vis_totals.fa += 1;
-             app.vis_totals.fg += 1;
-             vis_stats.paint += 1;
-             app.vis_score += 2;
-             app.vis_totals.tp = app.vis_score;
-             app.add_play(`${app.vis_team[index].name} made a shot in the paint`);
-             var total_attempts = 0;
-             var total_fgs = 0;
-             for(players = 0; players < app.vis_team.length; players++)
-             {
-               total_attempts += app.vis_team[players].fa;
-               total_fgs += (app.vis_team[players].fg + app.vis_team[players].m3);
-             }
-             vis_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
-             // change possession
-             app.home_possession();
-             break;
+               app.jp_good_paint(app.vis_team[index], app.vis_team, app.vis_totals, vis_stats);
+               break;
            }
            // J then Z - GOOD FG-FAST BREAK & PAINT
            else if (who_did_it == app.home_team[index].number && (result_code == "z" || result_code == "Z")) {
-                //update boxscore
-                app.vis_team[index].fg += 1;
-                app.vis_team[index].fa += 1;
-                app.vis_team[index].tp += 2;
-                app.vis_score += 2;
-                app.vis_totals.tp = app.vis_score;
-                app.vis_totals.fg += 1;
-                app.vis_totals.fa += 1;
-
-                // update fast break and in the paint
-                vis_stats.fastb += 1;
-                vis_stats.paint += 1;
-
-                // add to playby play
-                 app.add_play(`Fast Break: ${app.vis_team[index].name} made a shot in the paint`);
-                 var total_attempts = 0;
-                 var total_fgs = 0;
-                 for(players = 0; players < app.vis_team.length; players++)
-                 {
-                   total_attempts += app.vis_team[players].fa;
-                   total_fgs += (app.vis_team[players].fg + app.vis_team[players].m3);
-                 }
-                 vis_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
-                 app.assist()
-                 // change possession
-                 app.home_possession();
-                 break;
+               app.jz_good_fastb_paint(app.vis_team[index], app.vis_team, app.vis_totals, vis_stats);
+               break;
            }
            // J then F - GOOD FG ON A FAST BREAK
            else if (who_did_it == app.vis_team[index].number && (result_code == "f" || result_code == "F")) {
-                //update boxscore
-                app.vis_team[index].fg += 1;
-                app.vis_team[index].fa += 1;
-                app.vis_team[index].tp += 2;
-                app.vis_score += 2;
-                app.vis_totals.tp = app.vis_score;
-                app.vis_totals.fg += 1;
-                app.vis_totals.fa += 1;
-
-                // update fast break
-                vis_stats.fastb += 1;
-
-                // add to playby play
-                 app.add_play(`Fast Break: ${app.vis_team[index].name} made a shot`);
-                 var total_attempts = 0;
-                 var total_fgs = 0;
-                 for(players = 0; players < app.vis_team.length; players++)
-                 {
-                   total_attempts += app.vis_team[players].fa;
-                   total_fgs += (app.vis_team[players].fg + app.vis_team[players].m3);
-                 }
-                 vis_stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
-                 app.assist()
-                 // change possession
-                 app.home_possession();
-                 break;
+               app.jf_good_fastb(app.vis_team[index], app.vis_team, app.vis_totals, vis_stats);
+               break;
            }
            // J then X - MISSED 3PT SHOT (REBOUND)
            else if (who_did_it == app.vis_team[index].number && (result_code == "x" || result_code == "X")) {
-               app.j_missed_3(app.vis_team[index], app.vis_team, app.vis_totals, vis_stats);
+               app.jx_missed_3(app.vis_team[index], app.vis_team, app.vis_totals, vis_stats);
                break;
            }
            // J then K - BLOCKED SHOT
            else if (who_did_it == app.vis_team[index].number && (result_code == "k" || result_code == "K")) {
-               app.j_blocked_shot(app.vis_team[index], app.vis_team, app.vis_totals, vis_stats);
+               app.jk_blocked_shot(app.vis_team[index], app.vis_team, app.vis_totals, vis_stats);
                break;
            }
          }
@@ -622,7 +367,7 @@ var app = new Vue({
 
      // F10 - clear and do not complete any partially keyed action
      else if(e.keyCode == 121) {
-        // currently, pressing ESC completes this task. After integrating with the backend we may need this function
+        inputtext = ""; // clears inputtext variable that stores the key code sequence
      }
 
      // E - Free Throw
@@ -815,7 +560,224 @@ var app = new Vue({
         }
         
    },
-   j_missed_3(person, team, totals, stats) {
+   // J then G or Q - good field goal (2 points)
+   jgq_good(person, team, totals, stats) {
+         person.fg += 1;
+         person.fa += 1;
+         person.tp += 2;
+         totals.fg += 1;
+         totals.fa += 1;
+
+         // add to score
+         if(home) {
+            app.home_score += 2;
+            score = app.home_score;
+         }
+         else {
+            app.vis_score += 2;
+            score = app.vis_score;
+         }
+
+         totals.tp = score;
+         // add to play by play
+         app.add_play(`${person.name} made a jump shot`);
+
+         var total_attempts = 0;
+         var total_fgs = 0;
+         for(players = 0; players < team.length; players++)
+         {
+           total_attempts += (team[players].fa + team[players].a3);
+           total_fgs += (team[players].fg + team[players].m3);
+         }
+         stats.fg = Number.parseFloat((total_fgs/total_attempts)*100).toFixed(2);
+
+         // change possession
+         if(home) {
+            app.vis_possession();
+         }
+         else {
+            app.home_possession();
+         }
+   },
+   // J then Y - good 3pt field goal
+   jy_good_3(person, team, totals, stats) {
+         person.m3 += 1;
+         person.a3 += 1;
+         person.tp += 3;
+         totals.m3 += 1;
+         totals.a3 += 1;
+         person.fa += 1;
+         person.fg += 1;
+         totals.fa += 1;
+         totals.fg += 1;
+         var total_attempts = 0;
+         var total_fgs = 0;
+         var total_threes_attmept = 0;
+         var total_threes = 0;
+         for(players = 0; players < team.length; players++)
+         {
+           total_attempts += (team[players].fa + team[players].a3);
+           total_fgs += (team[players].fg + team[players].m3);
+           total_threes += team[players].m3;
+           total_threes_attmept += team[players].a3;
+         }
+         stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
+         stats.tfg = Number.parseFloat(total_threes/total_threes_attmept).toFixed(2);
+         if(home) {
+            app.home_score += 3;
+            score = app.home_score;
+         }
+         else {
+            app.vis_score += 3;
+            score = app.vis_score;
+         }
+         totals.tp = score;
+         // add to play by play - VIS
+         app.add_play(`${person.name} hit a 3-point jumper`);
+
+         // change possession
+         if(home) {
+            app.vis_possession();
+         }
+         else {
+            app.home_possession();
+         }
+   },
+   // J then R - missed shot (rebound)
+   jr_missed(person, team, totals, stats) {
+         person.fa += 1;
+         totals.fa += 1;
+         // add to play by play - VIS
+         app.add_play(`${person.name} missed a field goal`);
+         var total_attempts = 0;
+         var total_fgs = 0;
+         for(players = 0; players < team.length; players++)
+         {
+           total_attempts += (team[players].fa + team[players].a3);
+           total_fgs += (team[players].fg + team[players].m3);
+         }
+         stats.fg = Number.parseFloat((total_fgs/total_attempts)*100).toFixed(2);
+         app.rebound();
+   },
+   // J then P - field goal in the paint
+   jp_good_paint(person, team, totals, stats) {
+         person.fa += 1;
+         person.fg += 1;
+         person.tp += 2;
+         totals.fa += 1;
+         totals.fg += 1;
+         stats.paint += 1;
+         if(home) {
+            app.home_score += 2;
+            score = app.home_score;
+         }
+         else {
+            app.vis_score += 2;
+            score = app.vis_score;
+         }
+         totals.tp = score;
+         app.add_play(`${person.name} made a shot in the paint`);
+         var total_attempts = 0;
+         var total_fgs = 0;
+         for(players = 0; players < team.length; players++)
+         {
+           total_attempts += team[players].fa;
+           total_fgs += (team[players].fg + team[players].m3);
+         }
+         stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
+         // change possession
+         if(home) {
+            app.vis_possession();
+         }
+         else {
+            app.home_possession();
+         }
+   },
+   // J then Z - GOOD FG-FAST BREAK & PAINT
+   jz_good_fastb_paint(person, team, totals, stats) {
+        //update boxscore
+        person.fg += 1;
+        person.fa += 1;
+        person.tp += 2;
+        if(home) {
+            app.home_score += 2;
+            score = app.home_score;
+        }
+        else {
+            app.vis_score += 2;
+            score = app.vis_score;
+        }
+        totals.tp = score;
+        totals.fg += 1;
+        totals.fa += 1;
+
+        // update fast break and in the paint
+        stats.fastb += 1;
+        stats.paint += 1;
+
+        // add to playby play
+         app.add_play(`Fast Break: ${person.name} made a shot in the paint`);
+         var total_attempts = 0;
+         var total_fgs = 0;
+         for(players = 0; players < team.length; players++)
+         {
+           total_attempts += team[players].fa;
+           total_fgs += (team[players].fg + team[players].m3);
+         }
+         stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
+         app.assist()
+         // change possession
+         if(home) {
+            app.vis_possession();
+         }
+         else {
+            app.home_possession();
+         }
+   },
+   // J then F - GOOD FG ON A FAST BREAK
+   jf_good_fastb(person, team, totals, stats) {
+        //update boxscore
+        person.fg += 1;
+        person.fa += 1;
+        person.tp += 2;
+        if(home) {
+            app.home_score += 2;
+            score = app.home_score;
+        }
+        else {
+            app.vis_score += 2;
+            score = app.vis_score;
+        }
+        totals.tp = score;
+        totals.fg += 1;
+        totals.fa += 1;
+
+        // update fast break
+        stats.fastb += 1;
+
+        // add to playby play
+         app.add_play(`Fast Break: ${person.name} made a shot`);
+         var total_attempts = 0;
+         var total_fgs = 0;
+         for(players = 0; players < team.length; players++)
+         {
+           total_attempts += team[players].fa;
+           total_fgs += (team[players].fg + team[players].m3);
+         }
+         stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
+
+         app.assist()
+
+         // change possession
+         if(home) {
+            app.vis_possession();
+         }
+         else {
+            app.home_possession();
+         }
+   },
+   // J then X - MISSED 3PT SHOT (REBOUND)
+   jx_missed_3(person, team, totals, stats) {
          person.fa += 1;
          person.a3 += 1;
          totals.fa += 1;
@@ -840,7 +802,8 @@ var app = new Vue({
 
          app.rebound();
    },
-   j_blocked_shot(person, team, totals, stats) {
+   // J then K - BLOCKED SHOT
+   jk_blocked_shot(person, team, totals, stats) {
          person.fa += 1;
          totals.fa += 1;
          // add to play by play
@@ -1301,7 +1264,7 @@ var app = new Vue({
   blocked_shot()
   {
       blocker = window.prompt("SHOT BLOCKED BY PLAYER ##");
-      if(home)
+      if(!home)
       {
           for(index = 0; index < app.home_team.length; index++)
           {
