@@ -8,7 +8,8 @@ const fs = require('fs');
 
 const file_name = "data_test";
 const file_path = "data/data_test.txt";
-const labels = ['number', 'fg', 'fga', 'pts'];
+const individual_stat_labels = ['number', 'fg', 'fga', 'pts'];
+const team_stat_labels = ['team fouls', 'timeouts left'];
 const footer = ['test', 1,'test2/test3/4', 'test5'];
 
 /** UNIT TEST DATA */
@@ -77,7 +78,7 @@ function test_get_file_path() {
 }
 
 function test_create_file() {
-	drw.create_game_file(labels, file_name, footer);
+	drw.create_game_file(individual_stat_labels, team_stat_labels, file_name, footer);
 	if(fs.existsSync(file_path)) test_success("test_create_file");
 	else test_fail("test_create_file");
 }
@@ -90,14 +91,14 @@ function test_delete_file() {
 
 function test_create_game_file() {
 	var contents = "HOME\nnumber,fg,fga,pts\n;AWAY\nnumber,fg,fga,pts\n;FOOTER\n" + footer.toString();
-	drw.create_game_file(labels, file_name, footer);
+	drw.create_game_file(individual_stat_labels, team_stat_labels, file_name, footer);
 	if(fs.readFileSync(file_path, 'utf8') == contents) test_success("test_create_game_file");
 	else test_fail("test_create_game_file");
 }
 
 function test_initial_game_file_contents() {
 	var contents = "HOME\nnumber,fg,fga,pts\n;AWAY\nnumber,fg,fga,pts\n;FOOTER\n" + footer.toString();
-	if(drw.test_get_initial_game_file_contents(labels, footer) == contents) test_success("test_initial_game_file_contents");
+	if(drw.test_get_initial_game_file_contents(individual_stat_labels, team_stat_labels, footer) == contents) test_success("test_initial_game_file_contents");
 	else test_fail("test_initial_game_file_contents");
 }
 
