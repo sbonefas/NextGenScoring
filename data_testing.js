@@ -66,7 +66,7 @@ function test() {
 	test_get_game_information_string();
 	test_overwrite_game_file();
 	test_read_game_file_full();
-	test_write_to_game_file();
+	test_write_player_stats_to_game_file();
 
 	clean();
 }
@@ -165,7 +165,7 @@ function test_overwrite_game_file() {
 	else test_fail("test_overwrite_game_file");
 }
 
-function test_write_to_game_file() {
+function test_write_player_stats_to_game_file() {
 	var result_array = [ [ ['number','fg','fga','pts'],
 ['30',2,4,6],
 ['31',5,5,11],
@@ -178,12 +178,12 @@ function test_write_to_game_file() {
 ['03',4,5,8],
 ['29',0,1,0]] ];
 
-	drw.write_to_game_file(test_stat_changes_exist, file_name);
-	drw.write_to_game_file(test_stat_changes_exist, file_name);
-	drw.write_to_game_file(test_stat_changes_no_exist, file_name);
+	drw.write_player_stats_to_game_file(test_stat_changes_exist, file_name);
+	drw.write_player_stats_to_game_file(test_stat_changes_exist, file_name);
+	drw.write_player_stats_to_game_file(test_stat_changes_no_exist, file_name);
 
-	if(drw.read_game_file(file_name).toString() == result_array.toString()) test_success("test_write_to_game_file");
-	else test_fail("test_write_to_game_file");
+	if(drw.read_game_file(file_name).toString() == result_array.toString()) test_success("test_write_player_stats_to_game_file");
+	else test_fail("test_write_player_stats_to_game_file");
 }
 
 function test_read_game_file_full() {

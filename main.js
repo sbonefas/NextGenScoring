@@ -155,7 +155,7 @@ function addPlay(keystrokes){
 			return;
 	}
 	console.log(statArray);
-	drw.write_to_game_file(statArray, test_file_name);
+	drw.write_player_stats_to_game_file(statArray, test_file_name);
 } 
  
  
@@ -171,12 +171,12 @@ function rebound(t, player_number, def_rebound){
 		else if (t === 0) t = 1;
 	}
 	var statArray = [t, player_number,0,0,0,0,0,0,1,0,0,0,0,0,0];
-	drw.write_to_game_file(statArray, test_file_name);
+	drw.write_player_stats_to_game_file(statArray, test_file_name);
 }
  
 function assist(t, player_number){
 	var statArray = [t, player_number,0,0,0,0,0,0,0,1,0,0,0,0,0];
-	drw.write_to_game_file(statArray, test_file_name);	
+	drw.write_player_stats_to_game_file(statArray, test_file_name);	
 }
 
 function block(t, player_number){
@@ -186,19 +186,19 @@ function block(t, player_number){
 	else if (t === 0) activeTeam = 1;
 	
 	var statArray = [activeTeam, player_number,0,0,0,0,0,0,0,0,0,1,0,0,0];
-	drw.write_to_game_file(statArray, test_file_name);	
+	drw.write_player_stats_to_game_file(statArray, test_file_name);	
 }
 
 function chg (t, player_number, new_player_number){
 	var playerSub = [t, "CHG", player_number, new_player_number];
-	drw.write_to_game_file(statArray, test_file_name);	
+	drw.write_player_stats_to_game_file(statArray, test_file_name);	
 }
 
 
 /*
 function turnover(team, player_number){
 	var statArray = [team, player_number,0,0,0,0,0,0,0,0,0,1,0];
-	drw.write_to_game_file(statArray, file_path);	
+	drw.write_player_stats_to_game_file(statArray, file_path);	
 }
 */
 
