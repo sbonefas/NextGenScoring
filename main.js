@@ -52,7 +52,7 @@ function createWindow() {
  * 
  * FOR FREETHROWS: [E, PLAYER_NUMBER, RESULT_CODE, HOME/AWAY]
  *
- * FOR REBOUNDS/ASSISTS/FOULS/TURNOVERS/STEALS: [PLAY_CODE, PLAYER_NUMBER, HOME/AWAY]
+ * FOR REBOUNDS/ASSISTS/FOULS/TURNOVERS/STEALS: [PLAY_CODE, PLAYER_NUMBER, TEAM TURNOVER?, HOME/AWAY]
  *  
  * FOR CHANGING JERSEY: [F2, PLAYER_NUMBER, NEW_PLAYER_NUMBER, HOME/AWAY]
  *
@@ -70,7 +70,7 @@ function createWindow() {
  * TEAM STATARRY FORMAT:
  *
  *
- * [HOME/AWAY, MADE_IN_PAINT, FAST_BREAK]
+ * [HOME/AWAY, MADE_IN_PAINT, FAST_BREAK, TEAM_TURNOVER]
  *
  * [7]-[12] ARE EDITED IN SUBPLAY FUNCTIONS BELOW
  *
@@ -126,8 +126,6 @@ function addPlay(keystrokes){
 					break;
 				case 'p':
 					inPaint(statArray[0]);			
-					//in the paint
-					
 					break;
 				case 'f':
 					fastBreak(statArray[0]);
@@ -144,17 +142,21 @@ function addPlay(keystrokes){
 			break;
 		case 'r':
 			rebound(statArray[0], input[1]);
-			return;
+			break;
 		case 'a':
 			assist(statArray[0], input[1]); 
-			return;
+			break;
 		case 'f':
 			statArray[9] = 1;	//foul
 			break;
 		case 't':
+			if (input[2] == 't'){
+				teamTurnover(statArray[0]);
+				return;
+			}
+				
 			statArray[11] = 1; //turnover
-			//team turnover
-			//dead ball
+				
 			break;
 		case 's':
 			statArray[12] = 1;	//steal
@@ -204,20 +206,18 @@ function chg(t, player_number, new_player_number){
 }
 
 function inPaint(team){
-	drw.write_team_stats_to_game_file([team, 1, 0]);
+	drw.write_team_stats_to_game_file([team,1,0,0]);
 }
 
 function fastBreak(team){
-	drw.write_team_stats_to_game_file([team, 0, 1]);
+	drw.write_team_stats_to_game_file([team,0,1,0]);
 }
 
 
-/*
-function turnover(team, player_number){
-	var statArray = [team, player_number,0,0,0,0,0,0,0,0,0,1,0];
-	drw.write_player_stats_to_game_file(statArray, file_path);	
+function teamTurnover(team){
+	drw.write_team_stats_to_game_file([team,0,0,1]);	
 }
-*/
+
 
 
 /*
