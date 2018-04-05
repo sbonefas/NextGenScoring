@@ -57,7 +57,7 @@ function createWindow() {
  * FOR CHANGING JERSEY: [F2, PLAYER_NUMBER, NEW_PLAYER_NUMBER, HOME/AWAY]
  *
  *
- * STATARRAY GETS SUBMITTED TO GAME FILE
+ * PLAYER STATARRAY GETS SUBMITTED TO GAME FILE
  * FORMAT:
  *
  *	 (1)/(0)
@@ -65,6 +65,12 @@ function createWindow() {
  * [HOME/AWAY, PLAYER_NUMBER, FIELDGOAL, FIELDGOAL_ATTEMPT, MADE_3, 3_ATTEMPT, FREETHROW, FREETHROW_ATTEMPT, REBOUND, ASSIST, PERSONAL FOUL, TECHNICAL FOUL, BLOCK, TURNOVER, STEAL]
  * [    0    ,       1      ,     2    ,         3        ,    4  ,     5    ,     6    ,         7        ,    8   ,   9   ,       10     ,      11       ,  12  ,    13   ,  14  ]
  *
+ *
+ * 
+ * TEAM STATARRY FORMAT:
+ *
+ *
+ * [HOME/AWAY, MADE_IN_PAINT, FAST_BREAK]
  *
  * [7]-[12] ARE EDITED IN SUBPLAY FUNCTIONS BELOW
  *
@@ -119,13 +125,16 @@ function addPlay(keystrokes){
 					block(statArray[0], actingPlayer);
 					break;
 				case 'p':
+					inPaint(statArray[0]);			
 					//in the paint
+					
 					break;
 				case 'f':
-					//fast break
+					fastBreak(statArray[0]);
 					break;
 				case 'z':
-					//fast break in paint
+					inPaint(statArray[0]);
+					fastBreak(statArray[0]);
 					break;				
 			}
 			break;
@@ -189,9 +198,17 @@ function block(t, player_number){
 	drw.write_to_game_file(statArray, test_file_name);	
 }
 
-function chg (t, player_number, new_player_number){
+function chg(t, player_number, new_player_number){
 	var playerSub = [t, "CHG", player_number, new_player_number];
 	drw.write_to_game_file(statArray, test_file_name);	
+}
+
+function inPaint(team){
+	drw.write_team_stats_to_game_file([team, 1, 0]);
+}
+
+function fastBreak(team){
+	drw.write_team_stats_to_game_file([team, 0, 1]);
 }
 
 

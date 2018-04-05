@@ -257,7 +257,7 @@
 			ipc.send('add-play', keystrokes3);
 			
 			ipc.send('get-data');
-			
+			//ipc.send('get-teams');
 			
 			ipc.on('init-game-failure', function() { 
 				console.log("An error occurred in initializing game " + args + " to file : " + e);
@@ -282,6 +282,10 @@
 			
 			ipc.on('get-data-success', function(event, arg) { 
 				console.log("Successfully retrieved data: " + arg);
+			
+			});
+	
+			ipc.on('get-teams-success', function(event, arg){
 			
 			});
 	
