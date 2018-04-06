@@ -172,6 +172,8 @@ var app = new Vue({
           app.change_player_number(false, e.keyCode);
         } else if(currentlyInputtingPlay == "substitution") {
           app.subs(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "foul") {
+          app.foul(e.keyCode);
         }
         app.clear_input();
         //save play
@@ -329,6 +331,8 @@ var app = new Vue({
           app.timeout(false, e.keyCode);
         } else if(currentlyInputtingPlay == "changePlayerNumber") {
           app.change_player_number(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "foul") {
+          app.foul(e.keyCode);
         }
      }
 
@@ -341,6 +345,8 @@ var app = new Vue({
           app.timeout(false, e.keyCode);
         } else if(currentlyInputtingPlay == "changePlayerNumber") {
           app.change_player_number(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "foul") {
+          app.foul(e.keyCode);
         }
      }
 
@@ -366,7 +372,7 @@ var app = new Vue({
 
      // F10 - clear and do not complete any partially keyed action
      else if(e.keyCode == 121) {
-        inputtext = ""; // clears inputtext variable that stores the key code sequence
+        app.clear_input();
      }
 
      // E - Free Throw
@@ -376,7 +382,8 @@ var app = new Vue({
 
      // F - Foul
      else if(e.keyCode == 70) {
-      app.foul();
+      currentlyInputtingPlay = "foul";
+      app.foul(e.keyCode);
      }
 
      // T - turnover
@@ -385,7 +392,9 @@ var app = new Vue({
         app.turnover();
       } else if(currentlyInputtingPlay == "timeout") {
         app.timeout(false, e.keyCode);
-      }
+      } else if(currentlyInputtingPlay == "foul") {
+          app.foul(e.keyCode);
+        }
      }
 
      // R - rebound
@@ -396,6 +405,13 @@ var app = new Vue({
      // A - assist
      else if(e.keyCode == 65) {
         app.assist();
+     }
+
+     // B - used in foul() to indicate a bench foul
+     else if(e.keyCode == 66) {
+       if(currentlyInputtingPlay == "foul") {
+          app.foul(e.keyCode);
+        }
      }
 
      // S - steal
@@ -432,6 +448,8 @@ var app = new Vue({
           app.change_player_number(false, e.keyCode);
         } else if(currentlyInputtingPlay == "substitution") {
           app.subs(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "foul") {
+          app.foul(e.keyCode);
         }
      }
 
@@ -441,6 +459,8 @@ var app = new Vue({
           app.change_player_number(false, e.keyCode);
         } else if(currentlyInputtingPlay == "substitution") {
           app.subs(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "foul") {
+          app.foul(e.keyCode);
         }
      }
 
@@ -450,6 +470,8 @@ var app = new Vue({
           app.change_player_number(false, e.keyCode);
         } else if(currentlyInputtingPlay == "substitution") {
           app.subs(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "foul") {
+          app.foul(e.keyCode);
         }
      }
 
@@ -461,6 +483,8 @@ var app = new Vue({
           app.change_player_number(false, e.keyCode);
         } else if(currentlyInputtingPlay == "substitution") {
           app.subs(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "foul") {
+          app.foul(e.keyCode);
         }
      }
 
@@ -470,6 +494,8 @@ var app = new Vue({
           app.change_player_number(false, e.keyCode);
         } else if(currentlyInputtingPlay == "substitution") {
           app.subs(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "foul") {
+          app.foul(e.keyCode);
         }
      }
 
@@ -479,6 +505,8 @@ var app = new Vue({
           app.change_player_number(false, e.keyCode);
         } else if(currentlyInputtingPlay == "substitution") {
           app.subs(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "foul") {
+          app.foul(e.keyCode);
         }
      }
 
@@ -488,6 +516,8 @@ var app = new Vue({
           app.change_player_number(false, e.keyCode);
         } else if(currentlyInputtingPlay == "substitution") {
           app.subs(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "foul") {
+          app.foul(e.keyCode);
         }
      }
 
@@ -497,6 +527,8 @@ var app = new Vue({
           app.change_player_number(false, e.keyCode);
         } else if(currentlyInputtingPlay == "substitution") {
           app.subs(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "foul") {
+          app.foul(e.keyCode);
         }
      }
 
@@ -506,6 +538,8 @@ var app = new Vue({
           app.change_player_number(false, e.keyCode);
         } else if(currentlyInputtingPlay == "substitution") {
           app.subs(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "foul") {
+          app.foul(e.keyCode);
         }
      }
 
@@ -515,6 +549,8 @@ var app = new Vue({
           app.change_player_number(false, e.keyCode);
         } else if(currentlyInputtingPlay == "substitution") {
           app.subs(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "foul") {
+          app.foul(e.keyCode);
         }
      }
 
@@ -1044,63 +1080,69 @@ var app = new Vue({
         }
       }
    },
-   foul() {
-        var team = window.prompt("Foul on Home or Visiting team?\nEnter H for Home or V for Visitor"); // team will be h or v
-        var valid_team = false;
-        if(team == 'h' || team == 'H' || team == 'v' || team == 'V') {
-          valid_team = true;
+   foul(keyCode) {
+      var char_entered = String.fromCharCode(keyCode);
+      if(keyCode == 13) char_entered = "ENTER";
+      inputtext = inputtext + char_entered;
+      if(char_entered == "ENTER") {
+        if(inputtext.substring(2,3) == 'B') {
+          if(inputtext.substring(1,2) == 'H') {
+            home = true;
+            app.home_totals.pf += 1
+            app.add_play("Bench foul on the home team.");
+            app.vis_possession(); // switch possession
+        } else {
+            home = false;
+            app.vis_totals.pf += 1;
+            app.add_play("Bench foul on the visiting team.");
+            app.home_possession(); // switch possession
         }
-        if(!valid_team) {
-          window.alert("Please select H or V");
-        }
-        if(valid_team) {
-          var player = window.prompt("Foul on: (Key in a player ##:\nFor a technical, press T and a player ## or B for bench");
-        }
-        if(team == 'h' || team == 'H') {
+      } else if(inputtext.substring(2,3) == 'T') {
+          if(inputtext.substring(1,2) == 'H') {
           home = true;
-          if(player.charAt(0) == 't' || player.charAt(0) == 'T') { // technical foul TODO figure out if we have to store any info on technicals
-            var player_number = player.substring(1,3);
-            for(index = 0; index < app.home_team.length; index++)
-             {
-                if(player_number == app.home_team[index].number)
-                {
-                    app.home_team[index].pf += 1;
-                    app.add_play("Foul on " + app.home_team[index].name);
-                }
-             }
-          }
-          if(player.charAt(0) == 'b' || player.charAt(0) == 'B') { // bench foul
-
-          }
-          var player_number = player.substring(0,2);
-            for(index = 0; index < app.home_team.length; index++)
-             {
-                if(player_number == app.home_team[index].number)
-                {
-                    app.home_team[index].pf += 1;
-                    app.add_play("Foul on " + app.home_team[index].name);
-                }
-             }
-             app.home_totals.pf += 1
-             app.vis_possession(); // switch possession
-        }
-        if(team == 'v' || team == 'V') {
-          home = false;
-          if(player.charAt(0) == 't' || player.charAt(0) == 'T') { // technical foul TODO figure out if we have to store any info on technicals
-            var player_number = player.substring(1,3);
+          var player_number = inputtext.substring(3,5);
+          for(index = 0; index < app.home_team.length; index++)
+           {
+              if(player_number == app.home_team[index].number)
+              {
+                  app.home_team[index].pf += 1;
+                  app.add_play("Technical foul on " + app.home_team[index].name);
+              }
+           }
+            
+            app.home_totals.pf += 1
+            app.vis_possession(); // switch possession
+        } else {
+            home = false;
+            var player_number = inputtext.substring(3,5);
             for(index = 0; index < app.vis_team.length; index++)
              {
                 if(player_number == app.vis_team[index].number)
                 {
                     app.vis_team[index].pf += 1;
-                    app.add_play("Foul on " + app.vis_team[index].name);
+                    app.add_play("Technical foul on " + app.vis_team[index].name);
                 }
              }
-          }
-          if(player.charAt(0) == 'b' || player.charAt(0) == 'B') { // bench foul
-
-          }
-          var player_number = player.substring(0,2);
+            app.vis_totals.pf += 1;
+            app.home_possession(); // switch possession
+        }
+      } else {  // not a bench or technical foul
+        if(inputtext.substring(1,2) == 'H') {
+          home = true;
+          var player_number = inputtext.substring(2,4);
+          for(index = 0; index < app.home_team.length; index++)
+           {
+              if(player_number == app.home_team[index].number)
+              {
+                  app.home_team[index].pf += 1;
+                  app.add_play("Foul on " + app.home_team[index].name);
+              }
+           }
+          app.home_totals.pf += 1
+          app.vis_possession(); // switch possession
+        } else {
+          home = false;
+          var player_number = inputtext.substring(2,4);
             for(index = 0; index < app.vis_team.length; index++)
              {
                 if(player_number == app.vis_team[index].number)
@@ -1112,6 +1154,29 @@ var app = new Vue({
              app.vis_totals.pf += 1
              app.home_possession(); // switch possession
         }
+      }
+      } else if(char_entered == 'F') {
+        inputvalidator.innerText = "Home or Visiting team foul? Enter H for home or V for visitor";
+      } else if(char_entered == 'H') {
+        inputvalidator.innerText = "Home foul on: (Key in a player ##). For a technical, press T and a player ## or B for bench";
+      } else if(char_entered == 'V') {
+        inputvalidator.innerText = "Visitor foul on: (Key in a player ##). For a technical, press T and a player ## or B for bench";
+      } else if(char_entered == 'B' && inputtext.length == 3) {
+        var foul_on_home_team = false;
+        if(inputtext.substring(1,2) == 'H') {
+            foul_on_home_team = true;
+        }
+        inputvalidator.innerText = "Bench foul on the " + (foul_on_home_team ? "home" : "visiting") + " team. Press ENTER to save foul.";
+      } else if(char_entered == 'T') {
+        inputvalidator.innerText = "Technical foul. Enter player ##.";
+      } else if(!isNaN(char_entered) && (inputtext.length == 4 || (inputtext.length == 5 && inputtext.substring(2,3) == 'T'))) {
+        if(inputtext.substring(2,3) == 'T') {
+          inputvalidator.innerText = "Technical foul on #" + inputtext.substring(3,5) + ". Press ENTER to save foul.";
+        } else {
+          inputvalidator.innerText = "Foul on #" + inputtext.substring(2,4) + ". Press ENTER to save foul.";
+        }
+      }
+
 
    },
    rebound() {
