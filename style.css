@@ -3,6 +3,7 @@ html {
 	font-family: "Verlag", "Helvetica Neue", Helvetica, Arial, sans-serif;
 	overflow: hidden
 }
+
 /*Scorebar*/
 .fouls {
 	display: inline-block;
@@ -97,7 +98,7 @@ div.clock {
 }
 #userinput {
 	height: 30px;
-	width: 50%;
+	width: 15%;
 	font-size: 20px;
 	display: inline-block;
 	cursor: auto;

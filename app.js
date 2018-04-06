@@ -1,6 +1,9 @@
-var TESTING_MODE = true;  // this signals that you are in testing mode and will disable the annoying password promt that happens every time you load the page. Set this to false when in production mode!
+//const electron = require("electron");
+//const ipc = electron.ipcRenderer;
+
 var home = true;
 var inputtext = "";
+var currentlyInputtingPlay = "";
 result_code_prompt = `
 PRESS A RESULT CODE...
 
@@ -69,23 +72,6 @@ Vue.component('vis_team_stats', {
     return vis_stats
   }
 })
-
-window.onload = function () {
-  if(!TESTING_MODE) {
-    $(document.body).hide();
-   var password = "";
-   while(password != "123") {
-    var password = prompt("Please enter the password to access this site.");
-    if(password != "123") {
-      alert("Incorrect password");
-    }
-   }
-   if(password == "123") {
-      $(document.body).show();
-   }
-  }
-
-}
 
 function launchClockPrompt() { // called when the user clicks on the game clock in the scorebar. Is used to edit the clock time and change between half 1, half 2, and OT
   var period = prompt("Please enter the current period\n1: Period 1\n2: Period 2\nOT: First overtime\n2OT: Second overtime\n30T: Third overtime\n40T: Fourth overtime\n50T: Fifth overtime\n60T: Sixth overtime\n\nWARNING: Changing periods will reset the clock to 20:00 (or 5:00 for OT periods)");
@@ -180,17 +166,21 @@ var app = new Vue({
    keyevent(e) {
      console.log(e.keyCode);
      if(e.keyCode == 13) { // Enter key pressed
-        inputtext = ""; // clears inputtext variable that stores the key code sequence
-        inputvalidator.innerText = "Enter input...";  // sets inputvalidator h3 equal to the initial text (Enter input...)
-        userinput.value = "";  // clears the text box
+        if(currentlyInputtingPlay == "timeout") {
+          app.timeout(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "changePlayerNumber") {
+          app.change_player_number(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "substitution") {
+          app.subs(false, e.keyCode);
+        }
+        app.clear_input();
+        //save play
      }
      if(e.keyCode == 8) { // Backspace key pressed
         inputtext = inputtext.slice(0, -1);
      }
      if(e.keyCode == 27) { // Esc key pressed
-        inputtext = ""; // clears inputtext variable that stores the key code sequence
-        inputvalidator.innerText = "Enter input...";  // sets inputvalidator h3 equal to the initial text (Enter input...)
-        userinput.value = "";  // clears the text box
+        app.clear_input();
      }
      if(inputtext.length > 0) {
         if(inputtext.charAt(0) == 'Z') {
@@ -210,6 +200,7 @@ var app = new Vue({
         }
      }
      if(e.keyCode == 90) { // Z key pressed
+        userinput.value = "";
         inputvalidator.innerText = "Enter player number";
         inputtext = inputtext + "Z";  // add Z to the inputtext variable
         console.log("inputtext: " + inputtext);
@@ -331,22 +322,46 @@ var app = new Vue({
 
      // H or left arrow - home team
      else if(e.keyCode == 72 || e.keyCode == 37) {
-        app.home_possession();
+        if(currentlyInputtingPlay == "") {
+          app.home_possession();
+          userinput.value = "";
+        } else if(currentlyInputtingPlay == "timeout") {
+          app.timeout(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "changePlayerNumber") {
+          app.change_player_number(false, e.keyCode);
+        }
      }
 
      // V or right arrow - Visitor team
      else if(e.keyCode == 86 || e.keyCode == 39) {
-        app.vis_possession();
+        if(currentlyInputtingPlay == "") {
+          app.vis_possession();
+          userinput.value = "";
+        } else if(currentlyInputtingPlay == "timeout") {
+          app.timeout(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "changePlayerNumber") {
+          app.change_player_number(false, e.keyCode);
+        }
      }
 
      // F6 - Substitution
      else if(e.keyCode == 117){
-        app.subs();
+        currentlyInputtingPlay = "substitution";
+        if(inputtext == "") {
+          app.subs(true, e.keyCode);
+        } else {
+          app.subs(false, e.keyCode);
+        }
      }
 
      // F2 - change player jersey number
      else if(e.keyCode == 113) {
-         app.change_player_number();
+        currentlyInputtingPlay = "changePlayerNumber";
+        if(inputtext == "") {
+          app.change_player_number(true, e.keyCode);
+        } else {
+          app.change_player_number(false, e.keyCode);
+        }
      }
 
      // F10 - clear and do not complete any partially keyed action
@@ -366,7 +381,11 @@ var app = new Vue({
 
      // T - turnover
      else if(e.keyCode == 84) {
-      app.turnover();
+      if(currentlyInputtingPlay == "") {
+        app.turnover();
+      } else if(currentlyInputtingPlay == "timeout") {
+        app.timeout(false, e.keyCode);
+      }
      }
 
      // R - rebound
@@ -391,7 +410,112 @@ var app = new Vue({
 
      // O - timeout
      else if(e.keyCode == 79) {
-        app.timeout();
+        currentlyInputtingPlay = "timeout";
+        if(inputtext == "") {
+          app.timeout(true, e.keyCode);
+        } else{
+          app.timeout(false, e.keyCode);
+        }
+        
+     }
+
+     // M - used in timeout function (M is a full timeout)
+     else if(e.keyCode == 77) {
+        if(currentlyInputtingPlay == "timeout") {
+          app.timeout(false, e.keyCode);
+        }
+     }
+
+     // 0
+     else if(e.keyCode == 48) {
+        if(currentlyInputtingPlay == "changePlayerNumber") {
+          app.change_player_number(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "substitution") {
+          app.subs(false, e.keyCode);
+        }
+     }
+
+     // 1
+     else if(e.keyCode == 49) {
+        if(currentlyInputtingPlay == "changePlayerNumber") {
+          app.change_player_number(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "substitution") {
+          app.subs(false, e.keyCode);
+        }
+     }
+
+     // 2
+     else if(e.keyCode == 50) {
+        if(currentlyInputtingPlay == "changePlayerNumber") {
+          app.change_player_number(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "substitution") {
+          app.subs(false, e.keyCode);
+        }
+     }
+
+     // 3 - used in timeout function (3 is a 30 second timeout)
+     else if(e.keyCode == 51) {
+        if(currentlyInputtingPlay == "timeout") {
+          app.timeout(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "changePlayerNumber") {
+          app.change_player_number(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "substitution") {
+          app.subs(false, e.keyCode);
+        }
+     }
+
+     // 4
+     else if(e.keyCode == 52) {
+        if(currentlyInputtingPlay == "changePlayerNumber") {
+          app.change_player_number(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "substitution") {
+          app.subs(false, e.keyCode);
+        }
+     }
+
+     // 5
+     else if(e.keyCode == 53) {
+        if(currentlyInputtingPlay == "changePlayerNumber") {
+          app.change_player_number(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "substitution") {
+          app.subs(false, e.keyCode);
+        }
+     }
+
+     // 6
+     else if(e.keyCode == 54) {
+        if(currentlyInputtingPlay == "changePlayerNumber") {
+          app.change_player_number(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "substitution") {
+          app.subs(false, e.keyCode);
+        }
+     }
+
+     // 7
+     else if(e.keyCode == 55) {
+        if(currentlyInputtingPlay == "changePlayerNumber") {
+          app.change_player_number(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "substitution") {
+          app.subs(false, e.keyCode);
+        }
+     }
+
+     // 8
+     else if(e.keyCode == 56) {
+        if(currentlyInputtingPlay == "changePlayerNumber") {
+          app.change_player_number(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "substitution") {
+          app.subs(false, e.keyCode);
+        }
+     }
+
+     // 9
+     else if(e.keyCode == 57) {
+        if(currentlyInputtingPlay == "changePlayerNumber") {
+          app.change_player_number(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "substitution") {
+          app.subs(false, e.keyCode);
+        }
      }
 
      // C - Change time, period, stats
@@ -405,6 +529,12 @@ var app = new Vue({
      }
 
    }, //end keycode method
+   clear_input() {
+        inputtext = ""; // clears inputtext variable that stores the key code sequence
+        inputvalidator.innerText = "Enter input...";  // sets inputvalidator h3 equal to the initial text (Enter input...)
+        userinput.value = "";  // clears the text box
+        currentlyInputtingPlay = "";
+   },
    home_possession() {
        home = true;
        var h = document.getElementById("homescoreshowhide");
@@ -419,9 +549,6 @@ var app = new Vue({
        v.style.textDecoration = "none";
        v2.style.color = "black";
        v2.style.textDecoration = "none";
-       localStorage.setItem("team", "Wisconsin");
-       var data = localStorage.getItem("team");
-       console.log(data);
    },
    vis_possession() {
        home = false
@@ -472,37 +599,50 @@ var app = new Vue({
             currTeam = app.teams[1]
         }
         app.playlist.unshift({ time: document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText, team: currTeam, playdscrp: myPlayDcsrp, score: app.home_score + "-" + app.vis_score })
+        //let keystrokes = "O T";
+        //let keystroke2 = "j 16 g   h";
+        //ipc.send('add-play',keystrokes);
    },
-   timeout() {
-        which_timeout = window.prompt("TIMEOUT--\n\nT for media timout or H/V for team timeout");
-        if(which_timeout == "T" || which_timeout == "t") {
-            // media timeout (4 per game)
-            app.add_play("Media timeout");
+   timeout(first_input, keyCode) {
+        if(first_input == true) {
+          inputtext = "O";
+          inputvalidator.innerText = "Enter T for media timeout or H for home timeout or V for visitor timeout";
+        } else {
+          var char_entered = String.fromCharCode(keyCode);  // will be upper case
+          if(keyCode == 13) char_entered = "ENTER";
+          console.log("char entered: *" + char_entered + "*");
+          inputtext = inputtext + char_entered;
+          if(char_entered == 'T') {
+            inputvalidator.innerText = "Media timeout. Press ENTER to save play";
+          } else if(char_entered == 'H') {
+            inputvalidator.innerText = "Home timeout. Enter M for full timeout or 3 for 30 second timeout";
+          } else if(char_entered == 'V') {
+            inputvalidator.innerText = "Visitor timeout. Enter M for full timeout or 3 for 30 second timeout";
+          } else if(char_entered == 'M') {
+            inputvalidator.innerText = "Full timeout. Press ENTER to save play";
+          } else if(char_entered == '3') {
+            inputvalidator.innerText = "30 second timeout. Press ENTER to save play";
+          } else if(char_entered == 'ENTER') {
+            if(inputtext.substring(1,2) == 'T') { // media timeout
+              app.add_play("Media timeout");
+            } else if(inputtext.substring(1,2) == 'H' && inputtext.substring(2,3) == 'M') { // home full timeout
+              app.home_full -= 1;
+              app.add_play(app.teams[0] + " full timeout");
+            } else if(inputtext.substring(1,2) == 'H' && inputtext.substring(2,3) == '3') { // home 30 sec timeout
+              app.home_partial -= 1;
+              app.add_play(app.teams[0] + " partial timeout");
+            } else if(inputtext.substring(1,2) == 'V' && inputtext.substring(2,3) == 'M') { // visitor full timeout
+              app.vis_full -= 1;
+              app.add_play(app.teams[1] + " full timeout");
+            } else if(inputtext.substring(1,2) == 'V' && inputtext.substring(2,3) == '3') { // visitor 30 sec timeout
+              app.vis_partial -= 1;
+              app.add_play(app.teams[1] + " partial timeout");
+            }
+          } else {
+            inputvalidator.innerText = "Input not recognized";
+          }
         }
-        else if(which_timeout == "H" || which_timeout == "h") {
-            // home team timeout
-            timeout_length = window.prompt("M for full timeout or 3 for 30 second timeout");
-            if(timeout_length == "M" || timeout_length == "m") {
-                app.home_full -= 1;
-                app.add_play(app.teams[0] + " full timeout");
-            }
-            else if(timeout_length == "3") {
-                app.home_partial -= 1;
-                app.add_play(app.teams[0] + " partial timeout");
-            }
-        }
-        else if(which_timeout == "V" || which_timeout == "v") {
-            // away team timeout
-            timeout_length = window.prompt("M for full timeout or 3 for 30 second timeout");
-            if(timeout_length == "M" || timeout_length == "m") {
-                app.vis_full -= 1;
-                app.add_play(app.teams[1] + " full timeout");
-            }
-            else if(timeout_length == "3") {
-                app.vis_partial -= 1;
-                app.add_play(app.teams[1] + " partial timeout");
-            }
-        }
+        
    },
    // J then G or Q - good field goal (2 points)
    jgq_good(person, team, totals, stats) {
@@ -762,59 +902,63 @@ var app = new Vue({
          stats.fg = Number.parseFloat((total_fgs/total_attempts)*100).toFixed(2);
          app.blocked_shot();
    },
-   subs() {
-       who_came_out = window.prompt("ENTER ## OF PLAYER LEAVING");
-       // check if player is in game, and let them re-enter number if wrong
-       while(!app.check_in_game(who_came_out)) {
-           if(who_came_out == null) {
-                return;
-           }
-           who_came_out = window.prompt("Player " + who_came_out + " is not in game\n\nENTER ## OF PLAYER LEAVING");
-       }
-       who_came_in = window.prompt("ENTER ## OF PLAYER ENTERING");
+   subs(first_input, keyCode) {
+       if(first_input) {
+          inputtext = "F6";
+          userinput.value = "F6";
+          inputvalidator.innerText = "Enter ## of player leaving on the " + (home ? "home" : "visiting") + " team";
+       } else {
+          var char_entered = String.fromCharCode(keyCode); // will be upper case
+          if(keyCode == 13) char_entered = "ENTER";
+          console.log("char entered: *" + char_entered + "*");
+          inputtext = inputtext + char_entered;
+          if(char_entered == "ENTER") {
+             var who_came_out = inputtext.substring(2,4);
+             var who_came_in = inputtext.substring(4,6);
+             if(home == true) {
+               for(index = 0; index < app.home_team.length; index++) {
+                  if(who_came_out == app.home_team[index].number) {
+                    app.home_team[index].in_game = " "
+                    var came_out = index;
+                  }
+                  if(who_came_in == app.home_team[index].number) {
+                    app.home_team[index].in_game = "*"
+                    var came_in = index;
+                  }
+               }
+               // add to play by play - HOME
+               app.add_play(`${app.home_team[came_in].name} subbed in for ${app.home_team[came_out].name}`);
+             }
+             else {
+               for(index = 0; index < app.vis_team.length; index++) {
+                  if(who_came_out == app.vis_team[index].number) {
+                    app.vis_team[index].in_game = " "
+                    var came_out = index;
+                  }
+                  if(who_came_in == app.vis_team[index].number) {
+                    app.vis_team[index].in_game = "*"
+                    var came_in = index;
+                  }
+               }
+               // add to play by play - VISITOR
+               app.add_play(`${app.vis_team[came_in].name} subbed in for ${app.vis_team[came_out].name}`);
+             }
+          }
+          if(inputtext.length == 4) { // 4 is the number of characters in F623 i.e. after user has entered exiting player's number
+            if(app.check_in_game(inputtext.substring(2,4))) {
+              inputvalidator.innerText = "Enter ## of player entering on the " + (home ? "home" : "visiting") + " team";
+            } else {
+              inputvalidator.innerText = "Player #" + inputtext.substring(2,4) + " is not in the game. Press ESC/F10 to clear input";
+            }
+            
+          } else if(inputtext.length == 6) { // 6 is the number of characters in F62399 i.e. after user has entered exiting and entering player's number
+              if(!app.check_in_game(inputtext.substring(4))) {
+              inputvalidator.innerText = "#" + inputtext.substring(4,6) + " subbing in for #" + inputtext.substring(2,4) + ". Press ENTER to save play";
+            } else {
+              inputvalidator.innerText = "Player #" + inputtext.substring(4,6) + " is already in the game. Press ESC/F10 to clear input";
+            }
+          }
 
-       // check if player is in game, and let them re-enter number if wrong
-       while(app.check_in_game(who_came_in)) {
-           if(who_came_in == null) {
-                return
-           }
-           who_came_in = window.prompt("Player " + who_came_in + " is already in game\n\nENTER ## OF PLAYER ENTERING");
-       }
-
-       if(home == true)
-       {
-         for(index = 0; index < app.home_team.length; index++)
-         {
-            if(who_came_out == app.home_team[index].number)
-            {
-              app.home_team[index].in_game = " "
-              var came_out = index;
-            }
-            if(who_came_in == app.home_team[index].number)
-            {
-              app.home_team[index].in_game = "*"
-              var came_in = index;
-            }
-         }
-         // add to play by play - HOME
-         app.add_play(`${app.home_team[came_in].name} subbed in for ${app.home_team[came_out].name}`);
-       }
-       else {
-         for(index = 0; index < app.vis_team.length; index++)
-         {
-            if(who_came_out == app.vis_team[index].number)
-            {
-              app.vis_team[index].in_game = " "
-              var came_out = index;
-            }
-            if(who_came_in == app.vis_team[index].number)
-            {
-              app.vis_team[index].in_game = "*"
-              var came_in = index;
-            }
-         }
-         // add to play by play - VISITOR
-         app.add_play(`${app.vis_team[came_in].name} subbed in for ${app.vis_team[came_out].name}`);
        }
    },
    assist() {
@@ -1086,49 +1230,80 @@ var app = new Vue({
             // no change in posession
         }
     }, //end rebound method
-    change_player_number() {
-       var team = window.prompt("ENTER TEAM TO CHANGE PLAYER NUMBER (H: HOME   V: VISITOR)");
-       team_numbers = [];
-       var number = window.prompt("ENTER PLAYER ## TO CHANGE");
-       if(team == 'h' || team == 'H')
-       {
-           for(index = 0; index < app.home_team.length; index++)
-           {
+    change_player_number(first_input, keyCode) {
+    if(first_input) {
+      inputtext = "F2";
+      userinput.value = "F2";
+      inputvalidator.innerText = "Enter H for home number change or V for visitor number change";
+    } else {
+      var char_entered = String.fromCharCode(keyCode); // will be upper case
+      if(keyCode == 13) char_entered = "ENTER";
+      console.log("char entered: *" + char_entered + "*");
+      inputtext = inputtext + char_entered;
+      if(char_entered == 'H') {
+        inputvalidator.innerText = "Enter player number to change";
+      } else if(char_entered == 'V') {
+        inputvalidator.innerText = "Enter player number to change";
+      } else if(!isNaN(char_entered) && inputtext.length == 5) {  // 5: length of the input with a player number: ex F2H34
+        var old_number = inputtext.substring(3);
+        var team_numbers = [];
+        if(inputtext.substring(2,3) == 'H') {
+          for(index = 0; index < app.home_team.length; index++) {
              team_numbers.push(app.home_team[index].number);
-           }
-           for(index = 0; index < app.home_team.length; index++)
-           {
-               if(app.home_team[index].number == number)
-               {
-                 var new_number;
-                 while(team_numbers.includes(new_number) || new_number == null)
-                 {
-                   new_number = window.prompt("ENTER NEW PLAYER ##");
-                 }
-                 app.home_team[index].number = new_number;
-                 break;
-               }
-           }
-       }
-       else if(team == 'v' || team == 'V')
-       {
-         for(index = 0; index < app.vis_team.length; index++)
-         {
+          }
+        } else {
+          for(index = 0; index < app.vis_team.length; index++) {
            team_numbers.push(app.vis_team[index].number);
          }
-         for(index = 0; index < app.vis_team.length; index++)
-         {
-             if(app.vis_team[index].number == number)
-             {
-               var new_number;
-               while(team_numbers.includes(new_number) || new_number == null)
-               {
-                 new_number = window.prompt("ENTER NEW PLAYER ##");
-               }
-               app.vis_team[index].number = new_number;
-               break;
-             }
-         }
+        }
+        var number_is_valid = false;
+        for(index = 0; index < team_numbers.length; index++) {
+            if(old_number == team_numbers[index]) {
+              number_is_valid = true;
+              break;
+            }
+        }
+        if(number_is_valid) {
+          inputvalidator.innerText = "Enter new number";
+        } else {
+          inputvalidator.innerText = "Invalid number. No player has this number. Press ESC or F10 to clear input";
+        }
+      } else if(!isNaN(char_entered) && inputtext.length == 7) { // 7: length of the input with old and new player numbers: ex F2H3457
+          var new_number = inputtext.substring(5);
+          var team_numbers = [];
+          if(inputtext.substring(2,3) == 'H') {
+            for(index = 0; index < app.home_team.length; index++) {
+              team_numbers.push(app.home_team[index].number);
+            }
+          } else {
+            for(index = 0; index < app.vis_team.length; index++) {
+            team_numbers.push(app.vis_team[index].number);
+            }
+          }
+          if(team_numbers.includes(new_number)) {
+              inputvalidator.innerText = "Invalid number. Another player already has this number. Press ESC or F10 to clear input";
+          } else {
+              inputvalidator.innerText = "Changing #" + inputtext.substring(3,5) + " to #" + inputtext.substring(5,7) + ". Press ENTER to save change.";
+              if(inputtext.substring(2,3) == 'H') {
+                  for(index = 0; index < team_numbers.length; index++) {
+                    if(inputtext.substring(3,5) == team_numbers[index]) {
+                      app.home_team[index].number = new_number;
+                      break;
+                    }
+                  }
+              } else {
+                  for(index = 0; index < team_numbers.length; index++) {
+                    if(inputtext.substring(3,5) == team_numbers[index]) {
+                      app.vis_team[index].number = new_number;
+                      break;
+                    }
+                  }
+              }
+          }
+      } else if(char_entered == "ENTER") {
+        //TODO save data to backend
+      }
+
     }
   },
   log_free_throw()

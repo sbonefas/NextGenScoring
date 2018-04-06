@@ -224,7 +224,7 @@
 			});
 
 			document.body.onkeyup = function(e){
-    			if(e.keyCode == 32 && e.target == document.body){
+    			if(e.keyCode == 32){  // used to have  && e.target == document.body but with the new user input methods we had to remove it
        				 if(paused) {
        				 	timer.start();
        				 	paused = false;
