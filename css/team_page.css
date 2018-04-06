@@ -1,5 +1,6 @@
 body {
   background-color: #282728; /*UW Grey*/
+  font-family: "Verlag", "Helvetica Neue", Helvetica, Arial, sans-serif;
   overflow: hidden;
 }
 #page_title {
