@@ -170,6 +170,8 @@ var app = new Vue({
           app.timeout(false, e.keyCode);
         } else if(currentlyInputtingPlay == "changePlayerNumber") {
           app.change_player_number(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "substitution") {
+          app.subs(false, e.keyCode);
         }
         app.clear_input();
         //save play
@@ -344,7 +346,12 @@ var app = new Vue({
 
      // F6 - Substitution
      else if(e.keyCode == 117){
-        app.subs();
+        currentlyInputtingPlay = "substitution";
+        if(inputtext == "") {
+          app.subs(true, e.keyCode);
+        } else {
+          app.subs(false, e.keyCode);
+        }
      }
 
      // F2 - change player jersey number
@@ -423,6 +430,8 @@ var app = new Vue({
      else if(e.keyCode == 48) {
         if(currentlyInputtingPlay == "changePlayerNumber") {
           app.change_player_number(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "substitution") {
+          app.subs(false, e.keyCode);
         }
      }
 
@@ -430,6 +439,8 @@ var app = new Vue({
      else if(e.keyCode == 49) {
         if(currentlyInputtingPlay == "changePlayerNumber") {
           app.change_player_number(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "substitution") {
+          app.subs(false, e.keyCode);
         }
      }
 
@@ -437,6 +448,8 @@ var app = new Vue({
      else if(e.keyCode == 50) {
         if(currentlyInputtingPlay == "changePlayerNumber") {
           app.change_player_number(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "substitution") {
+          app.subs(false, e.keyCode);
         }
      }
 
@@ -446,6 +459,8 @@ var app = new Vue({
           app.timeout(false, e.keyCode);
         } else if(currentlyInputtingPlay == "changePlayerNumber") {
           app.change_player_number(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "substitution") {
+          app.subs(false, e.keyCode);
         }
      }
 
@@ -453,6 +468,8 @@ var app = new Vue({
      else if(e.keyCode == 52) {
         if(currentlyInputtingPlay == "changePlayerNumber") {
           app.change_player_number(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "substitution") {
+          app.subs(false, e.keyCode);
         }
      }
 
@@ -460,6 +477,8 @@ var app = new Vue({
      else if(e.keyCode == 53) {
         if(currentlyInputtingPlay == "changePlayerNumber") {
           app.change_player_number(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "substitution") {
+          app.subs(false, e.keyCode);
         }
      }
 
@@ -467,6 +486,8 @@ var app = new Vue({
      else if(e.keyCode == 54) {
         if(currentlyInputtingPlay == "changePlayerNumber") {
           app.change_player_number(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "substitution") {
+          app.subs(false, e.keyCode);
         }
      }
 
@@ -474,6 +495,8 @@ var app = new Vue({
      else if(e.keyCode == 55) {
         if(currentlyInputtingPlay == "changePlayerNumber") {
           app.change_player_number(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "substitution") {
+          app.subs(false, e.keyCode);
         }
      }
 
@@ -481,6 +504,8 @@ var app = new Vue({
      else if(e.keyCode == 56) {
         if(currentlyInputtingPlay == "changePlayerNumber") {
           app.change_player_number(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "substitution") {
+          app.subs(false, e.keyCode);
         }
      }
 
@@ -488,6 +513,8 @@ var app = new Vue({
      else if(e.keyCode == 57) {
         if(currentlyInputtingPlay == "changePlayerNumber") {
           app.change_player_number(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "substitution") {
+          app.subs(false, e.keyCode);
         }
      }
 
@@ -875,59 +902,63 @@ var app = new Vue({
          stats.fg = Number.parseFloat((total_fgs/total_attempts)*100).toFixed(2);
          app.blocked_shot();
    },
-   subs() {
-       who_came_out = window.prompt("ENTER ## OF PLAYER LEAVING");
-       // check if player is in game, and let them re-enter number if wrong
-       while(!app.check_in_game(who_came_out)) {
-           if(who_came_out == null) {
-                return;
-           }
-           who_came_out = window.prompt("Player " + who_came_out + " is not in game\n\nENTER ## OF PLAYER LEAVING");
-       }
-       who_came_in = window.prompt("ENTER ## OF PLAYER ENTERING");
+   subs(first_input, keyCode) {
+       if(first_input) {
+          inputtext = "F6";
+          userinput.value = "F6";
+          inputvalidator.innerText = "Enter ## of player leaving on the " + (home ? "home" : "visiting") + " team";
+       } else {
+          var char_entered = String.fromCharCode(keyCode); // will be upper case
+          if(keyCode == 13) char_entered = "ENTER";
+          console.log("char entered: *" + char_entered + "*");
+          inputtext = inputtext + char_entered;
+          if(char_entered == "ENTER") {
+             var who_came_out = inputtext.substring(2,4);
+             var who_came_in = inputtext.substring(4,6);
+             if(home == true) {
+               for(index = 0; index < app.home_team.length; index++) {
+                  if(who_came_out == app.home_team[index].number) {
+                    app.home_team[index].in_game = " "
+                    var came_out = index;
+                  }
+                  if(who_came_in == app.home_team[index].number) {
+                    app.home_team[index].in_game = "*"
+                    var came_in = index;
+                  }
+               }
+               // add to play by play - HOME
+               app.add_play(`${app.home_team[came_in].name} subbed in for ${app.home_team[came_out].name}`);
+             }
+             else {
+               for(index = 0; index < app.vis_team.length; index++) {
+                  if(who_came_out == app.vis_team[index].number) {
+                    app.vis_team[index].in_game = " "
+                    var came_out = index;
+                  }
+                  if(who_came_in == app.vis_team[index].number) {
+                    app.vis_team[index].in_game = "*"
+                    var came_in = index;
+                  }
+               }
+               // add to play by play - VISITOR
+               app.add_play(`${app.vis_team[came_in].name} subbed in for ${app.vis_team[came_out].name}`);
+             }
+          }
+          if(inputtext.length == 4) { // 4 is the number of characters in F623 i.e. after user has entered exiting player's number
+            if(app.check_in_game(inputtext.substring(2,4))) {
+              inputvalidator.innerText = "Enter ## of player entering on the " + (home ? "home" : "visiting") + " team";
+            } else {
+              inputvalidator.innerText = "Player #" + inputtext.substring(2,4) + " is not in the game. Press ESC/F10 to clear input";
+            }
+            
+          } else if(inputtext.length == 6) { // 6 is the number of characters in F62399 i.e. after user has entered exiting and entering player's number
+              if(!app.check_in_game(inputtext.substring(4))) {
+              inputvalidator.innerText = "#" + inputtext.substring(4,6) + " subbing in for #" + inputtext.substring(2,4) + ". Press ENTER to save play";
+            } else {
+              inputvalidator.innerText = "Player #" + inputtext.substring(4,6) + " is already in the game. Press ESC/F10 to clear input";
+            }
+          }
 
-       // check if player is in game, and let them re-enter number if wrong
-       while(app.check_in_game(who_came_in)) {
-           if(who_came_in == null) {
-                return
-           }
-           who_came_in = window.prompt("Player " + who_came_in + " is already in game\n\nENTER ## OF PLAYER ENTERING");
-       }
-
-       if(home == true)
-       {
-         for(index = 0; index < app.home_team.length; index++)
-         {
-            if(who_came_out == app.home_team[index].number)
-            {
-              app.home_team[index].in_game = " "
-              var came_out = index;
-            }
-            if(who_came_in == app.home_team[index].number)
-            {
-              app.home_team[index].in_game = "*"
-              var came_in = index;
-            }
-         }
-         // add to play by play - HOME
-         app.add_play(`${app.home_team[came_in].name} subbed in for ${app.home_team[came_out].name}`);
-       }
-       else {
-         for(index = 0; index < app.vis_team.length; index++)
-         {
-            if(who_came_out == app.vis_team[index].number)
-            {
-              app.vis_team[index].in_game = " "
-              var came_out = index;
-            }
-            if(who_came_in == app.vis_team[index].number)
-            {
-              app.vis_team[index].in_game = "*"
-              var came_in = index;
-            }
-         }
-         // add to play by play - VISITOR
-         app.add_play(`${app.vis_team[came_in].name} subbed in for ${app.vis_team[came_out].name}`);
        }
    },
    assist() {
@@ -1200,49 +1231,6 @@ var app = new Vue({
         }
     }, //end rebound method
     change_player_number(first_input, keyCode) {
-    //    var team = window.prompt("ENTER TEAM TO CHANGE PLAYER NUMBER (H: HOME   V: VISITOR)");
-    //    team_numbers = [];
-    //    var number = window.prompt("ENTER PLAYER ## TO CHANGE");
-    //    if(team == 'h' || team == 'H')
-    //    {
-    //        for(index = 0; index < app.home_team.length; index++)
-    //        {
-    //          team_numbers.push(app.home_team[index].number);
-    //        }
-    //        for(index = 0; index < app.home_team.length; index++)
-    //        {
-    //            if(app.home_team[index].number == number)
-    //            {
-    //              var new_number;
-    //              while(team_numbers.includes(new_number) || new_number == null)
-    //              {
-    //                new_number = window.prompt("ENTER NEW PLAYER ##");
-    //              }
-    //              app.home_team[index].number = new_number;
-    //              break;
-    //            }
-    //        }
-    //    }
-    //    else if(team == 'v' || team == 'V')
-    //    {
-    //      for(index = 0; index < app.vis_team.length; index++)
-    //      {
-    //        team_numbers.push(app.vis_team[index].number);
-    //      }
-    //      for(index = 0; index < app.vis_team.length; index++)
-    //      {
-    //          if(app.vis_team[index].number == number)
-    //          {
-    //            var new_number;
-    //            while(team_numbers.includes(new_number) || new_number == null)
-    //            {
-    //              new_number = window.prompt("ENTER NEW PLAYER ##");
-    //            }
-    //            app.vis_team[index].number = new_number;
-    //            break;
-    //          }
-    //      }
-    // }
     if(first_input) {
       inputtext = "F2";
       userinput.value = "F2";
@@ -1295,6 +1283,7 @@ var app = new Vue({
           if(team_numbers.includes(new_number)) {
               inputvalidator.innerText = "Invalid number. Another player already has this number. Press ESC or F10 to clear input";
           } else {
+              inputvalidator.innerText = "Changing #" + inputtext.substring(3,5) + " to #" + inputtext.substring(5,7) + ". Press ENTER to save change.";
               if(inputtext.substring(2,3) == 'H') {
                   for(index = 0; index < team_numbers.length; index++) {
                     if(inputtext.substring(3,5) == team_numbers[index]) {
