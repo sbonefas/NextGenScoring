@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Team Selection - NextGen</title>
+    <link rel="stylesheet" href="css/team_page.css">
+  </head>
+  <body>
+    <h1 id="page_title">TEAM SELECTION</h1>
+    <div id="team_app">
+      <table id="static_top">
+        <th id="table_head">{{message}}</th>
+        <tr>
+          <td id="team"><input type="text" id="searched" placeholder="Enter team name..." oninput="run_search()">
+        </tr>
+      </table>
+      <table class="team_search">
+        <tr v-for="team in teams">
+          <td><button class="team_cell"><h3>{{team.name}}</h3></button></td>
+        </tr>
+      <div>
+        <table id="options">
+          <th id="options_head">ROSTER OPTIONS</th>
+          <tr v-for="option in roster_options">
+            <td id="roster_option"><h3>{{option.name}}</h3></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript" src="js/teams.js"></script>
+  </body>
+</html>

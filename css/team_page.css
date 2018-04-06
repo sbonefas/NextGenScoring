@@ -1,0 +1,58 @@
+body {
+  background-color: #282728; /*UW Grey*/
+  font-family: "Verlag", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  overflow: hidden;
+}
+#page_title {
+  text-align: center;
+  color: white;
+}
+#team_app {
+  background-color: #c5050c; /*UW Red*/
+}
+#static_top {
+  background-color: #dadfe1; /*UW Grey-Blue*/
+}
+#options {
+  background-color: #dadfe1; /*UW Grey-Blue*/
+  position: fixed;
+  bottom: 50%;
+  left: 450px;
+  top: 300px;
+  width: 600px;
+  height: 100px;
+}
+#roster_option {
+  background-color: #282728; /*UW Grey*/
+  color: white;
+  font-family: serif;
+  padding: 5px 5px;
+  font-size: 20px;
+}
+input {
+  width: 243px;
+  text-align: center;
+}
+
+#table_head {
+  width: 250px;
+  background-color: #dadfe1; /*UW Grey-Blue*/
+}
+.team_search {
+  display: block;
+  height: 750px;
+  width: 256px;
+  overflow-y: scroll;
+  background-color: #dadfe1; /*UW Grey-Blue*/
+}
+
+.team_cell {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  font-size: 20px;
+  text-align: center;
+  background-color: #282728; /*UW Grey*/
+  width: 250px;
+  color: white;
+  font-family: serif;
+}
