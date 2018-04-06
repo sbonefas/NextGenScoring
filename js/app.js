@@ -174,6 +174,8 @@ var app = new Vue({
           app.subs(false, e.keyCode);
         } else if(currentlyInputtingPlay == "foul") {
           app.foul(e.keyCode);
+        } else if(currentlyInputtingPlay == "turnover") {
+          app.turnover(e.keyCode);
         }
         app.clear_input();
         //save play
@@ -389,12 +391,15 @@ var app = new Vue({
      // T - turnover
      else if(e.keyCode == 84) {
       if(currentlyInputtingPlay == "") {
-        app.turnover();
+          currentlyInputtingPlay = "turnover";
+          app.turnover(e.keyCode);
       } else if(currentlyInputtingPlay == "timeout") {
-        app.timeout(false, e.keyCode);
+          app.timeout(false, e.keyCode);
       } else if(currentlyInputtingPlay == "foul") {
           app.foul(e.keyCode);
-        }
+      } else if(currentlyInputtingPlay == "turnover") {
+          app.turnover(e.keyCode);
+      }
      }
 
      // R - rebound
@@ -435,10 +440,12 @@ var app = new Vue({
         
      }
 
-     // M - used in timeout function (M is a full timeout)
+     // M - used in timeout function (M is a full timeout) and turnover function (M is team turnover)
      else if(e.keyCode == 77) {
         if(currentlyInputtingPlay == "timeout") {
           app.timeout(false, e.keyCode);
+        } else if(currentlyInputtingPlay == "turnover") {
+          app.turnover(e.keyCode);
         }
      }
 
@@ -450,6 +457,8 @@ var app = new Vue({
           app.subs(false, e.keyCode);
         } else if(currentlyInputtingPlay == "foul") {
           app.foul(e.keyCode);
+        } else if(currentlyInputtingPlay == "turnover") {
+          app.turnover(e.keyCode);
         }
      }
 
@@ -461,6 +470,8 @@ var app = new Vue({
           app.subs(false, e.keyCode);
         } else if(currentlyInputtingPlay == "foul") {
           app.foul(e.keyCode);
+        } else if(currentlyInputtingPlay == "turnover") {
+          app.turnover(e.keyCode);
         }
      }
 
@@ -472,6 +483,8 @@ var app = new Vue({
           app.subs(false, e.keyCode);
         } else if(currentlyInputtingPlay == "foul") {
           app.foul(e.keyCode);
+        } else if(currentlyInputtingPlay == "turnover") {
+          app.turnover(e.keyCode);
         }
      }
 
@@ -485,6 +498,8 @@ var app = new Vue({
           app.subs(false, e.keyCode);
         } else if(currentlyInputtingPlay == "foul") {
           app.foul(e.keyCode);
+        } else if(currentlyInputtingPlay == "turnover") {
+          app.turnover(e.keyCode);
         }
      }
 
@@ -496,6 +511,8 @@ var app = new Vue({
           app.subs(false, e.keyCode);
         } else if(currentlyInputtingPlay == "foul") {
           app.foul(e.keyCode);
+        } else if(currentlyInputtingPlay == "turnover") {
+          app.turnover(e.keyCode);
         }
      }
 
@@ -507,6 +524,8 @@ var app = new Vue({
           app.subs(false, e.keyCode);
         } else if(currentlyInputtingPlay == "foul") {
           app.foul(e.keyCode);
+        } else if(currentlyInputtingPlay == "turnover") {
+          app.turnover(e.keyCode);
         }
      }
 
@@ -518,6 +537,8 @@ var app = new Vue({
           app.subs(false, e.keyCode);
         } else if(currentlyInputtingPlay == "foul") {
           app.foul(e.keyCode);
+        } else if(currentlyInputtingPlay == "turnover") {
+          app.turnover(e.keyCode);
         }
      }
 
@@ -529,6 +550,8 @@ var app = new Vue({
           app.subs(false, e.keyCode);
         } else if(currentlyInputtingPlay == "foul") {
           app.foul(e.keyCode);
+        } else if(currentlyInputtingPlay == "turnover") {
+          app.turnover(e.keyCode);
         }
      }
 
@@ -540,6 +563,8 @@ var app = new Vue({
           app.subs(false, e.keyCode);
         } else if(currentlyInputtingPlay == "foul") {
           app.foul(e.keyCode);
+        } else if(currentlyInputtingPlay == "turnover") {
+          app.turnover(e.keyCode);
         }
      }
 
@@ -551,6 +576,8 @@ var app = new Vue({
           app.subs(false, e.keyCode);
         } else if(currentlyInputtingPlay == "foul") {
           app.foul(e.keyCode);
+        } else if(currentlyInputtingPlay == "turnover") {
+          app.turnover(e.keyCode);
         }
      }
 
@@ -1036,48 +1063,60 @@ var app = new Vue({
             // Enter - no assist
         }
    },
-   turnover() {
-      console.log('turnover');
-      var response = window.prompt("Turnover by: (Key in a player ## or M for team turnover");
-      if(response.charAt(0) == 'm' || response.charAt(0) == 'M') {
-        if(home) {
-          home_stats.tvs += 1;
-          app.home_totals.to += 1
-          app.vis_possession(); // switch possession
-        } else {
-          vis_stats.tvs += 1;
-          app.vis_totals.to += 1
-          app.home_possession(); // switch possession
-        }
-      } else {
-        var player_number = response.substring(0,2);
-        if(app.check_in_game(player_number)) {
+   turnover(keyCode) {
+      var char_entered = String.fromCharCode(keyCode);
+      if(keyCode == 13) char_entered = "ENTER";
+      inputtext = inputtext + char_entered;
+      if(char_entered == "ENTER") {
+        if(inputtext.substring(1,2) == 'M') {
           if(home) {
-          for(index = 0; index < app.home_team.length; index++)
-             {
-                if(player_number == app.home_team[index].number)
-                {
-                    app.home_team[index].to += 1;
-                    app.add_play("Turnover by " + app.home_team[index].name);
-                }
-             }
-             home_stats.tvs += 1;
-             app.home_totals.to += 1
-             app.vis_possession(); // switch possession
+            home_stats.tvs += 1;
+            app.home_totals.to += 1
+            app.vis_possession(); // switch possession
+          } else {
+            vis_stats.tvs += 1;
+            app.vis_totals.to += 1
+            app.home_possession(); // switch possession
+          }
         } else {
-          for(index = 0; index < app.vis_team.length; index++)
-             {
-                if(player_number == app.vis_team[index].number)
-                {
+          var player_number = inputtext.substring(1,3);
+          if(app.check_in_game(player_number)) {
+            if(home) {
+            for(index = 0; index < app.home_team.length; index++) {
+              if(player_number == app.home_team[index].number) {
+                  app.home_team[index].to += 1;
+                  app.add_play("Turnover by " + app.home_team[index].name);
+                  break;
+              }
+            }
+           home_stats.tvs += 1;
+           app.home_totals.to += 1
+           app.vis_possession(); // switch possession
+        } else {
+          for(index = 0; index < app.vis_team.length; index++) {
+                if(player_number == app.vis_team[index].number) {
                     app.vis_team[index].to += 1;
                     app.add_play("Turnover by " + app.vis_team[index].name);
+                    break;
                 }
-             }
-             vis_stats.tvs += 1;
-             app.vis_totals.to += 1
-             app.home_possession(); // switch possession
+           }
+           vis_stats.tvs += 1;
+           app.vis_totals.to += 1
+           app.home_possession(); // switch possession
+          }
+          }
         }
+      } else if(char_entered == 'T') {
+        inputvalidator.innerText = "Turnover by: (Key in a player ##) or M for team turnover";
+      } else if(char_entered == 'M') {
+        inputvalidator.innerText = "Team turnover on the " + (home ? "home" : "visiting") + " team. Press ENTER to save play.";
+      } else if(!isNaN(char_entered) && inputtext.length == 3) {
+        if(app.check_in_game(inputtext.substring(1))) {
+          inputvalidator.innerText = "Turnover on #" + inputtext.substring(1) + ". Press ENTER to save play.";
+        } else {
+          inputvalidator.innerText = "#" + inputtext.substring(1) + " is not currently in the game. Press ESC/F10 to clear input.";
         }
+        
       }
    },
    foul(keyCode) {
