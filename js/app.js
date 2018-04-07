@@ -128,32 +128,32 @@ var app = new Vue({
     vis_partial: 4,
 
     home_team: [
-                {in_game: "*", number: "01", name: "Player_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "02", name: "Player_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "03", name: "Player_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "04", name: "Player_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "05", name: "Player_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "06", name: "Bench_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "07", name: "Bench_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "08", name: "Bench_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "09", name: "Bench_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "10", name: "Bench_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, pf: 0, tp: 0}
+                {in_game: "*", number: "01", name: "Player_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "02", name: "Player_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "03", name: "Player_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "04", name: "Player_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "05", name: "Player_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "06", name: "Bench_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "07", name: "Bench_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "08", name: "Bench_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "09", name: "Bench_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "10", name: "Bench_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0}
               ],
-    home_totals: {in_game: " ", number: " ", name: "Totals", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, pf: 0, tp: 0},
+    home_totals: {in_game: " ", number: " ", name: "Totals", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
 
     vis_team: [
-                {in_game: "*", number: "01", name: "Player_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "02", name: "Player_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "03", name: "Player_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "04", name: "Player_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "05", name: "Player_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "06", name: "Bench_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "07", name: "Bench_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "08", name: "Bench_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "09", name: "Bench_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "10", name: "Bench_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, pf: 0, tp: 0}
+                {in_game: "*", number: "01", name: "Player_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "02", name: "Player_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "03", name: "Player_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "04", name: "Player_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "05", name: "Player_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "06", name: "Bench_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "07", name: "Bench_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "08", name: "Bench_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "09", name: "Bench_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "10", name: "Bench_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0}
               ],
-    vis_totals: {in_game: " ", number: " ", name: "Totals", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, pf: 0, tp: 0},
+    vis_totals: {in_game: " ", number: " ", name: "Totals", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
 
     playlist: [
                 //example: {time: "19:85", team: "WISC", playdscrp: "Ethan Happ made a 3 point jumper", score: "100-2"},
@@ -178,6 +178,8 @@ var app = new Vue({
           app.turnover(e.keyCode);
         } else if(currentlyInputtingPlay == "assist") {
           app.assist(e.keyCode);
+        } else if(currentlyInputtingPlay == "steal") {
+          app.steal(e.keyCode);
         }
         app.clear_input();
         //save play
@@ -400,7 +402,8 @@ var app = new Vue({
 
      // S - steal
      else if(e.keyCode == 83) {
-
+        currentlyInputtingPlay = "steal";
+        app.steal(e.keyCode);
      }
 
      // K - blocked shot
@@ -440,6 +443,8 @@ var app = new Vue({
           app.turnover(e.keyCode);
         } else if(currentlyInputtingPlay == "assist") {
           app.assist(e.keyCode);
+        } else if(currentlyInputtingPlay == "steal") {
+          app.steal(e.keyCode);
         }
      }
 
@@ -455,6 +460,8 @@ var app = new Vue({
           app.turnover(e.keyCode);
         } else if(currentlyInputtingPlay == "assist") {
           app.assist(e.keyCode);
+        } else if(currentlyInputtingPlay == "steal") {
+          app.steal(e.keyCode);
         }
      }
 
@@ -470,6 +477,8 @@ var app = new Vue({
           app.turnover(e.keyCode);
         } else if(currentlyInputtingPlay == "assist") {
           app.assist(e.keyCode);
+        } else if(currentlyInputtingPlay == "steal") {
+          app.steal(e.keyCode);
         }
      }
 
@@ -487,6 +496,8 @@ var app = new Vue({
           app.turnover(e.keyCode);
         } else if(currentlyInputtingPlay == "assist") {
           app.assist(e.keyCode);
+        } else if(currentlyInputtingPlay == "steal") {
+          app.steal(e.keyCode);
         }
      }
 
@@ -502,6 +513,8 @@ var app = new Vue({
           app.turnover(e.keyCode);
         } else if(currentlyInputtingPlay == "assist") {
           app.assist(e.keyCode);
+        } else if(currentlyInputtingPlay == "steal") {
+          app.steal(e.keyCode);
         }
      }
 
@@ -517,6 +530,8 @@ var app = new Vue({
           app.turnover(e.keyCode);
         } else if(currentlyInputtingPlay == "assist") {
           app.assist(e.keyCode);
+        } else if(currentlyInputtingPlay == "steal") {
+          app.steal(e.keyCode);
         }
      }
 
@@ -532,6 +547,8 @@ var app = new Vue({
           app.turnover(e.keyCode);
         } else if(currentlyInputtingPlay == "assist") {
           app.assist(e.keyCode);
+        } else if(currentlyInputtingPlay == "steal") {
+          app.steal(e.keyCode);
         }
      }
 
@@ -547,6 +564,8 @@ var app = new Vue({
           app.turnover(e.keyCode);
         } else if(currentlyInputtingPlay == "assist") {
           app.assist(e.keyCode);
+        } else if(currentlyInputtingPlay == "steal") {
+          app.steal(e.keyCode);
         }
      }
 
@@ -562,6 +581,8 @@ var app = new Vue({
           app.turnover(e.keyCode);
         } else if(currentlyInputtingPlay == "assist") {
           app.assist(e.keyCode);
+        } else if(currentlyInputtingPlay == "steal") {
+          app.steal(e.keyCode);
         }
      }
 
@@ -577,6 +598,8 @@ var app = new Vue({
           app.turnover(e.keyCode);
         } else if(currentlyInputtingPlay == "assist") {
           app.assist(e.keyCode);
+        } else if(currentlyInputtingPlay == "steal") {
+          app.steal(e.keyCode);
         }
      }
 
@@ -1059,6 +1082,49 @@ var app = new Vue({
         var player_number = inputtext.substring(1,3);
         if(app.check_in_game(player_number)) {
           inputvalidator.innerText = "Assist by #" + player_number + ". Press ENTER to save play";
+        } else {
+          inputvalidator.innerText = "Player #" + player_number + " is not in the game. Press ESC/F10 to clear input.";
+        }
+      }
+   },
+   steal(keyCode) {
+      console.log("currentl inputting play:" + currentlyInputtingPlay);
+      var char_entered = String.fromCharCode(keyCode);
+      if(keyCode == 13) char_entered = "ENTER";
+      inputtext = inputtext + char_entered;
+      if(char_entered == "ENTER") {
+        var player_number = inputtext.substring(1,3);
+        if(app.check_in_game(player_number)) {
+          if(home) {
+             for(index = 0; index < app.home_team.length; index++)
+             {
+                if(player_number == app.home_team[index].number)
+                {
+                    app.home_team[index].stl += 1;
+                    app.home_totals.stl += 1;
+                    app.add_play("Steal by " + app.home_team[index].name);
+                }
+             }
+           }
+           else {
+             for(index = 0; index < app.vis_team.length; index++)
+             {
+                if(player_number == app.vis_team[index].number)
+                {
+                    app.vis_team[index].stl += 1;
+                    app.vis_totals.stl += 1;
+                    app.add_play("Steal by " + app.vis_team[index].name);
+                }
+             }
+           }
+        }
+      } else if(char_entered == 'S') {
+        inputvalidator.innerText = "Steal by: Key in a player ##.";
+      } else if(!isNaN(char_entered) && inputtext.length == 3) {
+        var player_number = inputtext.substring(1,3);
+        console.log("steal player num: *" + player_number + "*");
+        if(app.check_in_game(player_number)) {
+          inputvalidator.innerText = "Steal by #" + player_number + ". Press ENTER to save play";
         } else {
           inputvalidator.innerText = "Player #" + player_number + " is not in the game. Press ESC/F10 to clear input.";
         }
