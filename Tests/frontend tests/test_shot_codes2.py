@@ -34,14 +34,13 @@ class TestShotCodes(unittest.TestCase):
         __class__.driver.quit()
         #pass
 
-    def foul(team, player, tech=False):
-        __class__.driver.find_element_by_class_name("fouls").send_keys("F")
+    def foul(self, team, player, tech=False):
+        __class__.driver.find_element_by_id("userinput").send_keys("F")
         
         if tech == False:
-            Alert(__class__.driver).send_keys(team)
-            Alert(__class__.driver).accept()  
-            Alert(__class__.driver).send_keys(player)
-            Alert(__class__.driver).accept()
+            __class__.driver.find_element_by_id("userinput").send_keys(team)
+            __class__.driver.find_element_by_id("userinput").send_keys(player)
+            __class__.driver.find_element_by_id("userinput").send_keys(Keys.ENTER)
             
             
     def free_throw(self, player, made, rebounded, off_rb, player2):
@@ -49,6 +48,7 @@ class TestShotCodes(unittest.TestCase):
         
         Alert(__class__.driver).send_keys(player)
         Alert(__class__.driver).accept()
+        __class__.driver.implicitly_wait(1)
         
         if made:  
             Alert(__class__.driver).send_keys("E")
@@ -57,6 +57,7 @@ class TestShotCodes(unittest.TestCase):
             if rebounded:
                 Alert(__class__.driver).send_keys("R")
                 Alert(__class__.driver).accept()
+                __class__.driver.implicitly_wait(1)
                 
                 if off_rb:
                     Alert(__class__.driver).send_keys(player2)
@@ -81,15 +82,15 @@ class TestShotCodes(unittest.TestCase):
         
         for i in range(0,5):
             # Get number of PF for player
-            pf_before = __class__.driver.find_element_by_id("ps-visitor").find_element_by_xpath("table/tbody/tr[2]/td[11]").text
+            pf_before = __class__.driver.find_element_by_id("ps-visitor").find_element_by_xpath("table/tbody/tr[2]/td[13]").text
             
             # Get number of team fouls for defense
             tf_before = __class__.driver.find_element_by_id("visitor").find_element_by_class_name("fouls-top").find_element_by_xpath('h3[2]').text
             
-            __class__.foul("V", "01", False)
+            self.foul("V", "01", False)
             
             # Check that PF for player incremented
-            pf_after = __class__.driver.find_element_by_id("ps-visitor").find_element_by_xpath("table/tbody/tr[2]/td[11]").text
+            pf_after = __class__.driver.find_element_by_id("ps-visitor").find_element_by_xpath("table/tbody/tr[2]/td[13]").text
             self.assertEqual(int(pf_after), int(pf_before) + 1)
             
             # Check team fouls incremented
@@ -97,7 +98,7 @@ class TestShotCodes(unittest.TestCase):
             
             ## WILL FAIL UNTIL TEAM FOULS INCREMENT
             #self.assertEqual(int(tf_after), int(tf_before) + 1, "Team fouls")
-    
+   
     
     def test_offensive_fouls(self):
         ## ASSUME HOME TEAM IS ON OFFENSE ##
@@ -105,12 +106,12 @@ class TestShotCodes(unittest.TestCase):
             self.home_on_offense()
             
             # Get number of PF for player
-            pf_before = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[4]/td[11]").text
+            pf_before = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[4]/td[13]").text
             
             # Get number of team fouls for offense
             tf_before = __class__.driver.find_element_by_id("home").find_element_by_class_name("fouls-top").find_element_by_xpath('h3[2]').text
             
-            __class__.foul("H", "03", False)
+            self.foul("H", "03", False)
             
             # Ensure that offensive foul switched possession -> Visitor should now be active
             visitor_style = __class__.driver.find_element_by_id("visitorscoreshowhide").get_attribute("style")
@@ -121,12 +122,36 @@ class TestShotCodes(unittest.TestCase):
             home_color = home_style.split(';')[0].split(' ')[1]
             self.assertEqual(home_color, "white", "HOME COLOR")
             
-            pf_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[4]/td[11]").text
+            pf_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[4]/td[13]").text
             self.assertEqual(int(pf_after), int(pf_before) + 1)
             
             tf_after = __class__.driver.find_element_by_id("home").find_element_by_class_name("fouls-top").find_element_by_xpath('h3[2]').text
             self.assertEqual(int(tf_after), int(tf_before))
 
+            
+    def test_foul_play_by_play(self):
+        print("test_foul_play_by_play")
+        
+        self.home_on_offense()
+        
+        numA_name = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[3]").text
+        home_score = __class__.driver.find_element_by_id("home").find_element_by_class_name("score").find_element_by_xpath("h2[2]").text;
+        away_score = __class__.driver.find_element_by_id("visitor").find_element_by_class_name("score").find_element_by_xpath("h2[2]").text;
+        clock = (__class__.driver.find_element_by_id("clockminutes").text + ":" + 
+                 __class__.driver.find_element_by_id("clockseconds").text)
+        
+        self.foul("H", "01", False)
+        
+        play_by_play = __class__.driver.find_element_by_id("playbyplaybox").find_element_by_xpath("table/tbody/tr[2]").text.split(" ")
+        
+        self.assertEqual(clock, play_by_play[0])
+        self.assertEqual("WISC", play_by_play[1])
+        self.assertEqual("Foul", play_by_play[2])
+        self.assertEqual(numA_name, play_by_play[4])
+        self.assertEqual(home_score + "-" + away_score, play_by_play[5])
+    
+    #def test_technical_fouls(self):
+       
 
     def test_made_free_throw(self):
         ## ASSUME HOME TEAM IS ON OFFENSE ##
@@ -135,16 +160,16 @@ class TestShotCodes(unittest.TestCase):
         for i in range(0,10):
         
             ## TEST FT MADE ##
-            tp_before = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[12]").text
-            ft_before = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[7]").text
-            fa_before = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[8]").text
+            tp_before = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[14]").text
+            ft_before = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[8]").text
+            fa_before = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[9]").text
             team_pts_before = __class__.driver.find_element_by_id("home").find_element_by_class_name("score").text.split(' ')[1]
             
             self.free_throw("01", True, False, False, "02")
             
-            tp_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[12]").text
-            ft_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[7]").text
-            fa_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[8]").text
+            tp_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[14]").text
+            ft_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[8]").text
+            fa_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[9]").text
             team_pts_after = __class__.driver.find_element_by_id("home").find_element_by_class_name("score").text.split(' ')[1]
             
             self.assertEqual(int(tp_after), int(tp_before) + 1, "Total Player Points")
@@ -163,18 +188,18 @@ class TestShotCodes(unittest.TestCase):
 
         ## OFFENSIVE REBOUND
         for i in range(0,10):
-            tp_before = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[12]").text
-            ft_before = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[7]").text
-            fa_before = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[8]").text
-            rb_before = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[3]/td[9]").text
+            tp_before = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[14]").text
+            ft_before = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[8]").text
+            fa_before = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[9]").text
+            rb_before = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[3]/td[10]").text
             team_pts_before = __class__.driver.find_element_by_id("home").find_element_by_class_name("score").text.split(' ')[1]
             
             self.free_throw("01", False, True, True, "02")
             
-            tp_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[12]").text
-            ft_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[7]").text
-            fa_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[8]").text
-            rb_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[3]/td[9]").text
+            tp_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[14]").text
+            ft_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[8]").text
+            fa_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[9]").text
+            rb_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[3]/td[10]").text
             team_pts_after = __class__.driver.find_element_by_id("home").find_element_by_class_name("score").text.split(' ')[1]
             pct = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("div/p[1]").text.split(' ')[-1]
             
@@ -187,18 +212,18 @@ class TestShotCodes(unittest.TestCase):
             
         # DEFENSIVE REBOUND
         for i in range(0,10):
-            tp_before = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[12]").text
-            ft_before = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[7]").text
-            fa_before = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[8]").text
-            rb_before = __class__.driver.find_element_by_id("ps-visitor").find_element_by_xpath("table/tbody/tr[3]/td[9]").text
+            tp_before = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[14]").text
+            ft_before = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[8]").text
+            fa_before = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[9]").text
+            rb_before = __class__.driver.find_element_by_id("ps-visitor").find_element_by_xpath("table/tbody/tr[3]/td[10]").text
             team_pts_before = __class__.driver.find_element_by_id("home").find_element_by_class_name("score").text.split(' ')[1]
             
             self.free_throw("01", False, True, False, "02")
             
-            tp_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[12]").text
-            ft_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[7]").text
-            fa_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[8]").text
-            rb_after = __class__.driver.find_element_by_id("ps-visitor").find_element_by_xpath("table/tbody/tr[3]/td[9]").text
+            tp_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[14]").text
+            ft_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[8]").text
+            fa_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[9]").text
+            rb_after = __class__.driver.find_element_by_id("ps-visitor").find_element_by_xpath("table/tbody/tr[3]/td[10]").text
             team_pts_after = __class__.driver.find_element_by_id("home").find_element_by_class_name("score").text.split(' ')[1]
             pct = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("div/p[1]").text.split(' ')[-1]
             
