@@ -176,6 +176,8 @@ var app = new Vue({
           app.foul(e.keyCode);
         } else if(currentlyInputtingPlay == "turnover") {
           app.turnover(e.keyCode);
+        } else if(currentlyInputtingPlay == "assist") {
+          app.assist(e.keyCode);
         }
         app.clear_input();
         //save play
@@ -186,30 +188,6 @@ var app = new Vue({
      if(e.keyCode == 27) { // Esc key pressed
         app.clear_input();
      }
-     if(inputtext.length > 0) {
-        if(inputtext.charAt(0) == 'Z') {
-          if(inputtext.length < 3) {
-            inputtext = inputtext + String.fromCharCode(e.keyCode);
-            console.log("inputtext: " + inputtext);
-            if(inputtext.length == 3) {
-              inputvalidator.innerText = "Jumper by " + inputtext.substring(1,3) + ". Enter a result code";
-            }
-          } else if(inputtext.length == 3) {
-            if(e.keyCode == 73) {// 73 is the key code for 'I' 
-                inputtext = inputtext + String.fromCharCode(e.keyCode);
-                inputvalidator.innerText = "Good jumper by " + inputtext.substring(1,3) + ". Press ENTER to save play.";
-                // Send data to backend
-            }
-          }
-        }
-     }
-     if(e.keyCode == 90) { // Z key pressed
-        userinput.value = "";
-        inputvalidator.innerText = "Enter player number";
-        inputtext = inputtext + "Z";  // add Z to the inputtext variable
-        console.log("inputtext: " + inputtext);
-     }
-
 
      // alt + h - Help menu
      if(e.altKey && e.keyCode == 72) {
@@ -409,7 +387,8 @@ var app = new Vue({
 
      // A - assist
      else if(e.keyCode == 65) {
-        app.assist();
+        currentlyInputtingPlay = "assist";
+        app.assist(e.keyCode);
      }
 
      // B - used in foul() to indicate a bench foul
@@ -459,6 +438,8 @@ var app = new Vue({
           app.foul(e.keyCode);
         } else if(currentlyInputtingPlay == "turnover") {
           app.turnover(e.keyCode);
+        } else if(currentlyInputtingPlay == "assist") {
+          app.assist(e.keyCode);
         }
      }
 
@@ -472,6 +453,8 @@ var app = new Vue({
           app.foul(e.keyCode);
         } else if(currentlyInputtingPlay == "turnover") {
           app.turnover(e.keyCode);
+        } else if(currentlyInputtingPlay == "assist") {
+          app.assist(e.keyCode);
         }
      }
 
@@ -485,6 +468,8 @@ var app = new Vue({
           app.foul(e.keyCode);
         } else if(currentlyInputtingPlay == "turnover") {
           app.turnover(e.keyCode);
+        } else if(currentlyInputtingPlay == "assist") {
+          app.assist(e.keyCode);
         }
      }
 
@@ -500,6 +485,8 @@ var app = new Vue({
           app.foul(e.keyCode);
         } else if(currentlyInputtingPlay == "turnover") {
           app.turnover(e.keyCode);
+        } else if(currentlyInputtingPlay == "assist") {
+          app.assist(e.keyCode);
         }
      }
 
@@ -513,6 +500,8 @@ var app = new Vue({
           app.foul(e.keyCode);
         } else if(currentlyInputtingPlay == "turnover") {
           app.turnover(e.keyCode);
+        } else if(currentlyInputtingPlay == "assist") {
+          app.assist(e.keyCode);
         }
      }
 
@@ -526,6 +515,8 @@ var app = new Vue({
           app.foul(e.keyCode);
         } else if(currentlyInputtingPlay == "turnover") {
           app.turnover(e.keyCode);
+        } else if(currentlyInputtingPlay == "assist") {
+          app.assist(e.keyCode);
         }
      }
 
@@ -539,6 +530,8 @@ var app = new Vue({
           app.foul(e.keyCode);
         } else if(currentlyInputtingPlay == "turnover") {
           app.turnover(e.keyCode);
+        } else if(currentlyInputtingPlay == "assist") {
+          app.assist(e.keyCode);
         }
      }
 
@@ -552,6 +545,8 @@ var app = new Vue({
           app.foul(e.keyCode);
         } else if(currentlyInputtingPlay == "turnover") {
           app.turnover(e.keyCode);
+        } else if(currentlyInputtingPlay == "assist") {
+          app.assist(e.keyCode);
         }
      }
 
@@ -565,6 +560,8 @@ var app = new Vue({
           app.foul(e.keyCode);
         } else if(currentlyInputtingPlay == "turnover") {
           app.turnover(e.keyCode);
+        } else if(currentlyInputtingPlay == "assist") {
+          app.assist(e.keyCode);
         }
      }
 
@@ -578,6 +575,8 @@ var app = new Vue({
           app.foul(e.keyCode);
         } else if(currentlyInputtingPlay == "turnover") {
           app.turnover(e.keyCode);
+        } else if(currentlyInputtingPlay == "assist") {
+          app.assist(e.keyCode);
         }
      }
 
@@ -1024,22 +1023,17 @@ var app = new Vue({
 
        }
    },
-   assist() {
-        who_assist = window.prompt("ASSIST BY: \n\n Key in a player ## or press ENTER for no assist");
-
-        String.prototype.isNumber = function(){return /^\d+$/.test(this);}
-
-        if(who_assist.isNumber()) {
-           while(!app.check_in_game(who_assist)) {
-               if(who_assist == null) {
-                    return
-               }
-                who_assist = window.prompt("Player " + who_assist + " is not in the game!\n\n ASSIST BY OFFENSIVE: Key in a player ## or press ENTER for no assist");
-           }
-           if(home) {
+   assist(keyCode) {
+      var char_entered = String.fromCharCode(keyCode);
+      if(keyCode == 13) char_entered = "ENTER";
+      inputtext = inputtext + char_entered;
+      if(char_entered == "ENTER") {
+        var player_number = inputtext.substring(1,3);
+        if(app.check_in_game(player_number)) {
+          if(home) {
              for(index = 0; index < app.home_team.length; index++)
              {
-                if(who_assist == app.home_team[index].number)
+                if(player_number == app.home_team[index].number)
                 {
                     app.home_team[index].as += 1;
                     app.home_totals.as += 1;
@@ -1050,7 +1044,7 @@ var app = new Vue({
            else {
              for(index = 0; index < app.vis_team.length; index++)
              {
-                if(who_assist == app.vis_team[index].number)
+                if(player_number == app.vis_team[index].number)
                 {
                     app.vis_team[index].as += 1;
                     app.vis_totals.as += 1;
@@ -1059,9 +1053,16 @@ var app = new Vue({
              }
            }
         }
-        else if(who_assist == "") {
-            // Enter - no assist
+      } else if(char_entered == 'A') {
+        inputvalidator.innerText = "Assist by: Key in a player ## or ENTER for no assist.";
+      } else if(!isNaN(char_entered) && inputtext.length == 3) {
+        var player_number = inputtext.substring(1,3);
+        if(app.check_in_game(player_number)) {
+          inputvalidator.innerText = "Assist by #" + player_number + ". Press ENTER to save play";
+        } else {
+          inputvalidator.innerText = "Player #" + player_number + " is not in the game. Press ESC/F10 to clear input.";
         }
+      }
    },
    turnover(keyCode) {
       var char_entered = String.fromCharCode(keyCode);
