@@ -153,10 +153,8 @@ function addPlay(keystrokes){
 			if (input[2] == 't'){
 				teamTurnover(statArray[0]);
 				return;
-			}
-				
+			}		
 			statArray[11] = 1; //turnover
-				
 			break;
 		case 's':
 			statArray[12] = 1;	//steal
