@@ -1120,7 +1120,7 @@ var app = new Vue({
                     });
                     
                     ipc.on('add-play-success', function(event, arg) { 
-                      console.log("Successfully recorded keystroke: " + keystrokes);
+                      console.log("Successfully recorded keystroke: " + arg);
                     });
                     
                     ipc.on('get-teams-success', function(event, arg){
