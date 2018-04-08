@@ -9,7 +9,7 @@ To run NextGenScoring, you must first download Node.js and install Electron. Dow
 
 Once you have Node downloaded, install Electron using npm by running
 
-> npm install Electron
+> npm install electron
 
 # Usage and Testing
 On Iteration 1, our front end and back end are disconnected. This is because of a an oversight regarding Vue.js default prompts being incompatible with Electron that we didn't become aware of until late in Iteration 1. This means that we are unable to string a complete command from the user to the data and back.
