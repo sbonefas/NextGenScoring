@@ -144,12 +144,12 @@ function addPlay(keystrokes){
 			break;
 		case 'r':
 			rebound(statArray[0], input[1]);
-			break;
+			return;
 		case 'a':
 			assist(statArray[0], input[1]); 
-			break;
+			return;
 		case 'f':
-			statArray[9] = 1;	//foul
+			statArray[10] = 1;	//personal foul
 			break;
 		case 't':
 			if (input[1] == 'm'){

@@ -1,6 +1,9 @@
 //const electron = require("electron");
 //const ipc = electron.ipcRenderer;
 
+
+const electron = require("electron");
+const ipc = electron.ipcRenderer;
 var home = true;
 var inputtext = "";
 var currentlyInputtingPlay = "";
@@ -1097,8 +1100,6 @@ var app = new Vue({
                     app.home_totals.as += 1;
                     app.add_play("Assist by " + app.home_team[index].name);
                     // Send data to backend
-                    const electron = require("electron");
-                    const ipc = electron.ipcRenderer;
                     
                     let args = ["Wisconsin", "Ohio State", "796", "518", "100/0", "0/100", "3/12/19", "4pm", "Kohl Center", "Kohl-Center-code", 1, ["schedule notes"], "quarters", "15", "15", ["Official Names"], ["Box comments"]];
 
@@ -1120,7 +1121,7 @@ var app = new Vue({
                     });
                     
                     ipc.on('add-play-success', function(event, arg) { 
-                      console.log("Successfully recorded keystroke: " + keystrokes);
+                      console.log("Successfully recorded keystroke: " + arg);
                     });
                     
                     ipc.on('get-teams-success', function(event, arg){
