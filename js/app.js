@@ -1096,6 +1096,36 @@ var app = new Vue({
                     app.home_team[index].as += 1;
                     app.home_totals.as += 1;
                     app.add_play("Assist by " + app.home_team[index].name);
+                    // Send data to backend
+                    const electron = require("electron");
+                    const ipc = electron.ipcRenderer;
+                    
+                    let args = ["Wisconsin", "Ohio State", "796", "518", "100/0", "0/100", "3/12/19", "4pm", "Kohl Center", "Kohl-Center-code", 1, ["schedule notes"], "quarters", "15", "15", ["Official Names"], ["Box comments"]];
+
+                    ipc.send('init-game', args);
+                    
+                    ipc.send('get-data');
+                    //Format string for backend
+                    var backend_string = "a " + inputtext.substring(1,3) + " " + "h";
+                    ipc.send('add-play', backend_string); 
+                    ipc.on('init-game-failure', function() { 
+                      console.log("An error occurred in initializing game " + args + " to file : " + e);
+                    });
+                    
+                    ipc.on('init-game-success', function() { 
+                      console.log("Successfully initialized game: " + args);
+                    }); 
+                    ipc.on('add-play-failure', function(event, arg) { 
+                      console.log("An error occurred in writing " + arg + " to file : " + e);
+                    });
+                    
+                    ipc.on('add-play-success', function(event, arg) { 
+                      console.log("Successfully recorded keystroke: " + keystrokes);
+                    });
+                    
+                    ipc.on('get-teams-success', function(event, arg){
+                      
+                    });
                 }
              }
            }
