@@ -54,7 +54,7 @@ function createWindow() {
  * 
  * FOR FREETHROWS: [E, PLAYER_NUMBER, RESULT_CODE, HOME/AWAY]
  *
- * FOR REBOUNDS/ASSISTS/FOULS/TURNOVERS/STEALS: [PLAY_CODE, PLAYER_NUMBER, TEAM TURNOVER?, HOME/AWAY]
+ * FOR REBOUNDS/ASSISTS/FOULS/TURNOVERS/STEALS: [PLAY_CODE, PLAYER_NUMBER OR M (FOR TEAM TURNOVER), HOME/AWAY]
  *  
  * FOR CHANGING JERSEY: [F2, PLAYER_NUMBER, NEW_PLAYER_NUMBER, HOME/AWAY]
  *
@@ -140,7 +140,7 @@ function addPlay(keystrokes){
 			break;
 		case 'e':
 			statArray[6] = 1; //freethrow attempt
-			if (input[2] === 'g') statArray[4] = 1;
+			if (input[2] === 'e') statArray[4] = 1;
 			break;
 		case 'r':
 			rebound(statArray[0], input[1]);
@@ -152,7 +152,7 @@ function addPlay(keystrokes){
 			statArray[9] = 1;	//foul
 			break;
 		case 't':
-			if (input[2] == 't'){
+			if (input[1] == 'm'){
 				teamTurnover(statArray[0]);
 				return;
 			}		
