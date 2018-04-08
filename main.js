@@ -10,8 +10,8 @@ const url = require("url");
 const fs = require("fs");	//node.js filesystem
 const ipc = electron.ipcMain;
 const dialog = electron.dialog;
-const indiv_stat_headers = ['player_number','fg','fga','m3','3a','ft','fta','reb','ast','pf','blk','trn','stl'];
-const team_stat_headers = ['home/away', 'made_in_paint', 'fast_break', 'team_turnover'];
+const indiv_stat_headers = ['player_number','fg','fga','m3','3a','ft','fta','reb','ast','pf','tf','blk','trn','stl','pts'];
+const team_stat_headers = ['home/away', 'total_points', 'made_in_paint', 'fast_break', 'team_turnover'];
 
 
 let win;
@@ -58,21 +58,22 @@ function createWindow() {
  *  
  * FOR CHANGING JERSEY: [F2, PLAYER_NUMBER, NEW_PLAYER_NUMBER, HOME/AWAY]
  *
+ * FOR BLOCKS: [K, PLAYER_NUMBER, REBOUND?]				
  *
  * PLAYER STATARRAY GETS SUBMITTED TO GAME FILE
  * FORMAT:
  *
  *	 (1)/(0)
  *
- * [HOME/AWAY, PLAYER_NUMBER, FIELDGOAL, FIELDGOAL_ATTEMPT, MADE_3, 3_ATTEMPT, FREETHROW, FREETHROW_ATTEMPT, REBOUND, ASSIST, PERSONAL FOUL, TECHNICAL FOUL, BLOCK, TURNOVER, STEAL]
- * [    0    ,       1      ,     2    ,         3        ,    4  ,     5    ,     6    ,         7        ,    8   ,   9   ,       10     ,      11       ,  12  ,    13   ,  14  ]
+ * [HOME/AWAY, PLAYER_NUMBER, FIELDGOAL, FIELDGOAL_ATTEMPT, MADE_3, 3_ATTEMPT, FREETHROW, FREETHROW_ATTEMPT, REBOUND, ASSIST, PERSONAL FOUL, TECHNICAL FOUL, BLOCK, TURNOVER, STEAL, POINTS]
+ * [    0    ,       1      ,     2    ,         3        ,    4  ,     5    ,     6    ,         7        ,    8   ,   9   ,       10     ,      11       ,  12  ,    13   ,  14  ,   15  ]
  *
- *
+ * 
  * 
  * TEAM STATARRY FORMAT:
  *
  *
- * [HOME/AWAY, MADE_IN_PAINT, FAST_BREAK, TEAM_TURNOVER]
+ * [HOME/AWAY, POINTS, MADE_IN_PAINT, FAST_BREAK, TEAM_TURNOVER]
  *
  * [7]-[12] ARE EDITED IN SUBPLAY FUNCTIONS BELOW
  *
@@ -84,7 +85,7 @@ function createWindow() {
 
  
 function addPlay(keystrokes){ 
-	var statArray = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+	var statArray = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 	var input = keystrokes.split(/ /);
 	if(TESTING) console.log(input);
 		
@@ -110,10 +111,12 @@ function addPlay(keystrokes){
 				case 'g' || 'G' || 'q' || 'Q':
 					statArray[2] = 1;	//fieldgoal
 					if (input[3] != '') assist(statArray[0], actingPlayer);	//If there's an assist, record it
+					statArray[15] = 2;
 					break;
 				case 'y':
 					statArray[4] = 1;	//made 3-pointer
 					if (input[3] != '') assist(statArray[0], actingPlayer);	//If there's an assist, record it
+					statArray[15] = 3;
 					break;
 				case 'r':
 					var def_rebound = input[4];
@@ -127,14 +130,17 @@ function addPlay(keystrokes){
 					block(statArray[0], actingPlayer);
 					break;
 				case 'p':
-					inPaint(statArray[0]);			
+					inPaint(statArray[0]);
+					statArray[15] = 2;
 					break;
 				case 'f':
 					fastBreak(statArray[0]);
+					statArray[15] = 2;
 					break;
 				case 'z':
 					inPaint(statArray[0]);
 					fastBreak(statArray[0]);
+					statArray[15] = 2;
 					break;				
 			}
 			break;
@@ -156,11 +162,13 @@ function addPlay(keystrokes){
 				teamTurnover(statArray[0]);
 				return;
 			}		
-			statArray[11] = 1; //turnover
+			statArray[13] = 1; //turnover
 			break;
 		case 's':
-			statArray[12] = 1;	//steal
+			statArray[14] = 1;	//steal
 			break;
+		case 'k':
+			statArray[12] = 1; //block
 		case 'f2':
 			chg(input[input.length-1], input[1], input[2]);
 			return;
@@ -181,12 +189,12 @@ function rebound(t, player_number, def_rebound){
 		if (t === 1) t = 0;
 		else if (t === 0) t = 1;
 	}
-	var statArray = [t, player_number,0,0,0,0,0,0,1,0,0,0,0,0,0];
+	var statArray = [t, player_number,0,0,0,0,0,0,1,0,0,0,0,0,0,0];
 	drw.write_player_stats_to_game_file(statArray, test_file_name);
 }
  
 function assist(t, player_number){
-	var statArray = [t, player_number,0,0,0,0,0,0,0,1,0,0,0,0,0];
+	var statArray = [t, player_number,0,0,0,0,0,0,0,1,0,0,0,0,0,0];
 	drw.write_player_stats_to_game_file(statArray, test_file_name);	
 }
 
@@ -196,7 +204,7 @@ function block(t, player_number){
 	if (t === 1) activeTeam = 0;
 	else if (t === 0) activeTeam = 1;
 	
-	var statArray = [activeTeam, player_number,0,0,0,0,0,0,0,0,0,1,0,0,0];
+	var statArray = [activeTeam, player_number,0,0,0,0,0,0,0,0,0,1,0,0,0,0];
 	drw.write_player_stats_to_game_file(statArray, test_file_name);	
 }
 
@@ -217,7 +225,6 @@ function fastBreak(team){
 function teamTurnover(team){
 	drw.write_team_stats_to_game_file([team,0,0,1]);	
 }
-
 
 
 /*
