@@ -10,7 +10,9 @@ const url = require("url");
 const fs = require("fs");	//node.js filesystem
 const ipc = electron.ipcMain;
 const dialog = electron.dialog;
-const stat_headers = ['player_number','fg','fga','m3','3a','ft','fta','reb','ast','pf','blk','trn','stl'];
+const indiv_stat_headers = ['player_number','fg','fga','m3','3a','ft','fta','reb','ast','pf','blk','trn','stl'];
+const team_stat_headers = ['home/away', 'made_in_paint', 'fast_break', 'team_turnover'];
+
 
 let win;
 const TESTING = false;
@@ -20,7 +22,7 @@ const test_file_name = "test_drw_file";
 function createWindow() {
 	win = new BrowserWindow();
 	win.loadURL(url.format({
-		pathname: path.join(__dirname, 'backend_index.html'),
+		pathname: path.join(__dirname, 'index.html'),
 		protocol: 'file',
 		slashes: true		
 	}));
@@ -229,7 +231,7 @@ function teamTurnover(team){
  
 function initGame(args){
 	try {
-		drw.create_game_file(stat_headers, test_file_name, args);
+		drw.create_game_file(indiv_stat_headers, team_stat_headers, test_file_name, args);
 	} catch (e){
 		console.log("Exception in creating game file: " + e);
 	}
@@ -251,10 +253,10 @@ ipc.on('add-play', function (event,keystrokes){
 	} catch (e) {
 		//if failure
 		console.log("An error occurred in file writing: " + e);
-		event.sender.send('add-play-failure');
+		event.sender.send('add-play-failure',keystrokes);
 		return;
 	}
-	event.sender.send('add-play-success');
+	event.sender.send('add-play-success',keystrokes);
 });
 
 ipc.on('init-game', function (event,args){ 

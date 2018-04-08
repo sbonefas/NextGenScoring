@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<link rel="icon" href="img/favicon.ico">
-		<link rel="stylesheet" href="style.css">
+		<link rel="stylesheet" href="css/style.css">
 		<link rel="stylesheet" href="vex.css">
 		<link rel="stylesheet" href="vex-theme-os.css">
 		<title>NextGen Scoring</title>
@@ -264,7 +264,7 @@
 			});
 			
 			ipc.on('init-game-success', function() { 
-				console.log("Successfully recorded keystroke: " + keystrokes);
+				console.log("Successfully initialized game: " + args);
 			});		
 			
 			ipc.on('add-play-failure', function() { 

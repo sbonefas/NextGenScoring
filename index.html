@@ -234,6 +234,55 @@
        				 }
     			}
 			}
+			
+			
+			const electron = require("electron");
+			const ipc = electron.ipcRenderer;
+			
+			let keystrokes = "j 16 g   h";
+			let keystrokes2 = "j 16 k 7 h";
+			let keystrokes3 = "j 16 r 7 1 h";
+			let args = ["Wisconsin", "Ohio State", "796", "518", "100/0", "0/100", "3/12/19", "4pm", "Kohl Center", "Kohl-Center-code", 1, ["schedule notes"], "quarters", "15", "15", ["Official Names"], ["Box comments"]];
+
+			<!-- Testing send-data & get-data functions -->
+			ipc.send('init-game', args);
+			ipc.send('add-play', keystrokes);
+			ipc.send('add-play', keystrokes2);
+			ipc.send('add-play', keystrokes3);
+			
+			ipc.send('get-data');
+			//ipc.send('get-teams');
+			
+			ipc.on('init-game-failure', function() { 
+				console.log("An error occurred in initializing game " + args + " to file : " + e);
+			});
+			
+			ipc.on('init-game-success', function() { 
+				console.log("Successfully initialized game: " + args);
+			});		
+			
+			ipc.on('add-play-failure', function(event, arg) { 
+				console.log("An error occurred in writing " + arg + " to file : " + e);
+			});
+			
+			ipc.on('add-play-success', function(event, arg) { 
+				console.log("Successfully recorded keystroke: " + keystrokes);
+			});
+			
+			ipc.on('get-data-failure', function() { 
+				console.log("An error occurred in reading from file")
+			
+			});
+			
+			ipc.on('get-data-success', function(event, arg) { 
+				console.log("Successfully retrieved data: " + arg);
+			
+			});
+	
+			ipc.on('get-teams-success', function(event, arg){
+				
+			});
+			
 		</script>
 	</body>
 </html>
