@@ -113,6 +113,10 @@ function startClock(startingTime) {
   var paused = true;
 }
 
+function help() {
+    window.alert(help_menu);
+}
+
 var app = new Vue({
   el: '#app',
   data: {
@@ -196,12 +200,10 @@ var app = new Vue({
      // alt + h - Help menu
      if(e.altKey && e.keyCode == 72) {
         window.alert(help_menu);
-        altHeld = false;
      }
 
      // J then (G | Q | Y | R | P | Z | F | X | K) - Jump Shots
      else if(e.keyCode == 74) {
-       altHeld = false;
        who_did_it = window.prompt("SHOT BY: (Key in a player ##)");
        while(!app.check_in_game(who_did_it, home)) {
            if(who_did_it == null) {
