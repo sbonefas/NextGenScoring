@@ -1,22 +1,8 @@
-//var TESTING_MODE = false;  // this signals that you are in testing mode and will disable the annoying password promt that happens every time you load the page. Set this to false when in production mode!
-
-//window.onload = function () {
-//  if(!TESTING_MODE) {
-//    $(document.body).hide();
-//   password = "";
-//   while(password != "123") {
-//    var password = prompt("Please enter the password to access this site.");
-//    if(password != "123") {
-//      alert("Incorrect password");
-//    }
-//   }
-//   if(password == "123") {
-//      $(document.body).show();
-//      TESTING_MODE = true;
-//      console.log(TESTING_MODE)
-//   }
-//  }
-//}
+function quit() {
+    if(confirm("Are you sure you want to quit?")) {
+        window.close();
+    }
+}
 
 var app = new Vue({
     el: '#menu',
@@ -26,8 +12,13 @@ var app = new Vue({
     methods: {
         keyevent(e) {
             console.log(e.keyCode);
+            //T - TEAMS
             if(e.keyCode == 71) {
                 window.location = "./teams.html"
+            }
+            //Q - QUIT
+            else if(e.keyCode == 81) {
+                quit()
             }
         }
     }
