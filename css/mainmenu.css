@@ -48,3 +48,14 @@ a:hover {
 #menu p {
     text-align: center;
 }
+
+.inputcss {
+    margin: auto;
+    font-size: 1.2em;
+    width: max-content;
+    vertical-align: center;
+}
+
+#errormsg {
+    display: none;
+}
