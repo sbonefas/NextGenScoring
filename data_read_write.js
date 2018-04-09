@@ -1,23 +1,24 @@
-/***************************************************************
- *																*	
- *					DATA READING AND WRITING 					*
- *																*
- * This js file controls all reading/writing to data files		*												*
- *																*
- *																*
- * public functions: 											*
- * 		1. delete_file(file_name)								*
- *			- deletes the file with the given filename 			*
- *		2. edit_game_data_location_path(new_path)				*
- *			- changes the directory that game files are stored	*
- *		3. create_game_file(labels, file_name)					*
- *			- makes an empty game file 							*
- *		4. read_game_file(file_name)							*
- *			- gets a 3D array representation of a game file 	*
- *		5. write_to_game_file(stat_changes, file_name)			*
- *			- writes given changes to a game file 				*
- *																*	
-  ***************************************************************/
+/********************************************************************
+ *																	*		
+ *					DATA READING AND WRITING 						*
+ *																	*
+ *		This js file controls all reading/writing to data files		*													*
+ *																	*
+ *																	*
+ * public functions: 												*
+ * 		1. delete_file(file_name)									*
+ *			- deletes the file with the given filename 				*
+ *		2. edit_game_data_location_path(new_path)					*
+ *			- changes the directory that game files are stored		*
+ *		3. create_game_file(individual_stat_labels, 				*
+ *							team_stat_labels, file_name)			*
+ *			- makes an empty game file 								*
+ *		4. read_game_file(file_name)								*
+ *			- gets a 3D array representation of a game file 		*
+ *		5. write_player_stats_to_game_file(stat_changes, file_name)	*
+ *			- writes given player stat changes to a game file 		*
+ *																	*	
+  *******************************************************************/
 
 
 const fs = require("fs");	//node.js filesystem
@@ -54,26 +55,37 @@ exports.edit_game_data_location_path = function(new_path) {
 }
 
 /** 
- * Creates an empty .csv game file with the given file_name.
+ * Creates an empty .txt game file with the given file_name.
  * 
  * @param file_name Name of the file to create. The file name should
  * not include a filetype, and should follow standard naming procedures
  * for the user's operating system.
- * @param labels Array of labels to be used in the stat file
+ * @param individual_stat_labels Array of individual stat labels to be 
+ * used in the stat file
+ * @param team_stat_labels Array of team stat labels
+ * @param footer Array of game information describing the given game
  * @return True if game successfully created, false if file_name exists
  * or if the path to the data folder is invalid.
  */
-exports.create_game_file = function(labels, file_name) {
+exports.create_game_file = function(individual_stat_labels, team_stat_labels, file_name, footer) {
+	// Error Handling:
+	if(individual_stat_labels == undefined) throw "No Individual Stat Labels Provided";
+	if(team_stat_labels == undefined) throw "No Team Stat Labels Provided";
+	if(footer == undefined) throw "No Footer Provided";
+
 	// Check if file exists
 	var file_path = get_file_path(file_name);
 	if(fs.existsSync(file_path)) return false;
 
 	// Create file. Return false on errors
-	var file_contents = get_initial_game_file_contents(labels);
+	var file_contents = get_initial_game_file_contents(individual_stat_labels, team_stat_labels, footer);
 	try {
     	fs.writeFileSync(file_path, file_contents);
 	} catch (e) {
-		console.log("CREATE GAME FILE ERROR");
+		console.log("CREATE GAME FILE ERROR:", e);
+
+		//TODO: throw error instead of returning false
+
     	return false;
 	}
 	return true;
@@ -84,26 +96,35 @@ exports.create_game_file = function(labels, file_name) {
  * Game files are organized as follows:
  *
  * HOME
- * [stat labels]
+ * [individual stat labels]
  * [home player stats]
  * ;AWAY
- * [stat labels]
+ * [individual stat labels]
  * [home player stats]
+ * ;TEAM
+ * [team stat labels]
+ * [home team stats]
+ * [away team stats]
+ * ;FOOTER
+ * [game information]
  *
  * @param labels Array of stat labels to be used in the stat file
  * @return String of initial file contents.
  */
-function get_initial_game_file_contents(labels) {
+function get_initial_game_file_contents(individual_stat_labels, team_stat_labels, footer) {
 	var contents = "HOME\n";
-	for(var label_idx = 0; label_idx < labels.length; label_idx++) {
+	for(var label_idx = 0; label_idx < individual_stat_labels.length; label_idx++) {
 		if(label_idx != 0) contents += ",";
-		contents += labels[label_idx];
+		contents += individual_stat_labels[label_idx];
 	}
 	contents += "\n;AWAY\n";
-	for(var label_idx = 0; label_idx < labels.length; label_idx++) {
+	for(var label_idx = 0; label_idx < individual_stat_labels.length; label_idx++) {
 		if(label_idx != 0) contents += ",";
-		contents += labels[label_idx];
+		contents += individual_stat_labels[label_idx];
 	}
+	contents += "\n;FOOTER\n";
+	contents += footer.toString();
+
 	return contents;
 }
 
@@ -126,9 +147,10 @@ exports.read_game_file = function(file_name) {
 		throw "File Read Error: File " + file_name + " does not exist!";
 	}
 
-	// Convert to two separate strings. Cut off last newline in home stats.
+	// Convert to two separate strings. Cut off last newline in home stats and away stats.
 	var stats_string_arr = file_contents.split(';');
 	stats_string_arr[0] = stats_string_arr[0].substring(0, stats_string_arr[0].length-1);
+	stats_string_arr[1] = stats_string_arr[1].substring(0, stats_string_arr[1].length-1);
 
 	// Create unitialized 2d arrays for stats
 	var home_stats = scrape_stats(stats_string_arr[0]);
@@ -169,7 +191,7 @@ function get_game_file_contents(file_path) {
  * @return 2d array of stats, including labels.
  */
 function scrape_stats(stats_string_arr) {
-	// Get number of stats and players to set 2D array sizes
+	// Get number of stats and players (including labels) to set 2D array sizes
 	var num_stats = stats_string_arr.split('\n')[1].split(',').length;
 	var num_players = stats_string_arr.split('\n').length-1;
 
@@ -179,6 +201,7 @@ function scrape_stats(stats_string_arr) {
 	// Get stats
 	for(var player = 0; player < num_players; player++) {
 		for(var stat = 0; stat < num_stats; stat++) {
+			//console.log("el: " + stats_string_arr.split('\n')[player+1].split(',')[stat]);
 			arr_stats[player][stat] = stats_string_arr.split('\n')[player+1].split(',')[stat].trim();
 		}
 	}
@@ -206,7 +229,7 @@ function create_2d_array(num_rows, num_cols) {
 
 /**
  * Writes to the game file with the given filename and adds stats
- * corresponding to the given stat changes.
+ * corresponding to the given player stat changes.
  *
  * @param stat_changes Array of changes to stats as defined in main.js 
  * addPlay() function
@@ -214,7 +237,8 @@ function create_2d_array(num_rows, num_cols) {
  * @throws error if the first index of the stat changes isn't 0 or 1
  * @return True if write is successful, false otherwise.
  */
-exports.write_to_game_file = function(stat_changes, file_name) {
+exports.write_player_stats_to_game_file = function(stat_changes, file_name) {
+	if(stat_changes == undefined) throw "No Stat Changes Provided";
 	// Set player's team and player number for stat change
 	var is_home = stat_changes[0];
 	if(!(is_home == 1 || is_home == 0)) {
@@ -235,7 +259,8 @@ exports.write_to_game_file = function(stat_changes, file_name) {
 	var current_team_stats = edit_current_stats(current_game_stats[1-is_home], stat_changes);
 
 	current_game_stats[1-is_home] = current_team_stats;
-	return overwrite_game_file(game_array_to_string(current_game_stats), file_name);
+	return overwrite_game_file(game_array_to_string(current_game_stats) + "\n;" +
+							   get_game_information_string(file_name), file_name);
 }
 
 /** 
@@ -315,7 +340,27 @@ function overwrite_game_file(new_content, file_name) {
 	return true;
 }
 
+/**
+ * Gets the game information from the footer of a given file. Returns it in
+ * string form to rewrite when overwriting the file.
+ *
+ * @param file_name Name of the file to overwrite
+ * @return string representation of game information
+ */
+function get_game_information_string(file_name) {
+	// Get string version of file contents
+	var file_path = get_file_path(file_name);
+	var file_contents = get_game_file_contents(file_path);
+	if(file_contents == null) {
+		throw "File Read Error: File " + file_name + " does not exist!";
+	}
 
+	// Get footer from stats_string_arr
+	var stats_string_arr = file_contents.split(';');
+	var game_information = stats_string_arr[2];
+
+	return game_information;
+}
 
 
 
@@ -338,8 +383,8 @@ exports.test_delete_file = function(file_name) {
 	return delete_file(file_name);
 }
 
-exports.test_get_initial_game_file_contents = function(labels) {
-	return get_initial_game_file_contents(labels);
+exports.test_get_initial_game_file_contents = function(individual_stat_labels, team_stat_labels, footer) {
+	return get_initial_game_file_contents(individual_stat_labels, team_stat_labels, footer);
 }
 
 exports.test_get_game_file_contents = function(file_path) {
@@ -364,5 +409,9 @@ exports.test_game_array_to_string = function(game_array) {
 
 exports.test_overwrite_game_file = function(new_content, file_name) {
 	return overwrite_game_file(new_content, file_name);
+}
+
+exports.test_get_game_information_string = function(file_name) {
+	return get_game_information_string(file_name);
 }
 

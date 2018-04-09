@@ -8,12 +8,15 @@ const fs = require('fs');
 
 const file_name = "data_test";
 const file_path = "data/data_test.txt";
-const labels = ['number', 'fg', 'fga', 'pts'];
+const individual_stat_labels = ['number', 'fg', 'fga', 'pts'];
+const team_stat_labels = ['team fouls', 'timeouts left'];
+const footer = ['test', 1,'test2/test3/4', 'test5'];
 
 /** UNIT TEST DATA */
 const test_stats = "HOME\nnumber,fg,fga,pts\n30,2,4,6\n\
 31,3,3,7\n44,5,7,12\n02,1,5,2\n;AWAY\nnumber,fg,fga,pts\n\
 35,1,4,2\n36,2,3,6\n45,6,7,12\n03,4,5,8";
+const test_stats_with_footer = test_stats + "\n;FOOTER\n" + footer.toString();
 const test_team_stats = "HOME\nnumber,fg,fga,pts\n30,2,4,6\n\
 31,3,3,7\n44,5,7,12\n02,1,5,2";
 const test_stats_array = [ [ 
@@ -61,9 +64,10 @@ function test() {
 	test_read_game_file_empty();
 	test_edit_current_stats();
 	test_game_array_to_string();
+	test_get_game_information_string();
 	test_overwrite_game_file();
 	test_read_game_file_full();
-	test_write_to_game_file();
+	test_write_player_stats_to_game_file();
 
 	clean();
 }
@@ -74,7 +78,7 @@ function test_get_file_path() {
 }
 
 function test_create_file() {
-	drw.create_game_file(labels, file_name);
+	drw.create_game_file(individual_stat_labels, team_stat_labels, file_name, footer);
 	if(fs.existsSync(file_path)) test_success("test_create_file");
 	else test_fail("test_create_file");
 }
@@ -86,20 +90,20 @@ function test_delete_file() {
 }
 
 function test_create_game_file() {
-	var contents = "HOME\nnumber,fg,fga,pts\n;AWAY\nnumber,fg,fga,pts";
-	drw.create_game_file(labels, file_name);
+	var contents = "HOME\nnumber,fg,fga,pts\n;AWAY\nnumber,fg,fga,pts\n;FOOTER\n" + footer.toString();
+	drw.create_game_file(individual_stat_labels, team_stat_labels, file_name, footer);
 	if(fs.readFileSync(file_path, 'utf8') == contents) test_success("test_create_game_file");
 	else test_fail("test_create_game_file");
 }
 
 function test_initial_game_file_contents() {
-	var contents = "HOME\nnumber,fg,fga,pts\n;AWAY\nnumber,fg,fga,pts";
-	if(drw.test_get_initial_game_file_contents(labels) == contents) test_success("test_initial_game_file_contents");
+	var contents = "HOME\nnumber,fg,fga,pts\n;AWAY\nnumber,fg,fga,pts\n;FOOTER\n" + footer.toString();
+	if(drw.test_get_initial_game_file_contents(individual_stat_labels, team_stat_labels, footer) == contents) test_success("test_initial_game_file_contents");
 	else test_fail("test_initial_game_file_contents");
 }
 
 function test_get_game_file_contents() {
-	var contents = "HOME\nnumber,fg,fga,pts\n;AWAY\nnumber,fg,fga,pts";
+	var contents = "HOME\nnumber,fg,fga,pts\n;AWAY\nnumber,fg,fga,pts\n;FOOTER\n" + footer.toString();
 	if(drw.test_get_game_file_contents(file_path) == contents) test_success("test_get_game_file_contents");
 	else test_fail("test_get_game_file_contents");
 }
@@ -151,13 +155,18 @@ function test_game_array_to_string() {
 	else test_fail("test_game_array_to_string");
 }
 
+function test_get_game_information_string() {
+	if(drw.test_get_game_information_string(file_name) == "FOOTER\n" + footer.toString()) test_success("test_get_game_information_string");
+	else test_fail("test_get_game_information_string");
+}
+
 function test_overwrite_game_file() {
-	drw.test_overwrite_game_file(test_stats, file_name);
+	drw.test_overwrite_game_file(test_stats_with_footer, file_name);
 	if(drw.read_game_file(file_name).toString() == test_stats_array.toString()) test_success("test_overwrite_game_file");
 	else test_fail("test_overwrite_game_file");
 }
 
-function test_write_to_game_file() {
+function test_write_player_stats_to_game_file() {
 	var result_array = [ [ ['number','fg','fga','pts'],
 ['30',2,4,6],
 ['31',5,5,11],
@@ -170,12 +179,12 @@ function test_write_to_game_file() {
 ['03',4,5,8],
 ['29',0,1,0]] ];
 
-	drw.write_to_game_file(test_stat_changes_exist, file_name);
-	drw.write_to_game_file(test_stat_changes_exist, file_name);
-	drw.write_to_game_file(test_stat_changes_no_exist, file_name);
+	drw.write_player_stats_to_game_file(test_stat_changes_exist, file_name);
+	drw.write_player_stats_to_game_file(test_stat_changes_exist, file_name);
+	drw.write_player_stats_to_game_file(test_stat_changes_no_exist, file_name);
 
-	if(drw.read_game_file(file_name).toString() == result_array.toString()) test_success("test_write_to_game_file");
-	else test_fail("test_write_to_game_file");
+	if(drw.read_game_file(file_name).toString() == result_array.toString()) test_success("test_write_player_stats_to_game_file");
+	else test_fail("test_write_player_stats_to_game_file");
 }
 
 function test_read_game_file_full() {
