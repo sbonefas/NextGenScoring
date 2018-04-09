@@ -1,5 +1,5 @@
 /********************************************************************
- *																	*		
+ *																	*
  *					DATA READING AND WRITING 						*
  *																	*
  *		This js file controls all reading/writing to data files		*													*
@@ -17,7 +17,7 @@
  *			- gets a 3D array representation of a game file 		*
  *		5. write_player_stats_to_game_file(stat_changes, file_name)	*
  *			- writes given player stat changes to a game file 		*
- *																	*	
+ *																	*
   *******************************************************************/
 
 
@@ -26,7 +26,7 @@ const fs = require("fs");	//node.js filesystem
 /** path to the folder where data is kept */
 var game_data_location_path = "data/";
 
-/** 
+/**
  * Returns the filepath of a file with a given name
  *
  * @param file_name Name of the file
@@ -54,13 +54,13 @@ exports.edit_game_data_location_path = function(new_path) {
 	return true;
 }
 
-/** 
+/**
  * Creates an empty .txt game file with the given file_name.
- * 
+ *
  * @param file_name Name of the file to create. The file name should
  * not include a filetype, and should follow standard naming procedures
  * for the user's operating system.
- * @param individual_stat_labels Array of individual stat labels to be 
+ * @param individual_stat_labels Array of individual stat labels to be
  * used in the stat file
  * @param team_stat_labels Array of team stat labels
  * @param footer Array of game information describing the given game
@@ -91,7 +91,7 @@ exports.create_game_file = function(individual_stat_labels, team_stat_labels, fi
 	return true;
 }
 
-/** 
+/**
  * Creates the content of the game file when initially created.
  * Game files are organized as follows:
  *
@@ -128,7 +128,7 @@ function get_initial_game_file_contents(individual_stat_labels, team_stat_labels
 	return contents;
 }
 
-/** 
+/**
  * Reads the given game file and returns a 3D array, where index 0
  * contains a 2D array with the stats for the home team, and index 1
  * has a 2D array with the stats for the away team. Both 2D arrays include
@@ -164,9 +164,9 @@ exports.read_game_file = function(file_name) {
 	return arr_3d;
 }
 
-/** 
- * Gets the contents of the game file with the given filename and 
- * returns it as a string containing the entire contents of the file. 
+/**
+ * Gets the contents of the game file with the given filename and
+ * returns it as a string containing the entire contents of the file.
  * Returns null if the given file is not found.
  *
  * Warning: will not work on very large files. If this becomes an issue,
@@ -185,7 +185,7 @@ function get_game_file_contents(file_path) {
 /**
  * Takes the stats in a given string of comma-separated stats and organizes
  * them into a 2d array of stats to return.
- * 
+ *
  * @param stats_string_arr String containing comma-separated stats including HOME/AWAY
  * on line 1 and labels on line 2.
  * @return 2d array of stats, including labels.
@@ -231,7 +231,7 @@ function create_2d_array(num_rows, num_cols) {
  * Writes to the game file with the given filename and adds stats
  * corresponding to the given player stat changes.
  *
- * @param stat_changes Array of changes to stats as defined in main.js 
+ * @param stat_changes Array of changes to stats as defined in main.js
  * addPlay() function
  * @param file_name Name of the file we're writing to
  * @throws error if the first index of the stat changes isn't 0 or 1
@@ -263,10 +263,10 @@ exports.write_player_stats_to_game_file = function(stat_changes, file_name) {
 							   get_game_information_string(file_name), file_name);
 }
 
-/** 
+/**
  * Takes the current stats of a team and edits them based on given changes.
  *
- * @param current_stats 2D array with the current stats of players on one of the teams. 
+ * @param current_stats 2D array with the current stats of players on one of the teams.
  * First line is stat labels.
  * @param stat_changes 1D array with stat changes for a given player. Index 0 will always
  * be indicating whether they're home/away, and index 1 will always be the player number.
@@ -293,7 +293,7 @@ function edit_current_stats(current_stats, stat_changes) {
 	// Player exists
 	else {
 		for(var stat_idx = 2; stat_idx < stat_changes.length; stat_idx++) {
-			current_stats[edited_player_idx][stat_idx-1] = 
+			current_stats[edited_player_idx][stat_idx-1] =
 				(Number(current_stats[edited_player_idx][stat_idx-1]) + Number(stat_changes[stat_idx])).toString();
 		}
 	}
@@ -301,7 +301,7 @@ function edit_current_stats(current_stats, stat_changes) {
 	return current_stats;
 }
 
-/** 
+/**
  * Converts the given 3D array of game stats into a string.
  *
  * @param game_array 3D array of game stats
@@ -322,7 +322,7 @@ function game_array_to_string(game_array) {
 	return content;
 }
 
-/** 
+/**
  * Overwrites a given game file with the given new content.
  *
  * @param new_content New content to be put in the given game file. This
@@ -361,17 +361,6 @@ function get_game_information_string(file_name) {
 
 	return game_information;
 }
-
-
-
-
-
-
-
-
-
-
-
 
 /** These functions make private functions public for data_testing.js */
 
@@ -414,4 +403,3 @@ exports.test_overwrite_game_file = function(new_content, file_name) {
 exports.test_get_game_information_string = function(file_name) {
 	return get_game_information_string(file_name);
 }
-
