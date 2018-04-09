@@ -13,12 +13,14 @@ var app = new Vue({
         keyevent(e) {
             console.log(e.keyCode);
             //T - TEAMS
-            if(e.keyCode == 71) {
-                window.location = "./teams.html"
+            if(e.keyCode == 84) {
+                window.location = "./teams.html";
+            } else if(e.keyCode == 71) {
+                window.location = "./index.html";
             }
             //Q - QUIT
             else if(e.keyCode == 81) {
-                quit()
+                quit();
             }
         }
     }
