@@ -13,38 +13,6 @@ P - GOOD FG IN THE PAINT                  X - MISSED 3PT SHOT (REBOUND)
 Z - GOOD FG- FAST BREAK & PAINT   K - BLOCKED SHOT
 `;
 
-help_menu = `HELP MENU: GAMETIME INPUT CODES AND KEYS
-
-FIELD GOAL CODES                NON-FIELD GOAL CODES
-    J - 2- or 3- point shot              E - Free Throw  K - Block
-    Y - 3-point shot                        R - Rebound     T - Turnover
-    D - Dunk                                    A - Assist          S - Steal
-    L - Layup                                   F - Foul            O - Timeout
-    P - Tip-in
-    W - Wrong basket (defensive team scores in offensive team basket)
-
-RESULT CODES
-    G or Q - Good field goal (2- or 3-pointer)
-    Y - Good 3-point field goal
-    R - Missed field goal (followed by a rebound)
-    X - Missed 3-point field goal (followed by a rebound)
-    K - Missed field goal (due to a blocked shot)
-    P - Made field goal in the paint
-    F - Made field goal on a fast break
-    Z - Made field goal in the paint on a fast break
-    E - Made free throw
-
-SPECIAL KEYS
-    H or V - Select the home team or the visiting team
-    C - Change time, period, stats
-    F2 - Make "quick" roster changes to player numbers and names
-    F6 - Make player substitutions
-    F7 - Change the clock time
-    F10 - Clear and do not complete any partially keyed action
-    SPACEBAR - Start or Stop the Clock
-    ESC - Return to Main Menu
-`;
-
 var home_stats = {fg: Number.parseFloat(0.00).toFixed(2), tfg: Number.parseFloat(0.00).toFixed(2), ftp: Number.parseFloat(0.00).toFixed(2), tvs: 0, blocks: 0, steals: 0, paint: 0, offto: 0, sndch: 0, fastb: 0, fga: 0, tfga: 0}
 Vue.component('home_team_stats', {
   template: `
@@ -661,14 +629,8 @@ var app = new Vue({
 
      // C - Change time, period, stats
      else if(e.keyCode == 67) {
-        //can change clock
+        //can change clock by clicking on it
      }
-
-     // Esc - Return to main menu
-     else if(e.keyCode == 27) {
-        // currently there is no main menu. This will be implemented in iteration 2
-     }
-
    }, //end keycode method
    clear_input() {
         inputtext = ""; // clears inputtext variable that stores the key code sequence
