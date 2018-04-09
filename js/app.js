@@ -4,6 +4,7 @@
 var home = true;
 var inputtext = "";
 var currentlyInputtingPlay = "";
+var join_two_plays = "";
 result_code_prompt = `
 PRESS A RESULT CODE...
 
@@ -410,7 +411,8 @@ var app = new Vue({
 
      // K - blocked shot
      else if(e.keyCode == 75) {
-        app.blocked_shot();
+        currentlyInputtingPlay = "block";
+        app.blocked_shot(e.keyCode, false);
      }
 
      // O - timeout
@@ -452,6 +454,8 @@ var app = new Vue({
           app.steal(e.keyCode);
         } else if(currentlyInputtingPlay == "rebound") {
           app.rebound(e.keyCode);
+        } else if(currentlyInputtingPlay == "block") {
+          app.blocked_shot(e.keyCode, false);
         }
      }
 
@@ -471,6 +475,8 @@ var app = new Vue({
           app.steal(e.keyCode);
         } else if(currentlyInputtingPlay == "rebound") {
           app.rebound(e.keyCode);
+        } else if(currentlyInputtingPlay == "block") {
+          app.blocked_shot(e.keyCode, false);
         }
      }
 
@@ -490,6 +496,8 @@ var app = new Vue({
           app.steal(e.keyCode);
         } else if(currentlyInputtingPlay == "rebound") {
           app.rebound(e.keyCode);
+        } else if(currentlyInputtingPlay == "block") {
+          app.blocked_shot(e.keyCode, false);
         }
      }
 
@@ -511,6 +519,8 @@ var app = new Vue({
           app.steal(e.keyCode);
         } else if(currentlyInputtingPlay == "rebound") {
           app.rebound(e.keyCode);
+        } else if(currentlyInputtingPlay == "block") {
+          app.blocked_shot(e.keyCode, false);
         }
      }
 
@@ -530,6 +540,8 @@ var app = new Vue({
           app.steal(e.keyCode);
         } else if(currentlyInputtingPlay == "rebound") {
           app.rebound(e.keyCode);
+        } else if(currentlyInputtingPlay == "block") {
+          app.blocked_shot(e.keyCode, false);
         }
      }
 
@@ -549,6 +561,8 @@ var app = new Vue({
           app.steal(e.keyCode);
         } else if(currentlyInputtingPlay == "rebound") {
           app.rebound(e.keyCode);
+        } else if(currentlyInputtingPlay == "block") {
+          app.blocked_shot(e.keyCode, false);
         }
      }
 
@@ -568,6 +582,8 @@ var app = new Vue({
           app.steal(e.keyCode);
         } else if(currentlyInputtingPlay == "rebound") {
           app.rebound(e.keyCode);
+        } else if(currentlyInputtingPlay == "block") {
+          app.blocked_shot(e.keyCode, false);
         }
      }
 
@@ -587,6 +603,8 @@ var app = new Vue({
           app.steal(e.keyCode);
         } else if(currentlyInputtingPlay == "rebound") {
           app.rebound(e.keyCode);
+        } else if(currentlyInputtingPlay == "block") {
+          app.blocked_shot(e.keyCode, false);
         }
      }
 
@@ -606,6 +624,8 @@ var app = new Vue({
           app.steal(e.keyCode);
         } else if(currentlyInputtingPlay == "rebound") {
           app.rebound(e.keyCode);
+        } else if(currentlyInputtingPlay == "block") {
+          app.blocked_shot(e.keyCode, false);
         }
      }
 
@@ -625,6 +645,8 @@ var app = new Vue({
           app.steal(e.keyCode);
         } else if(currentlyInputtingPlay == "rebound") {
           app.rebound(e.keyCode);
+        } else if(currentlyInputtingPlay == "block") {
+          app.blocked_shot(e.keyCode, false);
         }
      }
 
@@ -638,6 +660,7 @@ var app = new Vue({
         inputvalidator.innerText = "Enter input...";  // sets inputvalidator h3 equal to the initial text (Enter input...)
         userinput.value = "";  // clears the text box
         currentlyInputtingPlay = "";
+        join_two_plays = "";
    },
    home_possession() {
        home = true;
@@ -1360,6 +1383,13 @@ var app = new Vue({
             app.rb_normal(inputtext);
           }
         }
+        inputtext = join_two_plays;
+        currentlyInputtingPlay = "block";
+        if(inputtext.substring(1,2) == 'D') {
+          app.blocked_shot(13, false);  // 13 is shot code for ENTER
+        } else {
+          app.blocked_shot(13, true);  // 13 is shot code for ENTER
+        }
       } else if(char_entered == 'R') {
         inputvalidator.innerText = "OFFENSIVE: player ## or M for team rebound or B for deadball\n" + "DEFENSIVE: D then player ## or DM for team rebound or DB for deadball";
       } else if(char_entered == 'D') {
@@ -1399,6 +1429,7 @@ var app = new Vue({
       }
     }, //end rebound method
     rb_normal(sequence) {
+      console.log("inputtext:" + inputtext);
       var player_number = 0;
       if(inputtext.length == 8) { // R01ENTER is 8 characters
         player_number = inputtext.substring(1,3);
@@ -1415,6 +1446,7 @@ var app = new Vue({
                     app.home_team[index].rb_def += 1;
                     app.home_totals.rb_def += 1;
                     app.add_play("Defensive rebound by " + app.home_team[index].name);
+                    app.home_possession();
                   } else {
                     inputvalidator.innerText = "Player #" + player_number + " is not in the game. Press ESC/F10 to clear input.";
                   }
@@ -1431,6 +1463,7 @@ var app = new Vue({
                     app.vis_team[index].rb_def += 1;
                     app.vis_totals.rb_def += 1;
                     app.add_play("Defensive rebound by " + app.vis_team[index].name);
+                    app.vis_possession();
                   } else {
                     inputvalidator.innerText = "Player #" + player_number + " is not in the game. Press ESC/F10 to clear input.";
                   }
@@ -1449,6 +1482,7 @@ var app = new Vue({
                 app.home_team[index].rb_off += 1;
                 app.home_totals.rb_off += 1;
                 app.add_play("Offensive rebound by " + app.home_team[index].name);
+                app.home_possession();
               } else {
                 inputvalidator.innerText = "Player #" + player_number + " is not in the game. Press ESC/F10 to clear input.";
               } 
@@ -1461,6 +1495,7 @@ var app = new Vue({
                 app.vis_team[index].rb_off += 1;
                 app.vis_totals.rb_off += 1;
                 app.add_play("Offensive rebound by " + app.vis_team[index].name);
+                app.vis_possession();
               } else {
                 inputvalidator.innerText = "Player #" + player_number + " is not in the game. Press ESC/F10 to clear input.";
               }
@@ -1664,38 +1699,73 @@ var app = new Vue({
       }
     }
   },
-  blocked_shot()
+  blocked_shot(keyCode, switch_possession)
   {
-      blocker = window.prompt("SHOT BLOCKED BY PLAYER ##");
-      if(!home)
-      {
-          for(index = 0; index < app.home_team.length; index++)
-          {
-              if(blocker == app.home_team[index].number)
-              {
-                app.home_team[index].blk += 1;
-                home_stats.blocks += 1;
-                app.rebound();
-                app.vis_possession();
-                break;
+      var char_entered = String.fromCharCode(keyCode);
+      if(keyCode == 13) char_entered = "ENTER";
+      inputtext = inputtext + char_entered;
+      if(char_entered == "ENTER") {
+          var blocker = inputtext.substring(1,3);
+          if(switch_possession) {
+            home = !home;
+          }
+          if(!home) {
+              for(index = 0; index < app.home_team.length; index++) {
+                  console.log("blocker: " + blocker + " index_num: " + app.vis_team[index].number);
+                  if(blocker == app.home_team[index].number && app.check_in_game(blocker, true)) {
+                    app.home_team[index].blk += 1;
+                    home_stats.blocks += 1;
+                    app.vis_possession();
+                    break;
+                  }
               }
           }
-      }
-      else
-      {
-        for(index = 0; index < app.vis_team.length; index++)
-        {
-            console.log("blocker: " + blocker + " index_num: " + app.vis_team[index].number);
-            if(blocker == app.vis_team[index].number)
-            {
-              app.vis_team[index].blk += 1;
-              vis_stats.blocks += 1;
-              app.rebound();
-              app.home_possession();
-              break;
+          else {
+            for(index = 0; index < app.vis_team.length; index++) {
+                console.log("blocker: " + blocker + " index_num: " + app.vis_team[index].number);
+                if(blocker == app.vis_team[index].number && app.check_in_game(blocker, false)) {
+                  app.vis_team[index].blk += 1;
+                  vis_stats.blocks += 1;
+                  app.home_possession();
+                  break;
+                }
             }
+          }
+      } else if(char_entered == 'K') {
+          inputvalidator.innerText = "Shot blocked by player ##:";
+      } else if(!isNaN(char_entered) && inputtext.length == 3) {
+          var blocker = inputtext.substring(1,3);
+          var valid_number = false;
+          if(!home) {
+              for(index = 0; index < app.home_team.length; index++) {
+                  if(blocker == app.home_team[index].number && app.check_in_game(blocker, true)) {
+                    // inputvalidator.innerText = "Shot blocked by player #" + blocker + ". Press ENTER to save play.";
+                    join_two_plays = inputtext;
+                    currentlyInputtingPlay = "rebound";
+                    inputtext = "";
+                    app.rebound(82); // 82 is keycode for R
+                    valid_number = true;
+                    break;
+                  }
+              }
+          }
+          else {
+            for(index = 0; index < app.vis_team.length; index++) {
+                if(blocker == app.vis_team[index].number && app.check_in_game(blocker, false)) {
+                  // inputvalidator.innerText = "Shot blocked by player #" + blocker + ". Press ENTER to save play.";
+                  join_two_plays = inputtext;
+                  currentlyInputtingPlay = "rebound";
+                  inputtext = "";
+                  app.rebound(82); // 82 is keycode for R
+                  valid_number = true;
+                  break;
+                }
+            }
+          }
+          if(!valid_number) {
+              inputvalidator.innerText = "Player #" + blocker + " is not in the game. Press ESC/F10 to clear input.";
+          }
       }
-     }
    }
 }
 })
