@@ -186,7 +186,8 @@ var app = new Vue({
 
      // alt + h - Help menu
      if(e.altKey && e.keyCode == 72) {
-        window.alert(help_menu);
+        //window.alert(help_menu);
+        help();
      }
 
      // J then (G | Q | Y | R | P | Z | F | X | K) - Jump Shots
