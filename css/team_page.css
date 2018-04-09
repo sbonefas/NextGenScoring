@@ -46,7 +46,7 @@ input {
   background-color: #dadfe1; /*UW Grey-Blue*/
 }
 
-.team_cell {
+#team_cell {
   padding-top: 5px;
   padding-bottom: 5px;
   font-size: 20px;

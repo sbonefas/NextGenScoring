@@ -10,12 +10,12 @@
       <table id="static_top">
         <th id="table_head">{{message}}</th>
         <tr>
-          <td id="team"><input type="text" id="searched" placeholder="Enter team name..." oninput="run_search()">
+          <td id="team"><input type="text" v-on:click="deselect_team" id="searched" placeholder="Enter team name..."></td>
         </tr>
       </table>
       <table class="team_search">
         <tr v-for="team in teams">
-          <td><button class="team_cell"><h3>{{team.name}}</h3></button></td>
+          <td><button id="team_cell" v-on:click="select_team(team)"><h3>{{team.name}}</h3></button></td>
         </tr>
       <div>
         <table id="options">
@@ -28,5 +28,17 @@
     </div>
     <script type="text/javascript" src="js/vue.js"></script>
     <script type="text/javascript" src="js/teams.js"></script>
+    <script>
+      function run_search() {
+        var search_string = document.getElementById("searched").value;
+        console.log(search_string);
+      };
+      document.getElementById("searched").addEventListener("keydown", function(e) {
+        if(e.keyCode == 13)
+        {
+          run_search();
+        }
+      });
+    </script>
   </body>
 </html>
