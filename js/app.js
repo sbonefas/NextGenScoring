@@ -128,32 +128,32 @@ var app = new Vue({
     vis_partial: 4,
 
     home_team: [
-                {in_game: "*", number: "01", name: "Player_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "02", name: "Player_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "03", name: "Player_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "04", name: "Player_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "05", name: "Player_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "06", name: "Bench_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "07", name: "Bench_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "08", name: "Bench_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "09", name: "Bench_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "10", name: "Bench_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0}
+                {in_game: "*", number: "01", name: "Player_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "02", name: "Player_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "03", name: "Player_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "04", name: "Player_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "05", name: "Player_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "06", name: "Bench_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "07", name: "Bench_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "08", name: "Bench_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "09", name: "Bench_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "10", name: "Bench_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0}
               ],
-    home_totals: {in_game: " ", number: " ", name: "Totals", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+    home_totals: {in_game: " ", number: " ", name: "Totals", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
 
     vis_team: [
-                {in_game: "*", number: "01", name: "Player_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "02", name: "Player_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "03", name: "Player_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "04", name: "Player_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "05", name: "Player_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "06", name: "Bench_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "07", name: "Bench_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "08", name: "Bench_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "09", name: "Bench_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "10", name: "Bench_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0}
+                {in_game: "*", number: "01", name: "Player_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "02", name: "Player_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "03", name: "Player_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "04", name: "Player_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "05", name: "Player_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "06", name: "Bench_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "07", name: "Bench_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "08", name: "Bench_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "09", name: "Bench_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "10", name: "Bench_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0}
               ],
-    vis_totals: {in_game: " ", number: " ", name: "Totals", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+    vis_totals: {in_game: " ", number: " ", name: "Totals", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
 
     playlist: [
                 //example: {time: "19:85", team: "WISC", playdscrp: "Ethan Happ made a 3 point jumper", score: "100-2"},
@@ -746,17 +746,33 @@ var app = new Vue({
             if(inputtext.substring(1,2) == 'T') { // media timeout
               app.add_play("Media timeout");
             } else if(inputtext.substring(1,2) == 'H' && inputtext.substring(2,3) == 'M') { // home full timeout
-              app.home_full -= 1;
-              app.add_play(app.teams[0] + " full timeout");
+              if(app.home_full > 0) {
+                app.home_full -= 1;
+                app.add_play(app.teams[0] + " full timeout");
+              } else {
+                // inputvalidator.innerText = "Out of timeouts. Press ESC/F10 to clear input.";
+              }
             } else if(inputtext.substring(1,2) == 'H' && inputtext.substring(2,3) == '3') { // home 30 sec timeout
-              app.home_partial -= 1;
-              app.add_play(app.teams[0] + " partial timeout");
+              if(app.home_partial > 0) {
+                app.home_partial -= 1;
+                app.add_play(app.teams[0] + " partial timeout");
+              } else {
+                // inputvalidator.innerText = "Out of timeouts. Press ESC/F10 to clear input.";
+              }
             } else if(inputtext.substring(1,2) == 'V' && inputtext.substring(2,3) == 'M') { // visitor full timeout
-              app.vis_full -= 1;
-              app.add_play(app.teams[1] + " full timeout");
+              if(app.vis_full > 0) {
+                app.vis_full -= 1;
+                app.add_play(app.teams[1] + " full timeout");
+              } else {
+                // inputvalidator.innerText = "Out of timeouts. Press ESC/F10 to clear input.";
+              }
             } else if(inputtext.substring(1,2) == 'V' && inputtext.substring(2,3) == '3') { // visitor 30 sec timeout
-              app.vis_partial -= 1;
-              app.add_play(app.teams[1] + " partial timeout");
+              if(app.vis_partial > 0) {
+                app.vis_partial -= 1;
+                app.add_play(app.teams[1] + " partial timeout");
+              } else {
+                // inputvalidator.innerText = "Out of timeouts. Press ESC/F10 to clear input.";
+              }
             }
           } else {
             inputvalidator.innerText = "Input not recognized";
@@ -1405,19 +1421,15 @@ var app = new Vue({
       } else {
         player_number = inputtext.substring(2,4);
       }
-      console.log(sequence);
-      console.log(player_number);
       if(inputtext.substring(1,2) == 'D') {
-        console.log("home: " + home);
         if(!home) {
-          console.log("vis def reb wrong");
            for(index = 0; index < app.home_team.length; index++)
            {
               if(player_number == app.home_team[index].number)
               {
                   if(app.check_in_game(player_number, true)) {
-                    app.home_team[index].rb += 1;
-                    app.home_totals.rb += 1;
+                    app.home_team[index].rb_def += 1;
+                    app.home_totals.rb_def += 1;
                     app.add_play("Defensive rebound by " + app.home_team[index].name);
                   } else {
                     inputvalidator.innerText = "Player #" + player_number + " is not in the game. Press ESC/F10 to clear input.";
@@ -1427,14 +1439,13 @@ var app = new Vue({
            }
          }
          else {
-            console.log("vis def reb correct");
            for(index = 0; index < app.vis_team.length; index++)
            {
               if(player_number == app.vis_team[index].number)
               {
                   if(app.check_in_game(player_number, false)) {
-                    app.vis_team[index].rb += 1;
-                    app.vis_totals.rb += 1;
+                    app.vis_team[index].rb_def += 1;
+                    app.vis_totals.rb_def += 1;
                     app.add_play("Defensive rebound by " + app.vis_team[index].name);
                   } else {
                     inputvalidator.innerText = "Player #" + player_number + " is not in the game. Press ESC/F10 to clear input.";
@@ -1451,8 +1462,8 @@ var app = new Vue({
             console.log("index, player_number:" + index + "," + player_number);
             if(player_number == app.home_team[index].number) {
               if(app.check_in_game(player_number, true)) {
-                app.home_team[index].rb += 1;
-                app.home_totals.rb += 1;
+                app.home_team[index].rb_off += 1;
+                app.home_totals.rb_off += 1;
                 app.add_play("Offensive rebound by " + app.home_team[index].name);
               } else {
                 inputvalidator.innerText = "Player #" + player_number + " is not in the game. Press ESC/F10 to clear input.";
@@ -1463,13 +1474,11 @@ var app = new Vue({
          for(index = 0; index < app.vis_team.length; index++) {
             if(player_number == app.vis_team[index].number) {
               if(app.check_in_game(player_number, false)) {
-                app.vis_team[index].rb += 1;
-                app.vis_totals.rb += 1;
+                app.vis_team[index].rb_off += 1;
+                app.vis_totals.rb_off += 1;
                 app.add_play("Offensive rebound by " + app.vis_team[index].name);
               } else {
-                app.vis_team[index].rb += 1;
-                app.vis_totals.rb += 1;
-                app.add_play("Offensive rebound by " + app.vis_team[index].name); 
+                inputvalidator.innerText = "Player #" + player_number + " is not in the game. Press ESC/F10 to clear input.";
               }
             }
          }
@@ -1481,19 +1490,19 @@ var app = new Vue({
     rb_team(defensive_rebound) {
       if(defensive_rebound) {
         if(home) {
-          app.vis_totals.rb += 1;
+          app.vis_totals.rb_def += 1;
           app.vis_possession();
         } else {
-          app.home_totals.rb += 1;
+          app.home_totals.rb_def += 1;
           app.home_possession();
         }
 
         app.add_play("Defensive Team Rebound");
       } else {
         if(home) {
-          app.home_totals.rb += 1;
+          app.home_totals.rb_off += 1;
         } else {
-          app.vis_totals.rb += 1;
+          app.vis_totals.rb_off += 1;
         }
         app.add_play("Offensive Team Rebound");
       }
