@@ -49,10 +49,11 @@ function createWindow() {
  * INPUT HOLDS ARGUMENTS FROM FRONTEND
  * FORMAT:
  *	 
- * FOR FIELD GOALS: [PLAY_CODE, PLAYER_NUMBER, RESULT_CODE, REBOUND/ASSIST/BLOCK_PLAYER (REBOUND IF RESULT_CODE = 'R or X' / BLOCK IF RESULT_CODE = 'K' / ASSIST IF ANYTHING ELSE), DEFENSIVE REBOUND? ('' IF NO), HOME/AWAY]
- *                  [    0    ,       1      ,      2     ,                                                       3                                                               ,               4              ,     5    ]	
- * 
- * FOR FREETHROWS: [E, PLAYER_NUMBER, RESULT_CODE, HOME/AWAY]
+ * FOR FIELD GOALS: [PLAY_CODE, PLAYER_NUMBER, RESULT_CODE (R FOR OFF REBOUND, D FOR DEF REBOUND), REBOUND/ASSIST/BLOCK_PLAYER (REBOUND IF RESULT_CODE = 'R or X or D' / BLOCK IF RESULT_CODE = 'K' / ASSIST IF ANYTHING ELSE), HOME/AWAY]
+ *                  [    0    ,       1      ,                    2                              ,                                                             3                                                              ,     4    ]	
+ *
+ *                                               
+ * FOR FREETHROWS: [E, PLAYER_NUMBER, RESULT_CODE, REBOUND_PLAYER_NUMBER (IF RESULT_CODE IS R/D), HOME/AWAY]
  *
  * FOR REBOUNDS/ASSISTS/FOULS/TURNOVERS/STEALS: [PLAY_CODE, PLAYER_NUMBER OR M (FOR TEAM TURNOVER), HOME/AWAY]
  *  
@@ -65,7 +66,7 @@ function createWindow() {
  *
  *	 (1)/(0)
  *
- * [HOME/AWAY, PLAYER_NUMBER, FIELDGOAL, FIELDGOAL_ATTEMPT, MADE_3, 3_ATTEMPT, FREETHROW, FREETHROW_ATTEMPT, REBOUND, ASSIST, PERSONAL FOUL, TECHNICAL FOUL, BLOCK, TURNOVER, STEAL, POINTS]
+ * [HOME/AWAY, PLAYER_NUMBER, FIELDGOAL, FIELDGOAL_ATTEMPT, MADE_3, 3_ATTEMPT, FREETHROW, FREETHROW_ATTEMPT, REBOUND, ASSIST, PERSONAL_FOUL, TECHNICAL_FOUL, BLOCK, TURNOVER, STEAL, POINTS]
  * [    0    ,       1      ,     2    ,         3        ,    4  ,     5    ,     6    ,         7        ,    8   ,   9   ,       10     ,      11       ,  12  ,    13   ,  14  ,   15  ]
  *
  * 
@@ -92,7 +93,8 @@ function addPlay(keystrokes){
 	//input parsing
 	statArray[1] = input[1];	//add player's number
 	var team = input[input.length-1];
-	console.log("team:" + team);
+	var actingPlayer;
+	
 	if (team === 'h')
 		statArray[0] = 1;
 	else if (team === 'v')
@@ -105,26 +107,37 @@ function addPlay(keystrokes){
 		case 'p':
 		case 'l':
 		case 'd':
-			var actingPlayer = input[3];
+			
+			//fieldgoal attempt cases
+			
 			statArray[3] = 1;	//fieldgoal attempt
+			if (team != input[3]) actingPlayer = input[3];	//if the 4th arg in input is not the team, it must be a stealing/rebounding/etc. player
 			switch(input[2]){
 				case 'g' || 'G' || 'q' || 'Q':
 					statArray[2] = 1;	//fieldgoal
-					if (input[3] != '') assist(statArray[0], actingPlayer);	//If there's an assist, record it
+					if (input[3] === 'a') 
+					{	
+					assist(statArray[0], actingPlayer);	//If there's an assist, record it
+					}
 					statArray[15] = 2;
 					break;
 				case 'y':
+					statArray[2] = 1;	//fieldgoal
 					statArray[4] = 1;	//made 3-pointer
-					if (input[3] != '') assist(statArray[0], actingPlayer);	//If there's an assist, record it
+					if (input[3] != '') 
+					{
+						assist(statArray[0], actingPlayer);	//If there's an assist, record it
+					}
 					statArray[15] = 3;
 					break;
 				case 'r':
-					var def_rebound = input[4];
-					if (input[3] != '') rebound(statArray[0], actingPlayer, def_rebound);	//If there's a rebound, record it
+					rebound(statArray[0], actingPlayer);	//Offensive rebound
 					break;
 				case 'x':
-					var def_rebound = input[4];
-					if (input[3] != '') rebound(statArray[0], actingPlayer, def_rebound);	//If there's a rebound, record it
+					rebound(statArray[0], actingPlayer);	//Offensive rebound
+					break;
+				case 'd':
+					rebound(statArray[0], actingPlayer, 1);	//Defensive rebound
 					break;
 				case 'k':
 					block(statArray[0], actingPlayer);
@@ -144,9 +157,27 @@ function addPlay(keystrokes){
 					break;				
 			}
 			break;
+			
 		case 'e':
-			statArray[6] = 1; //freethrow attempt
-			if (input[2] === 'e') statArray[4] = 1;
+			
+			//freethrow attempt cases
+			
+			statArray[7] = 1; //freethrow attempt	
+			if (input[2] === 'e') 
+			{
+				statArray[6] = 1;	//good freethrow, no rebound
+				statArray[15] = 1;
+			}
+			else if (input[2] === 'r')	
+			{
+				actingPlayer = input[3];
+				rebound(statArray[0], actingPlayer);	//offensive rebound
+			}
+			else if (input[2] === 'd')
+			{
+				actingPlayer = input[3];
+				rebound(statArray[0], actingPlayer, 1);
+			}
 			break;
 		case 'r':
 			rebound(statArray[0], input[1]);
@@ -169,11 +200,25 @@ function addPlay(keystrokes){
 			break;
 		case 'k':
 			statArray[12] = 1; //block
+			if (input[2] === 'r')
+			{
+				actingPlayer = input[3];
+				rebound(statArray[0],actingPlayer);
+				//break;
+			} 
+			else if (input[2] === 'd')
+			{
+				actingPlayer = input[3];
+				rebound(statArray[0],actingPlayer,1);
+				//break;
+			}	
+			break;
 		case 'f2':
 			chg(input[input.length-1], input[1], input[2]);
 			return;
 	}
-	console.log(statArray);
+	console.log("in addPlay: " + statArray);
+	//if (statArray[15] != 0) add_team_points(statArray[0],statArray[15]);
 	drw.write_player_stats_to_game_file(statArray, test_file_name);
 } 
  
@@ -185,7 +230,8 @@ function addPlay(keystrokes){
  */ 
  
 function rebound(t, player_number, def_rebound){
-	if (def_rebound != ''){
+	if (def_rebound != null){
+		console.log("Changing team");
 		if (t === 1) t = 0;
 		else if (t === 0) t = 1;
 	}
@@ -242,8 +288,6 @@ function initGame(args){
 	} catch (e){
 		console.log("Exception in creating game file: " + e);
 	}
-	
-	
 }
  
  
@@ -256,6 +300,7 @@ function initGame(args){
 
 ipc.on('add-play', function (event,keystrokes){ 
 	try {
+		console.log("adding play: " + keystrokes);
 		addPlay(keystrokes);
 	} catch (e) {
 		//if failure
@@ -272,10 +317,10 @@ ipc.on('init-game', function (event,args){
 	} catch (e) {
 		//if failure
 		console.log("An error occurred in game initializing: " + e);
-		event.sender.send('init-game-failure');
+		event.sender.send('init-game-failure',args);
 		return;
 	}
-	event.sender.send('init-game-success');
+	event.sender.send('init-game-success',args);
 });
  
 ipc.on('get-data', function(event){ 
