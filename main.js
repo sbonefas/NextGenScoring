@@ -218,7 +218,7 @@ function addPlay(keystrokes){
 			return;
 	}
 	console.log("in addPlay: " + statArray);
-	//if (statArray[15] != 0) add_team_points(statArray[0],statArray[15]);
+	if (statArray[15] != 0) add_team_points(statArray[0],statArray[15]);
 	drw.write_player_stats_to_game_file(statArray, test_file_name);
 } 
  
@@ -260,18 +260,21 @@ function chg(t, player_number, new_player_number){
 }
 
 function inPaint(team){
-	drw.write_team_stats_to_game_file([team,1,0,0]);
+	drw.write_team_stats_to_game_file([team,1,0,0,0]);
 }
 
 function fastBreak(team){
-	drw.write_team_stats_to_game_file([team,0,1,0]);
+	drw.write_team_stats_to_game_file([team,0,1,0,0]);
 }
 
 
 function teamTurnover(team){
-	drw.write_team_stats_to_game_file([team,0,0,1]);	
+	drw.write_team_stats_to_game_file([team,0,0,1,0]);	
 }
 
+function addTeamPoints(team,numPoints){
+	drw.write_team_stats_to_game_file([team,0,0,0,numPoints]);
+}
 
 /*
  *  INITIALIZE GAME FUNCTION
