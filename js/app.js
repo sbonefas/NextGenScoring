@@ -1,8 +1,8 @@
 //const electron = require("electron");
 //const ipc = electron.ipcRenderer;
 
-const electron = require("electron");
-const ipc = electron.ipcRenderer;
+//const electron = require("electron");
+//const ipc = electron.ipcRenderer;
 
 window.onload = function(){
 	// Send data to backend
