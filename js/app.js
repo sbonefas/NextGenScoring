@@ -14,7 +14,7 @@ P - GOOD FG IN THE PAINT                  X - MISSED 3PT SHOT (REBOUND)
 Z - GOOD FG- FAST BREAK & PAINT   K - BLOCKED SHOT
 `;
 
-var home_stats = {fg: Number.parseFloat(0.00).toFixed(2), tfg: Number.parseFloat(0.00).toFixed(2), ftp: Number.parseFloat(0.00).toFixed(2), tvs: 0, blocks: 0, steals: 0, paint: 0, offto: 0, sndch: 0, fastb: 0, fga: 0, tfga: 0}
+var home_stats = {fg: Number.parseFloat(0.00).toFixed(2), tfg: Number.parseFloat(0.00).toFixed(2), ftp: Number.parseFloat(0.00).toFixed(2), tvs: 0, blocks: 0, steals: 0, paint: 0, offto: 0, sndch: 0, fastb: 0, fga: 0, tfga: 0, benchpts: 0}
 Vue.component('home_team_stats', {
   template: `
   <div>
@@ -28,7 +28,7 @@ Vue.component('home_team_stats', {
   }
 })
 
-var vis_stats = {fg: Number.parseFloat(0.00).toFixed(2), tfg: Number.parseFloat(0.00).toFixed(2), ftp: Number.parseFloat(0.00).toFixed(2), tvs: 0, blocks: 0, steals: 0, paint: 0, offto: 0, sndch: 0, fastb: 0, fga: 0, tfga: 0}
+var vis_stats = {fg: Number.parseFloat(0.00).toFixed(2), tfg: Number.parseFloat(0.00).toFixed(2), ftp: Number.parseFloat(0.00).toFixed(2), tvs: 0, blocks: 0, steals: 0, paint: 0, offto: 0, sndch: 0, fastb: 0, fga: 0, tfga: 0, benchpts: 0}
 Vue.component('vis_team_stats', {
   template: `
   <div>
@@ -203,7 +203,6 @@ var app = new Vue({
 
      // alt + h - Help menu
      if(e.altKey && e.keyCode == 72) {
-        //window.alert(help_menu);
         help();
      }
 
@@ -407,7 +406,6 @@ var app = new Vue({
       } else if(currentlyInputtingPlay == "freethrow") {
         app.log_free_throw(e.keyCode, false);
       }
-        
      }
 
      // A - assist
@@ -445,7 +443,6 @@ var app = new Vue({
         } else{
           app.timeout(false, e.keyCode);
         }
-        
      }
 
      // M - used in timeout function (M is a full timeout) and turnover function (M is team turnover)
@@ -839,6 +836,12 @@ var app = new Vue({
          totals.fg += 1;
          totals.fa += 1;
 
+         //increase bench points
+         if(!person.starter) {
+            stats.benchpts += 1;
+            console.log("benchpts: " + stats.benchpts)
+         }
+
          // add to score
          if(home) {
             app.home_score += 2;
@@ -881,6 +884,13 @@ var app = new Vue({
          person.fg += 1;
          totals.fa += 1;
          totals.fg += 1;
+
+         //increase bench points
+         if(!person.starter) {
+             stats.benchpts += 1;
+             console.log("benchpts: " + stats.benchpts)
+         }
+
          var total_attempts = 0;
          var total_fgs = 0;
          var total_threes_attmept = 0;
@@ -938,6 +948,13 @@ var app = new Vue({
          totals.fa += 1;
          totals.fg += 1;
          stats.paint += 1;
+
+         //increase bench points
+         if(!person.starter) {
+              stats.benchpts += 1;
+              console.log("benchpts: " + stats.benchpts)
+         }
+
          if(home) {
             app.home_score += 2;
             score = app.home_score;
@@ -970,6 +987,13 @@ var app = new Vue({
         person.fg += 1;
         person.fa += 1;
         person.tp += 2;
+
+         //increase bench points
+         if(!person.starter) {
+             stats.benchpts += 1;
+             console.log("benchpts: " + stats.benchpts)
+         }
+
         if(home) {
             app.home_score += 2;
             score = app.home_score;
@@ -1011,6 +1035,13 @@ var app = new Vue({
         person.fg += 1;
         person.fa += 1;
         person.tp += 2;
+
+         //increase bench points
+         if(!person.starter) {
+             stats.benchpts += 1;
+             console.log("benchpts: " + stats.benchpts)
+         }
+
         if(home) {
             app.home_score += 2;
             score = app.home_score;
@@ -1054,6 +1085,12 @@ var app = new Vue({
          totals.fa += 1;
          totals.a3 += 1;
 
+         //increase bench points
+         if(!person.starter) {
+             stats.benchpts += 1;
+             console.log("benchpts: " + stats.benchpts)
+         }
+
          // add to play by play
          app.add_play(`${person.name} missed a 3-point jumper`);
 
@@ -1089,6 +1126,7 @@ var app = new Vue({
          stats.fg = Number.parseFloat((total_fgs/total_attempts)*100).toFixed(2);
          app.blocked_shot();
    },
+   //substitutions
    subs(first_input, keyCode) {
        if(first_input) {
           inputtext = "F6";
@@ -1148,6 +1186,7 @@ var app = new Vue({
 
        }
    },
+   //assists
    assist(keyCode) {
       var char_entered = String.fromCharCode(keyCode);
       if(keyCode == 13) char_entered = "ENTER";
@@ -1189,6 +1228,7 @@ var app = new Vue({
         }
       }
    },
+   //steals
    steal(keyCode) {
       console.log("currentl inputting play:" + currentlyInputtingPlay);
       var char_entered = String.fromCharCode(keyCode);
@@ -1232,6 +1272,7 @@ var app = new Vue({
         }
       }
    },
+   //turnovers
    turnover(keyCode) {
       var char_entered = String.fromCharCode(keyCode);
       if(keyCode == 13) char_entered = "ENTER";
@@ -1288,6 +1329,7 @@ var app = new Vue({
         
       }
    },
+   //fouls
    foul(keyCode) {
       var char_entered = String.fromCharCode(keyCode);
       if(keyCode == 13) char_entered = "ENTER";
@@ -1402,6 +1444,7 @@ var app = new Vue({
 
 
    },
+   //rebound
    rebound(keyCode) {
       var char_entered = String.fromCharCode(keyCode); // will be upper case
       if(keyCode == 13) char_entered = "ENTER";
