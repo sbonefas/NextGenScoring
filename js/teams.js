@@ -116,23 +116,31 @@ var app = new Vue({
     // If F9 is pressed
     delete_team : function() {
       if(app.selected_team.name != undefined) {
-        window.alert("DELETED TEAM: "+app.selected_team.name);
-        for(var index = 0; index < app.teams.length; index++)
+        var confirm_delete = window.confirm("DELETE TEAM: "+app.selected_team.name+"?");
+        if(confirm_delete)
         {
-          if(app.teams[index].name == app.selected_team.name)
+          for(var index = 0; index < app.teams.length; index++)
           {
-            app.teams.splice(index, 1);
-            //UPDATE BACKEND HERE
-            break;
+            if(app.teams[index].name == app.selected_team.name)
+            {
+              app.teams.splice(index, 1);
+              //UPDATE BACKEND HERE
+              break;
+            }
           }
         }
       }
       else {
         console.log("NO TEAM SELECTED");
+        window.alert("ERROR NO TEAM SELECTED");
       }
     },
     // Runs a search based on user input
     run_search : function() {
+      if(app.search_active)
+      {
+        app.reset_team_table();
+      }
       console.log("RUNNING SEARCH");
       app.teams_hold = app.teams;
       var query_teams = [];
@@ -155,7 +163,6 @@ var app = new Vue({
     deselect_team : function() {
       app.selected_team = {};
       app.input_selected = true;
-
     },
     // Resets the team table when a search is over
     reset_team_table : function() {
