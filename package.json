@@ -11,7 +11,7 @@
 	},
 	"scripts": {
 		"start": "electron .",
-		"test": "mocha"
+		"test": "nyc mocha"
 	},
 	"repository": {
 		"type": "git",
@@ -25,6 +25,7 @@
 	"homepage": "https://github.com/sbonefas/NextGenScoring#readme",
 	"dependencies": {
 		"npm": "^5.8.0",
+		"nyc": "^11.6.0",
 		"vex-js": "^4.1.0"
 	}
 }
