@@ -34,19 +34,24 @@ function help() {
         }
     }
 }
-
+/*
+  player-format:
+        object: array[name: "Giannis", number: 34, position: "everything"]
+        Joe Krabbenhoft, Dean Oliver
+*/
+var new_team = {};
 var app = new Vue({
   el: '#team_app',
   data: {
     message: "SELECT A TEAM",
     teams: [
-            {name: "WISCONSIN"},
-            {name: "MARQUETTE"},
-            {name: "MINNESOTA"},
-            {name: "PURDUE"},
-            {name: "MARYLAND"},
-            {name: "NORTHWESTERN"},
-            {name: "ILLINOIS"}
+            {name: "WISCONSIN", team_code: "WISC", head_coach: "Greg Gard", assistant: "Howard Moore, Joe Krabbenhoft, Dean Oliver", team_roster: [], home_stadium: "Kohl Center"},
+            {name: "MARQUETTE", team_code: "", head_coach: "", assistant: "", team_roster: [], home_stadium: ""},
+            {name: "MINNESOTA", team_code: "", head_coach: "", assistant: "", team_roster: [], home_stadium: ""},
+            {name: "PURDUE", team_code: "", head_coach: "", assistant: "", team_roster: [], home_stadium: ""},
+            {name: "MARYLAND", team_code: "", head_coach: "", assistant: "", team_roster: [], home_stadium: ""},
+            {name: "NORTHWESTERN", team_code: "", head_coach: "", assistant: "", team_roster: [], home_stadium: ""},
+            {name: "ILLINOIS", team_code: "", head_coach: "", assistant: "", team_roster: [], home_stadium: ""}
           ],
     roster_options: [
       {name: "<ENTER> - EDIT TEAM"},
@@ -94,9 +99,10 @@ var app = new Vue({
     },
     // If N is pressed
     add_new_team : function() {
-      team = {name: ""}
       // NEED TO REPLACE PROMPT
-      team_name = window.prompt("Enter a new team name").toUpperCase();
+      //team_name = window.prompt("Enter a new team name").toUpperCase();
+      document.getElementById("team_name_entry").showModal();
+
       if(team_name != "")
       {
         team.name = team_name;
@@ -130,8 +136,7 @@ var app = new Vue({
     // If F9 is pressed
     delete_team : function() {
       if(app.selected_team.name != undefined) {
-        var confirm_delete = window.confirm("DELETE TEAM: "+app.selected_team.name+"?");
-        if(confirm_delete)
+        if(window.confirm("DELETE TEAM: "+app.selected_team.name+"?"))
         {
           for(var index = 0; index < app.teams.length; index++)
           {
@@ -182,6 +187,11 @@ var app = new Vue({
     reset_team_table : function() {
       app.teams = app.teams_hold;
       app.search_active = false;
+    },
+    // Sets team name when entered in
+    set_team_name : function(entered_name) {
+      this.new_team = {name: entered_name, team_code: "", head_coach: "", assistant: "", team_roster: [], home_stadium: ""};
+      return team;
     }
   }
 
