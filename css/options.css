@@ -4,6 +4,38 @@ html {
 	overflow: hidden
 }
 
+#optionsheader {
+	margin: auto;
+	text-align: center;
+	padding: 3%;
+    width: 70%;
+    height: 30%;
+    background-color: #282728; /*UW Grey*/
+    color: #f9f9f9;
+    vertical-align: center;
+}
+
+#options {
+	margin: auto;
+	text-align: left;
+	padding: 3%;
+    width: 70%;
+    height: 30%;
+    background-color: #dadfe1; /*UW Grey-Blue*/
+    vertical-align: center;
+}
+
+.optionstext {
+    margin: auto;
+    font-size: 1.2em;
+    width: max-content;
+    vertical-align: center;
+}
+
+#options p {
+    text-align: center;
+}
+
 a {
     color: white;
     text-decoration: none;
@@ -11,8 +43,4 @@ a {
 
 a:hover {
     text-decoration: underline;
-}
-
-.help {
-    float: right;
 }

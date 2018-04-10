@@ -4,6 +4,44 @@ html {
 	overflow: hidden
 }
 
+#helpheader {
+	margin: auto;
+	text-align: center;
+	padding: 3%;
+    width: 70%;
+    height: 30%;
+    background-color: #282728; /*UW Grey*/
+    color: #f9f9f9;
+    vertical-align: center;
+}
+
+#help {
+	margin: auto;
+	text-align: left;
+	padding: 3%;
+    width: 70%;
+    height: 30%;
+    background-color: #dadfe1; /*UW Grey-Blue*/
+    vertical-align: center;
+}
+
+.helptext {
+    margin: auto;
+    font-size: 1.2em;
+    width: max-content;
+    vertical-align: center;
+}
+
+#help a {
+    color:  #c5050c; /*UW Red*/
+    text-decoration: none;
+    font-size: 1.5em;
+}
+
+#help a:hover {
+    text-decoration: underline;
+}
+
 a {
     color: white;
     text-decoration: none;
@@ -11,8 +49,4 @@ a {
 
 a:hover {
     text-decoration: underline;
-}
-
-.help {
-    float: right;
 }
