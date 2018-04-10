@@ -28,33 +28,39 @@ function createWindow() {
 		protocol: 'file',
 		slashes: true		
 	}));
-
+	win.maximize();
+	
 	/** SIMPLE BACKEND TESTING */
 	/** TODO: DELETE WHEN PUT IN TEST SUITE */
 	if(TESTING) {
 		//drw.create_game_file(stat_headers, test_file_name, args);
 		//drw.read_game_file(test_file_name);
-		createTeam("Badgers", 001, "Bo Ryan", "I Forgot", "Kohl Center");
+		createTeam("Badgers", "WIS", "Bo Ryan", "I Forgot", "Kohl Center");
 	}
 	win.on('closed', () => {
 		win = null;
 		drw.delete_file(test_file_name);	
 		app.quit();
 	})
-}
+};
 
 
 function createTeam(name, code, head_coach, asst_coach, stadium){
 	
 	var team = new Team(name, code, head_coach, asst_coach, stadium);
-	team.add_player_to_roster("Frank Kaminsky", 44)
+	team.add_player_to_roster("Frank Kaminsky", 44, "center");
 	teams.push(team);
 	console.log("Team name: " + teams[0].get_name());
-	/*won't freaking work
-	var roster = teams[0].get_active_roster();
-	console.log("Active Roster:" + roster.toString());
-	*/
-}
+	console.log("Team code:" + teams[0].get_code());
+	console.log("Head coach: " + teams[0].get_head_coach());
+	console.log("Assistant coach: " + teams[0].get_asst_coach());
+	console.log("Stadium: " + teams[0].get_stadium());
+	console.log("Active Roster: ");
+	for (var i = 0; i < teams[0].get_active_roster().length; i++){
+		var player = teams[0].get_active_roster()[i];
+		console.log("[" + i + "] " + player.get_name() + " #" + player.get_number() + " " + player.get_position() + "\n");
+	}
+};
 
 
 
