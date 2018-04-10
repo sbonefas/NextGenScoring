@@ -31,8 +31,8 @@ class TestShotCodes(unittest.TestCase):
         __class__.driver.get(index) 
 	
     def tearDown(self):
-        #__class__.driver.quit()
-        pass
+        __class__.driver.quit()
+        #pass
 
     def foul(self, team, player, tech=False):
         __class__.driver.find_element_by_id("userinput").send_keys("F")
@@ -57,16 +57,14 @@ class TestShotCodes(unittest.TestCase):
             if rebounded:
                 Alert(__class__.driver).send_keys("R")
                 Alert(__class__.driver).accept()
-                __class__.driver.implicitly_wait(2)
+                __class__.driver.implicitly_wait(1)
                 
                 if off_rb:
                     Alert(__class__.driver).send_keys(player2)
                     Alert(__class__.driver).accept()
-                    __class__.driver.implicitly_wait(2)
                 else:
                     Alert(__class__.driver).send_keys("D" + player2)
                     Alert(__class__.driver).accept()
-                    __class__.driver.implicitly_wait(2)
             else:
                 Alert(__class__.driver).send_keys("M")
                 Alert(__class__.driver).accept()
@@ -75,13 +73,7 @@ class TestShotCodes(unittest.TestCase):
         __class__.driver.find_element_by_class_name("fouls").send_keys("A")
         Alert(__class__.driver).send_keys(player)
         Alert(__class__.driver).accept()
-        
     
-    def turnover(self, player):
-        __class__.driver.find_element_by_id("userinput").send_keys("T")
-        __class__.driver.find_element_by_id("userinput").send_keys(player)
-        __class__.driver.find_element_by_id("userinput").send_keys(Keys.ENTER)
-        
     
     def home_on_offense(self):
         __class__.driver.find_element_by_class_name("fouls").send_keys("H")
@@ -267,102 +259,14 @@ class TestShotCodes(unittest.TestCase):
         pct = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("div/p[1]").text.split(' ')[-1]
         self.assertEqual(pct, '37.50')
         
-    
-    def test_turnover_home(self):
-        self.home_on_offense()
         
-        # Check # TO for player, team, possession changes
-        to_before = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[12]").text
-        team_to_before1 = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("div/p[2]").text.split(' ')[2]
-        team_to_before2 = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[12]/td[12]").text
-        
-        visitor_style = __class__.driver.find_element_by_id("visitorscoreshowhide").get_attribute("style")
-        visitor_color_1 = visitor_style.split(';')[0].split(' ')[1]
-        
-        self.turnover("01")
-        
-        to_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[12]").text
-        team_to_after1 = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("div/p[2]").text.split(' ')[2]
-        team_to_after2 = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[12]/td[12]").text
-        
-        visitor_style = __class__.driver.find_element_by_id("visitorscoreshowhide").get_attribute("style")
-        visitor_color_2 = visitor_style.split(';')[0].split(' ')[1]
-        
-        self.assertNotEqual(visitor_color_2, visitor_color_1)
-        self.assertEqual(visitor_color_2, "red")
-        self.assertEqual(int(to_after), int(to_before) + 1)
-        self.assertEqual(int(team_to_after1), int(team_to_before1) + 1)
-        self.assertEqual(int(team_to_after2), int(team_to_before2) + 1)
-        
-     
-    def test_turnover_away(self):
-        # Change to visitor
-        __class__.driver.find_element_by_id("ps-visitor").send_keys("V")
-        
-        # Check # TO for player, team, possession changes
-        to_before = __class__.driver.find_element_by_id("ps-visitor").find_element_by_xpath("table/tbody/tr[2]/td[12]").text
-        team_to_before1 = __class__.driver.find_element_by_id("ps-visitor").find_element_by_xpath("div/p[2]").text.split(' ')[2]
-        team_to_before2 = __class__.driver.find_element_by_id("ps-visitor").find_element_by_xpath("table/tbody/tr[12]/td[12]").text
-        
-        home_style = __class__.driver.find_element_by_id("homescoreshowhide").get_attribute("style")
-        home_color_1 = home_style.split(';')[0].split(' ')[1]
-        
-        self.turnover("01")
-        
-        to_after = __class__.driver.find_element_by_id("ps-visitor").find_element_by_xpath("table/tbody/tr[2]/td[12]").text
-        team_to_after1 = __class__.driver.find_element_by_id("ps-visitor").find_element_by_xpath("div/p[2]").text.split(' ')[2]
-        team_to_after2 = __class__.driver.find_element_by_id("ps-visitor").find_element_by_xpath("table/tbody/tr[12]/td[12]").text
-        
-        home_style = __class__.driver.find_element_by_id("homescoreshowhide").get_attribute("style")
-        home_color_2 = home_style.split(';')[0].split(' ')[1]
-        
-        self.assertNotEqual(home_color_2, home_color_1)
-        self.assertEqual(home_color_2, "red")
-        self.assertEqual(int(to_after), int(to_before) + 1)
-        self.assertEqual(int(team_to_after1), int(team_to_before1) + 1)
-        self.assertEqual(int(team_to_after2), int(team_to_before2) + 1)
-        
-     
-    def test_turnover_play_by_play(self):
-        self.home_on_offense()
-        numA_name = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[3]").text
-        home_score = __class__.driver.find_element_by_id("home").find_element_by_class_name("score").find_element_by_xpath("h2[2]").text;
-        away_score = __class__.driver.find_element_by_id("visitor").find_element_by_class_name("score").find_element_by_xpath("h2[2]").text;
-        clock = (__class__.driver.find_element_by_id("clockminutes").text + ":" + 
-                 __class__.driver.find_element_by_id("clockseconds").text)
-        
-        self.turnover("01")
-        
-        play_by_play = __class__.driver.find_element_by_id("playbyplaybox").find_element_by_xpath("table/tbody/tr[2]").text.split(" ")
-        
-        self.assertEqual(clock, play_by_play[0])
-        self.assertEqual("WISC", play_by_play[1])
-        self.assertEqual("Turnover", play_by_play[2])
-        self.assertEqual(numA_name, play_by_play[4])
-        self.assertEqual(home_score + "-" + away_score, play_by_play[5]) 
-        
-        self.turnover("01")
-        
-        play_by_play = __class__.driver.find_element_by_id("playbyplaybox").find_element_by_xpath("table/tbody/tr[2]").text.split(" ")
-        
-        self.assertEqual(clock, play_by_play[0])
-        self.assertEqual("VISITOR", play_by_play[1])
-        self.assertEqual("Turnover", play_by_play[2])
-        self.assertEqual(numA_name, play_by_play[4])
-        self.assertEqual(home_score + "-" + away_score, play_by_play[5]) 
-        
-        
-    #def test_
-        
-        
-        
-    # def test_assist(self):
-       # self.home_on_offense()
-       
-       # self.assist("01")
-    
-        
+    #def test_assist(self):
+    #    self.home_on_offense()
+    #    
+    #    self.assist("01")
+
+
+
 
 if __name__ == '__main__':
     unittest.main()
-    
