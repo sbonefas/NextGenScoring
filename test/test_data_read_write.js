@@ -1,27 +1,41 @@
-//const Application = require('spectron').Application
+/**
+ * TESTING FILE FOR data_read_write.js
+ * type npm test to run script
+ */
 const assert = require('assert')
 const drw = require('../data_read_write')
-const fs = require('fs')
-///const electronPath = require('electron') // Require Electron from the binaries included in node_modules.
-//const path = require('path')
+const fs = require('fs');
 
 const file_name = "data_test";
 const file_path = "data/data_test.txt";
 const individual_stat_labels = ['number', 'fg', 'fga', 'pts'];
 const team_stat_labels = ['team fouls', 'timeouts left'];
 const footer = ['test', 1,'test2/test3/4', 'test5'];
-const contents = "HOME\nnumber,fg,fga,pts\n;AWAY\nnumber,fg,fga,pts\n;FOOTER\n" + footer.toString();
-const test_stats = "HOME\nnumber,fg,fga,pts\n30,2,4,6\n\
-31,3,3,7\n44,5,7,12\n02,1,5,2\n;AWAY\nnumber,fg,fga,pts\n\
-35,1,4,2\n36,2,3,6\n45,6,7,12\n03,4,5,8";
-const test_stats_array = [ [
-	[ 'number', 'fg', 'fga', 'pts' ],[ '30', '2', '4', '6' ],[ '31', '3', '3', '7' ],
-	[ '44', '5', '7', '12' ],[ '02', '1', '5', '2' ] ],
-  [ [ 'number', 'fg', 'fga', 'pts' ],[ '35', '1', '4', '2' ],
-  [ '36', '2', '3', '6' ],[ '45', '6', '7', '12' ],[ '03', '4', '5', '8' ] ]
-  ];
+
+/** UNIT TEST DATA */
+const contents = "HOME\nnumber,fg,fga,pts\n"
+        + ";AWAY\nnumber,fg,fga,pts\n"
+        + ";TEAM\nteam fouls,timeouts left\n0,0\n0,0\n"
+        + ";FOOTER\n" + footer.toString();
+const test_stats = "HOME\nnumber,fg,fga,pts\n"
++ "30,2,4,6\n31,3,3,7\n44,5,7,12\n02,1,5,2\n"
++ ";AWAY\nnumber,fg,fga,pts\n"
++ "35,1,4,2\n36,2,3,6\n45,6,7,12\n03,4,5,8\n"
++ ";TEAM\nteam fouls,timeouts left\n"
++ "9,4\n"
++ "8,3";
+const test_stats_with_footer = test_stats + "\n;FOOTER\n" + footer.toString();
 const test_team_stats = "HOME\nnumber,fg,fga,pts\n30,2,4,6\n\
 31,3,3,7\n44,5,7,12\n02,1,5,2";
+const test_stats_array = [
+  [ [ 'number', 'fg', 'fga', 'pts' ],[ '30', '2', '4', '6' ],[ '31', '3', '3', '7' ],
+  	[ '44', '5', '7', '12' ],[ '02', '1', '5', '2' ] ],
+  [ [ 'number', 'fg', 'fga', 'pts' ],[ '35', '1', '4', '2' ],
+  	[ '36', '2', '3', '6' ],[ '45', '6', '7', '12' ],[ '03', '4', '5', '8' ] ],
+  [ [ 'team fouls', 'timeouts left'],[ '9', '4'] ],
+  [ [ 'team fouls', 'timeouts left'],[ '8', '3'] ],
+  [ 'test', 1, 'test2/test3/4', 'test5']
+  ];
 const test_team_stats_array = [ [ 'number', 'fg', 'fga', 'pts' ],
 	[ '30', '2', '4', '6' ],
 	[ '31', '3', '3', '7' ],
@@ -30,6 +44,9 @@ const test_team_stats_array = [ [ 'number', 'fg', 'fga', 'pts' ],
 const test_stat_changes_exist = [1, '31', 1, 1, 2];
 const test_stat_changes_no_exist = [0, '29', 0, 1, 0];
 const test_empty_team_stats_array = [[ 'number', 'fg', 'fga', 'pts' ]];
+
+/** ADDITIONAL INTEGRATION TEST DATA */
+//data
 
 // Merged clean and delete together
 after(function() {
@@ -44,13 +61,16 @@ describe('data_read_write tests', function() {
      });
    });
    describe('create_game_file()', function() {
-     it('should construct a new file with initial game contents', function() {
        assert.strictEqual(drw.create_game_file(individual_stat_labels, team_stat_labels, file_name, footer), true);
-       if(!fs.existsSync(file_path)) assert.fail(false, true, "Path of new file should exist in file system", "create");
-     });
-     it('should return false since we just created this file', function() {
-       assert.strictEqual(drw.create_game_file(individual_stat_labels, team_stat_labels, file_name, footer), false);
-     });
+       it('should exist in the file path', function() {
+          if(!fs.existsSync(file_path)) assert.fail(false, true, "Path of new file should exist in file system", "create");
+       });
+       it('should be able to be read', function() {
+         assert.strictEqual(fs.readFileSync(file_path, 'utf8'), contents);
+       });
+       it('should return false if we try to recreate this file', function() {
+         assert.strictEqual(drw.create_game_file(individual_stat_labels, team_stat_labels, file_name, footer), false);
+       });
    });
    describe('get_initial_game_file_contents()', function() {
      it('should correctly display valid contents given stat labels', function() {
@@ -62,9 +82,9 @@ describe('data_read_write tests', function() {
         assert.strictEqual(drw.test_get_game_file_contents(file_path), contents);
      });
    });
-   describe('scrape_stats()', function() {
+   describe('scrape_player_stats()', function() {
      it('should properly transform a string of stats to a 2D array', function() {
-        assert.strictEqual(drw.test_scrape_stats(test_team_stats).toString(), test_team_stats_array.toString());
+        assert.strictEqual(drw.test_scrape_player_stats(test_team_stats).toString(), test_team_stats_array.toString());
      });
    });
    describe('create_2d_array()', function() {
@@ -74,6 +94,7 @@ describe('data_read_write tests', function() {
        [ 0, 0, 0, 0, 0, 0, 0 ],
        [ 0, 0, 0, 0, 0, 0, 0 ],
        [ 0, 0, 0, 0, 0, 0, 0 ] ];
+
        let num_rows = 5;
        let num_cols = 7;
        assert.strictEqual(drw.test_create_2d_array(num_rows, num_cols).toString(), result_array.toString());
@@ -81,8 +102,13 @@ describe('data_read_write tests', function() {
    });
    describe('read_game_file_empty()', function() {
      it('should properly read a file with labels but no stats', function() {
-       let result_array = [ [ [ 'number', 'fg', 'fga', 'pts' ] ],
-       [ [ 'number', 'fg', 'fga', 'pts' ] ] ];
+       let result_array = [
+       [ [ 'number', 'fg', 'fga', 'pts' ] ],
+         [ [ 'number', 'fg', 'fga', 'pts' ] ],
+         [ [ 'team fouls', 'timeouts left' ], ['0', '0'] ],
+         [ [ 'team fouls', 'timeouts left' ], ['0', '0'] ],
+         [ 'test', '1', 'test2/test3/4', 'test5' ]
+         ];
        assert.strictEqual(drw.read_game_file(file_name).toString(), result_array.toString());
      });
    });
@@ -130,12 +156,15 @@ describe('data_read_write tests', function() {
          ['35',1,4,2],
          ['36',2,3,6],
          ['45',6,7,12],
-         ['03',4,5,8]] ] ;
+         ['03',4,5,8] ],
+         [ [ 'team fouls', 'timeouts left' ], [ '9', '4' ] ],
+         [ [ 'team fouls', 'timeouts left' ], [ '8', '3' ] ],
+         [ 'test', '1', 'test2/test3/4', 'test5' ] ];
          assert.strictEqual(drw.read_game_file(file_name).toString(), result_array.toString())
       });
    });
    describe('write_player_stats_to_game_file()', function() {
-       it('should write and update player stats to the game file', function() {
+       it('should write and update player stats in the game file', function() {
          let result_array = [ [ ['number','fg','fga','pts'],
          ['30',2,4,6],
          ['31',5,5,11],
@@ -146,7 +175,10 @@ describe('data_read_write tests', function() {
          ['36',2,3,6],
          ['45',6,7,12],
          ['03',4,5,8],
-         ['29',0,1,0]] ];
+         ['29',0,1,0] ],
+         [ [ 'team fouls', 'timeouts left' ], [ '9', '4' ] ],
+         [ [ 'team fouls', 'timeouts left' ], [ '8', '3' ] ],
+         [ 'test', '1', 'test2/test3/4', 'test5' ] ];
 
          drw.write_player_stats_to_game_file(test_stat_changes_exist, file_name);
          drw.write_player_stats_to_game_file(test_stat_changes_exist, file_name);
@@ -154,4 +186,26 @@ describe('data_read_write tests', function() {
          assert.strictEqual(drw.read_game_file(file_name).toString(), result_array.toString());
       });
     });
+    describe('write_team_stats_to_game_file()', function() {
+        it('should write and update team stats in the game file', function() {
+          let result_array = [ [ ['number','fg','fga','pts'],
+          ['30',2,4,6],
+          ['31',5,5,11],
+          ['44',5,7,12],
+          ['02',1,5,2] ],
+          [ ['number','fg','fga','pts'],
+          ['35',1,4,2],
+          ['36',2,3,6],
+          ['45',6,7,12],
+          ['03',4,5,8],
+          ['29',0,1,0] ],
+          [ [ 'team fouls', 'timeouts left' ], [ '10', '4' ] ],
+          [ [ 'team fouls', 'timeouts left' ], [ '8', '1' ] ],
+          [ 'test', '1', 'test2/test3/4', 'test5' ] ];
+
+          drw.write_team_stats_to_game_file([1, 1, 0], file_name);
+          drw.write_team_stats_to_game_file([0, 0, -2], file_name);
+          assert.strictEqual(drw.read_game_file(file_name).toString(), result_array.toString());
+       });
+     });
 });
