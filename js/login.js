@@ -5,10 +5,20 @@ function pswrdEntered() {
         window.location = "./mainmenu.html"
     }
     else {
+        var y = document.getElementById("forgot");
+        y.style.display = "none"
         var x = document.getElementById("errormsg");
         x.style.display = "block"
     }
 }
+
+function forgotPswd() {
+        var x = document.getElementById("errormsg");
+        x.style.display = "none"
+        var y = document.getElementById("forgot");
+        y.style.display = "block"
+}
+
 
 var app = new Vue({
     el: '#login',
@@ -29,6 +39,8 @@ var app = new Vue({
                 window.location = "./mainmenu.html"
             }
             else {
+                var y = document.getElementById("forgot");
+                y.style.display = "none"
                 var x = document.getElementById("errormsg");
                 x.style.display = "block"
             }
