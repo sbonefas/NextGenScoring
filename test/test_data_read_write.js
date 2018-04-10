@@ -31,8 +31,10 @@ const test_stat_changes_exist = [1, '31', 1, 1, 2];
 const test_stat_changes_no_exist = [0, '29', 0, 1, 0];
 const test_empty_team_stats_array = [[ 'number', 'fg', 'fga', 'pts' ]];
 
+// Merged clean and delete together
 after(function() {
-    if(fs.existsSync(file_path)) drw.delete_file(file_name);
+    drw.delete_file(file_name);
+    if(fs.existsSync(file_path)) assert.fail(false, true, "Path of deleted file shouldn't exist in file system", "delete");
 });
 
 describe('data_read_write tests', function() {
@@ -49,13 +51,6 @@ describe('data_read_write tests', function() {
      it('should return false since we just created this file', function() {
        assert.strictEqual(drw.create_game_file(individual_stat_labels, team_stat_labels, file_name, footer), false);
      });
-     //TODO - test_create_game_file
-   });
-   describe('delete_file()', function() {
-     it('should delete a file', function() {
-        drw.delete_file(file_name);
-      	if(fs.existsSync(file_path)) assert.fail(true, false, "Path of deleted file shouldn't exist in file system", "delete");
-     });
    });
    describe('get_initial_game_file_contents()', function() {
      it('should correctly display valid contents given stat labels', function() {
@@ -69,7 +64,6 @@ describe('data_read_write tests', function() {
    });
    describe('scrape_stats()', function() {
      it('should properly transform a string of stats to a 2D array', function() {
-        //assert.strictEqual(drw.test_get_game_file_contents(file_path), contents);
         assert.strictEqual(drw.test_scrape_stats(test_team_stats).toString(), test_team_stats_array.toString());
      });
    });
