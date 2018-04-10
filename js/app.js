@@ -49,6 +49,7 @@ ipc.on('init-game-success', function(event,args) {
 var home = true;
 var inputtext = "";
 var currentlyInputtingPlay = "";
+var join_two_plays = "";
 result_code_prompt = `
 PRESS A RESULT CODE...
 
@@ -58,44 +59,12 @@ P - GOOD FG IN THE PAINT                  X - MISSED 3PT SHOT (REBOUND)
 Z - GOOD FG- FAST BREAK & PAINT   K - BLOCKED SHOT
 `;
 
-help_menu = `HELP MENU: GAMETIME INPUT CODES AND KEYS
-
-FIELD GOAL CODES                NON-FIELD GOAL CODES
-    J - 2- or 3- point shot              E - Free Throw  K - Block
-    Y - 3-point shot                        R - Rebound     T - Turnover
-    D - Dunk                                    A - Assist          S - Steal
-    L - Layup                                   F - Foul            O - Timeout
-    P - Tip-in
-    W - Wrong basket (defensive team scores in offensive team basket)
-
-RESULT CODES
-    G or Q - Good field goal (2- or 3-pointer)
-    Y - Good 3-point field goal
-    R - Missed field goal (followed by a rebound)
-    X - Missed 3-point field goal (followed by a rebound)
-    K - Missed field goal (due to a blocked shot)
-    P - Made field goal in the paint
-    F - Made field goal on a fast break
-    Z - Made field goal in the paint on a fast break
-    E - Made free throw
-
-SPECIAL KEYS
-    H or V - Select the home team or the visiting team
-    C - Change time, period, stats
-    F2 - Make "quick" roster changes to player numbers and names
-    F6 - Make player substitutions
-    F7 - Change the clock time
-    F10 - Clear and do not complete any partially keyed action
-    SPACEBAR - Start or Stop the Clock
-    ESC - Return to Main Menu
-`;
-
-var home_stats = {fg: 0.0, tfg: 0.0, ftp: 0.0, tvs: 0, blocks: 0, steals: 0, paint: 0, offto: 0, sndch: 0, fastb: 0, fga: 0, tfga: 0}
+var home_stats = {fg: Number.parseFloat(0.00).toFixed(2), tfg: Number.parseFloat(0.00).toFixed(2), ftp: Number.parseFloat(0.00).toFixed(2), tvs: 0, blocks: 0, steals: 0, paint: 0, offto: 0, sndch: 0, fastb: 0, fga: 0, tfga: 0}
 Vue.component('home_team_stats', {
   template: `
   <div>
     <p>FG%: {{fg}}   3FG%: {{tfg}}   FT%: {{ftp}}</p>
-    <p>TEAM: TURNOVRS: {{tvs}}   BLOCKS: {{blocks}}   STEALS: {{steals}}</p>
+    <p>TEAM: TURNOVERS: {{tvs}}   BLOCKS: {{blocks}}   STEALS: {{steals}}</p>
     <p>paint: {{paint}}   offto: {{offto}}   2ndch: {{sndch}}   fastb: {{fastb}}</p>
   </div>
   `,
@@ -104,12 +73,12 @@ Vue.component('home_team_stats', {
   }
 })
 
-var vis_stats = {fg: 0.0, tfg: 0.0, ftp: 0.0, tvs: 0, blocks: 0, steals: 0, paint: 0, offto: 0, sndch: 0, fastb: 0, fga: 0, tfga: 0}
+var vis_stats = {fg: Number.parseFloat(0.00).toFixed(2), tfg: Number.parseFloat(0.00).toFixed(2), ftp: Number.parseFloat(0.00).toFixed(2), tvs: 0, blocks: 0, steals: 0, paint: 0, offto: 0, sndch: 0, fastb: 0, fga: 0, tfga: 0}
 Vue.component('vis_team_stats', {
   template: `
   <div>
     <p>FG%: {{fg}}   3FG%: {{tfg}}   FT%: {{ftp}}</p>
-    <p>TEAM: TURNOVRS: {{tvs}}   BLOCKS: {{blocks}}   STEALS: {{steals}}</p>
+    <p>TEAM: TURNOVERS: {{tvs}}   BLOCKS: {{blocks}}   STEALS: {{steals}}</p>
     <p>paint: {{paint}}   offto: {{offto}}   2ndch: {{sndch}}   fastb: {{fastb}}</p>
   </div>
   `,
@@ -158,6 +127,29 @@ function startClock(startingTime) {
   var paused = true;
 }
 
+function help() {
+    // Get the modal
+    var modal = document.getElementById('myModal');
+    // Get the <span> element that closes the modal
+    var span = document.getElementById("closeModal");
+
+    // show modal
+    modal.style.display = "block";
+
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+}
+
 var app = new Vue({
   el: '#app',
   data: {
@@ -173,32 +165,32 @@ var app = new Vue({
     vis_partial: 4,
 
     home_team: [
-                {in_game: "*", number: "01", name: "Player_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "02", name: "Player_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "03", name: "Player_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "04", name: "Player_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "05", name: "Player_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "06", name: "Bench_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "07", name: "Bench_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "08", name: "Bench_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "09", name: "Bench_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "10", name: "Bench_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0}
+                {in_game: "*", number: "01", name: "Player_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "02", name: "Player_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "03", name: "Player_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "04", name: "Player_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "05", name: "Player_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "06", name: "Bench_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "07", name: "Bench_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "08", name: "Bench_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "09", name: "Bench_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "10", name: "Bench_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0}
               ],
-    home_totals: {in_game: " ", number: " ", name: "Totals", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+    home_totals: {in_game: " ", number: " ", name: "Totals", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
 
     vis_team: [
-                {in_game: "*", number: "01", name: "Player_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "02", name: "Player_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "03", name: "Player_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "04", name: "Player_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {in_game: "*", number: "05", name: "Player_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "06", name: "Bench_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "07", name: "Bench_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "08", name: "Bench_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "09", name: "Bench_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {in_game: " ", number: "10", name: "Bench_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0}
+                {in_game: "*", number: "01", name: "Player_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "02", name: "Player_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "03", name: "Player_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "04", name: "Player_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: "*", number: "05", name: "Player_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "06", name: "Bench_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "07", name: "Bench_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "08", name: "Bench_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "09", name: "Bench_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+                {in_game: " ", number: "10", name: "Bench_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0}
               ],
-    vis_totals: {in_game: " ", number: " ", name: "Totals", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+    vis_totals: {in_game: " ", number: " ", name: "Totals", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
 
     playlist: [
                 //example: {time: "19:85", team: "WISC", playdscrp: "Ethan Happ made a 3 point jumper", score: "100-2"},
@@ -227,6 +219,8 @@ var app = new Vue({
           app.steal(e.keyCode);
         } else if(currentlyInputtingPlay == "rebound") {
           app.rebound(e.keyCode);
+        } else if(currentlyInputtingPlay == "freethrow") {
+          app.log_free_throw(e.keyCode, false);
         }
         app.clear_input();
         //save play
@@ -240,13 +234,12 @@ var app = new Vue({
 
      // alt + h - Help menu
      if(e.altKey && e.keyCode == 72) {
-        window.alert(help_menu);
-        altHeld = false;
+        //window.alert(help_menu);
+        help();
      }
 
      // J then (G | Q | Y | R | P | Z | F | X | K) - Jump Shots
      else if(e.keyCode == 74) {
-       altHeld = false;
        who_did_it = window.prompt("SHOT BY: (Key in a player ##)");
        while(!app.check_in_game(who_did_it, home)) {
            if(who_did_it == null) {
@@ -413,7 +406,8 @@ var app = new Vue({
 
      // E - Free Throw
      else if(e.keyCode == 69) {
-        app.log_free_throw();
+        currentlyInputtingPlay = "freethrow";
+        app.log_free_throw(e.keyCode, false);
      }
 
      // F - Foul
@@ -438,8 +432,13 @@ var app = new Vue({
 
      // R - rebound
      else if(e.keyCode == 82) {
+      if(currentlyInputtingPlay == "") {
         currentlyInputtingPlay = "rebound";
         app.rebound(e.keyCode);
+      } else if(currentlyInputtingPlay == "freethrow") {
+        app.log_free_throw(e.keyCode, false);
+      }
+        
      }
 
      // A - assist
@@ -465,7 +464,8 @@ var app = new Vue({
 
      // K - blocked shot
      else if(e.keyCode == 75) {
-        app.blocked_shot();
+        currentlyInputtingPlay = "block";
+        app.blocked_shot(e.keyCode, false);
      }
 
      // O - timeout
@@ -488,6 +488,8 @@ var app = new Vue({
           app.turnover(e.keyCode);
         } else if(currentlyInputtingPlay == "rebound") {
           app.rebound(e.keyCode);
+        } else if(currentlyInputtingPlay == "freethrow") {
+          app.log_free_throw(e.keyCode, false);
         }
      }
 
@@ -507,6 +509,10 @@ var app = new Vue({
           app.steal(e.keyCode);
         } else if(currentlyInputtingPlay == "rebound") {
           app.rebound(e.keyCode);
+        } else if(currentlyInputtingPlay == "block") {
+          app.blocked_shot(e.keyCode, false);
+        } else if(currentlyInputtingPlay == "freethrow") {
+          app.log_free_throw(e.keyCode, false);
         }
      }
 
@@ -526,6 +532,10 @@ var app = new Vue({
           app.steal(e.keyCode);
         } else if(currentlyInputtingPlay == "rebound") {
           app.rebound(e.keyCode);
+        } else if(currentlyInputtingPlay == "block") {
+          app.blocked_shot(e.keyCode, false);
+        } else if(currentlyInputtingPlay == "freethrow") {
+          app.log_free_throw(e.keyCode, false);
         }
      }
 
@@ -545,6 +555,10 @@ var app = new Vue({
           app.steal(e.keyCode);
         } else if(currentlyInputtingPlay == "rebound") {
           app.rebound(e.keyCode);
+        } else if(currentlyInputtingPlay == "block") {
+          app.blocked_shot(e.keyCode, false);
+        } else if(currentlyInputtingPlay == "freethrow") {
+          app.log_free_throw(e.keyCode, false);
         }
      }
 
@@ -566,6 +580,10 @@ var app = new Vue({
           app.steal(e.keyCode);
         } else if(currentlyInputtingPlay == "rebound") {
           app.rebound(e.keyCode);
+        } else if(currentlyInputtingPlay == "block") {
+          app.blocked_shot(e.keyCode, false);
+        } else if(currentlyInputtingPlay == "freethrow") {
+          app.log_free_throw(e.keyCode, false);
         }
      }
 
@@ -585,6 +603,10 @@ var app = new Vue({
           app.steal(e.keyCode);
         } else if(currentlyInputtingPlay == "rebound") {
           app.rebound(e.keyCode);
+        } else if(currentlyInputtingPlay == "block") {
+          app.blocked_shot(e.keyCode, false);
+        } else if(currentlyInputtingPlay == "freethrow") {
+          app.log_free_throw(e.keyCode, false);
         }
      }
 
@@ -604,6 +626,10 @@ var app = new Vue({
           app.steal(e.keyCode);
         } else if(currentlyInputtingPlay == "rebound") {
           app.rebound(e.keyCode);
+        } else if(currentlyInputtingPlay == "block") {
+          app.blocked_shot(e.keyCode, false);
+        } else if(currentlyInputtingPlay == "freethrow") {
+          app.log_free_throw(e.keyCode, false);
         }
      }
 
@@ -623,6 +649,10 @@ var app = new Vue({
           app.steal(e.keyCode);
         } else if(currentlyInputtingPlay == "rebound") {
           app.rebound(e.keyCode);
+        } else if(currentlyInputtingPlay == "block") {
+          app.blocked_shot(e.keyCode, false);
+        } else if(currentlyInputtingPlay == "freethrow") {
+          app.log_free_throw(e.keyCode, false);
         }
      }
 
@@ -642,6 +672,10 @@ var app = new Vue({
           app.steal(e.keyCode);
         } else if(currentlyInputtingPlay == "rebound") {
           app.rebound(e.keyCode);
+        } else if(currentlyInputtingPlay == "block") {
+          app.blocked_shot(e.keyCode, false);
+        } else if(currentlyInputtingPlay == "freethrow") {
+          app.log_free_throw(e.keyCode, false);
         }
      }
 
@@ -661,6 +695,10 @@ var app = new Vue({
           app.steal(e.keyCode);
         } else if(currentlyInputtingPlay == "rebound") {
           app.rebound(e.keyCode);
+        } else if(currentlyInputtingPlay == "block") {
+          app.blocked_shot(e.keyCode, false);
+        } else if(currentlyInputtingPlay == "freethrow") {
+          app.log_free_throw(e.keyCode, false);
         }
      }
 
@@ -680,25 +718,24 @@ var app = new Vue({
           app.steal(e.keyCode);
         } else if(currentlyInputtingPlay == "rebound") {
           app.rebound(e.keyCode);
+        } else if(currentlyInputtingPlay == "block") {
+          app.blocked_shot(e.keyCode, false);
+        } else if(currentlyInputtingPlay == "freethrow") {
+          app.log_free_throw(e.keyCode, false);
         }
      }
 
      // C - Change time, period, stats
      else if(e.keyCode == 67) {
-        //can change clock
+        //can change clock by clicking on it
      }
-
-     // Esc - Return to main menu
-     else if(e.keyCode == 27) {
-        // currently there is no main menu. This will be implemented in iteration 2
-     }
-
    }, //end keycode method
    clear_input() {
         inputtext = ""; // clears inputtext variable that stores the key code sequence
         inputvalidator.innerText = "Enter input...";  // sets inputvalidator h3 equal to the initial text (Enter input...)
         userinput.value = "";  // clears the text box
         currentlyInputtingPlay = "";
+        join_two_plays = "";
    },
    home_possession() {
        home = true;
@@ -807,17 +844,33 @@ var app = new Vue({
             if(inputtext.substring(1,2) == 'T') { // media timeout
               app.add_play("Media timeout");
             } else if(inputtext.substring(1,2) == 'H' && inputtext.substring(2,3) == 'M') { // home full timeout
-              app.home_full -= 1;
-              app.add_play(app.teams[0] + " full timeout");
+              if(app.home_full > 0) {
+                app.home_full -= 1;
+                app.add_play(app.teams[0] + " full timeout");
+              } else {
+                // inputvalidator.innerText = "Out of timeouts. Press ESC/F10 to clear input.";
+              }
             } else if(inputtext.substring(1,2) == 'H' && inputtext.substring(2,3) == '3') { // home 30 sec timeout
-              app.home_partial -= 1;
-              app.add_play(app.teams[0] + " partial timeout");
+              if(app.home_partial > 0) {
+                app.home_partial -= 1;
+                app.add_play(app.teams[0] + " partial timeout");
+              } else {
+                // inputvalidator.innerText = "Out of timeouts. Press ESC/F10 to clear input.";
+              }
             } else if(inputtext.substring(1,2) == 'V' && inputtext.substring(2,3) == 'M') { // visitor full timeout
-              app.vis_full -= 1;
-              app.add_play(app.teams[1] + " full timeout");
+              if(app.vis_full > 0) {
+                app.vis_full -= 1;
+                app.add_play(app.teams[1] + " full timeout");
+              } else {
+                // inputvalidator.innerText = "Out of timeouts. Press ESC/F10 to clear input.";
+              }
             } else if(inputtext.substring(1,2) == 'V' && inputtext.substring(2,3) == '3') { // visitor 30 sec timeout
-              app.vis_partial -= 1;
-              app.add_play(app.teams[1] + " partial timeout");
+              if(app.vis_partial > 0) {
+                app.vis_partial -= 1;
+                app.add_play(app.teams[1] + " partial timeout");
+              } else {
+                // inputvalidator.innerText = "Out of timeouts. Press ESC/F10 to clear input.";
+              }
             }
           } else {
             inputvalidator.innerText = "Input not recognized";
@@ -1430,6 +1483,24 @@ var app = new Vue({
             app.rb_normal(inputtext);
           }
         }
+        inputtext = join_two_plays;
+        if(inputtext.substring(0,1) == 'K') {  // block then rebound
+          currentlyInputtingPlay = "block";
+          if(inputtext.substring(1,2) == 'D') {
+            app.blocked_shot(13, false);  // 13 is shot code for ENTER
+          } else {
+            app.blocked_shot(13, true);  // 13 is shot code for ENTER
+          }
+        } else if(inputtext.substring(0,1) == 'E') {
+          console.log("rebound after ft inputtext:" + inputtext);
+          currentlyInputtingPlay = "freethrow";
+          if(inputtext.substring(1,2) == 'D') {
+            app.log_free_throw(13, true);  // 13 is shot code for ENTER
+          } else {
+            app.log_free_throw(13, false);  // 13 is shot code for ENTER
+          }
+        }
+        
       } else if(char_entered == 'R') {
         inputvalidator.innerText = "OFFENSIVE: player ## or M for team rebound or B for deadball\n" + "DEFENSIVE: D then player ## or DM for team rebound or DB for deadball";
       } else if(char_entered == 'D') {
@@ -1469,26 +1540,24 @@ var app = new Vue({
       }
     }, //end rebound method
     rb_normal(sequence) {
+      console.log("inputtext:" + inputtext);
       var player_number = 0;
       if(inputtext.length == 8) { // R01ENTER is 8 characters
         player_number = inputtext.substring(1,3);
       } else {
         player_number = inputtext.substring(2,4);
       }
-      console.log(sequence);
-      console.log(player_number);
       if(inputtext.substring(1,2) == 'D') {
-        console.log("home: " + home);
         if(!home) {
-          console.log("vis def reb wrong");
            for(index = 0; index < app.home_team.length; index++)
            {
               if(player_number == app.home_team[index].number)
               {
                   if(app.check_in_game(player_number, true)) {
-                    app.home_team[index].rb += 1;
-                    app.home_totals.rb += 1;
+                    app.home_team[index].rb_def += 1;
+                    app.home_totals.rb_def += 1;
                     app.add_play("Defensive rebound by " + app.home_team[index].name);
+                    app.home_possession();
                   } else {
                     inputvalidator.innerText = "Player #" + player_number + " is not in the game. Press ESC/F10 to clear input.";
                   }
@@ -1497,15 +1566,15 @@ var app = new Vue({
            }
          }
          else {
-            console.log("vis def reb correct");
            for(index = 0; index < app.vis_team.length; index++)
            {
               if(player_number == app.vis_team[index].number)
               {
                   if(app.check_in_game(player_number, false)) {
-                    app.vis_team[index].rb += 1;
-                    app.vis_totals.rb += 1;
+                    app.vis_team[index].rb_def += 1;
+                    app.vis_totals.rb_def += 1;
                     app.add_play("Defensive rebound by " + app.vis_team[index].name);
+                    app.vis_possession();
                   } else {
                     inputvalidator.innerText = "Player #" + player_number + " is not in the game. Press ESC/F10 to clear input.";
                   }
@@ -1521,9 +1590,10 @@ var app = new Vue({
             console.log("index, player_number:" + index + "," + player_number);
             if(player_number == app.home_team[index].number) {
               if(app.check_in_game(player_number, true)) {
-                app.home_team[index].rb += 1;
-                app.home_totals.rb += 1;
+                app.home_team[index].rb_off += 1;
+                app.home_totals.rb_off += 1;
                 app.add_play("Offensive rebound by " + app.home_team[index].name);
+                app.home_possession();
               } else {
                 inputvalidator.innerText = "Player #" + player_number + " is not in the game. Press ESC/F10 to clear input.";
               } 
@@ -1533,13 +1603,12 @@ var app = new Vue({
          for(index = 0; index < app.vis_team.length; index++) {
             if(player_number == app.vis_team[index].number) {
               if(app.check_in_game(player_number, false)) {
-                app.vis_team[index].rb += 1;
-                app.vis_totals.rb += 1;
+                app.vis_team[index].rb_off += 1;
+                app.vis_totals.rb_off += 1;
                 app.add_play("Offensive rebound by " + app.vis_team[index].name);
+                app.vis_possession();
               } else {
-                app.vis_team[index].rb += 1;
-                app.vis_totals.rb += 1;
-                app.add_play("Offensive rebound by " + app.vis_team[index].name); 
+                inputvalidator.innerText = "Player #" + player_number + " is not in the game. Press ESC/F10 to clear input.";
               }
             }
          }
@@ -1551,19 +1620,19 @@ var app = new Vue({
     rb_team(defensive_rebound) {
       if(defensive_rebound) {
         if(home) {
-          app.vis_totals.rb += 1;
+          app.vis_totals.rb_def += 1;
           app.vis_possession();
         } else {
-          app.home_totals.rb += 1;
+          app.home_totals.rb_def += 1;
           app.home_possession();
         }
 
         app.add_play("Defensive Team Rebound");
       } else {
         if(home) {
-          app.home_totals.rb += 1;
+          app.home_totals.rb_off += 1;
         } else {
-          app.vis_totals.rb += 1;
+          app.vis_totals.rb_off += 1;
         }
         app.add_play("Offensive Team Rebound");
       }
@@ -1659,111 +1728,201 @@ var app = new Vue({
 
     }
   },
-  log_free_throw()
+  log_free_throw(keyCode, switch_possession)
   {
-    //Home free throw
-    if(home)
-    {
-      ft_player_num = window.prompt("FREE THROW BY PLAYER ##");
-      result = window.prompt(`PRESS E FOR A MADE FREE THROW\nPRESS M FOR A MISS AND NO REBOUND\nPRESS R FOR A MISS WITH A REBOUND`);
-      for(index = 0; index < app.home_team.length; index++)
-      {
-        if(ft_player_num == app.home_team[index].number)
-          {
-            if(result == 'e' || result == 'E')
-            {
+      var char_entered = String.fromCharCode(keyCode); // will be upper case
+      if(keyCode == 13) char_entered = "ENTER";
+      inputtext = inputtext + char_entered;
+      if(char_entered == "ENTER") {
+        console.log("home before switch:" + home);
+        if(!switch_possession) {
+            home = !home;
+          }
+        console.log("home after switch:" + home);
+        // if(inputtext.substring(2,3) == 'D') {
+        //   home = !home;
+        // }
+        console.log(inputtext);
+        if(inputtext.substring(3,4) == 'E') {
+          if(home) {
+            for(index = 0; index < app.home_team.length; index++) {
+              if(ft_player_num == app.home_team[index].number) {
                 app.home_team[index].ftm += 1;
                 app.home_team[index].fta += 1;
                 app.home_team[index].tp += 1;
                 app.home_totals.ftm += 1;
                 app.home_totals.fta += 1;
                 app.home_totals.tp += 1;
+                app.home_score += 1;
+                app.add_play("Made free throw by " + app.home_team[index].name);
                 home_stats.ftp = Number.parseFloat((app.home_totals.ftm/app.home_totals.fta)*100).toFixed(2);
+              }
             }
-            else if(result == 'm' || result == 'M')
-            {
-                app.home_team[index].fta += 1;
-                app.home_totals.fta += 1;
-                home_stats.ftp = Number.parseFloat((app.home_totals.ftm/app.home_totals.fta)*100).toFixed(2);
-            }
-            else if(result == 'r' || result == 'R')
-            {
-                app.home_team[index].fta += 1;
-                app.home_totals.fta += 1;
-                home_stats.ftp = Number.parseFloat((app.home_totals.ftm/app.home_totals.fta)*100).toFixed(2);
-                app.rebound();
-            }
-          }
-      }
-
-    }
-    //away free throw
-    else
-    {
-      ft_player_num = window.prompt("FREE THROW BY PLAYER ##");
-      result = window.prompt(`PRESS E FOR A MADE FREE THROW\nPRESS M FOR A MISS AND NO REBOUND\nPRESS R FOR A MISS WITH A REBOUND`);
-      for(index = 0; index < app.vis_team.length; index++)
-      {
-        if(ft_player_num == app.vis_team[index].number)
-          {
-            if(result == 'e' || result == 'E')
-            {
+            
+          } else {
+            for(index = 0; index < app.vis_team.length; index++) {
+              if(ft_player_num == app.vis_team[index].number) {
                 app.vis_team[index].ftm += 1;
                 app.vis_team[index].fta += 1;
                 app.vis_team[index].tp += 1;
                 app.vis_totals.ftm += 1;
                 app.vis_totals.fta += 1;
                 app.vis_totals.tp += 1;
+                app.vis_score += 1;
+                app.add_play("Made free throw by " + app.vis_team[index].name);
                 vis_stats.ftp = Number.parseFloat((app.vis_totals.ftm/app.vis_totals.fta)*100).toFixed(2);
-            }
-            else if(result == 'm' || result == 'M')
-            {
-                app.vis_team[index].fta += 1;
-                app.vis_totals.fta += 1;
-                vis_stats.ftp = Number.parseFloat((app.vis_totals.ftm/app.vis_totals.fta)*100).toFixed(2);
-            }
-            else if(result == 'r' || result == 'R')
-            {
-                app.vis_team[index].fta += 1;
-                app.vis_totals.fta += 1;
-                vis_stats.ftp = Number.parseFloat((app.vis_totals.ftm/app.vis_totals.fta)*100).toFixed(2);
-                app.rebound();
+              }
             }
           }
+        } else if(inputtext.substring(3,4) == 'M') {
+          if(home) {
+          for(index = 0; index < app.home_team.length; index++) {
+            if(ft_player_num == app.home_team[index].number) {
+              app.home_team[index].fta += 1;
+              app.home_totals.fta += 1;
+              app.add_play("Missed free throw by " + app.home_team[index].name);
+              home_stats.ftp = Number.parseFloat((app.home_totals.ftm/app.home_totals.fta)*100).toFixed(2);
+            }
+          }
+        } else {
+          for(index = 0; index < app.vis_team.length; index++) {
+            if(ft_player_num == app.vis_team[index].number) {
+              app.vis_team[index].fta += 1;
+              app.vis_totals.fta += 1;
+              app.add_play("Missed free throw by " + app.vis_team[index].name);
+              vis_stats.ftp = Number.parseFloat((app.vis_totals.ftm/app.vis_totals.fta)*100).toFixed(2);
+            }
+          }
+        }
+        } else if(inputtext.substring(3,4) == 'R') {
+          console.log("r pressed in free throw");
+          var ft_player_num = inputtext.substring(1,3);
+          if(home) {
+            for(index = 0; index < app.home_team.length; index++) {
+            if(ft_player_num == app.home_team[index].number) {
+              app.home_team[index].fta += 1;
+              app.home_totals.fta += 1;
+              app.add_play("Missed free throw by " + app.home_team[index].name);
+              home_stats.ftp = Number.parseFloat((app.home_totals.ftm/app.home_totals.fta)*100).toFixed(2);
+            }
+          }
+          } else {
+            for(index = 0; index < app.vis_team.length; index++) {
+            if(ft_player_num == app.vis_team[index].number) {
+              app.vis_team[index].fta += 1;
+              app.vis_totals.fta += 1;
+              app.add_play("Missed free throw by " + app.vis_team[index].name);
+              vis_stats.ftp = Number.parseFloat((app.vis_totals.ftm/app.vis_totals.fta)*100).toFixed(2);
+            }
+          }
+          }
+        }
+      } else if(char_entered == 'E' && inputtext.length < 4) {
+        inputvalidator.innerText = "Free throw by player ##:";
+      } else if(!isNaN(char_entered) && inputtext.length == 3) {
+        ft_player_num = inputtext.substring(1,3);
+        if(home) {
+          var number_is_valid = false;
+          for(index = 0; index < app.home_team.length; index++) {
+            if(ft_player_num == app.home_team[index].number && app.check_in_game(ft_player_num, true)) {
+              inputvalidator.innerText = "Free throw by #" + ft_player_num + ". Press E (made FT) or M (missed FT, no rebound) or R (missed FT, rebound).";
+              number_is_valid = true;
+            }
+          }
+          if(!number_is_valid) {
+            inputvalidator.innerText = "Player #" + ft_player_num + " is not currently in the game. Press ESC/F10 to clear input.";
+          }
+        } else {
+          for(index = 0; index < app.vis_team.length; index++) {
+            if(ft_player_num == app.vis_team[index].number && app.check_in_game(ft_player_num, false)) {
+              inputvalidator.innerText = "Free throw by #" + ft_player_num + ". Press E (made FT) or M (missed FT, no rebound) or R (missed FT, rebound).";
+              number_is_valid = true;
+            }
+          }
+          if(!number_is_valid) {
+            inputvalidator.innerText = "Player #" + ft_player_num + " is not currently in the game. Press ESC/F10 to clear input.";
+          }
+        }
+      } else if(char_entered == 'E' && inputtext.length == 4) {
+        inputvalidator.innerText = "Made FT by player #" + ft_player_num + ". Press ENTER to save play.";
+      } else if(char_entered == 'M' && inputtext.length == 4) {
+        // miss, no rebound
+        inputvalidator.innerText = "Missed FT by player #" + ft_player_num + ". Press ENTER to save play.";
+      } else if(char_entered == 'R' && inputtext.length == 4) {
+        //miss, rebound
+        join_two_plays = inputtext;
+        currentlyInputtingPlay = "rebound";
+        inputtext = "";
+        app.rebound(82);
       }
-    }
   },
-  blocked_shot()
+  blocked_shot(keyCode, switch_possession)
   {
-      blocker = window.prompt("SHOT BLOCKED BY PLAYER ##");
-      if(!home)
-      {
-          for(index = 0; index < app.home_team.length; index++)
-          {
-              if(blocker == app.home_team[index].number)
-              {
-                app.home_team[index].blk += 1;
-                home_stats.blocks += 1;
-                app.rebound();
-                app.vis_possession();
-                break;
+      var char_entered = String.fromCharCode(keyCode);
+      if(keyCode == 13) char_entered = "ENTER";
+      inputtext = inputtext + char_entered;
+      if(char_entered == "ENTER") {
+          var blocker = inputtext.substring(1,3);
+          if(switch_possession) {
+            home = !home;
+          }
+          if(!home) {
+              for(index = 0; index < app.home_team.length; index++) {
+                  console.log("blocker: " + blocker + " index_num: " + app.vis_team[index].number);
+                  if(blocker == app.home_team[index].number && app.check_in_game(blocker, true)) {
+                    app.home_team[index].blk += 1;
+                    home_stats.blocks += 1;
+                    app.vis_possession();
+                    break;
+                  }
               }
           }
-      }
-      else
-      {
-        for(index = 0; index < app.vis_team.length; index++)
-        {
-            if(blocker == app.vis_team[index].number)
-            {
-              app.vis_team[index].blk += 1;
-              vis_stats.blocks += 1;
-              app.rebound();
-              app.home_possession();
-              break;
+          else {
+            for(index = 0; index < app.vis_team.length; index++) {
+                console.log("blocker: " + blocker + " index_num: " + app.vis_team[index].number);
+                if(blocker == app.vis_team[index].number && app.check_in_game(blocker, false)) {
+                  app.vis_team[index].blk += 1;
+                  vis_stats.blocks += 1;
+                  app.home_possession();
+                  break;
+                }
             }
+          }
+      } else if(char_entered == 'K') {
+          inputvalidator.innerText = "Shot blocked by player ##:";
+      } else if(!isNaN(char_entered) && inputtext.length == 3) {
+          var blocker = inputtext.substring(1,3);
+          var valid_number = false;
+          if(!home) {
+              for(index = 0; index < app.home_team.length; index++) {
+                  if(blocker == app.home_team[index].number && app.check_in_game(blocker, true)) {
+                    // inputvalidator.innerText = "Shot blocked by player #" + blocker + ". Press ENTER to save play.";
+                    join_two_plays = inputtext;
+                    currentlyInputtingPlay = "rebound";
+                    inputtext = "";
+                    app.rebound(82); // 82 is keycode for R
+                    valid_number = true;
+                    break;
+                  }
+              }
+          }
+          else {
+            for(index = 0; index < app.vis_team.length; index++) {
+                if(blocker == app.vis_team[index].number && app.check_in_game(blocker, false)) {
+                  // inputvalidator.innerText = "Shot blocked by player #" + blocker + ". Press ENTER to save play.";
+                  join_two_plays = inputtext;
+                  currentlyInputtingPlay = "rebound";
+                  inputtext = "";
+                  app.rebound(82); // 82 is keycode for R
+                  valid_number = true;
+                  break;
+                }
+            }
+          }
+          if(!valid_number) {
+              inputvalidator.innerText = "Player #" + blocker + " is not in the game. Press ESC/F10 to clear input.";
+          }
       }
-     }
    }
 	 
 }

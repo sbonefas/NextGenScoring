@@ -1,11 +1,10 @@
 html {
 	background-color: #c5050c; /*UW Red*/
 	font-family: "Verlag", "Helvetica Neue", Helvetica, Arial, sans-serif;
-	overflow: hidden;
+	overflow: hidden
 }
 
-/*Main Menu*/
-#welcome {
+#optionsheader {
 	margin: auto;
 	text-align: center;
 	padding: 3%;
@@ -16,7 +15,7 @@ html {
     vertical-align: center;
 }
 
-#menu {
+#options {
 	margin: auto;
 	text-align: left;
 	padding: 3%;
@@ -26,40 +25,22 @@ html {
     vertical-align: center;
 }
 
-.menutext {
+.optionstext {
     margin: auto;
     font-size: 1.2em;
     width: max-content;
     vertical-align: center;
 }
 
-a {
-    color: #000;
-    text-decoration: none;
-    display: block;
-}
-
-a:hover {
-    color: #c5050c; /*UW Red*/
-    text-decoration: none;
-    display: block;
-}
-
-#menu p {
+#options p {
     text-align: center;
 }
 
-.inputcss {
-    margin: auto;
-    font-size: 1.2em;
-    width: max-content;
-    vertical-align: center;
+a {
+    color: white;
+    text-decoration: none;
 }
 
-#errormsg {
-    display: none;
-}
-
-#forgot {
-    display: none;
+a:hover {
+    text-decoration: underline;
 }
