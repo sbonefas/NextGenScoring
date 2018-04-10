@@ -284,7 +284,7 @@ function create_2d_array(num_rows, num_cols) {
  */
 exports.write_player_stats_to_game_file = function(stat_changes, file_name) {
 	if(stat_changes == undefined) throw "No Stat Changes Provided";
-	console.log(stat_changes);  //added stat input checker
+	
 	// Set player's team and player number for stat change
 	var is_home = stat_changes[0];
 	if(!(is_home == 1 || is_home == 0)) {
