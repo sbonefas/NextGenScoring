@@ -275,20 +275,20 @@ function chg(t, player_number, new_player_number){
 }
 
 function inPaint(team){
-	drw.write_team_stats_to_game_file([team,1,0,0,0]);
+	drw.write_team_stats_to_game_file([team,1,0,0,0], test_file_name);
 }
 
 function fastBreak(team){
-	drw.write_team_stats_to_game_file([team,0,1,0,0]);
+	drw.write_team_stats_to_game_file([team,0,1,0,0], test_file_name);
 }
 
 
 function teamTurnover(team){
-	drw.write_team_stats_to_game_file([team,0,0,1,0]);	
+	drw.write_team_stats_to_game_file([team,0,0,1,0], test_file_name);	
 }
 
 function add_team_points(team,numPoints){
-	//drw.write_team_stats_to_game_file([team,0,0,0,numPoints]);
+	drw.write_team_stats_to_game_file([team,numPoints,0,0,0], test_file_name);
 }
 
 /*
