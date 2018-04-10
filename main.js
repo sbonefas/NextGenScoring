@@ -12,10 +12,12 @@ const ipc = electron.ipcMain;
 const dialog = electron.dialog;
 const indiv_stat_headers = ['player_number','fg','fga','m3','3a','ft','fta','reb','ast','pf','tf','blk','trn','stl','pts'];
 const team_stat_headers = ['home/away', 'total_points', 'made_in_paint', 'fast_break', 'team_turnover'];
-
+var Team = require('./Team.js');	//team object import
+var Player = require('./Player.js'); 	//player object import
+var teams = new Array();
 
 let win;
-const TESTING = false;
+const TESTING = true;
 const file_name = 'test_read_game_file';
 const test_file_name = "test_drw_file";
 
@@ -30,8 +32,9 @@ function createWindow() {
 	/** SIMPLE BACKEND TESTING */
 	/** TODO: DELETE WHEN PUT IN TEST SUITE */
 	if(TESTING) {
-		drw.create_game_file(stat_headers, test_file_name, args);
-		drw.read_game_file(test_file_name);
+		//drw.create_game_file(stat_headers, test_file_name, args);
+		//drw.read_game_file(test_file_name);
+		createTeam("Badgers", 001, "Bo Ryan", "I Forgot", "Kohl Center");
 	}
 	win.on('closed', () => {
 		win = null;
@@ -40,6 +43,18 @@ function createWindow() {
 	})
 }
 
+
+function createTeam(name, code, head_coach, asst_coach, stadium){
+	
+	var team = new Team(name, code, head_coach, asst_coach, stadium);
+	team.add_player_to_roster("Frank Kaminsky", 44)
+	teams.push(team);
+	console.log("Team name: " + teams[0].get_name());
+	/*won't freaking work
+	var roster = teams[0].get_active_roster();
+	console.log("Active Roster:" + roster.toString());
+	*/
+}
 
 
 
@@ -272,8 +287,8 @@ function teamTurnover(team){
 	drw.write_team_stats_to_game_file([team,0,0,1,0]);	
 }
 
-function addTeamPoints(team,numPoints){
-	drw.write_team_stats_to_game_file([team,0,0,0,numPoints]);
+function add_team_points(team,numPoints){
+	//drw.write_team_stats_to_game_file([team,0,0,0,numPoints]);
 }
 
 /*
