@@ -1,4 +1,4 @@
-<html>
+<html xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
 	<head>
 		<link rel="icon" href="img/favicon.ico">
 		<link rel="stylesheet" href="css/style.css">
@@ -7,7 +7,65 @@
 
 	<body>
 		<div id = "app">
-            <a href="./mainmenu.html">back to main</a>
+            <!-- Menu Buttons -->
+            <div id="menubuttons">
+                <a href="./mainmenu.html">Back to the Main Menu</a>
+                <a class="help" onclick="help()">Help</a>
+
+                <!-- The Modal -->
+                <div id="myModal" class="modal">
+
+                    <!-- Modal content -->
+                    <div class="modal-content">
+                        <span id="closeModal" class="close">&times;</span>
+                        <h1>HELP MENU: GAMETIME INPUT CODES AND KEYS</h1>
+
+                        <h3>FIELD GOAL CODES</h3>
+                        <p>J - 2- or 3- point shot</br>
+                        Y - 3-point shot</br>
+                        D - Dunk</br>
+                        L - Layup</br>
+                        P - Tip-in</br>
+                        W - Wrong basket (defensive team scores in offensive team basket)
+                        </p>
+
+                        <h3>NON-FIELD GOAL CODES</h3>
+                        <p>E - Free Throw</br>
+                        K - Block</br>
+                        R - Rebound</br>
+                        T - Turnover</br>
+                        A - Assist</br>
+                        S - Steal</br>
+                        F - Foul</br>
+                        O - Timeout
+                        </p>
+
+                        <h3>RESULT CODES</h3>
+                        <p>G or Q - Good field goal (2- or 3-pointer)</br>
+                        Y - Good 3-point field goal</br>
+                        R - Missed field goal (followed by a rebound)</br>
+                        X - Missed 3-point field goal (followed by a rebound)</br>
+                        K - Missed field goal (due to a blocked shot)</br>
+                        P - Made field goal in the paint</br>
+                        F - Made field goal on a fast break</br>
+                        Z - Made field goal in the paint on a fast break</br>
+                        E - Made free throw
+                        </p>
+
+                        <h3>SPECIAL KEYS</h3>
+                        <p>H or V - Select the home team or the visiting team</br>
+                        C - Change time, period, stats</br>
+                        F2 - Make "quick" roster changes to player numbers and names</br>
+                        F6 - Make player substitutions</br>
+                        F7 - Change the clock time</br>
+                        F10 - Clear and do not complete any partially keyed action</br>
+                        SPACEBAR - Start or Stop the Clock</br>
+                        ESC - Return to Main Menu
+                        </p>
+                    </div>
+                </div>
+            </div>
+
 			<!-- SCORE BAR AND CLOCK -->
 			<div id = "scorebar">
 				<div id = "home">
@@ -31,7 +89,6 @@
 					<span onclick="launchClockPrompt()" id = "clockminutes">20</span><span onclick="launchClockPrompt()" id = "clockseparator">:</span><span onclick="launchClockPrompt()" id = "clockseconds">00</span>
 					<h2 class = "clock" onclick="launchClockPrompt()"> {{ period }}</h2>
 					<h3 class = "clock" id="clockisstopped">**Clock is stopped**</h3>
-					<br>
 				</div>
 				<div id = "visitor">
 					<div class = "score">
@@ -84,7 +141,7 @@
                                 <td>{{ player.a3 }}</td>
                                 <td>{{ player.ftm }}</td>
                                 <td>{{ player.fta }}</td>
-                                <td>{{ player.rb }}</td>
+                                <td>{{ player.rb_off + player.rb_def }}</td>
                                 <td>{{ player.as }}</td>
                                 <td>{{ player.to }}</td>
                                 <td>{{ player.pf }}</td>
@@ -100,7 +157,7 @@
                                 <td>{{ home_totals.a3 }}</td>
                                 <td>{{ home_totals.ftm }}</td>
                                 <td>{{ home_totals.fta }}</td>
-                                <td>{{ home_totals.rb }}</td>
+                                <td>{{ home_totals.rb_off + home_totals.rb_def }}</td>
                                 <td>{{ home_totals.as }}</td>
                                 <td>{{ home_totals.to }}</td>
                                 <td>{{ home_totals.pf }}</td>
@@ -140,7 +197,7 @@
                             <td>{{ player.a3 }}</td>
                             <td>{{ player.ftm }}</td>
                             <td>{{ player.fta }}</td>
-                            <td>{{ player.rb }}</td>
+                            <td>{{ player.rb_off + player.rb_def }}</td>
                             <td>{{ player.as }}</td>
                             <td>{{ player.to }}</td>
                             <td>{{ player.pf }}</td>
@@ -156,7 +213,7 @@
                             <td>{{ vis_totals.a3 }}</td>
                             <td>{{ vis_totals.ftm }}</td>
                             <td>{{ vis_totals.fta }}</td>
-                            <td>{{ vis_totals.rb }}</td>
+                            <td>{{ vis_totals.rb_off + vis_totals.rb_def }}</td>
                             <td>{{ vis_totals.as }}</td>
                             <td>{{ vis_totals.to }}</td>
                             <td>{{ vis_totals.pf }}</td>
