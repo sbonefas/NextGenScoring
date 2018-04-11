@@ -26,10 +26,10 @@ function createWindow() {
 	win.loadURL(url.format({
 		pathname: path.join(__dirname, 'index.html'),
 		protocol: 'file',
-		slashes: true		
+		slashes: true
 	}));
 	win.maximize();
-	
+
 	/** SIMPLE BACKEND TESTING */
 	/** TODO: DELETE WHEN PUT IN TEST SUITE */
 	if(TESTING) {
@@ -39,14 +39,14 @@ function createWindow() {
 	}
 	win.on('closed', () => {
 		win = null;
-		drw.delete_file(test_file_name);	
+		drw.delete_file(test_file_name);
 		app.quit();
 	})
 };
 
 
 function createTeam(name, code, head_coach, asst_coach, stadium){
-	
+
 	var team = new Team(name, code, head_coach, asst_coach, stadium);
 	team.add_player_to_roster("Frank Kaminsky", 44, "center");
 	teams.push(team);
@@ -65,22 +65,22 @@ function createTeam(name, code, head_coach, asst_coach, stadium){
 
 
 /**
- * Sends data from the front end to the back end. 
- * 
+ * Sends data from the front end to the back end.
+ *
  * INPUT HOLDS ARGUMENTS FROM FRONTEND
  * FORMAT:
- *	 
- * FOR FIELD GOALS: [PLAY_CODE, PLAYER_NUMBER, RESULT_CODE (R FOR OFF REBOUND, D FOR DEF REBOUND), REBOUND/ASSIST/BLOCK_PLAYER (REBOUND IF RESULT_CODE = 'R or X or D' / BLOCK IF RESULT_CODE = 'K' / ASSIST IF ANYTHING ELSE), HOME/AWAY]
- *                  [    0    ,       1      ,                    2                              ,                                                             3                                                              ,     4    ]	
  *
- *                                               
+ * FOR FIELD GOALS: [PLAY_CODE, PLAYER_NUMBER, RESULT_CODE (R FOR OFF REBOUND, D FOR DEF REBOUND), REBOUND/ASSIST/BLOCK_PLAYER (REBOUND IF RESULT_CODE = 'R or X or D' / BLOCK IF RESULT_CODE = 'K' / ASSIST IF ANYTHING ELSE), HOME/AWAY]
+ *                  [    0    ,       1      ,                    2                              ,                                                             3                                                              ,     4    ]
+ *
+ *
  * FOR FREETHROWS: [E, PLAYER_NUMBER, RESULT_CODE, REBOUND_PLAYER_NUMBER (IF RESULT_CODE IS R/D), HOME/AWAY]
  *
  * FOR REBOUNDS/ASSISTS/FOULS/TURNOVERS/STEALS: [PLAY_CODE, PLAYER_NUMBER OR M (FOR TEAM TURNOVER), HOME/AWAY]
- *  
+ *
  * FOR CHANGING JERSEY: [F2, PLAYER_NUMBER, NEW_PLAYER_NUMBER, HOME/AWAY]
  *
- * FOR BLOCKS: [K, PLAYER_NUMBER, REBOUND?]				
+ * FOR BLOCKS: [K, PLAYER_NUMBER, REBOUND?]
  *
  * PLAYER STATARRAY GETS SUBMITTED TO GAME FILE
  * FORMAT:
@@ -90,8 +90,8 @@ function createTeam(name, code, head_coach, asst_coach, stadium){
  * [HOME/AWAY, PLAYER_NUMBER, FIELDGOAL, FIELDGOAL_ATTEMPT, MADE_3, 3_ATTEMPT, FREETHROW, FREETHROW_ATTEMPT, REBOUND, ASSIST, PERSONAL_FOUL, TECHNICAL_FOUL, BLOCK, TURNOVER, STEAL, POINTS]
  * [    0    ,       1      ,     2    ,         3        ,    4  ,     5    ,     6    ,         7        ,    8   ,   9   ,       10     ,      11       ,  12  ,    13   ,  14  ,   15  ]
  *
- * 
- * 
+ *
+ *
  * TEAM STATARRY FORMAT:
  *
  *
@@ -105,17 +105,17 @@ function createTeam(name, code, head_coach, asst_coach, stadium){
  *
  */
 
- 
-function addPlay(keystrokes){ 
+
+function addPlay(keystrokes){
 	var statArray = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 	var input = keystrokes.split(/ /);
 	if(TESTING) console.log(input);
-		
+
 	//input parsing
 	statArray[1] = input[1];	//add player's number
 	var team = input[input.length-1];
 	var actingPlayer;
-	
+
 	if (team === 'h')
 		statArray[0] = 1;
 	else if (team === 'v')
@@ -128,16 +128,16 @@ function addPlay(keystrokes){
 		case 'p':
 		case 'l':
 		case 'd':
-			
+
 			//fieldgoal attempt cases
-			
+
 			statArray[3] = 1;	//fieldgoal attempt
 			if (team != input[3]) actingPlayer = input[3];	//if the 4th arg in input is not the team, it must be a stealing/rebounding/etc. player
 			switch(input[2]){
 				case 'g' || 'G' || 'q' || 'Q':
 					statArray[2] = 1;	//fieldgoal
-					if (input[3] === 'a') 
-					{	
+					if (input[3] === 'a')
+					{
 					assist(statArray[0], actingPlayer);	//If there's an assist, record it
 					}
 					statArray[15] = 2;
@@ -145,7 +145,7 @@ function addPlay(keystrokes){
 				case 'y':
 					statArray[2] = 1;	//fieldgoal
 					statArray[4] = 1;	//made 3-pointer
-					if (input[3] != '') 
+					if (input[3] != '')
 					{
 						assist(statArray[0], actingPlayer);	//If there's an assist, record it
 					}
@@ -175,21 +175,21 @@ function addPlay(keystrokes){
 					inPaint(statArray[0]);
 					fastBreak(statArray[0]);
 					statArray[15] = 2;
-					break;				
+					break;
 			}
 			break;
-			
+
 		case 'e':
-			
+
 			//freethrow attempt cases
-			
-			statArray[7] = 1; //freethrow attempt	
-			if (input[2] === 'e') 
+
+			statArray[7] = 1; //freethrow attempt
+			if (input[2] === 'e')
 			{
 				statArray[6] = 1;	//good freethrow, no rebound
 				statArray[15] = 1;
 			}
-			else if (input[2] === 'r')	
+			else if (input[2] === 'r')
 			{
 				actingPlayer = input[3];
 				rebound(statArray[0], actingPlayer);	//offensive rebound
@@ -204,7 +204,7 @@ function addPlay(keystrokes){
 			rebound(statArray[0], input[1]);
 			return;
 		case 'a':
-			assist(statArray[0], input[1]); 
+			assist(statArray[0], input[1]);
 			return;
 		case 'f':
 			statArray[10] = 1;	//personal foul
@@ -213,7 +213,7 @@ function addPlay(keystrokes){
 			if (input[1] == 'm'){
 				teamTurnover(statArray[0]);
 				return;
-			}		
+			}
 			statArray[13] = 1; //turnover
 			break;
 		case 's':
@@ -226,13 +226,13 @@ function addPlay(keystrokes){
 				actingPlayer = input[3];
 				rebound(statArray[0],actingPlayer);
 				//break;
-			} 
+			}
 			else if (input[2] === 'd')
 			{
 				actingPlayer = input[3];
 				rebound(statArray[0],actingPlayer,1);
 				//break;
-			}	
+			}
 			break;
 		case 'f2':
 			chg(input[input.length-1], input[1], input[2]);
@@ -241,15 +241,15 @@ function addPlay(keystrokes){
 	console.log("in addPlay: " + statArray);
 	if (statArray[15] != 0) add_team_points(statArray[0],statArray[15]);
 	drw.write_player_stats_to_game_file(statArray, test_file_name);
-} 
- 
- 
-/*	
+}
+
+
+/*
  *	SUBPLAY FUNCTIONS
  *	CALLED BY ADDPLAY()
  *
- */ 
- 
+ */
+
 function rebound(t, player_number, def_rebound){
 	if (def_rebound != null){
 		console.log("Changing team");
@@ -259,10 +259,10 @@ function rebound(t, player_number, def_rebound){
 	var statArray = [t, player_number,0,0,0,0,0,0,1,0,0,0,0,0,0,0];
 	drw.write_player_stats_to_game_file(statArray, test_file_name);
 }
- 
+
 function assist(t, player_number){
 	var statArray = [t, player_number,0,0,0,0,0,0,0,1,0,0,0,0,0,0];
-	drw.write_player_stats_to_game_file(statArray, test_file_name);	
+	drw.write_player_stats_to_game_file(statArray, test_file_name);
 }
 
 function block(t, player_number){
@@ -270,14 +270,14 @@ function block(t, player_number){
 	var activeTeam;
 	if (t === 1) activeTeam = 0;
 	else if (t === 0) activeTeam = 1;
-	
+
 	var statArray = [activeTeam, player_number,0,0,0,0,0,0,0,0,0,1,0,0,0,0];
-	drw.write_player_stats_to_game_file(statArray, test_file_name);	
+	drw.write_player_stats_to_game_file(statArray, test_file_name);
 }
 
 function chg(t, player_number, new_player_number){
 	var playerSub = [t, "CHG", player_number, new_player_number];
-	drw.write_player_stats_to_game_file(statArray, test_file_name);	
+	drw.write_player_stats_to_game_file(statArray, test_file_name);
 }
 
 function inPaint(team){
@@ -290,7 +290,7 @@ function fastBreak(team){
 
 
 function teamTurnover(team){
-	drw.write_team_stats_to_game_file([team,0,0,0,1], test_file_name);	
+	drw.write_team_stats_to_game_file([team,0,0,0,1], test_file_name);
 }
 
 function add_team_points(team,numPoints){
@@ -302,10 +302,10 @@ function add_team_points(team,numPoints){
  *
  *	ARGS FORMAT:
  *	[HOME_TEAM, AWAY_TEAM, HOME_TEAM_CODE, AWAY_TEAM_CODE, HOME_TEAM_RECORD, AWAY_TEAM_RECORD, START_TIME, STADIUM, STADIUM_CODE, CONF_GAME?, [SCHEDULE_NOTES], QUARTERS/HALVES?, MIN_PER_PERIOD, MIN_IN_OT, [OFFICIALS], [BOX_COMMENTS]]
- *	[    0    ,     1    ,       2       ,        3      ,        4        ,        5        ,      6    ,    7   ,      8      ,     9     ,        10       ,        11       ,        12     ,     13   ,      14    ,       15      ] 
- * 
+ *	[    0    ,     1    ,       2       ,        3      ,        4        ,        5        ,      6    ,    7   ,      8      ,     9     ,        10       ,        11       ,        12     ,     13   ,      14    ,       15      ]
+ *
  */
- 
+
 function initGame(args){
 	try {
 		drw.create_game_file(indiv_stat_headers, team_stat_headers, test_file_name, args);
@@ -313,16 +313,16 @@ function initGame(args){
 		console.log("Exception in creating game file: " + e);
 	}
 }
- 
- 
- 
+
+
+
 /*
  *	IPC EVENT HANDLER
  *
  */
- 
 
-ipc.on('add-play', function (event,keystrokes){ 
+
+ipc.on('add-play', function (event,keystrokes){
 	try {
 		console.log("adding play: " + keystrokes);
 		addPlay(keystrokes);
@@ -335,7 +335,7 @@ ipc.on('add-play', function (event,keystrokes){
 	event.sender.send('add-play-success',keystrokes);
 });
 
-ipc.on('init-game', function (event,args){ 
+ipc.on('init-game', function (event,args){
 	try {
 		initGame(args);
 	} catch (e) {
@@ -346,8 +346,8 @@ ipc.on('init-game', function (event,args){
 	}
 	event.sender.send('init-game-success',args);
 });
- 
-ipc.on('get-data', function(event){ 
+
+ipc.on('get-data', function(event){
 	try {
 		var data = [];
 		data = drw.read_game_file(test_file_name);
@@ -367,5 +367,5 @@ app.on('ready', createWindow);
 app.on('activate', () => {
 	if (win === null) {
 		createWindow();
-	}	
+	}
 })

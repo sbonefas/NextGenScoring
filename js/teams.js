@@ -1,3 +1,19 @@
+/*
+  player-format:
+        object: array[name: "Giannis", number: 34, position: "everything"]
+        Joe Krabbenhoft, Dean Oliver
+*/
+const electron = require("electron");
+const ipc = electron.ipcRenderer;
+const Team = require('./Team.js'); //imports stuff from the Team.js backend file
+const Player = require('./Player.js'); //imports stuff from the Player.js backend file
+/*
+
+var team = new Team(name, code, coach, assistants, home_stadium, team_roster)
+when getting a team,
+
+*/
+
 function help() {
     // Get the modal
     var modal = document.getElementById('myModal');
@@ -34,24 +50,21 @@ function help() {
         }
     }
 }
-/*
-  player-format:
-        object: array[name: "Giannis", number: 34, position: "everything"]
-        Joe Krabbenhoft, Dean Oliver
-*/
+
+
 var new_team = {};
 var app = new Vue({
   el: '#team_app',
   data: {
     message: "SELECT A TEAM",
     teams: [
-            {name: "WISCONSIN", team_code: "WISC", head_coach: "Greg Gard", assistant: "Howard Moore, Joe Krabbenhoft, Dean Oliver", team_roster: [], home_stadium: "Kohl Center"},
-            {name: "MARQUETTE", team_code: "", head_coach: "", assistant: "", team_roster: [], home_stadium: ""},
-            {name: "MINNESOTA", team_code: "", head_coach: "", assistant: "", team_roster: [], home_stadium: ""},
-            {name: "PURDUE", team_code: "", head_coach: "", assistant: "", team_roster: [], home_stadium: ""},
-            {name: "MARYLAND", team_code: "", head_coach: "", assistant: "", team_roster: [], home_stadium: ""},
-            {name: "NORTHWESTERN", team_code: "", head_coach: "", assistant: "", team_roster: [], home_stadium: ""},
-            {name: "ILLINOIS", team_code: "", head_coach: "", assistant: "", team_roster: [], home_stadium: ""}
+            {name: "WISCONSIN", team_code: "WISC", head_coach: "Greg Gard", assistants: "Howard Moore, Joe Krabbenhoft, Dean Oliver",  home_stadium: "Kohl Center", team_roster: []},
+            {name: "MARQUETTE", team_code: "", head_coach: "", assistants: "", home_stadium: "", team_roster: []},
+            {name: "MINNESOTA", team_code: "", head_coach: "", assistants: "",  home_stadium: "", team_roster: []},
+            {name: "PURDUE", team_code: "", head_coach: "", assistants: "",  home_stadium: "", team_roster: []},
+            {name: "MARYLAND", team_code: "", head_coach: "", assistants: "",  home_stadium: "", team_roster: []},
+            {name: "NORTHWESTERN", team_code: "", head_coach: "", assistants: "",  home_stadium: "", team_roster: []},
+            {name: "ILLINOIS", team_code: "", head_coach: "", assistants: "",  home_stadium: "", team_roster: []}
           ],
     roster_options: [
       {name: "<ENTER> - EDIT TEAM"},
@@ -93,7 +106,7 @@ var app = new Vue({
         // See laptop for team edit screen
         // Might require loading from backend
       }
-      else {
+      else if(document.getElementById("searched") == document.activeElement){
         app.run_search();
       }
     },
@@ -103,9 +116,9 @@ var app = new Vue({
       //team_name = window.prompt("Enter a new team name").toUpperCase();
       document.getElementById("team_name_entry").showModal();
 
-      if(team_name != "")
+      if(new_team.name != "")
       {
-        team.name = team_name;
+        team.name = new_team.name;
         var is_existing = false;
         for(var index = 0; index < app.teams.length; index++)
         {
@@ -142,8 +155,15 @@ var app = new Vue({
           {
             if(app.teams[index].name == app.selected_team.name)
             {
-              app.teams.splice(index, 1);
               //UPDATE BACKEND HERE
+              /*
+              //Testing code to delete Nate's created test team
+              // Create team object to send to the backend to delete
+              var del_team = new Team("Badgers", "WIS", "Bo Ryan", "I Forgot", "Kohl Center");
+              // Send the request to delete the team
+              ipc.send('delete-team', del_team);
+              */
+              app.teams.splice(index, 1);
               break;
             }
           }
@@ -191,6 +211,7 @@ var app = new Vue({
     // Sets team name when entered in
     set_team_name : function(entered_name) {
       this.new_team = {name: entered_name, team_code: "", head_coach: "", assistant: "", team_roster: [], home_stadium: ""};
+      document.getElementById("team_name_entry").close();
       return team;
     }
   }
