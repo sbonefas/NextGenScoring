@@ -24,7 +24,7 @@ const test_file_name = "test_drw_file";
 function createWindow() {
 	win = new BrowserWindow();
 	win.loadURL(url.format({
-		pathname: path.join(__dirname, 'teams.html'),
+		pathname: path.join(__dirname, 'index.html'),
 		protocol: 'file',
 		slashes: true
 	}));
