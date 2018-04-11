@@ -174,13 +174,8 @@ function addPlay(keystrokes){
 				case 'z':
 					inPaint(statArray[0]);
 					fastBreak(statArray[0]);
-//<<<<<<< HEAD
-	//				statArray[15] = 2;
-		//			break;
-//=======
 					statArray[16] = 2;
 					break;
-//>>>>>>> 3ff4dc4e78e3f5742c8831bfe47fb779c295d34c
 			}
 			break;
 
@@ -220,13 +215,8 @@ function addPlay(keystrokes){
 			if (input[1] == 'm'){
 				teamTurnover(statArray[0]);
 				return;
-//<<<<<<< HEAD
-	//		}
-		//	statArray[13] = 1; //turnover
-//=======
 			}
 			statArray[14] = 1; //turnover
-//>>>>>>> 3ff4dc4e78e3f5742c8831bfe47fb779c295d34c
 			break;
 		case 's':
 			statArray[15] = 1;	//steal
@@ -276,13 +266,8 @@ function rebound(t, player_number, def_rebound){
 }
 
 function assist(t, player_number){
-//<<<<<<< HEAD
-//	var statArray = [t, player_number,0,0,0,0,0,0,0,1,0,0,0,0,0,0];
-//	drw.write_player_stats_to_game_file(statArray, test_file_name);
-//=======
 	var statArray = [t, player_number,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0];
 	drw.write_player_stats_to_game_file(statArray, test_file_name);
-//>>>>>>> 3ff4dc4e78e3f5742c8831bfe47fb779c295d34c
 }
 
 function block(t, player_number){
@@ -290,15 +275,9 @@ function block(t, player_number){
 	var activeTeam;
 	if (t === 1) activeTeam = 0;
 	else if (t === 0) activeTeam = 1;
-//<<<<<<< HEAD
-
-//	var statArray = [activeTeam, player_number,0,0,0,0,0,0,0,0,0,1,0,0,0,0];
-//	drw.write_player_stats_to_game_file(statArray, test_file_name);
-//=======
 
 	var statArray = [activeTeam, player_number,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0];
 	drw.write_player_stats_to_game_file(statArray, test_file_name);
-//>>>>>>> 3ff4dc4e78e3f5742c8831bfe47fb779c295d34c
 }
 
 function chg(t, player_number, new_player_number){
