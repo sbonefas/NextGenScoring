@@ -13,10 +13,10 @@ const team3_content = ['new_name', 'new_code',
 					   'new_stadium'];
 
 // Team Strings
-const team0_string = "name,code,stadium";
-const team1_string = "name,code,[[[player1/player2/player3]]],stadium";
-const team2_string = "new_name,new_code,new_stadium";
-const team3_string = "new_name,new_code,[[[new_player0/new_player1/new_player2]]],new_stadium";
+const team0_string = "name%!_a)#$d#code%!_a)#$d#stadium";
+const team1_string = "name%!_a)#$d#code%!_a)#$d#u^#q@3.>{player1@i+b&*-~rplayer2@i+b&*-~rplayer3:p2$%_1=*%!_a)#$d#stadium";
+const team2_string = "new_name%!_a)#$d#new_code%!_a)#$d#new_stadium";
+const team3_string = "new_name%!_a)#$d#new_code%!_a)#$d#u^#q@3.>{new_player0@i+b&*-~rnew_player1@i+b&*-~rnew_player2:p2$%_1=*%!_a)#$d#new_stadium";
 
 test();
 
