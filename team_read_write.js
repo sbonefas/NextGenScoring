@@ -113,6 +113,7 @@ exports.get_all_teams = function() {
 	file_names = fs.readdirSync(team_directory);
 	teams = Array(file_names.length);
 
+	// Convert file names in teams to contents
 	for(var el_no = 0; el_no < file_names.length; el_no++) {
 		teams[el_no] = exports.read_team(file_names[el_no].replace(".txt",""));
 	}
@@ -120,6 +121,13 @@ exports.get_all_teams = function() {
 	return teams;
 }
 
+/**
+ * Converts a given array representation of a team and converts
+ * it to a string
+ *
+ * @param team_arr array representation of team
+ * @return string representation of team
+ */
 function team_to_string(team_arr) {
 	var team_str = "";
 
@@ -130,7 +138,7 @@ function team_to_string(team_arr) {
 											   .replace(/,/g,"/") + "]]]";
 		}
 		else {
-			// Field -> String
+			// Element -> String
 			team_str += String(team_arr[el_no]);
 		}
 		if(el_no != team_arr.length - 1) team_str += ",";
@@ -139,9 +147,17 @@ function team_to_string(team_arr) {
 	return team_str;
 }
 
+/**
+ * Converts a given string representation of a team and converts
+ * it to an array
+ *
+ * @param team_str string representation of team
+ * @return array representation of team
+ */
 function string_to_team(team_str) {
 	var team_arr = team_str.split(",");
 
+	// Convert Sub Arrays
 	for(el_no = 0; el_no < team_arr.length; el_no++) {
 		if(team_arr[el_no].substring(0,3) == "[[[") {
 			team_arr[el_no] = team_arr[el_no].replace('[[[','')
@@ -155,6 +171,10 @@ function string_to_team(team_str) {
 
 
 
+/***************
+ * FOR TESTING *
+ ***************/
+ 
 exports.test_team_to_string = function(team_array) {
 	return team_to_string(team_array);
 }
