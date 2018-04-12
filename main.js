@@ -48,7 +48,7 @@ function createWindow() {
 function createTeam(name, code, head_coach, asst_coach, stadium){
 
 	var team = new Team(name, code, head_coach, asst_coach, stadium);
-	team.add_player_to_roster("Frank Kaminsky", 44, "center");
+	team.add_player_to_roster(new Player("Frank Kaminsky", 44, "center"));
 	teams.push(team);
 	console.log("Team name: " + teams[0].get_name());
 	console.log("Team code:" + teams[0].get_code());
@@ -59,6 +59,11 @@ function createTeam(name, code, head_coach, asst_coach, stadium){
 	for (var i = 0; i < teams[0].get_active_roster().length; i++){
 		var player = teams[0].get_active_roster()[i];
 		console.log("[" + i + "] " + player.get_name() + " #" + player.get_number() + " " + player.get_position() + "\n");
+	}
+	try {
+		team.remove_player_from_roster("Frank Kaminsky", 44);
+	} catch (e) {
+		console.log("Error: " + e);
 	}
 };
 
@@ -318,8 +323,6 @@ function initGame(args){
 		console.log("Exception in creating game file: " + e);
 	}
 }
-
-
 
 /*
  *	IPC EVENT HANDLER

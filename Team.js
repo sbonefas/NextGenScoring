@@ -14,7 +14,7 @@ module.exports = function (name, code, head_coach, asst_coach, stadium, roster){
 	this.active_roster = [];
 
 	if (roster != null) this.active_roster = roster;
-
+	
 	this.get_name = function(){
 		return this.name;
 	}
@@ -54,18 +54,29 @@ module.exports = function (name, code, head_coach, asst_coach, stadium, roster){
 	this.set_stadium = function(stadium){
 		this.stadium = stadium;
 	}
-
-	this.add_player_to_roster = function(name, number, position){
-		var p = new Player(name, number, position);
-		this.active_roster.push(p);
-	}
-
-	this.remove_player_from_roster = function(name, number, position){
-		var p = new Player(name, number, position);
-		var index = this.active_roster.indexOf(p);
-		if (index > -1){
-			this.active_roster.splice(p,1);
+	
+	this.add_player_to_roster = function(player){
+		//var p = new Player(name, number, position);
+		
+		if (player.get_name() == null || player.get_number() == null || player.get_position() == null)
+			throw "add_player_to_roster Error: object passed is not a player";
+		
+		this.active_roster.push(player);
+	}	
+	
+	this.remove_player_from_roster = function(name, number){
+		if (name == null || number == null)
+			throw "remove_player_to_roster Error: objects passed are not valid";
+		
+		for (var i = 0; i < this.active_roster.length; i++){
+			var p = this.active_roster[i];
+			if (p.get_name() == name && p.get_number() == number){
+				this.active_roster.splice(p,1);
+				console.log("removed player: " + p.get_name());
+				return;
+			}			
 		}
+		throw "remove_player_from_roster Error: player could not be found: (name: " + name + " number: " + number + ")\n";
 	}
 
 	this.get_active_roster = function(){

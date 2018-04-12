@@ -9,7 +9,7 @@
  * public functions: 												*
  * 		1. delete_file(file_name)									*
  *			- deletes the file with the given filename 				*
- *		2. edit_game_data_location_path(new_path)					*
+ *		2. edit_game_directory(new_path)							*
  *			- changes the directory that game files are stored		*
  *		3. create_game_file(individual_stat_labels, 				*
  *							team_stat_labels, file_name)			*
@@ -28,7 +28,7 @@
 const fs = require("fs");	//node.js filesystem
 
 /** path to the folder where data is kept */
-var game_data_location_path = "data/";
+var game_directory = "data/";
 
 /**
  * Returns the filepath of a file with a given name
@@ -37,7 +37,7 @@ var game_data_location_path = "data/";
  * @return Filepath of the file
  */
 function get_file_path(file_name) {
-	return game_data_location_path + file_name + '.txt';
+	return game_directory + file_name + '.txt';
 }
 
 exports.delete_file = function(file_name) {
@@ -52,9 +52,9 @@ exports.delete_file = function(file_name) {
  * @return True if path is successfully edited. False if the directory path
  * does not exist.
  */
-exports.edit_game_data_location_path = function(new_path) {
+exports.edit_game_directory = function(new_path) {
 	if(!fs.existsSync(new_path)) return false;
-	game_data_location_path = new_path;
+	game_directory = new_path;
 	return true;
 }
 
