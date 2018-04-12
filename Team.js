@@ -62,9 +62,9 @@ module.exports = function (name, code, head_coach, asst_coach, stadium, roster){
 
 	this.remove_player_from_roster = function(name, number, position){
 		var p = new Player(name, number, position);
-		var index = active_roster.indexOf(p);
+		var index = this.active_roster.indexOf(p);
 		if (index > -1){
-			active_roster.splice(p,1);
+			this.active_roster.splice(p,1);
 		}
 	}
 
