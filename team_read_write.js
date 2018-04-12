@@ -30,6 +30,12 @@ const util = require("util");	//node.js utility module
 /** path to the folder where team data is kept */
 var team_directory = "team/";
 
+/** comma, open array, and close array delimiter replacements */
+const comma_replacement  = "%!_a)#$d#";
+const open_replacement   = "u^#q@3.>{";
+const close_replacement  = ":p2$%_1=*";
+const subarray_delimiter = "@i+b&*-~r";
+
 /** 
  * Returns the filepath of a file with a given name
  *
@@ -134,16 +140,16 @@ function team_to_string(team_arr) {
 	for(var el_no = 0; el_no < team_arr.length; el_no++) {
 		if(util.isArray(team_arr[el_no])) {
 			// Sub Array -> String
-			team_str += "[[[" + team_arr[el_no].toString()
-											   .replace(/,/g,"/") + "]]]";
+			team_str += open_replacement + team_arr[el_no].toString()
+											   .replace(/,/g,subarray_delimiter) + close_replacement;
 		}
 		else {
 			// Element -> String
 			team_str += String(team_arr[el_no]);
 		}
-		if(el_no != team_arr.length - 1) team_str += ",";
+		if(el_no != team_arr.length - 1) team_str += comma_replacement;
 	}
-
+	
 	return team_str;
 }
 
@@ -155,14 +161,14 @@ function team_to_string(team_arr) {
  * @return array representation of team
  */
 function string_to_team(team_str) {
-	var team_arr = team_str.split(",");
+	var team_arr = team_str.split(comma_replacement);
 
 	// Convert Sub Arrays
 	for(el_no = 0; el_no < team_arr.length; el_no++) {
-		if(team_arr[el_no].substring(0,3) == "[[[") {
-			team_arr[el_no] = team_arr[el_no].replace('[[[','')
-											 .replace(']]]','')
-											 .split("/");
+		if(team_arr[el_no].substring(0,open_replacement.length) == open_replacement) {
+			team_arr[el_no] = team_arr[el_no].replace(open_replacement,'')
+											 .replace(close_replacement,'')
+											 .split(subarray_delimiter);
 		}
 	}
 
