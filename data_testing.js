@@ -15,12 +15,12 @@ const footer = ['test', 1,'test2/test3/4', 'test5'];
 /** UNIT TEST DATA */
 const test_stats = "HOME\nnumber,fg,fga,pts\n"
 + "30,2,4,6\n31,3,3,7\n44,5,7,12\n02,1,5,2\n"
-+ ";AWAY\nnumber,fg,fga,pts\n"
++ "/Od@&?l#iAWAY\nnumber,fg,fga,pts\n"
 + "35,1,4,2\n36,2,3,6\n45,6,7,12\n03,4,5,8\n"
-+ ";TEAM\nteam fouls,timeouts left\n"
++ "/Od@&?l#iTEAM\nteam fouls,timeouts left\n"
 + "9,4\n"
 + "8,3";
-const test_stats_with_footer = test_stats + "\n;FOOTER\n" + footer.toString();
+const test_stats_with_footer = test_stats + "\n/Od@&?l#iFOOTER\n" + footer.toString();
 const test_team_stats = "HOME\nnumber,fg,fga,pts\n30,2,4,6\n\
 31,3,3,7\n44,5,7,12\n02,1,5,2";
 const test_stats_array = [ 
@@ -103,9 +103,9 @@ function test_delete_file() {
 //done
 function test_create_game_file() {
 	var contents = "HOME\nnumber,fg,fga,pts\n"
-					+ ";AWAY\nnumber,fg,fga,pts\n"
-					+ ";TEAM\nteam fouls,timeouts left\n0,0\n0,0\n"
-					+ ";FOOTER\n" + footer.toString();
+					+ "/Od@&?l#iAWAY\nnumber,fg,fga,pts\n"
+					+ "/Od@&?l#iTEAM\nteam fouls,timeouts left\n0,0\n0,0\n"
+					+ "/Od@&?l#iFOOTER\n" + footer.toString();
 	drw.create_game_file(individual_stat_labels, team_stat_labels, file_name, footer);
 	if(fs.readFileSync(file_path, 'utf8') == contents) test_success("test_create_game_file");
 	else test_fail("test_create_game_file");
@@ -114,9 +114,9 @@ function test_create_game_file() {
 //done
 function test_initial_game_file_contents() {
 	var contents = "HOME\nnumber,fg,fga,pts\n"
-					+ ";AWAY\nnumber,fg,fga,pts\n"
-					+ ";TEAM\nteam fouls,timeouts left\n0,0\n0,0\n"
-					+ ";FOOTER\n" + footer.toString();
+					+ "/Od@&?l#iAWAY\nnumber,fg,fga,pts\n"
+					+ "/Od@&?l#iTEAM\nteam fouls,timeouts left\n0,0\n0,0\n"
+					+ "/Od@&?l#iFOOTER\n" + footer.toString();
 	if(drw.test_get_initial_game_file_contents(individual_stat_labels, team_stat_labels, footer) == contents) test_success("test_initial_game_file_contents");
 	else test_fail("test_initial_game_file_contents");
 }
@@ -124,9 +124,9 @@ function test_initial_game_file_contents() {
 //done
 function test_get_game_file_contents() {
 	var contents = "HOME\nnumber,fg,fga,pts\n"
-					+ ";AWAY\nnumber,fg,fga,pts\n"
-					+ ";TEAM\nteam fouls,timeouts left\n0,0\n0,0\n"
-					+ ";FOOTER\n" + footer.toString();
+					+ "/Od@&?l#iAWAY\nnumber,fg,fga,pts\n"
+					+ "/Od@&?l#iTEAM\nteam fouls,timeouts left\n0,0\n0,0\n"
+					+ "/Od@&?l#iFOOTER\n" + footer.toString();
 	if(drw.test_get_game_file_contents(file_path) == contents) test_success("test_get_game_file_contents");
 	else test_fail("test_get_game_file_contents");
 }

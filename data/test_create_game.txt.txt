@@ -1,4 +1,0 @@
-HOME
-player_name,player_number,fg,fga,m3,3a,ft,fta,reb,ast,pf,blk,trn,stl
-;AWAY
-player_name,player_number,fg,fga,m3,3a,ft,fta,reb,ast,pf,blk,trn,stl

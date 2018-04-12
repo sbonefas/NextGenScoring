@@ -28,6 +28,10 @@ const fs = require("fs");	//node.js filesystem
 /** path to the folder where data is kept */
 var game_directory = "data/";
 
+/** comma and semicolon replacements */
+const comma_replacement		= "(&h#@d!`_";
+const semicolon_replacement = "/Od@&?l#i";
+
 /** 
  * Returns the filepath of a file with a given name
  *
@@ -119,12 +123,12 @@ function get_initial_game_file_contents(individual_stat_labels, team_stat_labels
 		if(label_idx != 0) contents += ",";
 		contents += individual_stat_labels[label_idx];
 	}
-	contents += "\n;AWAY\n";
+	contents += "\n" + semicolon_replacement + "AWAY\n";
 	for(var label_idx = 0; label_idx < individual_stat_labels.length; label_idx++) {
 		if(label_idx != 0) contents += ",";
 		contents += individual_stat_labels[label_idx];
 	}
-	contents += "\n;TEAM\n";
+	contents += "\n" + semicolon_replacement + "TEAM\n";
 	for(var label_idx = 0; label_idx < team_stat_labels.length; label_idx++) {
 		if(label_idx != 0) contents += ",";
 		contents += team_stat_labels[label_idx];
@@ -136,7 +140,7 @@ function get_initial_game_file_contents(individual_stat_labels, team_stat_labels
 			contents += '0';
 		}
 	}
-	contents += "\n;FOOTER\n";
+	contents += "\n" + semicolon_replacement + "FOOTER\n";
 	contents += footer.toString();
 
 	return contents;
@@ -164,7 +168,7 @@ exports.read_game_file = function(file_name) {
 	}
 
 	// Convert to three separate strings. Cut off last newline.
-	var stats_string_arr = file_contents.split(';');
+	var stats_string_arr = file_contents.split(semicolon_replacement);
 	stats_string_arr[0] = stats_string_arr[0].substring(0, stats_string_arr[0].length-1);
 	stats_string_arr[1] = stats_string_arr[1].substring(0, stats_string_arr[1].length-1);
 	stats_string_arr[2] = stats_string_arr[2].substring(0, stats_string_arr[2].length-1);
@@ -307,7 +311,7 @@ exports.write_player_stats_to_game_file = function(stat_changes, file_name) {
 	var current_team_stats = edit_current_stats(current_game_stats[1-is_home], stat_changes);
 	current_game_stats[1-is_home] = current_team_stats;
 
-	return overwrite_game_file(game_array_to_string(current_game_stats) + "\n;" +
+	return overwrite_game_file(game_array_to_string(current_game_stats) + "\n" + semicolon_replacement +
 							   get_game_information_string(file_name), file_name);
 }
 
@@ -346,7 +350,7 @@ exports.write_team_stats_to_game_file = function(stat_changes, file_name) {
 	}
 	current_game_stats[3 - is_home][1] = team_stats;
 
-	return overwrite_game_file(game_array_to_string(current_game_stats) + "\n;" +
+	return overwrite_game_file(game_array_to_string(current_game_stats) + "\n" + semicolon_replacement+
 							   get_game_information_string(file_name), file_name);
 
 }
@@ -405,10 +409,10 @@ function game_array_to_string(game_array) {
 			}
 			if(player_idx != game_array[team_idx].length-1) content += "\n";
 		}
-		if(team_idx == 0) content += "\n;AWAY\n";
+		if(team_idx == 0) content += "\n" + semicolon_replacement + "AWAY\n";
 	}
 
-	content += "\n;TEAM\n";
+	content += "\n" + semicolon_replacement + "TEAM\n";
 	for(var stat_idx = 0; stat_idx < game_array[2][0].length; stat_idx++) {
 		if(stat_idx != 0) content += ",";
 		content += game_array[2][0][stat_idx];
@@ -459,7 +463,7 @@ function get_game_information_string(file_name) {
 	}
 
 	// Get footer from stats_string_arr
-	var stats_string_arr = file_contents.split(';');
+	var stats_string_arr = file_contents.split(semicolon_replacement);
 	var game_information = stats_string_arr[3];
 
 	return game_information;
