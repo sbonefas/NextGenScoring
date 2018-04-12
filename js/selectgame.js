@@ -3,13 +3,13 @@ var app = new Vue({
   data: {
     message: "SELECT A GAME",
     games: [
-            {date: "April 12, 2018", time: "12:00pm", site: "Madison, WI", site_code: "Home", league: true, schedule_note: "On time",
+            {date: "2018-04-12", time: "17:00", site: "Madison, WI", site_code: "Home", league: true, schedule_note: "On time",
             quarters: true, min_period: 20, min_ot: 5, vis_team: "MINN", home_team: "WISC", vis_record: "0-1", home_record: "1-0",
             officials: ["ref1", "ref2", "ref3"], attendance: 20000, comments: "comments"},
-            {date: "April 13, 2018", time: "12:00pm", site: "Greg Gard", site_code: "Home", league: true, schedule_note: "On time",
+            {date: "2018-04-13", time: "18:00", site: "Greg Gard", site_code: "Home", league: true, schedule_note: "On time",
             quarters: true, min_period: 20, min_ot: 5, vis_team: "MINN", home_team: "WISC", vis_record: "0-1", home_record: "1-0",
             officials: ["ref1", "ref2", "ref3"], attendance: 20000, comments: "comments"},
-            {date: "April 14, 2018", time: "12:00pm", site: "Greg Gard", site_code: "Home", league: true, schedule_note: "On time",
+            {date: "2018-04-14", time: "19:00", site: "Greg Gard", site_code: "Home", league: true, schedule_note: "On time",
             quarters: true, min_period: 20, min_ot: 5, vis_team: "MINN", home_team: "WISC", vis_record: "0-1", home_record: "1-0",
             officials: ["ref1", "ref2", "ref3"], attendance: 20000, comments: "comments"}
           ],
@@ -60,25 +60,61 @@ var app = new Vue({
     },
     // If N is pressed
     add_new_game() {
-      // NEED TO REPLACE PROMPT
-      game_date = window.prompt("Enter a new game date").toUpperCase();
-//      document.getElementById("game_date_entry").showModal();
+        // Get the modal
+        var modal = document.getElementById('myModal');
+        // Get the <span> element that closes the modal
+        var span = document.getElementById("closeModal");
 
-      if(game_date != "")
-      {
-      window.location = "./index.html";
-        game.date = game_date;
+        // show modal
+        modal.style.display = "block";
+
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // When the user hits ESC, close it
+        document.onkeydown = function(e) {
+            e = e || window.event;
+            var isEscape = false;
+            if ("key" in e) {
+                isEscape = (e.key == "Escape" || e.key == "Esc");
+            } else {
+                isEscape = (e.keyCode == 27);
+            }
+            if (isEscape) {
+                modal.style.display = "none";
+            }
+        }
+    },
+    submit() {
+        game_date = document.getElementsByName("game_date")[0].value;
+        game_time = document.getElementsByName("game_time")[0].value;
+        console.log(game_date);
+        console.log(game_time);
         var is_existing = false;
-        for(var index = 0; index < app.games.length; index++)
+        for(index = 0; index < app.games.length; index++)
         {
-          if(app.games[index].date == game.date)
+          if(app.games[index].date == game_date)
           {
-            is_existing = true;
+            console.log(app.games[index].date);
+            if(app.games[index].time == game_time) {
+                console.log(app.games[index].date);
+                is_existing = true;
+            }
           }
         }
         if(is_existing == true)
         {
-          window.alert("ERROR GAME ALREADY EXISTS");
+            window.alert("ERROR GAME ALREADY EXISTS");
         }
         else
         {
@@ -90,11 +126,11 @@ var app = new Vue({
           else
           {
             app.games.push(game);
+            window.location = "./index.html";
           }
 
           // UPDATE BACKEND
         }
-      }
     },
     // If F9 is pressed
     delete_game() {

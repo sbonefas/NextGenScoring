@@ -41,10 +41,81 @@
             </p>
         </div>
 
+        <!-- The Modal -->
+        <div id="myModal" class="modal">
+
+            <!-- Modal content -->
+            <div class="modal-content">
+                <span id="closeModal" class="close">&times;</span>
+                <h1>CREATE NEW GAME</h1>
+
+                <h4>Game Date:&emsp;
+                    <input id = "userinput" type = "date" name = "game_date">
+                </h4>
+                <h4>Game Time:&emsp;
+                    <input id = "userinput" type = "time" name = "game_time">
+                </h4>
+                <h4>Site of Game:&emsp;
+                    <input id = "userinput" type = "text" name = "game_site">
+                </h4>
+                <h4>Site Code (Home, Away, Neutral):&emsp;
+                    <select>
+                        <option value="home">Home</option>
+                        <option value="away">Away</option>
+                        <option value="neutral">Neutral</option>
+                    </select>
+                </h4>
+                <h4>League Game (Y/N):&emsp;
+                    <select>
+                        <option value="league">Yes</option>
+                        <option value="notleague">No</option>
+                    </select>
+                </h4>
+                <h4>Schedule Note:&emsp;
+                    <input id = "userinput" type = "text" name = "sched_note">
+                </h4>
+                <h4>Halves or Quarters (Men/Women):&emsp;
+                    <select>
+                        <option value="halves">Halves: Men</option>
+                        <option value="quarters">Quarters: Women</option>
+                    </select>
+                </h4>
+                <h4># Mins per period:&emsp;
+                    <input id = "userinput" type = "text" name = "min_period">
+                </h4>
+                <h4># Mins in Overtime:&emsp;
+                    <input id = "userinput" type = "text" name = "min_ot">
+                </h4>
+                <h4>Visiting Team Code (Example: WISC):&emsp;
+                    <input id = "userinput" type = "text" name = "vis_code">
+                </h4>
+                <h4>Home Team Code (Example: WISC):&emsp;
+                    <input id = "userinput" type = "text" name = "home_code">
+                </h4>
+                <h4>Visitor Team Record (Wins-Losses):&emsp;
+                    <input id = "userinput" type = "text" name = "vis_record">
+                </h4>
+                <h4>Home Team Record (Wins-Losses):&emsp;
+                    <input id = "userinput" type = "text" name = "home_record">
+                </h4>
+                <h4>Officials:&emsp;
+                    <input id = "userinput" type = "text" name = "officials">
+                </h4>
+                <h4>Attendance:&emsp;
+                    <input id = "userinput" type = "text" name = "atten">
+                </h4>
+                <h4>Box Score Comments (4 Lines):&emsp;
+                    <textarea name="Text1" cols="40" rows="5"></textarea>
+                </h4></br>
+
+                <button v-on:click="submit">Create Game</button>
+            </div>
+        </div>
+
         <table id="static_top">
             <th id="table_head">{{message}}</th>
             <tr>
-                <td id="game"><input type="text" v-on:click="deselect_team" id="searched" placeholder="Enter game..."></td>
+                <td id="game"><input type="text" v-on:click="deselect_game" id="searched" placeholder="Enter game..."></td>
             </tr>
         </table>
         <table class="game_search">

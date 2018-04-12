@@ -18,7 +18,7 @@ var app = new Vue({
             }
             // G - Gametime scoring
             else if(e.keyCode == 71) {
-                window.location = "./index.html";
+                window.location = "./selectgame.html";
             }
             // O - Options
             else if(e.keyCode == 79) {
