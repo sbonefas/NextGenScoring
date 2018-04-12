@@ -47,7 +47,7 @@
             <!-- Modal content -->
             <div class="modal-content">
                 <span id="closeModal" class="close">&times;</span>
-                <h1>CREATE NEW GAME</h1>
+                <h1>GAME DETAILS</h1>
 
                 <h4>Game Date:&emsp;
                     <input id = "userinput" type = "date" name = "game_date">
@@ -59,14 +59,14 @@
                     <input id = "userinput" type = "text" name = "game_site">
                 </h4>
                 <h4>Site Code (Home, Away, Neutral):&emsp;
-                    <select>
+                    <select id="select_site">
                         <option value="home">Home</option>
                         <option value="away">Away</option>
                         <option value="neutral">Neutral</option>
                     </select>
                 </h4>
                 <h4>League Game (Y/N):&emsp;
-                    <select>
+                    <select id="select_league">
                         <option value="league">Yes</option>
                         <option value="notleague">No</option>
                     </select>
@@ -75,7 +75,7 @@
                     <input id = "userinput" type = "text" name = "sched_note">
                 </h4>
                 <h4>Halves or Quarters (Men/Women):&emsp;
-                    <select>
+                    <select id="select_halves">
                         <option value="halves">Halves: Men</option>
                         <option value="quarters">Quarters: Women</option>
                     </select>
@@ -108,7 +108,7 @@
                     <textarea name="Text1" cols="40" rows="5"></textarea>
                 </h4></br>
 
-                <button v-on:click="submit">Create Game</button>
+                <button v-on:click="submit">Submit and Go to Scoring</button>
             </div>
         </div>
 
@@ -122,7 +122,7 @@
             <tr v-for="game in games">
                 <td><button id="game_cell" v-on:click="select_game(game)"><h3>{{game.date}}</h3><h3>&emsp;&emsp;{{game.vis_team}}</h3><h3 class="game_site">&emsp;&emsp;{{game.site}}</h3></button></td>
             </tr>
-            <dialog id="game_date_entry"><h3>ENTER NEW GAME DATE</h3><input id="game_box" v-on:keyup.enter="set_game_date(document.getElementById("game_box").value)"placeholder="New game name..."></dialog>
+            <!--<dialog id="game_date_entry"><h3>ENTER NEW GAME DATE</h3><input id="game_box" v-on:keyup.enter="set_game_date(document.getElementById("game_box").value)"placeholder="New game name..."></dialog>-->
         </table>
     </div>
     <script type="text/javascript" src="js/vue.js"></script>
