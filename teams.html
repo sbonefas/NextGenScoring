@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>Team Selection - NextGen</title>
+    <link rel="icon" href="img/favicon.ico">
     <link rel="stylesheet" href="css/team_page.css">
     <link rel="stylesheet" href="css/style.css">
   </head>
@@ -42,20 +43,9 @@
           </tr>
         </table>
       </div>
+      <dialog id="team_name_entry"><h3>ENTER NEW TEAM NAME</h3><input id="team_box" v-on:keyup.enter="set_team_name(document.getElementById("team_box").value)"placeholder="New team name..."></dialog>
     </div>
     <script type="text/javascript" src="js/vue.js"></script>
     <script type="text/javascript" src="js/teams.js"></script>
-    <script>
-      function run_search() {
-        var search_string = document.getElementById("searched").value;
-        console.log(search_string);
-      };
-      document.getElementById("searched").addEventListener("keydown", function(e) {
-        if(e.keyCode == 13)
-        {
-          run_search();
-        }
-      });
-    </script>
   </body>
 </html>

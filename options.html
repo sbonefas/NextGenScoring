@@ -7,30 +7,50 @@
     <title>NextGen Scoring</title>
 </head>
 <body>
-    <!-- Menu Buttons -->
-    <div id="menubuttons">
-        <a href="./mainmenu.html">Back to the Main Menu</a>
-    </div>
-
-    <div id="optionsheader">
-        <h1>Options</h1>
-    </div>
-
-    <div id="options">
-        <div class="optionstext">
-            <!--<a href="./teams.html">T - Teams and Rosters</a></br>-->
-            <!--<a href="./index.html">G - Gametime Scoring</a></br>-->
-            <!--<a href="./options.html">O - Options</a></br>-->
-            <!--<a href="./help.html">H - Help</a></br>-->
-            <!--<a onclick="quit()">Q - Logout</a>-->
-            <h5>Drive Path (C:\Statcrew)</br>
-                Games Directory</br>
-                Autosave? How often?</br>
-                Home Team left/right</br>
-                Current Season</br>
-                Display Specialty Stats</h5>
+    <div id="optionsapp">
+        <!-- Menu Buttons -->
+        <div id="menubuttons">
+            <a href="./mainmenu.html">Back to the Main Menu</a>
         </div>
-        <!--<p></br>Select one of the following options above</p>-->
+
+        <div id="optionsheader">
+            <h1>Options</h1>
+        </div>
+
+        <div id="options">
+            <div class="optionstext">
+                <!--<a href="./teams.html">T - Teams and Rosters</a></br>-->
+                <!--<a href="./index.html">G - Gametime Scoring</a></br>-->
+                <!--<a href="./options.html">O - Options</a></br>-->
+                <!--<a href="./help.html">H - Help</a></br>-->
+                <!--<a onclick="quit()">Q - Logout</a>-->
+                <p>Drive Path: C:\
+                    <input id = "userinput" type = "text" name = "userinput">
+                    <button onclick="changeDir()">Submit</button>
+                </p>
+
+                <a href="./mainmenu.html">Games Directory</a>
+                <p>Autosave: Off
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider round"></span>
+                    </label>
+                    On
+                </p>
+                <!--<p>Home Team left/right</p>-->
+                <p>Current Season
+                    <select>
+                        <option value="2018">2018</option>
+                        <option value="2019">2019</option>
+                    </select>
+                </p>
+                <a href="./mainmenu.html">Display Specialty Stats</a>
+            </div>
+            <!--<p></br>Select one of the following options above</p>-->
+        </div>
     </div>
+
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript" src="js/options.js"></script>
 </body>
 </html>

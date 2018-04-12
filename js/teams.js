@@ -19,20 +19,39 @@ function help() {
             modal.style.display = "none";
         }
     }
-}
 
+    // When the user hits ESC, close it
+    document.onkeydown = function(e) {
+        e = e || window.event;
+        var isEscape = false;
+        if ("key" in e) {
+            isEscape = (e.key == "Escape" || e.key == "Esc");
+        } else {
+            isEscape = (e.keyCode == 27);
+        }
+        if (isEscape) {
+            modal.style.display = "none";
+        }
+    }
+}
+/*
+  player-format:
+        object: array[name: "Giannis", number: 34, position: "everything"]
+        Joe Krabbenhoft, Dean Oliver
+*/
+var new_team = {};
 var app = new Vue({
   el: '#team_app',
   data: {
     message: "SELECT A TEAM",
     teams: [
-            {name: "WISCONSIN"},
-            {name: "MARQUETTE"},
-            {name: "MINNESOTA"},
-            {name: "PURDUE"},
-            {name: "MARYLAND"},
-            {name: "NORTHWESTERN"},
-            {name: "ILLINOIS"}
+            {name: "WISCONSIN", team_code: "WISC", head_coach: "Greg Gard", assistant: "Howard Moore, Joe Krabbenhoft, Dean Oliver", team_roster: [], home_stadium: "Kohl Center"},
+            {name: "MARQUETTE", team_code: "", head_coach: "", assistant: "", team_roster: [], home_stadium: ""},
+            {name: "MINNESOTA", team_code: "", head_coach: "", assistant: "", team_roster: [], home_stadium: ""},
+            {name: "PURDUE", team_code: "", head_coach: "", assistant: "", team_roster: [], home_stadium: ""},
+            {name: "MARYLAND", team_code: "", head_coach: "", assistant: "", team_roster: [], home_stadium: ""},
+            {name: "NORTHWESTERN", team_code: "", head_coach: "", assistant: "", team_roster: [], home_stadium: ""},
+            {name: "ILLINOIS", team_code: "", head_coach: "", assistant: "", team_roster: [], home_stadium: ""}
           ],
     roster_options: [
       {name: "<ENTER> - EDIT TEAM"},
@@ -49,6 +68,11 @@ var app = new Vue({
   methods: {
     keyevent : function (e) {
       console.log(e.keyCode);
+      // alt + h - Help menu
+      if(e.altKey && e.keyCode == 72) {
+          help();
+      }
+
       // <Enter> --> Edit Team
       if(e.keyCode == 13) {
         app.edit_team();
@@ -80,9 +104,10 @@ var app = new Vue({
     },
     // If N is pressed
     add_new_team : function() {
-      team = {name: ""}
       // NEED TO REPLACE PROMPT
-      team_name = window.prompt("Enter a new team name").toUpperCase();
+      //team_name = window.prompt("Enter a new team name").toUpperCase();
+      document.getElementById("team_name_entry").showModal();
+
       if(team_name != "")
       {
         team.name = team_name;
@@ -116,23 +141,30 @@ var app = new Vue({
     // If F9 is pressed
     delete_team : function() {
       if(app.selected_team.name != undefined) {
-        window.alert("DELETED TEAM: "+app.selected_team.name);
-        for(var index = 0; index < app.teams.length; index++)
+        if(window.confirm("DELETE TEAM: "+app.selected_team.name+"?"))
         {
-          if(app.teams[index].name == app.selected_team.name)
+          for(var index = 0; index < app.teams.length; index++)
           {
-            app.teams.splice(index, 1);
-            //UPDATE BACKEND HERE
-            break;
+            if(app.teams[index].name == app.selected_team.name)
+            {
+              app.teams.splice(index, 1);
+              //UPDATE BACKEND HERE
+              break;
+            }
           }
         }
       }
       else {
         console.log("NO TEAM SELECTED");
+        window.alert("ERROR NO TEAM SELECTED");
       }
     },
     // Runs a search based on user input
     run_search : function() {
+      if(app.search_active)
+      {
+        app.reset_team_table();
+      }
       console.log("RUNNING SEARCH");
       app.teams_hold = app.teams;
       var query_teams = [];
@@ -155,12 +187,16 @@ var app = new Vue({
     deselect_team : function() {
       app.selected_team = {};
       app.input_selected = true;
-
     },
     // Resets the team table when a search is over
     reset_team_table : function() {
       app.teams = app.teams_hold;
       app.search_active = false;
+    },
+    // Sets team name when entered in
+    set_team_name : function(entered_name) {
+      this.new_team = {name: entered_name, team_code: "", head_coach: "", assistant: "", team_roster: [], home_stadium: ""};
+      return team;
     }
   }
 
