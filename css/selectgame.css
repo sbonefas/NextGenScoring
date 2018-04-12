@@ -6,60 +6,72 @@ body {
   background-color: #282728; /*UW Grey*/
   overflow: hidden;
 }
+
 #menubuttons {
     background-color: #c5050c; /*UW Red*/
 }
-
 #page_title {
   text-align: center;
   color: white;
 }
-#team_app {
+#game_app {
   background-color: #c5050c; /*UW Red*/
 }
 #static_top {
   background-color: #dadfe1; /*UW Grey-Blue*/
 }
-#options {
-  background-color: #dadfe1; /*UW Grey-Blue*/
-  position: fixed;
+/*#options {*/
+  /*background-color: #dadfe1;*/ /*UW Grey-Blue*/
+  /*position: fixed;
   bottom: 50%;
   left: 450px;
   top: 300px;
   width: 600px;
   height: 100px;
-}
-#roster_option {
+}*/
+.game_option {
   background-color: #282728; /*UW Grey*/
   color: white;
-  font-family: serif;
   padding: 5px 5px;
   font-size: 20px;
+  text-align: center;
+
 }
+
 input {
-  width: 243px;
+  width: 80%;
   text-align: center;
 }
 
 #table_head {
-  width: 250px;
+  width: 100%;
   background-color: #dadfe1; /*UW Grey-Blue*/
 }
-.team_search {
+.game_search {
   display: block;
   height: 750px;
-  width: 256px;
+  width: 100%;
   overflow-y: scroll;
   background-color: #dadfe1; /*UW Grey-Blue*/
 }
 
-#team_cell {
+#game_cell {
   padding-top: 5px;
   padding-bottom: 5px;
   font-size: 20px;
   text-align: center;
   background-color: #282728; /*UW Grey*/
-  width: 250px;
+  width: 1418px;
   color: white;
-  font-family: serif;
+}
+
+table {
+    width: 100%;
+}
+
+.game_site {
+    text-align: right;
+}
+h3 {
+    display: inline-block;
 }

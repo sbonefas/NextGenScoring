@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" href="img/favicon.ico">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/selectgame.css">
+    <title>NextGen Scoring</title>
+</head>
+<body>
+    <!-- Menu Buttons -->
+    <div id="menubuttons">
+        <a href="./mainmenu.html">Back to the Main Menu</a>
+    </div>
+
+    <!--N - New Game (fill out the following fields:)-->
+        <!--Game Date-->
+        <!--Game Time-->
+        <!--Site of Game-->
+        <!--Site Code (Home, Away, Neutral)-->
+        <!--League Game (Y/N)-->
+        <!--Schedule Note-->
+        <!--Quarters or Halves (Men/Women)-->
+        <!--# Mins per period-->
+        <!--# Mins in Overtime-->
+        <!--Visiting Team Code-->
+        <!--Home Team code-->
+        <!--Visitors Record-->
+        <!--Home Team record-->
+        <!--Officials-->
+        <!--Attendance-->
+        <!--Box Score Comments (4 Lines)-->
+    <!--Enter - Edit Game-->
+        <!--Edit the info above-->
+
+    <div id="selectapp">
+        <h1 id="page_title">GAME SELECTION</h1>
+        <div id="">
+            <p class="game_option" id="edit">{{game_options[0].name}}
+            &emsp;&emsp;&emsp;{{game_options[1].name}}
+            &emsp;&emsp;&emsp;{{game_options[2].name}}
+            </p>
+        </div>
+
+        <table id="static_top">
+            <th id="table_head">{{message}}</th>
+            <tr>
+                <td id="game"><input type="text" v-on:click="deselect_team" id="searched" placeholder="Enter game..."></td>
+            </tr>
+        </table>
+        <table class="game_search">
+            <tr v-for="game in games">
+                <td><button id="game_cell" v-on:click="select_game(game)"><h3>{{game.date}}</h3><h3>&emsp;&emsp;{{game.vis_team}}</h3><h3 class="game_site">&emsp;&emsp;{{game.site}}</h3></button></td>
+            </tr>
+            <dialog id="game_date_entry"><h3>ENTER NEW GAME DATE</h3><input id="game_box" v-on:keyup.enter="set_game_date(document.getElementById("game_box").value)"placeholder="New game name..."></dialog>
+        </table>
+    </div>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript" src="js/selectgame.js"></script>
+</body>
+</html>
