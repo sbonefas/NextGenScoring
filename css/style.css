@@ -96,6 +96,7 @@ div.clock {
 	vertical-align: center;
 	margin: auto;
 }
+
 #userinput {
 	height: 30px;
 	width: 15%;
@@ -104,6 +105,7 @@ div.clock {
 	display: inline-block;
 	cursor: auto;
 }
+
 #inputvalidator {
 	margin: 5px;
 	margin-left: 30px;

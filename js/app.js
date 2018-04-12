@@ -50,14 +50,14 @@ var home = true;
 var inputtext = "";
 var currentlyInputtingPlay = "";
 var join_two_plays = "";
-result_code_prompt = `
-PRESS A RESULT CODE...
-
-G (or Q) - GOOD FIELD GOAL               F - GOOD FG ON A FAST BREAK
-Y - GOOD 3PT FIELD GOAL                  R - MISSED SHOT (REBOUND)
-P - GOOD FG IN THE PAINT                  X - MISSED 3PT SHOT (REBOUND)
-Z - GOOD FG- FAST BREAK & PAINT   K - BLOCKED SHOT
-`;
+//result_code_prompt = `
+//PRESS A RESULT CODE...
+//
+//G (or Q) - GOOD FIELD GOAL               F - GOOD FG ON A FAST BREAK
+//Y - GOOD 3PT FIELD GOAL                  R - MISSED SHOT (REBOUND)
+//P - GOOD FG IN THE PAINT                  X - MISSED 3PT SHOT (REBOUND)
+//Z - GOOD FG- FAST BREAK & PAINT   K - BLOCKED SHOT
+//`;
 
 var home_stats = {fg: Number.parseFloat(0.00).toFixed(2), tfg: Number.parseFloat(0.00).toFixed(2), ftp: Number.parseFloat(0.00).toFixed(2), tvs: 0, blocks: 0, steals: 0, paint: 0, offto: 0, sndch: 0, fastb: 0, fga: 0, tfga: 0, benchpts: 0}
 Vue.component('home_team_stats', {
