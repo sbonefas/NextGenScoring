@@ -1,5 +1,6 @@
 const assert = require('assert');
 var Team = require('../Team');
+var Player = require('../Player');
 
 function verifyArrayInfo(array, flag) {
   let testArray;
@@ -70,28 +71,50 @@ describe('Team setters', function() {
     assert.strictEqual(t1.get_stadium(), "Kohl Center");
   });
   it('should add a player to the roster', function() {
-    t1.add_player_to_roster("Ethan Happ", 22, "F");
+    var p1 = new Player("Ethan Happ", 22, "F");
+    t1.add_player_to_roster(p1);
     assert.strictEqual(t1.get_active_roster()[0]["name"], "Ethan Happ");
     assert.strictEqual(t1.get_active_roster()[0]["number"], 22);
     assert.strictEqual(t1.get_active_roster()[0]["position"], "F");
   });
   it('should add another player to the roster', function() {
-     t1.add_player_to_roster("Khalil Iverson", 21, "G");
+     var p2 = new Player("Khalil Iverson", 21, "G");
+     t1.add_player_to_roster(p2);
      assert.strictEqual(t1.get_active_roster()[1]["name"], "Khalil Iverson");
      assert.strictEqual(t1.get_active_roster()[1]["number"], 21);
      assert.strictEqual(t1.get_active_roster()[1]["position"], "G");
   });
   it('should remove a player from the roster', function() {
-     t1.remove_player_from_roster("Khalil Iverson", 21, "G");
+     t1.remove_player_from_roster("Khalil Iverson", 21);
      assert.strictEqual(t1.get_active_roster()[1], undefined);
   });
   it('shouldn\'t remove a player from the roster given invalid parameters', function() {
-     t1.remove_player_from_roster("Ethan Hap", 22, "F");
+     try {
+       t1.remove_player_from_roster("Ethan Hap", 22, "F");
+     } catch(e) {
+       assert.strictEqual(e, "remove_player_from_roster Error: player could not be found: (name: Ethan Hap number: 22)\n");
+     }
+     //console.log(t1.get_active_roster());
      assert.strictEqual(t1.get_active_roster()[0]["name"], "Ethan Happ");
      assert.strictEqual(t1.get_active_roster()[0]["number"], 22);
      assert.strictEqual(t1.get_active_roster()[0]["position"], "F");
   });
   it('should return all new information as an array', function() {
     verifyArrayInfo(t1.to_array(), 1);
+  });
+  it('should throw an error if passed in a null argument when adding a new player', function() {
+    var p3 = new Player(null, 22, "F");
+    try {
+      t1.add_player_to_roster(p3);
+    } catch (e) {
+      assert.strictEqual(e, "add_player_to_roster Error: object passed is not a player");
+    }
+  });
+  it('should throw an error if passed in a null argument when removing a player', function() {
+    try {
+      t1.remove_player_from_roster(null, 22);
+    } catch (e) {
+      assert.strictEqual(e, "remove_player_to_roster Error: objects passed are not valid");
+    }
   });
 });
