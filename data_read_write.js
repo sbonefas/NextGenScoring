@@ -1,8 +1,9 @@
 /********************************************************************
  *																	*
- *					DATA READING AND WRITING 						*
+ *																	*		
+ *					GAME DATA READING AND WRITING 					*
  *																	*
- *		This js file controls all reading/writing to data files		*													*
+ *	This js file controls all reading/writing to game data files	*													*
  *																	*
  *																	*
  * public functions: 												*
@@ -18,6 +19,9 @@
  *		5. write_player_stats_to_game_file(stat_changes, file_name)	*
  *			- writes given player stat changes to a game file 		*
  *																	*
+ *		6. write_team_stats_to_game_file(stat_changes, file_name)	*
+ *			- writes given team stat changes to a game file 		*
+ *																	*	
   *******************************************************************/
 
 
@@ -284,7 +288,7 @@ function create_2d_array(num_rows, num_cols) {
  */
 exports.write_player_stats_to_game_file = function(stat_changes, file_name) {
 	if(stat_changes == undefined) throw "No Stat Changes Provided";
-	
+
 	// Set player's team and player number for stat change
 	var is_home = stat_changes[0];
 	if(!(is_home == 1 || is_home == 0)) {
