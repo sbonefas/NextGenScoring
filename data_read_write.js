@@ -521,4 +521,3 @@ exports.test_overwrite_game_file = function(new_content, file_name) {
 exports.test_get_game_information_string = function(file_name) {
 	return get_game_information_string(file_name);
 }
-
