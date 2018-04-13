@@ -25,6 +25,7 @@
 
 
 const fs = require("fs");	//node.js filesystem
+const util = require("util");	//node.js utility module
 
 /** path to the folder where team data is kept */
 var team_directory = "team/";
@@ -137,7 +138,7 @@ function team_to_string(team_arr) {
 	var team_str = "";
 
 	for(var el_no = 0; el_no < team_arr.length; el_no++) {
-		if(Array.isArray(team_arr[el_no])) {
+		if(util.isArray(team_arr[el_no])) {
 			// Sub Array -> String
 			team_str += open_replacement + team_arr[el_no].toString()
 											   .replace(/,/g,subarray_separator) + close_replacement;

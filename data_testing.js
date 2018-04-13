@@ -10,7 +10,7 @@ const file_name = "data_test";
 const file_path = "data/data_test.txt";
 const individual_stat_labels = ['number', 'fg', 'fga', 'pts'];
 const team_stat_labels = ['team fouls', 'timeouts left'];
-const footer = ['test', 1,'test2/test3/test4', 'test5'];
+const footer = ['test', 1,'test2/test3/4', 'test5'];
 
 /** UNIT TEST DATA */
 const test_stats = "HOME\nnumber(&h#@d!`_fg(&h#@d!`_fga(&h#@d!`_pts\n"
@@ -30,7 +30,7 @@ const test_stats_array = [
   	[ '36', '2', '3', '6' ],[ '45', '6', '7', '12' ],[ '03', '4', '5', '8' ] ],
   [ [ 'team fouls', 'timeouts left'],[ '9', '4'] ],
   [ [ 'team fouls', 'timeouts left'],[ '8', '3'] ],
-  [ 'test', 1, 'test2/test3/test4', 'test5']
+  [ 'test', 1, 'test2/test3/4', 'test5']
   ];
 const test_team_stats_array = [ [ 'number', 'fg', 'fga', 'pts' ],
 	[ '30', '2', '4', '6' ],
@@ -77,7 +77,7 @@ function test() {
 	test_write_player_stats_to_game_file();
 	test_write_team_stats_to_game_file();
 
-	clean();
+	//clean();
 }
 
 //done
@@ -159,7 +159,7 @@ function test_read_game_file_empty() {
   	[ [ 'number', 'fg', 'fga', 'pts' ] ],
   	[ [ 'team fouls', 'timeouts left' ], ['0', '0'] ],
   	[ [ 'team fouls', 'timeouts left' ], ['0', '0'] ],
-  	[ 'test', '1', 'test2/test3/test4', 'test5' ]
+  	[ 'test', '1', 'test2/test3/4', 'test5' ]
   	];
 
 	if(drw.read_game_file(file_name).toString() == result_array.toString()) test_success("test_read_game_file (empty)");
@@ -214,7 +214,7 @@ function test_write_player_stats_to_game_file() {
 ['29',0,1,0] ],
 [ [ 'team fouls', 'timeouts left' ], [ '9', '4' ] ],
 [ [ 'team fouls', 'timeouts left' ], [ '8', '3' ] ],
-[ 'test', '1', 'test2/test3/test4', 'test5' ] ];
+[ 'test', '1', 'test2/test3/4', 'test5' ] ];
 
 	drw.write_player_stats_to_game_file(test_stat_changes_exist, file_name);
 	drw.write_player_stats_to_game_file(test_stat_changes_exist, file_name);
@@ -238,7 +238,7 @@ function test_write_team_stats_to_game_file() {
 ['29',0,1,0] ],
 [ [ 'team fouls', 'timeouts left' ], [ '10', '4' ] ],
 [ [ 'team fouls', 'timeouts left' ], [ '8', '1' ] ],
-[ 'test', '1', 'test2/test3/test4', 'test5' ] ];
+[ 'test', '1', 'test2/test3/4', 'test5' ] ];
 
 	drw.write_team_stats_to_game_file([1, 1, 0], file_name);
 	drw.write_team_stats_to_game_file([0, 0, -2], file_name);
@@ -262,7 +262,7 @@ function test_read_game_file_full() {
 ['03',4,5,8] ],
 [ [ 'team fouls', 'timeouts left' ], [ '9', '4' ] ],
 [ [ 'team fouls', 'timeouts left' ], [ '8', '3' ] ],
-[ 'test', '1', 'test2/test3/test4', 'test5' ] ];
+[ 'test', '1', 'test2/test3/4', 'test5' ] ];
 
 	if(drw.read_game_file(file_name).toString() == result_array.toString()) test_success("test_read_game_file (full)");
 	else test_fail("test_read_game_file (full)");
