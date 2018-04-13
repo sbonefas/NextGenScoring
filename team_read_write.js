@@ -25,16 +25,15 @@
 
 
 const fs = require("fs");	//node.js filesystem
-const util = require("util");	//node.js utility module
 
 /** path to the folder where team data is kept */
 var team_directory = "team/";
 
-/** comma, open array, and close array delimiter replacements */
+/** comma, open array, close array, and subarray separator delimiter replacements */
 const comma_replacement  = "%!_a)#$d#";
 const open_replacement   = "u^#q@3.>{";
 const close_replacement  = ":p2$%_1=*";
-const subarray_delimiter = "@i+b&*-~r";
+const subarray_separator = "@i+b&*-~r";
 
 /** 
  * Returns the filepath of a file with a given name
@@ -138,10 +137,10 @@ function team_to_string(team_arr) {
 	var team_str = "";
 
 	for(var el_no = 0; el_no < team_arr.length; el_no++) {
-		if(util.isArray(team_arr[el_no])) {
+		if(Array.isArray(team_arr[el_no])) {
 			// Sub Array -> String
 			team_str += open_replacement + team_arr[el_no].toString()
-											   .replace(/,/g,subarray_delimiter) + close_replacement;
+											   .replace(/,/g,subarray_separator) + close_replacement;
 		}
 		else {
 			// Element -> String
@@ -149,7 +148,7 @@ function team_to_string(team_arr) {
 		}
 		if(el_no != team_arr.length - 1) team_str += comma_replacement;
 	}
-	
+
 	return team_str;
 }
 
@@ -168,7 +167,7 @@ function string_to_team(team_str) {
 		if(team_arr[el_no].substring(0,open_replacement.length) == open_replacement) {
 			team_arr[el_no] = team_arr[el_no].replace(open_replacement,'')
 											 .replace(close_replacement,'')
-											 .split(subarray_delimiter);
+											 .split(subarray_separator);
 		}
 	}
 
