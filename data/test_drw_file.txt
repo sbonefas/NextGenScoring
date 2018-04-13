@@ -1,0 +1,16 @@
+HOME
+player_number,fg,fga,m3,3a,ft,fta,offr,defr,ast,pf,tf,blk,trn,stl,pts
+05,0,0,0,0,5,15,5,0,0,0,0,0,0,0,5
+02,5,20,0,0,0,0,0,0,0,0,0,15,0,10,0
+01,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0
+03,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0
+;AWAY
+player_number,fg,fga,m3,3a,ft,fta,offr,defr,ast,pf,tf,blk,trn,stl,pts
+03,0,0,0,0,0,0,0,5,0,0,0,0,0,5,0
+04,0,0,0,0,0,0,0,10,0,0,0,0,0,0,0
+;TEAM
+home/away,total_points,made_in_paint,fast_break,team_turnover
+10,0,0,0,NaN
+5,0,0,0,NaN
+;FOOTER
+Wisconsin,Ohio State,796,518,100/0,0/100,3/12/19,4pm,Kohl Center,Kohl-Center-code,1,schedule notes,quarters,15,15,Official Names,Box comments

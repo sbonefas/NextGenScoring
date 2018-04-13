@@ -1,11 +1,10 @@
 html {
 	background-color: #c5050c; /*UW Red*/
 	font-family: "Verlag", "Helvetica Neue", Helvetica, Arial, sans-serif;
-	overflow: hidden;
+	overflow: hidden
 }
 
-/*Main Menu*/
-#welcome {
+#helpheader {
 	margin: auto;
 	text-align: center;
 	padding: 3%;
@@ -16,7 +15,7 @@ html {
     vertical-align: center;
 }
 
-#menu {
+#help {
 	margin: auto;
 	text-align: left;
 	padding: 3%;
@@ -26,40 +25,28 @@ html {
     vertical-align: center;
 }
 
-.menutext {
+.helptext {
     margin: auto;
-    font-size: 1.2em;
-    width: max-content;
-    vertical-align: center;
+    font-size: 1.1em;
+    /*width: max-content;*/
+    vertical-align: left;
+}
+
+#help a {
+    color:  #c5050c; /*UW Red*/
+    text-decoration: none;
+    font-size: 1.5em;
+}
+
+#help a:hover {
+    text-decoration: underline;
 }
 
 a {
-    color: #000;
+    color: white;
     text-decoration: none;
-    display: block;
 }
 
 a:hover {
-    color: #c5050c; /*UW Red*/
-    text-decoration: none;
-    display: block;
-}
-
-#menu p {
-    text-align: center;
-}
-
-.inputcss {
-    margin: auto;
-    font-size: 1.2em;
-    width: max-content;
-    vertical-align: center;
-}
-
-#errormsg {
-    display: none;
-}
-
-#forgot {
-    display: none;
+    text-decoration: underline;
 }
