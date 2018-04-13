@@ -1,6 +1,6 @@
 {
 	"name": "nextgenscoring",
-	"version": "1.0.0",
+	"version": "2.0.0",
 	"description": "506 best project",
 	"main": "main.js",
 	"devDependencies": {
@@ -12,7 +12,7 @@
 	},
 	"scripts": {
 		"start": "electron .",
-		"test": "nyc mocha"-
+		"test": "nyc mocha"
 	},
 	"repository": {
 		"type": "git",
