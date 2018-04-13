@@ -194,12 +194,12 @@ describe('data_read_write tests', function() {
           ];
         assert.strictEqual(drw.read_game_file(file_name).toString(), result_array.toString());
      });
-     it('should return a No File Name Error given an invalid file_name', function() {
+     it('should return a File Read Error given an invalid file_name and contents', function() {
        try {
          drw.read_game_file("test");
-         assert.fail("No File Name Error should be thrown and caught");
+         assert.fail("No File Read Error should be thrown and caught");
        } catch (e) {
-         assert.strictEqual(e, "No File Name Error: File test does not exist!");
+         assert.strictEqual(e, "File Read Error: File test does not exist!");
        }
      });
    });
