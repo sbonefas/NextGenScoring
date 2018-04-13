@@ -10,10 +10,10 @@ const url = require("url");
 const fs = require("fs");	//node.js filesystem
 const ipc = electron.ipcMain;
 const dialog = electron.dialog;
-const indiv_stat_headers = ['player_number','fg','fga','m3','3a','ft','fta','reb','ast','pf','tf','blk','trn','stl','pts'];
+const indiv_stat_headers = ['player_number','fg','fga','m3','3a','ft','fta','offr','defr','ast','pf','tf','blk','trn','stl','pts'];
 const team_stat_headers = ['home/away', 'total_points', 'made_in_paint', 'fast_break', 'team_turnover'];
-var Team = require('./Team.js');	//team object import
-var Player = require('./Player.js'); 	//player object import
+const Team = require('./Team.js');	//team object import
+const Player = require('./Player.js'); 	//player object import
 var teams = new Array();
 
 let win;
@@ -48,7 +48,7 @@ function createWindow() {
 function createTeam(name, code, head_coach, asst_coach, stadium){
 	
 	var team = new Team(name, code, head_coach, asst_coach, stadium);
-	team.add_player_to_roster("Frank Kaminsky", 44, "center");
+	team.add_player_to_roster(new Player("Frank Kaminsky", 44, "center"));
 	teams.push(team);
 	console.log("Team name: " + teams[0].get_name());
 	console.log("Team code:" + teams[0].get_code());
@@ -59,6 +59,11 @@ function createTeam(name, code, head_coach, asst_coach, stadium){
 	for (var i = 0; i < teams[0].get_active_roster().length; i++){
 		var player = teams[0].get_active_roster()[i];
 		console.log("[" + i + "] " + player.get_name() + " #" + player.get_number() + " " + player.get_position() + "\n");
+	}
+	try {
+		team.remove_player_from_roster("Frank Kaminsky", 44);
+	} catch (e) {
+		console.log("Error: " + e);
 	}
 };
 
@@ -87,8 +92,8 @@ function createTeam(name, code, head_coach, asst_coach, stadium){
  *
  *	 (1)/(0)
  *
- * [HOME/AWAY, PLAYER_NUMBER, FIELDGOAL, FIELDGOAL_ATTEMPT, MADE_3, 3_ATTEMPT, FREETHROW, FREETHROW_ATTEMPT, REBOUND, ASSIST, PERSONAL_FOUL, TECHNICAL_FOUL, BLOCK, TURNOVER, STEAL, POINTS]
- * [    0    ,       1      ,     2    ,         3        ,    4  ,     5    ,     6    ,         7        ,    8   ,   9   ,       10     ,      11       ,  12  ,    13   ,  14  ,   15  ]
+ * [HOME/AWAY, PLAYER_NUMBER, FIELDGOAL, FIELDGOAL_ATTEMPT, MADE_3, 3_ATTEMPT, FREETHROW, FREETHROW_ATTEMPT, OFF_REBOUND, DEF_REBOUND, ASSIST, PERSONAL_FOUL, TECHNICAL_FOUL, BLOCK, TURNOVER, STEAL, POINTS]
+ * [    0    ,       1      ,     2    ,         3        ,    4  ,     5    ,     6    ,         7        ,       8    ,      9     ,  10   ,      11      ,      12       ,  13  ,    14   ,  15  ,   16  ]
  *
  * 
  * 
@@ -107,7 +112,7 @@ function createTeam(name, code, head_coach, asst_coach, stadium){
 
  
 function addPlay(keystrokes){ 
-	var statArray = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+	var statArray = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 	var input = keystrokes.split(/ /);
 	if(TESTING) console.log(input);
 		
@@ -165,16 +170,16 @@ function addPlay(keystrokes){
 					break;
 				case 'p':
 					inPaint(statArray[0]);
-					statArray[15] = 2;
+					statArray[16] = 2;
 					break;
 				case 'f':
 					fastBreak(statArray[0]);
-					statArray[15] = 2;
+					statArray[16] = 2;
 					break;
 				case 'z':
 					inPaint(statArray[0]);
 					fastBreak(statArray[0]);
-					statArray[15] = 2;
+					statArray[16] = 2;
 					break;				
 			}
 			break;
@@ -187,7 +192,7 @@ function addPlay(keystrokes){
 			if (input[2] === 'e') 
 			{
 				statArray[6] = 1;	//good freethrow, no rebound
-				statArray[15] = 1;
+				statArray[16] = 1;
 			}
 			else if (input[2] === 'r')	
 			{
@@ -197,30 +202,32 @@ function addPlay(keystrokes){
 			else if (input[2] === 'd')
 			{
 				actingPlayer = input[3];
-				rebound(statArray[0], actingPlayer, 1);
+				rebound(statArray[0], actingPlayer, 1);	//defensive rebound
 			}
 			break;
 		case 'r':
 			rebound(statArray[0], input[1]);
 			return;
+		case 'd':
+			rebound(statArray[0], input[1], 1);
 		case 'a':
 			assist(statArray[0], input[1]); 
 			return;
 		case 'f':
-			statArray[10] = 1;	//personal foul
+			statArray[11] = 1;	//personal foul
 			break;
 		case 't':
 			if (input[1] == 'm'){
 				teamTurnover(statArray[0]);
 				return;
 			}		
-			statArray[13] = 1; //turnover
+			statArray[14] = 1; //turnover
 			break;
 		case 's':
-			statArray[14] = 1;	//steal
+			statArray[15] = 1;	//steal
 			break;
 		case 'k':
-			statArray[12] = 1; //block
+			statArray[13] = 1; //block
 			if (input[2] === 'r')
 			{
 				actingPlayer = input[3];
@@ -251,17 +258,20 @@ function addPlay(keystrokes){
  */ 
  
 function rebound(t, player_number, def_rebound){
+	var statArray;
 	if (def_rebound != null){
 		console.log("Changing team");
 		if (t === 1) t = 0;
 		else if (t === 0) t = 1;
+		var statArray = [t, player_number,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0];
+	} else {
+		var statArray = [t, player_number,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0];	
 	}
-	var statArray = [t, player_number,0,0,0,0,0,0,1,0,0,0,0,0,0,0];
 	drw.write_player_stats_to_game_file(statArray, test_file_name);
 }
  
 function assist(t, player_number){
-	var statArray = [t, player_number,0,0,0,0,0,0,0,1,0,0,0,0,0,0];
+	var statArray = [t, player_number,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0];
 	drw.write_player_stats_to_game_file(statArray, test_file_name);	
 }
 
@@ -271,7 +281,7 @@ function block(t, player_number){
 	if (t === 1) activeTeam = 0;
 	else if (t === 0) activeTeam = 1;
 	
-	var statArray = [activeTeam, player_number,0,0,0,0,0,0,0,0,0,1,0,0,0,0];
+	var statArray = [activeTeam, player_number,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0];
 	drw.write_player_stats_to_game_file(statArray, test_file_name);	
 }
 
@@ -313,7 +323,6 @@ function initGame(args){
 		console.log("Exception in creating game file: " + e);
 	}
 }
- 
  
  
 /*
@@ -361,6 +370,7 @@ ipc.on('get-data', function(event){
 	event.sender.send('get-data-success', data);
 });
 
+//add-team, delete-team, 
 
 app.on('ready', createWindow);
 
