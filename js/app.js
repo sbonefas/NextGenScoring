@@ -1,6 +1,3 @@
-//const electron = require("electron");
-//const ipc = electron.ipcRenderer;
-
 const electron = require("electron");
 const ipc = electron.ipcRenderer;
 
@@ -244,6 +241,12 @@ var app = new Vue({
      }
      if(e.keyCode == 27) { // Esc key pressed
         app.clear_input();
+     }
+     //Q - back to main menu
+     if(e.keyCode == 81) {
+        if(confirm("Are you sure you want to go back to the main menu? Changes will be lost")) {
+            window.location = "./mainmenu.html"
+        }
      }
 
      // alt + h - Help menu
