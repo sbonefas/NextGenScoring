@@ -1219,10 +1219,12 @@ var app = new Vue({
           } else if(char_entered == 'ENTER') {
             if(inputtext.substring(1,2) == 'T') { // media timeout
               app.add_play("Media timeout");
+              ipc.send('add-play', "O T");
             } else if(inputtext.substring(1,2) == 'H' && inputtext.substring(2,3) == 'M') { // home full timeout
               if(app.home_full > 0) {
                 app.home_full -= 1;
                 app.add_play(app.teams[0] + " full timeout");
+                ipc.send('add-play', "O M H");
               } else {
                 // inputvalidator.innerText = "Out of timeouts. Press ESC/F10 to clear input.";
               }
@@ -1230,6 +1232,7 @@ var app = new Vue({
               if(app.home_partial > 0) {
                 app.home_partial -= 1;
                 app.add_play(app.teams[0] + " partial timeout");
+                ipc.send('add-play', "O 3 H");
               } else {
                 // inputvalidator.innerText = "Out of timeouts. Press ESC/F10 to clear input.";
               }
@@ -1237,6 +1240,7 @@ var app = new Vue({
               if(app.vis_full > 0) {
                 app.vis_full -= 1;
                 app.add_play(app.teams[1] + " full timeout");
+                ipc.send('add-play', "O M V");
               } else {
                 // inputvalidator.innerText = "Out of timeouts. Press ESC/F10 to clear input.";
               }
@@ -1244,6 +1248,7 @@ var app = new Vue({
               if(app.vis_partial > 0) {
                 app.vis_partial -= 1;
                 app.add_play(app.teams[1] + " partial timeout");
+                ipc.send('add-play', "O 3 V");
               } else {
                 // inputvalidator.innerText = "Out of timeouts. Press ESC/F10 to clear input.";
               }
@@ -1680,6 +1685,7 @@ var app = new Vue({
                     app.home_team[index].stl += 1;
                     app.home_totals.stl += 1;
                     app.add_play("Steal by " + app.home_team[index].name);
+                    ipc.send('add-play', "S " + player_number + " H");
                 }
              }
            }
@@ -1691,6 +1697,7 @@ var app = new Vue({
                     app.vis_team[index].stl += 1;
                     app.vis_totals.stl += 1;
                     app.add_play("Steal by " + app.vis_team[index].name);
+                    ipc.send('add-play', "S " + player_number + " V");
                 }
              }
            }
@@ -1717,10 +1724,12 @@ var app = new Vue({
           if(home) {
             home_stats.tvs += 1;
             app.home_totals.to += 1
+            ipc.send('add-play', "T M H");
             app.vis_possession(); // switch possession
           } else {
             vis_stats.tvs += 1;
             app.vis_totals.to += 1
+            ipc.send('add-play', "T M V");
             app.home_possession(); // switch possession
           }
         } else {
@@ -1731,6 +1740,7 @@ var app = new Vue({
               if(player_number == app.home_team[index].number) {
                   app.home_team[index].to += 1;
                   app.add_play("Turnover by " + app.home_team[index].name);
+                  ipc.send('add-play', "T " + player_number + " H");
                   break;
               }
             }
@@ -1742,6 +1752,7 @@ var app = new Vue({
                 if(player_number == app.vis_team[index].number) {
                     app.vis_team[index].to += 1;
                     app.add_play("Turnover by " + app.vis_team[index].name);
+                    ipc.send('add-play', "T " + player_number + " V");
                     break;
                 }
            }
@@ -1981,6 +1992,7 @@ var app = new Vue({
                     app.home_team[index].rb_def += 1;
                     app.home_totals.rb_def += 1;
                     app.add_play("Defensive rebound by " + app.home_team[index].name);
+                    ipc.send('add-play', "R " + player_number + "D V");
                     app.home_possession();
                   } else {
                     inputvalidator.innerText = "Player #" + player_number + " is not in the game. Press ESC/F10 to clear input.";
@@ -1998,6 +2010,7 @@ var app = new Vue({
                     app.vis_team[index].rb_def += 1;
                     app.vis_totals.rb_def += 1;
                     app.add_play("Defensive rebound by " + app.vis_team[index].name);
+                    ipc.send('add-play', "R " + player_number + "D H");
                     app.vis_possession();
                   } else {
                     inputvalidator.innerText = "Player #" + player_number + " is not in the game. Press ESC/F10 to clear input.";
@@ -2017,6 +2030,7 @@ var app = new Vue({
                 app.home_team[index].rb_off += 1;
                 app.home_totals.rb_off += 1;
                 app.add_play("Offensive rebound by " + app.home_team[index].name);
+                ipc.send('add-play', "R " + player_number + " R H");
                 app.home_possession();
               } else {
                 inputvalidator.innerText = "Player #" + player_number + " is not in the game. Press ESC/F10 to clear input.";
@@ -2030,6 +2044,7 @@ var app = new Vue({
                 app.vis_team[index].rb_off += 1;
                 app.vis_totals.rb_off += 1;
                 app.add_play("Offensive rebound by " + app.vis_team[index].name);
+                ipc.send('add-play', "R " + player_number + " R V");
                 app.vis_possession();
               } else {
                 inputvalidator.innerText = "Player #" + player_number + " is not in the game. Press ESC/F10 to clear input.";
@@ -2045,9 +2060,11 @@ var app = new Vue({
       if(defensive_rebound) {
         if(home) {
           app.vis_totals.rb_def += 1;
+          ipc.send('add-play', "R M D H");
           app.vis_possession();
         } else {
           app.home_totals.rb_def += 1;
+          ipc.send('add-play', "R M D V");
           app.home_possession();
         }
 
@@ -2055,8 +2072,10 @@ var app = new Vue({
       } else {
         if(home) {
           app.home_totals.rb_off += 1;
+          ipc.send('add-play', "R M H");
         } else {
           app.vis_totals.rb_off += 1;
+          ipc.send('add-play', "R M V");
         }
         app.add_play("Offensive Team Rebound");
       }
@@ -2292,10 +2311,10 @@ var app = new Vue({
           }
           if(!home) {
               for(index = 0; index < app.home_team.length; index++) {
-                  console.log("blocker: " + blocker + " index_num: " + app.vis_team[index].number);
                   if(blocker == app.home_team[index].number && app.check_in_game(blocker, true)) {
                     app.home_team[index].blk += 1;
                     home_stats.blocks += 1;
+                    ipc.send('add-play', "K " + blocker + " H");
                     app.vis_possession();
                     break;
                   }
@@ -2303,10 +2322,10 @@ var app = new Vue({
           }
           else {
             for(index = 0; index < app.vis_team.length; index++) {
-                console.log("blocker: " + blocker + " index_num: " + app.vis_team[index].number);
                 if(blocker == app.vis_team[index].number && app.check_in_game(blocker, false)) {
                   app.vis_team[index].blk += 1;
                   vis_stats.blocks += 1;
+                  ipc.send('add-play', "K " + blocker + " V");
                   app.home_possession();
                   break;
                 }
