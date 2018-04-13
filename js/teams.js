@@ -81,6 +81,11 @@ var app = new Vue({
   methods: {
     keyevent : function (e) {
       console.log(e.keyCode);
+      // alt + h - Help menu
+      if(e.altKey && e.keyCode == 72) {
+          help();
+      }
+
       // <Enter> --> Edit Team
       if(e.keyCode == 13) {
         app.edit_team();
