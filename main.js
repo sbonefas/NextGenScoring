@@ -213,10 +213,10 @@ function addPlay(keystrokes){
 			}
 			break;
 		case 'r':
-			rebound(statArray[0], input[1]);
+			if (input[2] == 'r') rebound(statArray[0], input[1]);
+			else if (input[2] == 'd') rebound(statArray[0], input[1],1);
+			else if (input[2] == 'm') 
 			return;
-		case 'd':
-			rebound(statArray[0], input[1], 1);
 		case 'a':
 			assist(statArray[0], input[1]); 
 			return;
