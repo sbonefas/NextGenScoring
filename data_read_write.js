@@ -166,7 +166,9 @@ exports.read_game_file = function(file_name) {
 	if(file_contents == null) {
 		throw "File Read Error: File " + file_name + " does not exist!";
 	}
-
+	
+	
+	
 	// Convert to three separate strings. Cut off last newline.
 	var stats_string_arr = file_contents.split(semicolon_replacement);
 	stats_string_arr[0] = stats_string_arr[0].substring(0, stats_string_arr[0].length-1);
