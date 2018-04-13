@@ -17,4 +17,5 @@ module.exports = function(name, number, position){
 	this.get_position = function(){
 		return this.position;
 	}
+
 }
