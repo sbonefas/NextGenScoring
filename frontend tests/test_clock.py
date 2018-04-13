@@ -9,8 +9,7 @@ import unittest
 def configure_index():
     cwd = os.getcwd()
     path = os.path.abspath(os.path.join(cwd, os.pardir))
-    path2 = os.path.abspath(os.path.join(path, os.pardir))  
-    index_path = 'file:///' + path2 + '/index.html'
+    index_path = 'file:///' + path + '/index.html'
     return index_path.replace("\\", '/')
 
 def run_clock(sleep_time, driver):
@@ -84,5 +83,9 @@ class TestClock(unittest.TestCase):
         self.assertEqual(sleep_time, duration.seconds)
  
 if __name__ == '__main__':
+<<<<<<< HEAD
     unittest.main() 
     
+=======
+    unittest.main()
+>>>>>>> frontend_testing
