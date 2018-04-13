@@ -20,7 +20,7 @@ const test_stats = "HOME\nnumber(&h#@d!`_fg(&h#@d!`_fga(&h#@d!`_pts\n"
 + "/Od@&?l#iTEAM\nteam fouls(&h#@d!`_timeouts left\n"
 + "9(&h#@d!`_4\n"
 + "8(&h#@d!`_3";
-const test_stats_with_footer = test_stats + "\n/Od@&?l#iFOOTER\n" + footer.toString().replace(',','(&h#@d!`_');
+const test_stats_with_footer = test_stats + "\n/Od@&?l#iFOOTER\n" + footer.toString().replace(/,/g,'(&h#@d!`_');
 const test_team_stats = "HOME\nnumber(&h#@d!`_fg(&h#@d!`_fga(&h#@d!`_pts\n30(&h#@d!`_2(&h#@d!`_4(&h#@d!`_6\n\
 31(&h#@d!`_3(&h#@d!`_3(&h#@d!`_7\n44(&h#@d!`_5(&h#@d!`_7(&h#@d!`_12\n02(&h#@d!`_1(&h#@d!`_5(&h#@d!`_2";
 const test_stats_array = [ 
@@ -77,7 +77,7 @@ function test() {
 	test_write_player_stats_to_game_file();
 	test_write_team_stats_to_game_file();
 
-	clean();
+	//clean();
 }
 
 //done
@@ -105,7 +105,7 @@ function test_create_game_file() {
 	var contents = "HOME\nnumber(&h#@d!`_fg(&h#@d!`_fga(&h#@d!`_pts\n"
 					+ "/Od@&?l#iAWAY\nnumber(&h#@d!`_fg(&h#@d!`_fga(&h#@d!`_pts\n"
 					+ "/Od@&?l#iTEAM\nteam fouls(&h#@d!`_timeouts left\n0(&h#@d!`_0\n0(&h#@d!`_0\n"
-					+ "/Od@&?l#iFOOTER\n" + footer.toString().replace(',','(&h#@d!`_');
+					+ "/Od@&?l#iFOOTER\n" + footer.toString().replace(/,/g,'(&h#@d!`_');
 	drw.create_game_file(individual_stat_labels, team_stat_labels, file_name, footer);
 	if(fs.readFileSync(file_path, 'utf8') == contents) test_success("test_create_game_file");
 	else test_fail("test_create_game_file");
@@ -116,7 +116,7 @@ function test_initial_game_file_contents() {
 	var contents = "HOME\nnumber(&h#@d!`_fg(&h#@d!`_fga(&h#@d!`_pts\n"
 					+ "/Od@&?l#iAWAY\nnumber(&h#@d!`_fg(&h#@d!`_fga(&h#@d!`_pts\n"
 					+ "/Od@&?l#iTEAM\nteam fouls(&h#@d!`_timeouts left\n0(&h#@d!`_0\n0(&h#@d!`_0\n"
-					+ "/Od@&?l#iFOOTER\n" + footer.toString().replace(',','(&h#@d!`_');
+					+ "/Od@&?l#iFOOTER\n" + footer.toString().replace(/,/g,'(&h#@d!`_');
 	if(drw.test_get_initial_game_file_contents(individual_stat_labels, team_stat_labels, footer) == contents) test_success("test_initial_game_file_contents");
 	else test_fail("test_initial_game_file_contents");
 }
@@ -126,7 +126,7 @@ function test_get_game_file_contents() {
 	var contents = "HOME\nnumber(&h#@d!`_fg(&h#@d!`_fga(&h#@d!`_pts\n"
 					+ "/Od@&?l#iAWAY\nnumber(&h#@d!`_fg(&h#@d!`_fga(&h#@d!`_pts\n"
 					+ "/Od@&?l#iTEAM\nteam fouls(&h#@d!`_timeouts left\n0(&h#@d!`_0\n0(&h#@d!`_0\n"
-					+ "/Od@&?l#iFOOTER\n" + footer.toString().replace(',','(&h#@d!`_');
+					+ "/Od@&?l#iFOOTER\n" + footer.toString().replace(/,/g,'(&h#@d!`_');
 	if(drw.test_get_game_file_contents(file_path) == contents) test_success("test_get_game_file_contents");
 	else test_fail("test_get_game_file_contents");
 }
@@ -190,7 +190,7 @@ function test_game_array_to_string() {
 
 //done
 function test_get_game_information_string() {
-	if(drw.test_get_game_information_string(file_name) == "FOOTER\n" + footer.toString().replace(',','(&h#@d!`_')) test_success("test_get_game_information_string");
+	if(drw.test_get_game_information_string(file_name) == "FOOTER\n" + footer.toString().replace(/,/g,'(&h#@d!`_')) test_success("test_get_game_information_string");
 	else test_fail("test_get_game_information_string");
 }
 

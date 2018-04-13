@@ -141,7 +141,7 @@ function get_initial_game_file_contents(individual_stat_labels, team_stat_labels
 		}
 	}
 	contents += "\n" + semicolon_replacement + "FOOTER\n";
-	contents += footer.toString().replace(',','(&h#@d!`_');
+	contents += footer.toString().replace(/,/g,'(&h#@d!`_');
 
 	return contents;
 }
