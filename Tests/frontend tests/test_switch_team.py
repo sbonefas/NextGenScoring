@@ -1,212 +1,171 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.alert import Alert
 import unittest
-from switch_team import SwitchTeam
+import os
 
-class TestSwitchTeam(unittest.TestCase):
-    driver = None
+
+def configure_index():
+    cwd = os.getcwd()
+    path = os.path.abspath(os.path.join(cwd, os.pardir))
+    path2 = os.path.abspath(os.path.join(path, os.pardir))  
+    index_path = 'file:///' + path2 + '/index.html'
+    return index_path.replace("\\", '/')
     
+    
+class TestTimeOuts(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-	    ## Setup the website ##
         __class__.driver = webdriver.Firefox()
-        __class__.driver.get("file:///C:/Users/damon/Documents/Senior_Yr_Sem2/Software%20Engineering/Project/NextGenScoring/index.html") 
-        #__class__.driver.find_element_by_id("scorebar").text
-        #__class__.driver.find_element_by_id("clockh2").text
+        index = configure_index()
+        __class__.driver.get(index) 
+        pass
+		
     @classmethod
     def tearDownClass(cls):
 	    __class__.driver.quit()
+        #pass
 
     def setUp(self):
-	    # set attribute to something this entire time
-	    self.team = SwitchTeam()
+        self.switch_to_home_with_h()
+        
+    def resetClass(self):
+        __class__.driver.quit()
+        self.setUpClass()
 	
     def tearDown(self):
-	    pass
-	
-    def test___init__(self):
-	    # ensure default constructor selects default option - H
-        self.assertEqual(self.team.curr_team, "H")
-		
-        # ensure parameterized constructor selects option 1 - H
-        self.team2 = SwitchTeam("H")
-        self.assertEqual(self.team2.curr_team, "H")
-		
-        # ensure parameterized constructor selects option 2 - V
-        self.team3 = SwitchTeam("V")
-        self.assertEqual(self.team3.curr_team, "V")
-		
-		# ensure parameterized constructor returns ValueError
-        try:
-            self.team4 = SwitchTeam("A")
-            self.assertEqual(self.team4.curr_team, "A")		
-        except ValueError:
-            pass
-
-		# ensure parameterized constructor returns ValueError
-        try:
-            self.team5 = SwitchTeam("h")
-            self.assertEqual(self.team5.curr_team, "h")		
-        except ValueError:
-            pass
-
-		# ensure parameterized constructor returns ValueError
-        try:
-            self.team6 = SwitchTeam("v")
-            self.assertEqual(self.team6.curr_team, "v")		
-        except ValueError:
-            pass
-
-        # ensure parameterized constructor returns ValueError
-        try:
-            self.team7 = SwitchTeam("Home")
-            self.assertEqual(self.team7.curr_team, "Home")		
-        except ValueError:
-            pass
-			
-        # ensure parameterized constructor returns ValueError
-        try:
-            self.team8 = SwitchTeam("Visitor")
-            self.assertEqual(self.team8.curr_team, "Visitor")		
-        except ValueError:
-            pass
-
-    # starts at home and switches to home again
-    def test_switch_to_home(self):
-	    __class__.driver.find_element_by_id("scorebar").send_keys("H");
-	    self.team.switch_to_home()
-	    self.assertEqual(self.team.curr_team, "H")
-	
-    # starts at home and switches to visitor	
-    def test_switch_to_visitor(self):
-        self.team.switch_to_visitor()
-        self.assertEqual(self.team.curr_team, "V")
-
-    # starts at home, switches to visitor, and switches back to home
-    def test_switch_between_end_at_home(self):
-	    self.team.switch_to_visitor()
-	    self.team.switch_to_home()
-	    self.assertEqual(self.team.curr_team, "H")
-		
-    # starts at home, switches to visitor, switches to home, and back to visitor
-    def test_switch_between_end_at_visitor(self):
-	    self.team.switch_to_visitor()
-	    self.team.switch_to_home()
-	    self.team.switch_to_visitor()
-	    self.assertEqual(self.team.curr_team, "V")
-	
-    # starts at visitor, switches to home, and switches back to visitor
-    def test_start_at_visitor_switch_between_end_at_visitor(self):
-	    self.team = SwitchTeam("V")
-	    self.team.switch_to_home()
-	    self.team.switch_to_visitor()
-	    self.assertEqual(self.team.curr_team, "V")
-		
-if __name__ == '__main__':
-=======
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-import unittest
-from switch_team import SwitchTeam
-
-class TestSwitchTeam(unittest.TestCase):
-    driver = None
+        #__class__.driver.quit()
+        pass
+        
+    def setupAway(self):
+        self.switch_to_away_with_v()
+        
+    def switch_to_home_with_h(self):
+        __class__.driver.find_element_by_class_name("fouls").send_keys("H")
     
-    @classmethod
-    def setUpClass(cls):
-	    ## Setup the website ##
-        __class__.driver = webdriver.Firefox()
-        __class__.driver.get("file:///C:/Users/damon/Documents/Senior_Yr_Sem2/Software%20Engineering/Project/NextGenScoring/index.html") 
-        #__class__.driver.find_element_by_id("scorebar").text
-        #__class__.driver.find_element_by_id("clockh2").text
-    @classmethod
-    def tearDownClass(cls):
-	    __class__.driver.quit()
+    def switch_to_away_with_v(self):
+        __class__.driver.find_element_by_class_name("fouls").send_keys("V")
+        
+    def switch_to_home_with_left(self):
+        __class__.driver.find_element_by_class_name("fouls").send_keys(Keys.LEFT)
+    
+    def switch_to_away_with_right(self):
+        __class__.driver.find_element_by_class_name("fouls").send_keys(Keys.RIGHT)
+    
+    def test_switch_to_away_with_v(self):
+        visitor_style = __class__.driver.find_element_by_id("visitorscoreshowhide").get_attribute("style")
+        visitor_color1 = visitor_style.split(';')[0].split(' ')[1]
+        
+        home_style = __class__.driver.find_element_by_id("homescoreshowhide").get_attribute("style")
+        home_color1 = home_style.split(';')[0].split(' ')[1]
 
-    def setUp(self):
-	    # set attribute to something this entire time
-	    self.team = SwitchTeam()
-	
-    def tearDown(self):
-	    pass
-	
-    def test___init__(self):
-	    # ensure default constructor selects default option - H
-        self.assertEqual(self.team.curr_team, "H")
-		
-        # ensure parameterized constructor selects option 1 - H
-        self.team2 = SwitchTeam("H")
-        self.assertEqual(self.team2.curr_team, "H")
-		
-        # ensure parameterized constructor selects option 2 - V
-        self.team3 = SwitchTeam("V")
-        self.assertEqual(self.team3.curr_team, "V")
-		
-		# ensure parameterized constructor returns ValueError
-        try:
-            self.team4 = SwitchTeam("A")
-            self.assertEqual(self.team4.curr_team, "A")		
-        except ValueError:
-            pass
+        self.switch_to_away_with_v()
+        
+        visitor_style = __class__.driver.find_element_by_id("visitorscoreshowhide").get_attribute("style")
+        visitor_color2 = visitor_style.split(';')[0].split(' ')[1]
+        
+        home_style = __class__.driver.find_element_by_id("homescoreshowhide").get_attribute("style")
+        home_color2 = home_style.split(';')[0].split(' ')[1]
+        
+        self.assertNotEqual(home_color1, home_color2)
+        self.assertNotEqual(visitor_color1, visitor_color2)
+        self.assertEqual(home_color2, 'white')
+        self.assertEqual(visitor_color2, 'red')
+        
+        
+    def test_switch_to_home_with_h(self):
+        self.setupAway()
+        visitor_style = __class__.driver.find_element_by_id("visitorscoreshowhide").get_attribute("style")
+        visitor_color1 = visitor_style.split(';')[0].split(' ')[1]
+        
+        home_style = __class__.driver.find_element_by_id("homescoreshowhide").get_attribute("style")
+        home_color1 = home_style.split(';')[0].split(' ')[1]
 
-		# ensure parameterized constructor returns ValueError
-        try:
-            self.team5 = SwitchTeam("h")
-            self.assertEqual(self.team5.curr_team, "h")		
-        except ValueError:
-            pass
+        self.switch_to_home_with_h()
+        
+        visitor_style = __class__.driver.find_element_by_id("visitorscoreshowhide").get_attribute("style")
+        visitor_color2 = visitor_style.split(';')[0].split(' ')[1]
+        
+        home_style = __class__.driver.find_element_by_id("homescoreshowhide").get_attribute("style")
+        home_color2 = home_style.split(';')[0].split(' ')[1]
+        
+        self.assertNotEqual(home_color1, home_color2)
+        self.assertNotEqual(visitor_color1, visitor_color2)
+        self.assertEqual(visitor_color2, 'white')
+        self.assertEqual(home_color2, 'red')
+        
 
-		# ensure parameterized constructor returns ValueError
-        try:
-            self.team6 = SwitchTeam("v")
-            self.assertEqual(self.team6.curr_team, "v")		
-        except ValueError:
-            pass
+    def test_switch_to_away_with_right(self):
+        visitor_style = __class__.driver.find_element_by_id("visitorscoreshowhide").get_attribute("style")
+        visitor_color1 = visitor_style.split(';')[0].split(' ')[1]
+        
+        home_style = __class__.driver.find_element_by_id("homescoreshowhide").get_attribute("style")
+        home_color1 = home_style.split(';')[0].split(' ')[1]
 
-        # ensure parameterized constructor returns ValueError
-        try:
-            self.team7 = SwitchTeam("Home")
-            self.assertEqual(self.team7.curr_team, "Home")		
-        except ValueError:
-            pass
-			
-        # ensure parameterized constructor returns ValueError
-        try:
-            self.team8 = SwitchTeam("Visitor")
-            self.assertEqual(self.team8.curr_team, "Visitor")		
-        except ValueError:
-            pass
+        self.switch_to_away_with_right()
+        
+        visitor_style = __class__.driver.find_element_by_id("visitorscoreshowhide").get_attribute("style")
+        visitor_color2 = visitor_style.split(';')[0].split(' ')[1]
+        
+        home_style = __class__.driver.find_element_by_id("homescoreshowhide").get_attribute("style")
+        home_color2 = home_style.split(';')[0].split(' ')[1]
+        
+        self.assertNotEqual(home_color1, home_color2)
+        self.assertNotEqual(visitor_color1, visitor_color2)
+        self.assertEqual(home_color2, 'white')
+        self.assertEqual(visitor_color2, 'red')
+        
+        
+    def test_switch_to_home_with_left(self):
+        self.setupAway()
+        visitor_style = __class__.driver.find_element_by_id("visitorscoreshowhide").get_attribute("style")
+        visitor_color1 = visitor_style.split(';')[0].split(' ')[1]
+        
+        home_style = __class__.driver.find_element_by_id("homescoreshowhide").get_attribute("style")
+        home_color1 = home_style.split(';')[0].split(' ')[1]
 
-    # starts at home and switches to home again
-    def test_switch_to_home(self):
-	    __class__.driver.find_element_by_id("scorebar").send_keys("H");
-	    self.team.switch_to_home()
-	    self.assertEqual(self.team.curr_team, "H")
-	
-    # starts at home and switches to visitor	
-    def test_switch_to_visitor(self):
-        self.team.switch_to_visitor()
-        self.assertEqual(self.team.curr_team, "V")
+        self.switch_to_home_with_left()
+        
+        visitor_style = __class__.driver.find_element_by_id("visitorscoreshowhide").get_attribute("style")
+        visitor_color2 = visitor_style.split(';')[0].split(' ')[1]
+        
+        home_style = __class__.driver.find_element_by_id("homescoreshowhide").get_attribute("style")
+        home_color2 = home_style.split(';')[0].split(' ')[1]
+        
+        self.assertNotEqual(home_color1, home_color2)
+        self.assertNotEqual(visitor_color1, visitor_color2)
+        self.assertEqual(visitor_color2, 'white')
+        self.assertEqual(home_color2, 'red')
+        
+        
+    def test_change_mult_end_home(self):
+        self.switch_to_away_with_right()
+        self.switch_to_away_with_right()
+        self.switch_to_home_with_left()
+        self.switch_to_away_with_right()
+        self.switch_to_home_with_left()
+        
+        home_style = __class__.driver.find_element_by_id("homescoreshowhide").get_attribute("style")
+        home_color = home_style.split(';')[0].split(' ')[1]
+        
+        self.assertEqual(home_color, "red")
+    
 
-    # starts at home, switches to visitor, and switches back to home
-    def test_switch_between_end_at_home(self):
-	    self.team.switch_to_visitor()
-	    self.team.switch_to_home()
-	    self.assertEqual(self.team.curr_team, "H")
-		
-    # starts at home, switches to visitor, switches to home, and back to visitor
-    def test_switch_between_end_at_visitor(self):
-	    self.team.switch_to_visitor()
-	    self.team.switch_to_home()
-	    self.team.switch_to_visitor()
-	    self.assertEqual(self.team.curr_team, "V")
-	
-    # starts at visitor, switches to home, and switches back to visitor
-    def test_start_at_visitor_switch_between_end_at_visitor(self):
-	    self.team = SwitchTeam("V")
-	    self.team.switch_to_home()
-	    self.team.switch_to_visitor()
-	    self.assertEqual(self.team.curr_team, "V")
-		
+    def test_change_mult_end_away(self):
+        self.switch_to_away_with_right()
+        self.switch_to_away_with_right()
+        self.switch_to_home_with_left()
+        self.switch_to_away_with_right()
+        self.switch_to_home_with_left()
+        self.switch_to_away_with_right()
+        
+        visitor_style = __class__.driver.find_element_by_id("visitorscoreshowhide").get_attribute("style")
+        visitor_color = visitor_style.split(';')[0].split(' ')[1]
+        
+        self.assertEqual(visitor_color, "red")
+
+
+    
 if __name__ == '__main__':
-	unittest.main()
+    unittest.main()
+    
