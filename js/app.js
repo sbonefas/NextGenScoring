@@ -3,7 +3,7 @@ const ipc = electron.ipcRenderer;
 
 window.onload = function(){
 	// Send data to backend
-	let args = ["Wisconsin", "Ohio State", "796", "518", "100/0", "0/100", "3/12/19", "4pm", "Kohl Center", "Kohl-Center-code", 1, ["schedule notes"], "quarters", "15", "15", ["Official Names"], ["Box comments"]];
+	let args = ["Wisconsin", "Ohio State", "796", "518", "100-0", "0-100", "3-12-19", "4pm", "Kohl Center", "Kohl-Center-code", "1", ["schedule notes"], "quarters", "15", "15", ["Official Names"], ["Box comments"],"attendance"];
 	ipc.send('init-game', args);
 	
 	let fieldgoal_off_rebound = "j 02 r 05 h";  //offensive rebound (shot made by home #2, rebound home #5)
@@ -232,12 +232,17 @@ var app = new Vue({
           app.rebound(e.keyCode);
         } else if(currentlyInputtingPlay == "freethrow") {
           app.log_free_throw(e.keyCode, false);
+        } else if(currentlyInputtingPlay == "shotattempt") {
+          app.shot_attempt(e.keyCode);
         }
         app.clear_input();
         //save play
      }
      if(e.keyCode == 8) { // Backspace key pressed
         inputtext = inputtext.slice(0, -1);
+        if(userinput.value.length <= 1) {
+          app.clear_input();
+        }
      }
      if(e.keyCode == 27) { // Esc key pressed
         app.clear_input();
@@ -321,6 +326,8 @@ var app = new Vue({
           app.foul(e.keyCode);
         } else if(currentlyInputtingPlay == "rebound") {
           app.rebound(e.keyCode);
+        } else if(currentlyInputtingPlay == "shotattempt") {
+          app.shot_attempt(e.keyCode);
         }
      }
 
@@ -332,9 +339,12 @@ var app = new Vue({
      // D - used in rebound() to indicate defensive rebound
      else if(e.keyCode == 68) {
         if(currentlyInputtingPlay == "") {
+          currentlyInputtingPlay = "shotattempt";
           app.shot_attempt(e.keyCode);
         } else if(currentlyInputtingPlay == "rebound") {
           app.rebound(e.keyCode);
+        } else if(currentlyInputtingPlay == "shotattempt") {
+          app.shot_attempt(e.keyCode);
         }
      }
 
@@ -498,6 +508,8 @@ var app = new Vue({
           app.rebound(e.keyCode);
         } else if(currentlyInputtingPlay == "freethrow") {
           app.log_free_throw(e.keyCode, false);
+        } else if(currentlyInputtingPlay == "shotattempt") {
+          app.shot_attempt(e.keyCode);
         }
      }
 
@@ -514,6 +526,7 @@ var app = new Vue({
      // P - used as result code in shot_attempt()
      else if(e.keyCode == 80) {
         if(currentlyInputtingPlay == "") {
+          currentlyInputtingPlay = "shotattempt";
           app.shot_attempt(e.keyCode);
         } else if(currentlyInputtingPlay == "shotattempt") {
           app.shot_attempt(e.keyCode);
@@ -555,6 +568,12 @@ var app = new Vue({
       }
      }
 
+     // W - used in shot_attempt() for wrong basket
+     else if(e.keyCode == 87) {
+        currentlyInputtingPlay = "shotattempt";
+        app.shot_attempt(e.keyCode);
+     }
+
      // X - used as result code in shot_attempt()
      else if(e.keyCode == 88) {
         if(currentlyInputtingPlay == "shotattempt") {
@@ -565,6 +584,7 @@ var app = new Vue({
      // Y - used as result code in shot_attempt()
      else if(e.keyCode == 89) {
         if(currentlyInputtingPlay == "") {
+          currentlyInputtingPlay = "shotattempt";
           app.shot_attempt(e.keyCode);
         } else if(currentlyInputtingPlay == "shotattempt") {
           app.shot_attempt(e.keyCode);
@@ -922,14 +942,222 @@ var app = new Vue({
         //let keystroke2 = "j 16 g   h";
         //ipc.send('add-play',keystrokes);
    },
+   // Returns player index or -1 if they cannot be found
+   get_player_index(player_number, home_team) {
+        if(home_team) {
+            for(index = 0; index < app.home_team.length; index++) {
+              if(player_number == app.home_team[index].number) {
+                  return index;
+              }
+            }
+            return -1;
+        } else {
+          for(index = 0; index < app.vis_team.length; index++) {
+              if(player_number == app.vis_team[index].number) {
+                  return index;
+              }
+            }
+            return -1;
+        }
+   },
    shot_attempt(keyCode) {
       var char_entered = String.fromCharCode(keyCode);  // will be upper case
       if(keyCode == 13) char_entered = "ENTER";
       inputtext = inputtext + char_entered;
+      console.log("keycode:" + keyCode);
+      console.log("inputtext:" + inputtext);
       if(char_entered == "ENTER") {
+        console.log(inputtext);
+        if(inputtext.substring(0,1) == 'W') {
+          if(home) {
+            app.vis_score += 2;
+          } else {
+            app.home_score += 2;
+          }
+          app.add_play("Scored in wrong basket");
+        } else if(inputtext.substring(0,1) == 'J') {
+          if(inputtext.substring(3,4) == 'G' || inputtext.substring(3,4) == 'Q') {
+            if(home) {
+              app.jgq_good(app.home_team[app.get_player_index(inputtext.substring(1,3), true)], app.home_team, app.home_totals, home_stats);
+              if(inputtext.length > 6 && app.check_in_game(inputtext.substring(4,6), true)) {
+                  app.home_team[app.get_player_index(inputtext.substring(4,6), true)].as += 1;
+                  app.home_totals.as += 1;
+              }
+            } else {
+              app.jgq_good(app.vis_team[app.get_player_index(inputtext.substring(1,3), false)], app.vis_team, app.vis_totals, vis_stats);
+              if(inputtext.length > 6 && app.check_in_game(inputtext.substring(4,6), true)) {
+                  app.vis_team[app.get_player_index(inputtext.substring(4,6), false)].as += 1;
+                  app.vis_totals.as += 1;
+              }
+            }
+          } else if(inputtext.substring(3,4) == 'Y') {
+            if(home) {
+              app.jy_good_3(app.home_team[app.get_player_index(inputtext.substring(1,3), true)], app.home_team, app.home_totals, home_stats);
+              if(inputtext.length > 6 && app.check_in_game(inputtext.substring(4,6), true)) {
+                  app.home_team[app.get_player_index(inputtext.substring(4,6), true)].as += 1;
+                  app.home_totals.as += 1;
+              }
+            } else {
+              app.jy_good_3(app.vis_team[app.get_player_index(inputtext.substring(1,3), false)], app.vis_team, app.vis_totals, vis_stats);
+              if(inputtext.length > 6 && app.check_in_game(inputtext.substring(4,6), true)) {
+                  app.vis_team[app.get_player_index(inputtext.substring(4,6), false)].as += 1;
+                  app.vis_totals.as += 1;
+              }
+            }
+          } else if(inputtext.substring(3,4) == 'P') {
+            if(home) {
+              app.jp_good_paint(app.home_team[app.get_player_index(inputtext.substring(1,3), true)], app.home_team, app.home_totals, home_stats);
+              if(inputtext.length > 6 && app.check_in_game(inputtext.substring(4,6), true)) {
+                  app.home_team[app.get_player_index(inputtext.substring(4,6), true)].as += 1;
+                  app.home_totals.as += 1;
+              }
+            } else {
+              app.jp_good_paint(app.vis_team[app.get_player_index(inputtext.substring(1,3), false)], app.vis_team, app.vis_totals, vis_stats);
+              if(inputtext.length > 6 && app.check_in_game(inputtext.substring(4,6), true)) {
+                  app.vis_team[app.get_player_index(inputtext.substring(4,6), false)].as += 1;
+                  app.vis_totals.as += 1;
+              }
+            }
+          } else if(inputtext.substring(3,4) == 'Z') {
+            if(home) {
+              app.jz_good_fastb_paint(app.home_team[app.get_player_index(inputtext.substring(1,3), true)], app.home_team, app.home_totals, home_stats);
+              if(inputtext.length > 6 && app.check_in_game(inputtext.substring(4,6), true)) {
+                  app.home_team[app.get_player_index(inputtext.substring(4,6), true)].as += 1;
+                  app.home_totals.as += 1;
+              }
+            } else {
+              app.jz_good_fastb_paint(app.vis_team[app.get_player_index(inputtext.substring(1,3), false)], app.vis_team, app.vis_totals, vis_stats);
+              if(inputtext.length > 6 && app.check_in_game(inputtext.substring(4,6), true)) {
+                  app.vis_team[app.get_player_index(inputtext.substring(4,6), false)].as += 1;
+                  app.vis_totals.as += 1;
+              }
+            }
+          } else if(inputtext.substring(3,4) == 'F') {
+            if(home) {
+              app.jf_good_fastb(app.home_team[app.get_player_index(inputtext.substring(1,3), true)], app.home_team, app.home_totals, home_stats);
+              if(inputtext.length > 6 && app.check_in_game(inputtext.substring(4,6), true)) {
+                  app.home_team[app.get_player_index(inputtext.substring(4,6), true)].as += 1;
+                  app.home_totals.as += 1;
+              }
+            } else {
+              app.jf_good_fastb(app.vis_team[app.get_player_index(inputtext.substring(1,3), false)], app.vis_team, app.vis_totals, vis_stats);
+              if(inputtext.length > 6 && app.check_in_game(inputtext.substring(4,6), true)) {
+                  app.vis_team[app.get_player_index(inputtext.substring(4,6), false)].as += 1;
+                  app.vis_totals.as += 1;
+              }
+            }
+          } else if(inputtext.substring(3,4) == 'R') {
+              if(home) {
+                app.jr_missed(app.home_team[app.get_player_index(inputtext.substring(1,3), true)], app.home_team, app.home_totals, home_stats);
+              } else {
+                app.jr_missed(app.vis_team[app.get_player_index(inputtext.substring(1,3), false)], app.vis_team, app.vis_totals, vis_stats);
+              }
+              var sequence = inputtext.substring(3);
+              var defensive = false;
+              if(sequence.substring(1,2) == 'D') {
+                defensive = true;
+                if(sequence.substring(2,3) == 'M') {
+                  console.log("calling rb team");
+                  app.rb_team(defensive);
+                } else if(sequence.substring(2,3) == 'B') {
+                  app.rb_deadball(defensive);
+                  console.log("calling rb deadball");
+                } else {
+                  app.rb_normal(sequence);
+                }
+              } else {
+                defensive = false;
+                if(sequence.substring(1,2) == 'M') {
+                  console.log("calling rb team");
+                  app.rb_team(defensive);
+                } else if(sequence.substring(1,2) == 'B') {
+                  app.rb_deadball(defensive);
+                  console.log("calling rb deadball");
+                } else {
+                  app.rb_normal(sequence);
+                }
+              }
+          } else if(inputtext.substring(3,4) == 'X') {
+              if(home) {
+                app.jx_missed_3(app.home_team[app.get_player_index(inputtext.substring(1,3), true)], app.home_team, app.home_totals, home_stats);
+              } else {
+                app.jx_missed_3(app.vis_team[app.get_player_index(inputtext.substring(1,3), false)], app.vis_team, app.vis_totals, vis_stats);
+              }
+              var sequence = inputtext.substring(3);
+              var defensive = false;
+              if(sequence.substring(1,2) == 'D') {
+                defensive = true;
+                if(sequence.substring(2,3) == 'M') {
+                  console.log("calling rb team");
+                  app.rb_team(defensive);
+                } else if(sequence.substring(2,3) == 'B') {
+                  app.rb_deadball(defensive);
+                  console.log("calling rb deadball");
+                } else {
+                  app.rb_normal(sequence);
+                }
+              } else {
+                defensive = false;
+                if(sequence.substring(1,2) == 'M') {
+                  console.log("calling rb team");
+                  app.rb_team(defensive);
+                } else if(sequence.substring(1,2) == 'B') {
+                  app.rb_deadball(defensive);
+                  console.log("calling rb deadball");
+                } else {
+                  app.rb_normal(sequence);
+                }
+              }
+          } else if(inputtext.substring(3,4) == 'K') {
+              // copied from blocked_shot() method (Yes I know this is bad, but we're on a deadline here folks! -Nick 4/12/18)
+
+              var blocker = inputtext.substring(4,6);
+              if(!home) {
+                app.jk_blocked_shot(app.vis_team[app.get_player_index(inputtext.substring(1,3), false)], app.vis_team, app.vis_totals, vis_stats);
+                  for(index = 0; index < app.home_team.length; index++) {
+                      if(blocker == app.home_team[index].number && app.check_in_game(blocker, true)) {
+                        app.home_team[index].blk += 1;
+                        home_stats.blocks += 1;
+
+                        app.vis_possession();
+                        break;
+                      }
+                  }
+              }
+              else {
+                app.jk_blocked_shot(app.home_team[app.get_player_index(inputtext.substring(1,3), true)], app.home_team, app.home_totals, home_stats);
+                for(index = 0; index < app.vis_team.length; index++) {
+                    if(blocker == app.vis_team[index].number && app.check_in_game(blocker, false)) {
+                      app.vis_team[index].blk += 1;
+                      vis_stats.blocks += 1;
+                      app.home_possession();
+                      break;
+                    }
+                }
+              }
+          }
+        } else if(inputtext.substring(0,1) == 'Y') {
+          
+        } else if(inputtext.substring(0,1) == 'D') {
+          
+        } else if(inputtext.substring(0,1) == 'L') {
+          
+        } else if(inputtext.substring(0,1) == 'P') {
+          
+        }
         
-      } else if(char_entered == 'J') {
-        inputvalidator.innerText = "Shot by player ##:";
+      } else if(char_entered == 'J' && inputtext.length == 1) {
+        inputvalidator.innerText = "Jumper by player ##:";
+      } else if(char_entered == 'Y' && inputtext.length == 1) {
+        inputvalidator.innerText = "3 pointer by player ##:";
+      } else if(char_entered == 'D' && inputtext.length == 1) {
+        inputvalidator.innerText = "Dunk by player ##:";
+      } else if(char_entered == 'L' && inputtext.length == 1) {
+        inputvalidator.innerText = "Layup by player ##:";
+      } else if(char_entered == 'P' && inputtext.length == 1) {
+        inputvalidator.innerText = "Tip-in by player ##:";
+      } else if(char_entered == 'W' && inputtext.length == 1) {
+        inputvalidator.innerText = "Wrong basket. Press ENTER to save play.";
       } else if(!isNaN(char_entered) && inputtext.length == 3) {
         var player_number = inputtext.substring(1,3);
         if(app.check_in_game(player_number, home)) {
@@ -938,21 +1166,34 @@ var app = new Vue({
           inputvalidator.innerText = "Player #" + player_number + " is not currently in the game. Press ESC/F10 to clear input";
         }
       } else if((char_entered == 'G' || char_entered == 'Q') && inputtext.length == 4) {
-          inputvalidator.innerText = "G or Q pressed";
+          inputvalidator.innerText = "Assist by: ## (Press ENTER for no assist).";
       } else if(char_entered == 'Y' && inputtext.length == 4) {
-          inputvalidator.innerText = "Y pressed";
+          inputvalidator.innerText = "Assist by: ## (Press ENTER for no assist).";
       } else if(char_entered == 'P' && inputtext.length == 4) {
-          inputvalidator.innerText = "P pressed";
+          inputvalidator.innerText = "Assist by: ## (Press ENTER for no assist).";
       } else if(char_entered == 'Z' && inputtext.length == 4) {
-          inputvalidator.innerText = "Z pressed";
+          inputvalidator.innerText = "Assist by: ## (Press ENTER for no assist).";
       } else if(char_entered == 'F' && inputtext.length == 4) {
-          inputvalidator.innerText = "F pressed";
+          inputvalidator.innerText = "Assist by: ## (Press ENTER for no assist).";
       } else if(char_entered == 'R' && inputtext.length == 4) {
-          inputvalidator.innerText = "R pressed";
+          inputvalidator.innerText = "OFFENSIVE: player ## or M for team rebound or B for deadball\n" + "DEFENSIVE: D then player ## or DM for team rebound or DB for deadball";
       } else if(char_entered == 'X' && inputtext.length == 4) {
-          inputvalidator.innerText = "X pressed";
+          inputvalidator.innerText = "OFFENSIVE: player ## or M for team rebound or B for deadball\n" + "DEFENSIVE: D then player ## or DM for team rebound or DB for deadball";
       } else if(char_entered == 'K' && inputtext.length == 4) {
-          inputvalidator.innerText = "K pressed";
+          inputvalidator.innerText = "Blocked by #: (Enter player number).";
+      } else if(!isNaN(char_entered) && inputtext.length == 6) {
+        var player_number = inputtext.substring(4,6);
+        if(app.check_in_game(player_number, home)) {
+          if(inputtext.substring(3,4) == 'R' || inputtext.substring(3,4) == 'X') {
+            inputvalidator.innerText = "Rebound by #" + player_number + ". Press ENTER to save play";
+          } else if(inputtext.substring(3,4) == 'K') {
+            inputvalidator.innerText = "Block by #" + player_number + ". Press ENTER to save play";
+          } else {
+            inputvalidator.innerText = "Assist by #" + player_number + ". Press ENTER to save play";
+          }
+        } else {
+          inputvalidator.innerText = "Player #" + player_number + " is not currently in the game. Press ESC/F10 to clear input";
+        }
       }
    },
    timeout(first_input, keyCode) {
@@ -1299,7 +1540,7 @@ var app = new Vue({
          person.fa += 1;
          totals.fa += 1;
          // add to play by play
-         app.add_play(`${person.name} J -> K`);
+         app.add_play(`${person.name}'s shot was blocked`);
          var total_attempts = 0;
          var total_fgs = 0;
          for(players = 0; players < team.length; players++)
@@ -1720,14 +1961,16 @@ var app = new Vue({
       }
     }, //end rebound method
     rb_normal(sequence) {
-      console.log("inputtext:" + inputtext);
+      sequence = sequence.replace(/[^\x20-\x7E]/g, '');  // Removes non-whitespace characters that were causing an issue
       var player_number = 0;
-      if(inputtext.length == 8) { // R01ENTER is 8 characters
-        player_number = inputtext.substring(1,3);
+      if(sequence.length == 8) { // R01ENTER is 8 characters
+        player_number = sequence.substring(1,3);
+        console.log("pn:" + player_number);
       } else {
-        player_number = inputtext.substring(2,4);
+        player_number = sequence.substring(2,4);
+        console.log("pn:" + player_number);
       }
-      if(inputtext.substring(1,2) == 'D') {
+      if(sequence.substring(1,2) == 'D') {
         if(!home) {
            for(index = 0; index < app.home_team.length; index++)
            {
