@@ -2059,11 +2059,11 @@ var app = new Vue({
       if(defensive_rebound) {
         if(home) {
           app.vis_totals.rb_def += 1;
-          ipc.send('add-play', "R M H");
+          ipc.send('add-play', "R M D H");
           app.vis_possession();
         } else {
           app.home_totals.rb_def += 1;
-          ipc.send('add-play', "R M V");
+          ipc.send('add-play', "R M D V");
           app.home_possession();
         }
 
@@ -2071,8 +2071,10 @@ var app = new Vue({
       } else {
         if(home) {
           app.home_totals.rb_off += 1;
+          ipc.send('add-play', "R M H");
         } else {
           app.vis_totals.rb_off += 1;
+          ipc.send('add-play', "R M V");
         }
         app.add_play("Offensive Team Rebound");
       }
