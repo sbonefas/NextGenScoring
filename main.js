@@ -15,6 +15,7 @@ const team_stat_headers = ['home/away', 'total_points', 'made_in_paint', 'fast_b
 const Team = require('./Team.js');	//team object import
 const Player = require('./Player.js'); 	//player object import
 var teams = new Array();
+var current_game;
 
 let win;
 const TESTING = true;
@@ -39,7 +40,7 @@ function createWindow() {
 	}
 	win.on('closed', () => {
 		win = null;
-		drw.delete_file(test_file_name);
+		//drw.delete_file(test_file_name);
 		app.quit();
 	})
 };
@@ -242,7 +243,7 @@ function addPlay(keystrokes){
 	}
 	console.log("in addPlay: " + statArray);
 	if (statArray[15] != 0) add_team_points(statArray[0],statArray[15]);
-	drw.write_player_stats_to_game_file(statArray, test_file_name);
+	drw.write_player_stats_to_game_file(statArray, current_game);
 }
 
 
@@ -262,12 +263,12 @@ function rebound(t, player_number, def_rebound){
 	} else {
 		var statArray = [t, player_number,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0];
 	}
-	drw.write_player_stats_to_game_file(statArray, test_file_name);
+	drw.write_player_stats_to_game_file(statArray, current_game);
 }
 
 function assist(t, player_number){
 	var statArray = [t, player_number,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0];
-	drw.write_player_stats_to_game_file(statArray, test_file_name);
+	drw.write_player_stats_to_game_file(statArray, current_game);
 }
 
 function block(t, player_number){
@@ -277,46 +278,49 @@ function block(t, player_number){
 	else if (t === 0) activeTeam = 1;
 
 	var statArray = [activeTeam, player_number,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0];
-	drw.write_player_stats_to_game_file(statArray, test_file_name);
+	drw.write_player_stats_to_game_file(statArray, current_game);
 }
 
 function chg(t, player_number, new_player_number){
 	var playerSub = [t, "CHG", player_number, new_player_number];
-	drw.write_player_stats_to_game_file(statArray, test_file_name);
+	drw.write_player_stats_to_game_file(statArray, current_game);
 }
 
 function inPaint(team){
-	drw.write_team_stats_to_game_file([team,0,1,0,0], test_file_name);
+	drw.write_team_stats_to_game_file([team,0,1,0,0], current_game);
 }
 
 function fastBreak(team){
-	drw.write_team_stats_to_game_file([team,0,0,1,0], test_file_name);
+	drw.write_team_stats_to_game_file([team,0,0,1,0], current_game);
 }
 
 
 function teamTurnover(team){
-	drw.write_team_stats_to_game_file([team,0,0,0,1], test_file_name);
+	drw.write_team_stats_to_game_file([team,0,0,0,1], current_game);
 }
 
 function add_team_points(team,numPoints){
-	drw.write_team_stats_to_game_file([team,numPoints,0,0,0], test_file_name);
+	drw.write_team_stats_to_game_file([team,numPoints,0,0,0], current_game);
 }
 
 /*
  *  INITIALIZE GAME FUNCTION
  *
  *	ARGS FORMAT:
- *	[HOME_TEAM, AWAY_TEAM, HOME_TEAM_CODE, AWAY_TEAM_CODE, HOME_TEAM_RECORD, AWAY_TEAM_RECORD, START_TIME, STADIUM, STADIUM_CODE, CONF_GAME?, [SCHEDULE_NOTES], QUARTERS/HALVES?, MIN_PER_PERIOD, MIN_IN_OT, [OFFICIALS], [BOX_COMMENTS]]
- *	[    0    ,     1    ,       2       ,        3      ,        4        ,        5        ,      6    ,    7   ,      8      ,     9     ,        10       ,        11       ,        12     ,     13   ,      14    ,       15      ]
+ *	[HOME_TEAM, AWAY_TEAM, HOME_TEAM_CODE, AWAY_TEAM_CODE, HOME_TEAM_RECORD, AWAY_TEAM_RECORD, GAME_DATE, START_TIME, STADIUM, STADIUM_CODE, CONF_GAME?, [SCHEDULE_NOTES], QUARTERS/HALVES?, MIN_PER_PERIOD, MIN_IN_OT, OFFICIALS, [BOX_COMMENTS], ATTENDANCE]
+ *	[    0    ,     1    ,       2       ,        3      ,        4        ,        5        ,     6    ,     7     ,   8    ,       9     ,    10     ,        11       ,        12       ,       13      ,    14    ,    15    ,        16     ,     17    ]
  *
  */
 
 function initGame(args){
 	try {
-		drw.create_game_file(indiv_stat_headers, team_stat_headers, test_file_name, args);
+		var game_file = args[6] + "_" + args[7];
+		drw.create_game_file(indiv_stat_headers, team_stat_headers, game_file, args);
+		current_game = game_file;
 	} catch (e){
 		console.log("Exception in creating game file: " + e);
 	}
+	console.log("Successfully made game file: " + current_game);
 }
 
 
@@ -326,6 +330,17 @@ function initGame(args){
  *
  */
 
+ ipc.on('get-game', function (event,game_name){
+	try {
+		var game_info = get_game_information(game_name);
+	} catch (e) {
+		//if failure
+		console.log("An error occurred in file writing: " + e);
+		event.sender.send('get-game-failure',game_name);
+		return;
+	}
+	event.sender.send('get-game-success',game_info);
+});
 
 ipc.on('add-play', function (event,keystrokes){
 	try {
@@ -355,7 +370,7 @@ ipc.on('init-game', function (event,args){
 ipc.on('get-data', function(event){
 	try {
 		var data = [];
-		data = drw.read_game_file(test_file_name);
+		data = drw.read_game_file(current_game);
 		console.log(data);
 	} catch (e) {
 		//if failure

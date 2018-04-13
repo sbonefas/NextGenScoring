@@ -1,12 +1,9 @@
-//const electron = require("electron");
-//const ipc = electron.ipcRenderer;
-
 const electron = require("electron");
 const ipc = electron.ipcRenderer;
 
 window.onload = function(){
 	// Send data to backend
-	let args = ["Wisconsin", "Ohio State", "796", "518", "100/0", "0/100", "3/12/19", "4pm", "Kohl Center", "Kohl-Center-code", 1, ["schedule notes"], "quarters", "15", "15", ["Official Names"], ["Box comments"]];
+	let args = ["Wisconsin", "Ohio State", "796", "518", "100-0", "0-100", "3-12-19", "4pm", "Kohl Center", "Kohl-Center-code", "1", ["schedule notes"], "quarters", "15", "15", ["Official Names"], ["Box comments"],"attendance"];
 	ipc.send('init-game', args);
 	
 	let fieldgoal_off_rebound = "j 02 r 05 h";  //offensive rebound (shot made by home #2, rebound home #5)
@@ -249,6 +246,12 @@ var app = new Vue({
      }
      if(e.keyCode == 27) { // Esc key pressed
         app.clear_input();
+     }
+     //Q - back to main menu
+     if(e.keyCode == 81) {
+        if(confirm("Are you sure you want to go back to the main menu? Changes will be lost")) {
+            window.location = "./mainmenu.html"
+        }
      }
 
      // alt + h - Help menu

@@ -1,3 +1,35 @@
+const electron = require("electron");
+const ipc = electron.ipcRenderer;
+
+var curr_game = [];
+
+window.onload = function(){
+	let args = ["Wisconsin", "Ohio State", "796", "518", "100/0", "0/100", "3/12/19", "4pm", "Kohl Center", "H|V|N", "league", ["schedule notes"], "quarters", "15", "15", ["Official Names"], ["Box comments"], "attendance"];
+}
+
+ipc.on('get-game-success', function(event,args) {
+	console.log("get-game-success");
+	curr_game = args;
+});
+
+ipc.on('get-game-failure', function(event,args) {
+	console.log("get-game-failure");
+	window.alert("ERROR: GAME DOESN'T EXIST");
+});
+
+ipc.on('init-game-success', function(event,args) {
+	console.log("init-game-success");
+	curr_game = args;
+	app.games = curr_game;
+	window.location = "./index.html"
+});
+
+ipc.on('init-game-failure', function(event,args) {
+	console.log("init-game-failure");
+	window.alert("ERROR: GAME ALREADY EXISTS");
+});
+
+
 var app = new Vue({
   el: '#selectapp',
   data: {
@@ -35,9 +67,9 @@ var app = new Vue({
         app.edit_game();
       }
       // <N> --> Add New game
-      else if (e.keyCode == 78 && (document.getElementById('searched') != document.activeElement)) {
-        app.add_new_game();
-      }
+//      else if (e.keyCode == 78 && (document.getElementById('searched') != document.activeElement)) {
+//        app.add_new_game();
+//      }
       // <F9> --> Delete game
       else if (e.keyCode == 120) {
         app.delete_game();
@@ -167,39 +199,96 @@ var app = new Vue({
         document.getElementsByName("Text1")[0].value = "";
     },
     submit() {
-        game_date = document.getElementsByName("game_date")[0].value;
-        game_time = document.getElementsByName("game_time")[0].value;
-        console.log(game_date);
-        console.log(game_time);
         var is_existing = false;
         if(making_new_game) {
-            for(index = 0; index < app.games.length; index++)
-            {
-              if(app.games[index].date == game_date)
-              {
-                console.log(app.games[index].date);
-                if(app.games[index].time == game_time) {
-                    console.log(app.games[index].date);
-                    is_existing = true;
-                }
-              }
-            }
-            if(is_existing == true)
-            {
-                window.alert("ERROR GAME ALREADY EXISTS");
-            }
-            else
-            {
-              if(app.search_active == true)
-              {
-                app.games_hold.push(game);
+            curr_game = []
+            //add code for team names
+            curr_game.push("Wisconsin")
+            curr_game.push("Ohio State")
 
-              }
-              else
-              {
-                app.games.push(game);
-                window.location = "./index.html";
-              }
+            home_code = document.getElementsByName("home_code")[0].value;
+            if(home_code != "") {
+                curr_game.push(home_code)
+            }
+
+            vis_code = document.getElementsByName("vis_code")[0].value;
+            if(vis_code != "") {
+                curr_game.push(vis_code)
+            }
+
+            home_record = document.getElementsByName("home_record")[0].value;
+            if(home_record != "") {
+                curr_game.push(home_record)
+            }
+
+            vis_record = document.getElementsByName("vis_record")[0].value;
+            if(vis_record != "") {
+                curr_game.push(vis_record)
+            }
+
+            game_date = document.getElementsByName("game_date")[0].value;
+            if(game_date != "") {
+                curr_game.push(game_date)
+            }
+
+            game_time = document.getElementsByName("game_time")[0].value;
+            if(game_time != "") {
+                curr_game.push(game_time)
+            }
+
+            game_site = document.getElementsByName("game_site")[0].value;
+            if(game_site != "") {
+                curr_game.push(game_site)
+            }
+
+            select_site = document.getElementById("select_site").selectedIndex;//0 = home, 1 = away, 2 = neutral
+            curr_game.push(select_site)
+
+            league = document.getElementById("select_league").selectedIndex;//0 = Yes, 1 = No
+            curr_game.push(league)
+
+            sched_note_array = []
+            sched_note = document.getElementsByName("sched_note")[0].value;
+            sched_note_array.push(sched_note)
+            if(sched_note != "") {
+                curr_game.push(sched_note_array)
+            }
+
+            halves = document.getElementById("select_halves").selectedIndex;//0 = halves, 1 = quarters
+            curr_game.push(halves)
+
+            min_period = document.getElementsByName("min_period")[0].value;
+            if(min_period != "") {
+                curr_game.push(min_period)
+            }
+
+            min_ot = document.getElementsByName("min_ot")[0].value;
+            if(min_ot != "") {
+                curr_game.push(min_ot)
+            }
+
+            officials_array = []
+            officials = document.getElementsByName("officials")[0].value;
+            officials_array.push(officials)
+            if(officials != "") {
+                curr_game.push(officials_array)
+            }
+
+            comments_array = []
+            comments = document.getElementsByName("Text1")[0].value;
+            comments_array.push(comments)
+            if(comments != "") {
+                curr_game.push(comments_array)
+            }
+
+            atten = document.getElementsByName("atten")[0].value;
+            if(atten != "") {
+                curr_game.push(atten)
+            }
+
+            if(curr_game.length == 18) {
+                console.log(curr_game)
+                ipc.send("init-game", curr_game)
             }
         }
         else {
