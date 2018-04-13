@@ -25,7 +25,7 @@ const test_file_name = "test_drw_file";
 function createWindow() {
 	win = new BrowserWindow();
 	win.loadURL(url.format({
-		pathname: path.join(__dirname, 'index.html'),
+		pathname: path.join(__dirname, 'login.html'),
 		protocol: 'file',
 		slashes: true
 	}));
@@ -214,9 +214,13 @@ function addPlay(keystrokes){
 			}
 			break;
 		case 'r':
+			if (input[1] == 'm') {
+				if (input[2] == 'r') teamRebound(statArray[0]);
+				else if (input[2] == 'd') teamRebound(statArray[0],1);
+			}	
 			if (input[2] == 'r') rebound(statArray[0], input[1]);
 			else if (input[2] == 'd') rebound(statArray[0], input[1],1);
-			else if (input[2] == 'm') 
+
 			return;
 		case 'a':
 			assist(statArray[0], input[1]);
@@ -278,7 +282,7 @@ function addPlay(keystrokes){
 function rebound(team, player_number, def_rebound){
 	var statArray;
 	if (def_rebound != null){
-		console.log("Changing team");
+		//console.log("Changing team");
 		if (team === 1) t = 0;
 		else if (team === 0) t = 1;
 		var statArray = [team, player_number,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0];
@@ -313,7 +317,7 @@ function chg(t, player_number, new_player_number){
 }
 
 function add_team_points(team,numPoints){
-	drw.write_team_stats_to_game_file([team,numPoints,0,0,0,0,0,0], test_file_name);
+	drw.write_team_stats_to_game_file([team,numPoints,0,0,0,0,0,0], current_game);
 }
 
 function inPaint(team){
@@ -326,11 +330,7 @@ function fastBreak(team){
 }
 
 function teamTurnover(team){
-	drw.write_team_stats_to_game_file([team,0,0,0,1,0,0,0], test_file_name);
-}
-
-function add_team_points(team,numPoints){
-	drw.write_team_stats_to_game_file([team,numPoints,0,0,0,0,0,0], current_game);
+	drw.write_team_stats_to_game_file([team,0,0,0,1,0,0,0], current_game);
 }
 
 function teamRebound(team,def_rebound){
@@ -339,7 +339,7 @@ function teamRebound(team,def_rebound){
 		if (team === 1) activeTeam = 0;
 		else if (team === 0) activeTeam = 1;
 	}
-	drw.write_team_stats_to_game_file([activeTeam,0,0,0,0,1,0,0], test_file_name);
+	drw.write_team_stats_to_game_file([activeTeam,0,0,0,0,1,0,0], current_game);
 }
 
 function wrongBasket(team){

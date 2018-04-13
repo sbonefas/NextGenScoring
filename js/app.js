@@ -17,6 +17,8 @@ window.onload = function(){
 	let block_off_rebound = "k 02 r 03 h";			//block, offensive rebound (blocked by home, recovered by away)
 	let block_def_rebound = "k 02 d 04 h"; 			//block, defensive rebound (blocked by home, recovered by home)
 	let block_no_rebound = "k 02 h";							//block, no rebound
+	let team_rebound = "r m d h";				//team rebound
+	
 	
 	ipc.send('add-play', fieldgoal_off_rebound);
 	ipc.send('add-play', fieldgoal_def_rebound);
@@ -29,8 +31,7 @@ window.onload = function(){
 	ipc.send('add-play', block_off_rebound);
 	ipc.send('add-play', block_def_rebound);
 	ipc.send('add-play', block_no_rebound);
-	
-	
+	ipc.send('add-play', team_rebound);
 	
 }
 
