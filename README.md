@@ -34,7 +34,7 @@ or (Windows)
 
 > explorer "login.html"
 
-This will open the login screen. After entering the password, the user can navigate to view teams, games, and scoring. The in-game scoring interface we created in Iteration 1 can be reached through "G-Gametime Scoring" -> "Create New Game" -> "Submit and Go to Scoring" 
+This will open the login screen without running electron. Because electron is not running, the Vue data will not populate (it will show as {{variable_name}} instead). Note: This may also misconstrue the CSS styling. After entering the password, the user can navigate to view teams, games, and scoring. The in-game scoring interface we created in Iteration 1 can be reached through "G-Gametime Scoring" -> "Create New Game" -> "Submit and Go to Scoring" 
 
 The password to enter the frontend application is:
 
