@@ -1,6 +1,6 @@
 # NextGenScoring
 The Stat Crew System for Basketball, the current software used by the UW Athletic Department to score basketball games, is extremely outdated and obsolete (it cannot run on Window operating systems past XP). The purpose of this project is to develop a modern replacement to the software which can be used via a web application. Our program allows scorekeepers to document all relevant statistics related to the game being played, and then export it to both a file which the stadium’s scoreboards reference, as well as any external media sources which are following the game. 
-(ITERATION no1)
+(ITERATION no2)
 
 # Installation
 To run NextGenScoring, you must first download Node.js and install Electron. Download Node.js [here](https://nodejs.org/en/). To make sure it is installed, run
@@ -12,7 +12,7 @@ Once you have Node downloaded, install Electron using npm by running
 > npm install electron
 
 # Usage and Testing
-On Iteration 1, our front end and back end are disconnected. This is because of a an oversight regarding Vue.js default prompts being incompatible with Electron that we didn't become aware of until late in Iteration 1. This means that we are unable to string a complete command from the user to the data and back.
+On Iteration 2, our front end and back end are partially integrated. Because of a an oversight regarding Vue.js default prompts being incompatible with Electron (that we didn't become aware of until late in Iteration 1), our front and back ends were disconnected. They are now partially connected, except for generating teams.
 
 So, to run our backend tests, run
 
@@ -28,13 +28,13 @@ You will see an old version of the front end that runs some data reading and wri
 
 To view the front end, run (Unix/Linux)
 
-> open index.html
+> open login.html
 
 or (Windows)
 
-> explorer "index.html"
+> explorer "login.html"
 
-This will open the in-game scoring interface, which hard edits the scoreboard on the screen. By Iteration 2, this will instead edit the data through the backend, and then send the edited data from the backend to the scoreboard. 
+This will open the login screen. After entering the password, the user can navigate to view teams, games, and scoring. The in-game scoring interface we created in Iteration 1 can be reached through "G-Gametime Scoring" -> "Create New Game" -> "Submit and Go to Scoring" 
 
 The password to enter the frontend application is:
 
