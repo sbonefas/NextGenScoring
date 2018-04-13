@@ -66,10 +66,6 @@ var app = new Vue({
       if(e.keyCode == 13) {
         app.edit_game();
       }
-      // <N> --> Add New game
-//      else if (e.keyCode == 78 && (document.getElementById('searched') != document.activeElement)) {
-//        app.add_new_game();
-//      }
       // <F9> --> Delete game
       else if (e.keyCode == 120) {
         app.delete_game();
@@ -85,6 +81,11 @@ var app = new Vue({
       if(app.selected_game.date != undefined) {
         // See laptop for game edit screen
         // Might require loading from backend
+
+        date_time = "2018-04-12_17:00"
+//        curr_game.date + "_" + curr_game.time;
+        console.log(date_time)
+        ipc.send("get-game", date_time)
 
         making_new_game = false;
 
@@ -292,10 +293,9 @@ var app = new Vue({
             }
         }
         else {
+
             window.location = "./index.html";
         }
-          // UPDATE BACKEND
-
     },
     // If F9 is pressed
     delete_game() {
