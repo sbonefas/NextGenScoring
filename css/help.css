@@ -27,9 +27,9 @@ html {
 
 .helptext {
     margin: auto;
-    font-size: 1.2em;
-    width: max-content;
-    vertical-align: center;
+    font-size: 1.1em;
+    /*width: max-content;*/
+    vertical-align: left;
 }
 
 #help a {

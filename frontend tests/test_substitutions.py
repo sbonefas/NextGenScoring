@@ -7,8 +7,7 @@ import os
 def configure_index():
     cwd = os.getcwd()
     path = os.path.abspath(os.path.join(cwd, os.pardir))
-    path2 = os.path.abspath(os.path.join(path, os.pardir))  
-    index_path = 'file:///' + path2 + '/index.html'
+    index_path = 'file:///' + path + '/index.html'
     return index_path.replace("\\", '/')
 
 
@@ -235,4 +234,3 @@ class TestSubs(unittest.TestCase):
      
 if __name__ == '__main__':
     unittest.main()
-    
