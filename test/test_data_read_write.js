@@ -10,21 +10,31 @@ const file_name = "data_test";
 const file_path = "data/data_test.txt";
 const individual_stat_labels = ['number', 'fg', 'fga', 'pts'];
 const team_stat_labels = ['team fouls', 'timeouts left'];
-const footer = ['test', 1,'test2/test3/4', 'test5'];
 
+String.prototype.replaceAll = function(target, replacement) {
+  return this.split(target).join(replacement);
+};
+
+var footer = ['test', 1,'test2/test3/4', 'test5'];
 /** UNIT TEST DATA */
-const contents = "HOME\nnumber,fg,fga,pts\n"
+var contents = "HOME\nnumber,fg,fga,pts\n"
         + ";AWAY\nnumber,fg,fga,pts\n"
         + ";TEAM\nteam fouls,timeouts left\n0,0\n0,0\n"
         + ";FOOTER\n" + footer.toString();
-const test_stats = "HOME\nnumber,fg,fga,pts\n"
+contents = contents.replaceAll(",", "(&h#@d!`_");
+contents = contents.replaceAll(";", "/Od@&?l#i");
+
+var test_stats = "HOME\nnumber,fg,fga,pts\n"
 + "30,2,4,6\n31,3,3,7\n44,5,7,12\n02,1,5,2\n"
 + ";AWAY\nnumber,fg,fga,pts\n"
 + "35,1,4,2\n36,2,3,6\n45,6,7,12\n03,4,5,8\n"
 + ";TEAM\nteam fouls,timeouts left\n"
 + "9,4\n"
 + "8,3";
-const test_stats_with_footer = test_stats + "\n;FOOTER\n" + footer.toString();
+test_stats = test_stats.replaceAll(",", "(&h#@d!`_");
+test_stats = test_stats.replaceAll(";", "/Od@&?l#i");
+
+const test_stats_with_footer = test_stats + "\n;FOOTER\n" + footer.toString().replaceAll(",", "(&h#@d!`_");
 const test_team_stats = "HOME\nnumber,fg,fga,pts\n30,2,4,6\n\
 31,3,3,7\n44,5,7,12\n02,1,5,2";
 const test_stats_array = [
@@ -219,19 +229,18 @@ describe('data_read_write tests', function() {
        assert.strictEqual(new_stats[1].toString(), ['29', 0, 1, 0].toString());
      });
    });
-   describe('game_array_to_string()', function() {
+     describe('game_array_to_string()', function() {
      it('should convert the game\'s 3D array into a string', function() {
         assert.strictEqual(drw.test_game_array_to_string(test_stats_array), test_stats);
      });
    });
    describe('get_game_information_string()', function() {
       it('should get the game information from a footer and stringify it', function() {
-        assert.strictEqual(drw.test_get_game_information_string(file_name), "FOOTER\n" + footer.toString(),);
+        assert.strictEqual(drw.test_get_game_information_string(file_name), "FOOTER\n" + footer.toString().replaceAll(",", "(&h#@d!`_"));
       });
     });
    describe('overwrite_game_file()', function() {
       it('should overwrite the contents of a file with new contents', function() {
-        let test_stats_with_footer = test_stats + "\n;FOOTER\n" + footer.toString();
         assert.strictEqual(drw.test_overwrite_game_file(test_stats_with_footer, file_name), true);
         assert.strictEqual(drw.read_game_file(file_name).toString(), test_stats_array.toString());
       });

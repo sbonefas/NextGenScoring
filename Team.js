@@ -71,8 +71,8 @@ module.exports = function (name, code, head_coach, asst_coach, stadium, roster){
 		for (var i = 0; i < this.active_roster.length; i++){
 			var p = this.active_roster[i];
 			if (p.get_name() == name && p.get_number() == number){
-				this.active_roster.splice(p,1);
-				console.log("removed player: " + p.get_name());
+				this.active_roster.splice(this.active_roster.indexOf(p),1);
+				//console.log("removed player: " + p.get_name());
 				return;
 			}
 		}
