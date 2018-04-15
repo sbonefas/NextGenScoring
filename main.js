@@ -11,7 +11,7 @@ const fs = require("fs");	//node.js filesystem
 const ipc = electron.ipcMain;
 const dialog = electron.dialog;
 const indiv_stat_headers = ['player_number','fg','fga','m3','3a','ft','fta','offr','defr','ast','pf','tf','blk','trn','stl','pts'];
-const team_stat_headers = ['home/away', 'total_points', 'made_in_paint', 'fast_break', 'team_turnover', 'team_rebound','partial_timeouts_taken','full_timeouts_taken'];
+const team_stat_headers = ['home/away', 'total_points', 'made_in_paint', 'fast_break', 'team_turnover', 'team_rebound', 'team_fouls', 'partial_timeouts_taken','full_timeouts_taken'];
 const Team = require('./Team.js');	//team object import
 const Player = require('./Player.js'); 	//player object import
 var teams = new Array();
@@ -82,7 +82,9 @@ function createTeam(name, code, head_coach, asst_coach, stadium){
  *
  * FOR FREETHROWS: [E, PLAYER_NUMBER, RESULT_CODE, REBOUND_PLAYER_NUMBER (IF RESULT_CODE IS R/D), HOME/AWAY]
  *
- * FOR REBOUNDS/ASSISTS/FOULS/TURNOVERS/STEALS: [PLAY_CODE, PLAYER_NUMBER OR M (FOR TEAM TURNOVER), HOME/AWAY]
+ * FOR REBOUNDS/ASSISTS/TURNOVERS/STEALS: [PLAY_CODE, PLAYER_NUMBER OR M (FOR TEAM TURNOVER), HOME/AWAY]
+ *
+ * FOR FOULS: [F, T+PLAYER_NUMBER (IF TECHNICAL) OR B+PLAYER_NUMBER (IF BENCH FOUL) OR PLAYER_NUMBER];
  *
  * FOR CHANGING JERSEY: [F2, PLAYER_NUMBER, NEW_PLAYER_NUMBER, HOME/AWAY]
  *
@@ -226,7 +228,19 @@ function addPlay(keystrokes){
 			assist(statArray[0], input[1]);
 			return;
 		case 'f':
-			statArray[11] = 1;	//personal foul
+			console.log(input[1].charAt(0));
+			if (input[1].charAt(0) === 't'){	//technical foul (input[1] = 'T##')
+				statArray[1] = input[1].substring(1,3);	//take last two characters for player number 
+				console.log("technical foul");
+				statArray[12] = 1;
+				teamFoul(statArray[0]);
+			} else if (input[1] === 'b'){	//bench foul (team stat)
+				teamFoul(statArray[0]);
+				return;
+			} else {
+				statArray[11] = 1;	//personal foul
+				teamFoul(statArray[0]);
+			}
 			break;
 		case 't':
 			if (input[1] == 'm'){
@@ -317,20 +331,21 @@ function chg(t, player_number, new_player_number){
 }
 
 function add_team_points(team,numPoints){
-	drw.write_team_stats_to_game_file([team,numPoints,0,0,0,0,0,0], current_game);
+	drw.write_team_stats_to_game_file([team,numPoints,0,0,0,0,0,0,0], current_game);
 }
 
 function inPaint(team){
-	drw.write_team_stats_to_game_file([team,0,1,0,0,0,0,0], current_game);
+	drw.write_team_stats_to_game_file([team,0,1,0,0,0,0,0,0], current_game);
 }
 
+
 function fastBreak(team){
-	drw.write_team_stats_to_game_file([team,0,0,1,0,0,0,0], current_game);
+	drw.write_team_stats_to_game_file([team,0,0,1,0,0,0,0,0], current_game);
 
 }
 
 function teamTurnover(team){
-	drw.write_team_stats_to_game_file([team,0,0,0,1,0,0,0], current_game);
+	drw.write_team_stats_to_game_file([team,0,0,0,1,0,0,0,0], current_game);
 }
 
 function teamRebound(team,def_rebound){
@@ -339,24 +354,28 @@ function teamRebound(team,def_rebound){
 		if (team === 1) activeTeam = 0;
 		else if (team === 0) activeTeam = 1;
 	}
-	drw.write_team_stats_to_game_file([activeTeam,0,0,0,0,1,0,0], current_game);
+	drw.write_team_stats_to_game_file([activeTeam,0,0,0,0,1,0,0,0], current_game);
+}
+
+function teamFoul(team){
+	drw.write_team_stats_to_game_file([team,0,0,0,0,0,1,0,0], current_game);
+}
+
+
+function timeout(team,type){
+	if (type === "p"){
+		drw.write_team_stats_to_game_file([team,0,0,0,0,0,0,1,0]);
+	} else if (type === "f"){
+		drw.write_team_stats_to_game_file([team,0,0,0,0,0,0,0,1]);		
+	}
 }
 
 function wrongBasket(team){
 	var activeTeam;
 	if (t === 1) activeTeam = 0;
 	else if (t === 0) activeTeam = 1;
-	drw.write_team_stats([activeTeam,2,0,0,0,0,0,0]);
+	drw.write_team_stats([activeTeam,2,0,0,0,0,0,0,0]);
 }
-
-function timeout(team,type){
-	if (type === "p"){
-		drw.write_team_stats_to_game_file([team,0,0,0,0,0,1,0]);
-	} else if (type === "f"){
-		drw.write_team_stats_to_game_file([team,0,0,0,0,0,0,1]);		
-	}
-}
-
 /*
  *  INITIALIZE GAME FUNCTION
  *

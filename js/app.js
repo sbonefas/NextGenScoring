@@ -16,9 +16,11 @@ window.onload = function(){
 	let steal = "s 03 v";												//steal
 	let block_off_rebound = "k 02 r 03 h";			//block, offensive rebound (blocked by home, recovered by away)
 	let block_def_rebound = "k 02 d 04 h"; 			//block, defensive rebound (blocked by home, recovered by home)
-	let block_no_rebound = "k 02 h";							//block, no rebound
-	let team_rebound = "r m d h";				//team rebound
-	
+	let block_no_rebound = "k 02 h";						//block, no rebound
+	let team_rebound = "r m d h";								//team rebound
+	let tech_foul = "f t10 h";									//technical foul
+	let pers_foul = "f 12 h";										//personal foul
+	let bench_foul = "f b h";										//bench foul
 	
 	ipc.send('add-play', fieldgoal_off_rebound);
 	ipc.send('add-play', fieldgoal_def_rebound);
@@ -32,6 +34,9 @@ window.onload = function(){
 	ipc.send('add-play', block_def_rebound);
 	ipc.send('add-play', block_no_rebound);
 	ipc.send('add-play', team_rebound);
+	ipc.send('add-play', tech_foul);
+	ipc.send('add-play', pers_foul);
+	ipc.send('add-play', bench_foul);
 	
 }
 
