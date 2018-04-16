@@ -5,6 +5,7 @@
 const assert = require('assert');
 const drw = require('../data_read_write');
 const fs = require('fs');
+var FileReader = require('filereader');
 
 const file_name = "data_test";
 const file_path = "data/data_test.txt";
@@ -129,10 +130,15 @@ describe('data_read_write tests', function() {
              assert.strictEqual(e, "No Individual Stat Labels Provided");
            }
          });
-         //TODO - Test if .txt?
-         it('should return false when writeSync fails', function() {
-           //TODO - Somehow cause writeSync to fail with a newly created file
-           assert.fail("Don't know how to test this as of now!");
+         it('should throw and error when writeSync fails', function() {
+           try {
+             var reader = new FileReader();
+             //files/5MB.zip is a corrupted file that can't be read
+             drw.create_game_file(reader.readAsBinaryString("files/5MB.zip"), ",;", "comma_semicolon", ",;");
+             assert.fail("Error: cannot read as File should've been thrown and caught");
+           } catch (e) {
+             assert.strictEqual(e, "Error: cannot read as File: \"files/5MB.zip\"");
+           }
          });
        });
    });
@@ -317,8 +323,12 @@ describe('data_read_write tests', function() {
              assert.strictEqual(e, "No Stat Changes Provided");
            }
          });
-         it('should throw a First Index Error if is_home isn\'t 0 or 1', function() {
-           assert.fail("Don't know how to do this")
+         it('should throw an Index Error if is_home isn\'t 0 or 1', function() {
+           try {
+             drw.write_player_stats_to_game_file([2, '31', 1, 1, 2], file_name);
+           } catch (e) {
+             assert.strictEqual(e, "Index Error: The first index in any stat changes must be 0 or 1");
+           }
          });
          it('should return a File Read Error given a file that doesn\'t exist', function() {
            try {
@@ -376,8 +386,12 @@ describe('data_read_write tests', function() {
               assert.strictEqual(e, "No Stat Changes Provided");
             }
           });
-          it('should throw a First Index Error if is_home isn\'t 0 or 1', function() {
-            assert.fail("Don't know how to do this")
+          it('should throw a Index Error if is_home isn\'t 0 or 1', function() {
+            try {
+              drw.write_player_stats_to_game_file([2, 1, 0], file_name);
+            } catch (e) {
+              assert.strictEqual(e, "Index Error: The first index in any stat changes must be 0 or 1");
+            }
           });
           it('should return a File Read Error given a file that doesn\'t exist', function() {
             try {

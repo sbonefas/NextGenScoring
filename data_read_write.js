@@ -300,7 +300,7 @@ exports.write_player_stats_to_game_file = function(stat_changes, file_name) {
 	// Set player's team and player number for stat change
 	var is_home = stat_changes[0];
 	if(!(is_home == 1 || is_home == 0)) {
-		throw "The first index in any stat changes must be 0 or 1";
+		throw "Index Error: The first index in any stat changes must be 0 or 1";
 	}
 	var player_number = stat_changes[1];
 
@@ -337,7 +337,7 @@ exports.write_team_stats_to_game_file = function(stat_changes, file_name) {
 	if(!fs.existsSync(get_file_path(file_name))) throw "File Read Error: File " + file_name + " does not exist!";
 	var is_home = stat_changes[0];
 	if(!(is_home == 1 || is_home == 0)) {
-		throw "The first index in any stat changes must be 0 or 1";
+		throw "Index Error: The first index in any stat changes must be 0 or 1";
 	}
 	var player_number = stat_changes[1];
 

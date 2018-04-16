@@ -24,6 +24,7 @@
 	},
 	"homepage": "https://github.com/sbonefas/NextGenScoring#readme",
 	"dependencies": {
+		"filereader": "^0.10.3",
 		"npm": "^5.8.0",
 		"nyc": "^11.6.0",
 		"vex-js": "^4.1.0"
