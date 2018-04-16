@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" href="img/favicon.ico">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/selectgame.css">
+    <title>NextGen Scoring</title>
+</head>
+<body>
+    <!-- Menu Buttons -->
+    <div id="menubuttons">
+        <a href="./mainmenu.html">Back to the Main Menu</a>
+    </div>
+
+    <!--N - New Game (fill out the following fields:)-->
+        <!--Game Date-->
+        <!--Game Time-->
+        <!--Site of Game-->
+        <!--Site Code (Home, Away, Neutral)-->
+        <!--League Game (Y/N)-->
+        <!--Schedule Note-->
+        <!--Quarters or Halves (Men/Women)-->
+        <!--# Mins per period-->
+        <!--# Mins in Overtime-->
+        <!--Visiting Team Code-->
+        <!--Home Team code-->
+        <!--Visitors Record-->
+        <!--Home Team record-->
+        <!--Officials-->
+        <!--Attendance-->
+        <!--Box Score Comments (4 Lines)-->
+    <!--Enter - Edit Game-->
+        <!--Edit the info above-->
+
+    <div id="selectapp">
+        <h1 id="page_title">GAME SELECTION</h1>
+        <div id="">
+            <p class="game_option" id="edit">{{game_options[0].name}}
+            &emsp;&emsp;&emsp;{{game_options[1].name}}
+            &emsp;&emsp;&emsp;{{game_options[2].name}}
+            </p>
+        </div>
+
+        <!-- The Modal -->
+        <div id="myModal" class="modal">
+
+            <!-- Modal content -->
+            <div class="modal-content">
+                <span id="closeModal" class="close">&times;</span>
+                <h1>GAME DETAILS</h1>
+
+                <h4>Game Date:&emsp;
+                    <input id = "userinput" type = "date" name = "game_date">
+                </h4>
+                <h4>Game Time:&emsp;
+                    <input id = "userinput" type = "time" name = "game_time">
+                </h4>
+                <h4>Site of Game:&emsp;
+                    <input id = "userinput" type = "text" name = "game_site">
+                </h4>
+                <h4>Site Code (Home, Away, Neutral):&emsp;
+                    <select id="select_site">
+                        <option value="home">Home</option>
+                        <option value="away">Away</option>
+                        <option value="neutral">Neutral</option>
+                    </select>
+                </h4>
+                <h4>League Game (Y/N):&emsp;
+                    <select id="select_league">
+                        <option value="league">Yes</option>
+                        <option value="notleague">No</option>
+                    </select>
+                </h4>
+                <h4>Schedule Note:&emsp;
+                    <input id = "userinput" type = "text" name = "sched_note">
+                </h4>
+                <h4>Halves or Quarters (Men/Women):&emsp;
+                    <select id="select_halves">
+                        <option value="halves">Halves: Men</option>
+                        <option value="quarters">Quarters: Women</option>
+                    </select>
+                </h4>
+                <h4># Mins per period:&emsp;
+                    <input id = "userinput" type = "text" name = "min_period">
+                </h4>
+                <h4># Mins in Overtime:&emsp;
+                    <input id = "userinput" type = "text" name = "min_ot">
+                </h4>
+                <h4>Visiting Team Code (Example: WISC):&emsp;
+                    <input id = "userinput" type = "text" name = "vis_code">
+                </h4>
+                <h4>Home Team Code (Example: WISC):&emsp;
+                    <input id = "userinput" type = "text" name = "home_code">
+                </h4>
+                <h4>Visitor Team Record (Wins-Losses):&emsp;
+                    <input id = "userinput" type = "text" name = "vis_record">
+                </h4>
+                <h4>Home Team Record (Wins-Losses):&emsp;
+                    <input id = "userinput" type = "text" name = "home_record">
+                </h4>
+                <h4>Officials:&emsp;
+                    <input id = "userinput" type = "text" name = "officials">
+                </h4>
+                <h4>Attendance:&emsp;
+                    <input id = "userinput" type = "text" name = "atten">
+                </h4>
+                <h4>Box Score Comments (4 Lines):&emsp;
+                    <textarea name="Text1" cols="40" rows="5"></textarea>
+                </h4></br>
+
+                <button v-on:click="submit">Submit and Go to Scoring</button>
+            </div>
+        </div>
+
+        <table id="static_top">
+            <th id="table_head">{{message}}</th>
+            <tr>
+                <td id="game"><input type="text" v-on:click="deselect_game" id="searched" placeholder="Enter game..."></td>
+            </tr>
+        </table>
+        <table class="game_search">
+            <tr v-for="game in games">
+                <td><button id="game_cell" v-on:click="select_game(game)"><h3>{{game.date}}</h3><h3>&emsp;&emsp;{{game.vis_team}}</h3><h3 class="game_site">&emsp;&emsp;{{game.site}}</h3></button></td>
+            </tr>
+            <!--<dialog id="game_date_entry"><h3>ENTER NEW GAME DATE</h3><input id="game_box" v-on:keyup.enter="set_game_date(document.getElementById("game_box").value)"placeholder="New game name..."></dialog>-->
+        </table>
+    </div>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript" src="js/selectgame.js"></script>
+</body>
+</html>
