@@ -1,5 +1,5 @@
-/** 
- * TESTING FILE FOR data_read_write.js 
+/**
+ * TESTING FILE FOR data_read_write.js
  * run node data_testing.js to run script
  */
 
@@ -23,14 +23,14 @@ const test_stats = "HOME\nnumber(&h#@d!`_fg(&h#@d!`_fga(&h#@d!`_pts\n"
 const test_stats_with_footer = test_stats + "\n/Od@&?l#iFOOTER\n" + footer.toString().replace(/,/g,'(&h#@d!`_');
 const test_team_stats = "HOME\nnumber(&h#@d!`_fg(&h#@d!`_fga(&h#@d!`_pts\n30(&h#@d!`_2(&h#@d!`_4(&h#@d!`_6\n\
 31(&h#@d!`_3(&h#@d!`_3(&h#@d!`_7\n44(&h#@d!`_5(&h#@d!`_7(&h#@d!`_12\n02(&h#@d!`_1(&h#@d!`_5(&h#@d!`_2";
-const test_stats_array = [ 
+const test_stats_array = [
   [ [ 'number', 'fg', 'fga', 'pts' ],[ '30', '2', '4', '6' ],[ '31', '3', '3', '7' ],
   	[ '44', '5', '7', '12' ],[ '02', '1', '5', '2' ] ],
   [ [ 'number', 'fg', 'fga', 'pts' ],[ '35', '1', '4', '2' ],
   	[ '36', '2', '3', '6' ],[ '45', '6', '7', '12' ],[ '03', '4', '5', '8' ] ],
   [ [ 'team fouls', 'timeouts left'],[ '9', '4'] ],
   [ [ 'team fouls', 'timeouts left'],[ '8', '3'] ],
-  [ 'test', 1, 'test2/test3/4', 'test5']
+  [ 'test', 1, 'test2/test3/test4', 'test5']
   ];
 const test_team_stats_array = [ [ 'number', 'fg', 'fga', 'pts' ],
 	[ '30', '2', '4', '6' ],
@@ -77,7 +77,7 @@ function test() {
 	test_write_player_stats_to_game_file();
 	test_write_team_stats_to_game_file();
 
-	//clean();
+	clean();
 }
 
 //done
@@ -147,19 +147,19 @@ function test_create_2d_array() {
 
 	var num_rows = 5;
 	var num_cols = 7;
-	
+
 	if(drw.test_create_2d_array(num_rows, num_cols).toString() == result_array.toString()) test_success("test_create_2d_array");
 	else test_fail("test_create_2d_array");
 }
 
 //done
 function test_read_game_file_empty() {
-	var result_array = [ 
+	var result_array = [
 	[ [ 'number', 'fg', 'fga', 'pts' ] ],
   	[ [ 'number', 'fg', 'fga', 'pts' ] ],
   	[ [ 'team fouls', 'timeouts left' ], ['0', '0'] ],
   	[ [ 'team fouls', 'timeouts left' ], ['0', '0'] ],
-  	[ 'test', '1', 'test2/test3/4', 'test5' ]
+  	[ 'test', '1', 'test2/test3/test4', 'test5' ]
   	];
 
 	if(drw.read_game_file(file_name).toString() == result_array.toString()) test_success("test_read_game_file (empty)");
@@ -267,5 +267,3 @@ function test_read_game_file_full() {
 	if(drw.read_game_file(file_name).toString() == result_array.toString()) test_success("test_read_game_file (full)");
 	else test_fail("test_read_game_file (full)");
 }
-
-

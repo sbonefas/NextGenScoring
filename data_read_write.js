@@ -77,6 +77,7 @@ exports.create_game_file = function(individual_stat_labels, team_stat_labels, fi
 	// Error Handling:
 	if(individual_stat_labels == undefined) throw "No Individual Stat Labels Provided";
 	if(team_stat_labels == undefined) throw "No Team Stat Labels Provided";
+	if(file_name == undefined) throw "No File Name Provided";
 	if(footer == undefined) throw "No Footer Provided";
 
 	// Check if file exists
@@ -270,6 +271,7 @@ function scrape_team_stats(stats_string_arr, team_no) {
  * @return 2d array with unitialized elements.
  */
 function create_2d_array(num_rows, num_cols) {
+	if (num_rows <= 0 || num_cols <= 0) throw "Invalid Index Error";
 	var arr = [];
 	for(var row = 0; row < num_rows; row++) {
 		arr[row] = [];
@@ -292,6 +294,7 @@ function create_2d_array(num_rows, num_cols) {
  */
 exports.write_player_stats_to_game_file = function(stat_changes, file_name) {
 	if(stat_changes == undefined) throw "No Stat Changes Provided";
+	if(file_name == undefined) throw "No File Name Provided";
 
 	// Set player's team and player number for stat change
 	var is_home = stat_changes[0];
@@ -329,6 +332,8 @@ exports.write_player_stats_to_game_file = function(stat_changes, file_name) {
  */
 exports.write_team_stats_to_game_file = function(stat_changes, file_name) {
 	if(stat_changes == undefined) throw "No Stat Changes Provided";
+	if(file_name == undefined) throw "No File Name Provided";
+	if(!fs.existsSync(get_file_path(file_name))) throw "Invalid File Name";
 	var is_home = stat_changes[0];
 	if(!(is_home == 1 || is_home == 0)) {
 		throw "The first index in any stat changes must be 0 or 1";
@@ -470,17 +475,6 @@ function get_game_information_string(file_name) {
 
 	return game_information;
 }
-
-
-
-
-
-
-
-
-
-
-
 
 /** These functions make private functions public for data_testing.js */
 
