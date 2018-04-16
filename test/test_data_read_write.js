@@ -63,9 +63,6 @@ const test_empty_team_stats_array = [[ 'number', 'fg', 'fga', 'pts' ]];
 after(function() {
     drw.delete_file(file_name);
     if(fs.existsSync(file_path)) assert.fail(false, true, "Path of deleted file shouldn't exist in file system", "delete");
-    // Tests invoking program are creating these files. Remove when proper behavior is simulated
-    drw.delete_file("test");
-    drw.delete_file("undefined");
 });
 
 describe('data_read_write tests', function() {
@@ -83,7 +80,7 @@ describe('data_read_write tests', function() {
          assert.strictEqual(drw.create_game_file(individual_stat_labels, team_stat_labels, file_name, footer), true);
        });
        it('after creation, file path should exist in the file system', function() {
-          if(!fs.existsSync(file_path)) assert.fail(false, true);
+          if(!fs.existsSync(drw.test_get_file_path(file_name))) assert.fail(false, true);
        });
        it('should be able to be read', function() {
          assert.strictEqual(fs.readFileSync(file_path, 'utf8'), contents);
@@ -205,14 +202,15 @@ describe('data_read_write tests', function() {
           ];
         assert.strictEqual(drw.read_game_file(file_name).toString(), result_array.toString());
      });
-     it('should return a No File Name Error given an invalid file_name', function() {
+     it('should return a File Read Error given a file that doesn\'t exist', function() {
        try {
          drw.read_game_file("test");
-         assert.fail("No File Name Error should be thrown and caught");
+         assert.fail("File Read Error should be thrown and caught");
        } catch (e) {
-         assert.strictEqual(e, "No File Name Error: File test does not exist!");
+         assert.strictEqual(e, "File Read Error: File test does not exist!");
        }
      });
+     //try to do
    });
    describe('edit_current_stats()', function() {
      let new_stats = drw.test_edit_current_stats(test_team_stats_array, test_stat_changes_exist);
@@ -245,12 +243,12 @@ describe('data_read_write tests', function() {
         assert.strictEqual(drw.test_overwrite_game_file(test_stats_with_footer, file_name), true);
         assert.strictEqual(drw.read_game_file(file_name).toString(), test_stats_array.toString());
       });
-      it ("should return false if file_name doesn't exist", function() {
+      it ('should return a File Read Error given a file that doesn\'t exist', function() {
         try {
-          assert.strictEqual(drw.test_overwrite_game_file(test_stats_with_footer, "test"), false);
-          assert.fail("File Doesn't Exist Error should be thrown and caught");
+          drw.test_overwrite_game_file(test_stats_with_footer, "test");
+          assert.fail("File Read Error should be thrown and caught");
         } catch (e) {
-          assert.strictEqual(e, "File Doesn't Exist Error: File test does not exist!");
+          assert.strictEqual(e, "File Read Error: File test does not exist!");
         }
       });
    });
@@ -322,12 +320,12 @@ describe('data_read_write tests', function() {
          it('should throw a First Index Error if is_home isn\'t 0 or 1', function() {
            assert.fail("Don't know how to do this")
          });
-         it('should throw a No File Name Error if an invalid file name is passed', function() {
+         it('should return a File Read Error given a file that doesn\'t exist', function() {
            try {
              drw.write_player_stats_to_game_file(test_stat_changes_exist, "test");
-             assert.fail("No File Name Error should be thrown and caught");
+             assert.fail("File Read Error should be thrown and caught");
            } catch (e) {
-             assert.strictEqual(e, "No File Name Provided");
+             assert.strictEqual(e, "File Read Error: File test does not exist!");
            }
          });
       });
@@ -381,12 +379,12 @@ describe('data_read_write tests', function() {
           it('should throw a First Index Error if is_home isn\'t 0 or 1', function() {
             assert.fail("Don't know how to do this")
           });
-          it('should throw a No File Name Error if an invalid file name is passed', function() {
+          it('should return a File Read Error given a file that doesn\'t exist', function() {
             try {
               drw.write_team_stats_to_game_file(test_stat_changes_exist, "test");
-              assert.fail("No File Name Error should be thrown and caught");
+              assert.fail("File Read Error should be thrown and caught");
             } catch (e) {
-              assert.strictEqual(e, "No File Name Provided");
+              assert.strictEqual(e, "File Read Error: File test does not exist!");
             }
           });
       });

@@ -1,4 +1,4 @@
-/*const assert = require('assert');
+const assert = require('assert');
 var Team = require('../Team');
 var Player = require('../Player');
 
@@ -117,4 +117,4 @@ describe('Team setters', function() {
       assert.strictEqual(e, "remove_player_to_roster Error: objects passed are not valid");
     }
   });
-});*/
+});

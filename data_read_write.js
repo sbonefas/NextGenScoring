@@ -162,13 +162,13 @@ function get_initial_game_file_contents(individual_stat_labels, team_stat_labels
  */
 exports.read_game_file = function(file_name) {
 	// Get string version of file contents
+	if (file_name == undefined) throw "No File Name Provided";
 	var file_path = get_file_path(file_name);
+	//if (!fs.existsSync(file_path)) throw "File Name Doesn't Exist";
 	var file_contents = get_game_file_contents(file_path);
 	if(file_contents == null) {
 		throw "File Read Error: File " + file_name + " does not exist!";
 	}
-
-
 
 	// Convert to three separate strings. Cut off last newline.
 	var stats_string_arr = file_contents.split(semicolon_replacement);
@@ -295,6 +295,7 @@ function create_2d_array(num_rows, num_cols) {
 exports.write_player_stats_to_game_file = function(stat_changes, file_name) {
 	if(stat_changes == undefined) throw "No Stat Changes Provided";
 	if(file_name == undefined) throw "No File Name Provided";
+	if(!fs.existsSync(get_file_path(file_name))) throw "File Read Error: File " + file_name + " does not exist!";
 
 	// Set player's team and player number for stat change
 	var is_home = stat_changes[0];
@@ -333,7 +334,7 @@ exports.write_player_stats_to_game_file = function(stat_changes, file_name) {
 exports.write_team_stats_to_game_file = function(stat_changes, file_name) {
 	if(stat_changes == undefined) throw "No Stat Changes Provided";
 	if(file_name == undefined) throw "No File Name Provided";
-	if(!fs.existsSync(get_file_path(file_name))) throw "Invalid File Name";
+	if(!fs.existsSync(get_file_path(file_name))) throw "File Read Error: File " + file_name + " does not exist!";
 	var is_home = stat_changes[0];
 	if(!(is_home == 1 || is_home == 0)) {
 		throw "The first index in any stat changes must be 0 or 1";
@@ -445,6 +446,9 @@ function game_array_to_string(game_array) {
  * @return True if overwrite is successful, false otherwise.
  */
 function overwrite_game_file(new_content, file_name) {
+	if (file_name == undefined) throw "No File Name Provided";
+	if(!fs.existsSync(get_file_path(file_name))) throw "File Read Error: File " + file_name + " does not exist!";
+
 	try {
     	fs.writeFileSync(get_file_path(file_name), new_content);
 	} catch (e) {
