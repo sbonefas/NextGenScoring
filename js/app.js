@@ -5,7 +5,7 @@ window.onload = function(){
 	// Send data to backend
 	let args = ["Wisconsin", "Ohio State", "796", "518", "100-0", "0-100", "3-12-19", "4pm", "Kohl Center", "Kohl-Center-code", "1", ["schedule notes"], "quarters", "15", "15", ["Official Names"], ["Box comments"],"attendance"];
 	ipc.send('init-game', args);
-	
+
 	let fieldgoal_off_rebound = "j 02 r 05 h";  //offensive rebound (shot made by home #2, rebound home #5)
 	let fieldgoal_def_rebound = "j 02 d 03 h";  //defensive rebound (shot made by home #2, rebound visit #3)
 	let fieldgoal_no_rebound = "j 02 g h";			//no rebound (good shot)
@@ -16,8 +16,12 @@ window.onload = function(){
 	let steal = "s 03 v";												//steal
 	let block_off_rebound = "k 02 r 03 h";			//block, offensive rebound (blocked by home, recovered by away)
 	let block_def_rebound = "k 02 d 04 h"; 			//block, defensive rebound (blocked by home, recovered by home)
-	let block_no_rebound = "k 02 h";							//block, no rebound
-	
+	let block_no_rebound = "k 02 h";						//block, no rebound
+	let team_rebound = "r m d h";								//team rebound
+	let tech_foul = "f t10 h";									//technical foul
+	let pers_foul = "f 12 h";										//personal foul
+	let bench_foul = "f b h";										//bench foul
+
 	ipc.send('add-play', fieldgoal_off_rebound);
 	ipc.send('add-play', fieldgoal_def_rebound);
 	ipc.send('add-play', fieldgoal_no_rebound);
@@ -29,18 +33,20 @@ window.onload = function(){
 	ipc.send('add-play', block_off_rebound);
 	ipc.send('add-play', block_def_rebound);
 	ipc.send('add-play', block_no_rebound);
-	
-	
-	
+	ipc.send('add-play', team_rebound);
+	ipc.send('add-play', tech_foul);
+	ipc.send('add-play', pers_foul);
+	ipc.send('add-play', bench_foul);
+
 }
 
-ipc.on('init-game-failure', function(event,args) { 
+ipc.on('init-game-failure', function(event,args) {
 	console.log("An error occurred in initializing game " + args + " to file : " + e);
 });
 
-ipc.on('init-game-success', function(event,args) { 
+ipc.on('init-game-success', function(event,args) {
 	console.log("Successfully initialized game: " + args);
-}); 
+});
 
 
 var home = true;
@@ -366,7 +372,7 @@ var app = new Vue({
       } else if(currentlyInputtingPlay == "shotattempt") {
         app.shot_attempt(e.keyCode);
       }
-      
+
      }
      // G (or Q) - used as result codes in shot_attempt()
      else if(e.keyCode == 71 || e.keyCode == 81) {
@@ -543,7 +549,7 @@ var app = new Vue({
         app.log_free_throw(e.keyCode, false);
       } else if(currentlyInputtingPlay == "shotattempt") {
         app.shot_attempt(e.keyCode);
-      }    
+      }
      }
 
      // S - steal
@@ -1137,15 +1143,15 @@ var app = new Vue({
               }
           }
         } else if(inputtext.substring(0,1) == 'Y') {
-          
+
         } else if(inputtext.substring(0,1) == 'D') {
-          
+
         } else if(inputtext.substring(0,1) == 'L') {
-          
+
         } else if(inputtext.substring(0,1) == 'P') {
-          
+
         }
-        
+
       } else if(char_entered == 'J' && inputtext.length == 1) {
         inputvalidator.innerText = "Jumper by player ##:";
       } else if(char_entered == 'Y' && inputtext.length == 1) {
@@ -1256,7 +1262,7 @@ var app = new Vue({
             inputvalidator.innerText = "Input not recognized";
           }
         }
-        
+
    },
    // J then G or Q - good field goal (2 points)
    jgq_good(person, team, totals, stats) {
@@ -1605,7 +1611,7 @@ var app = new Vue({
             } else {
               inputvalidator.innerText = "Player #" + inputtext.substring(2,4) + " is not in the game. Press ESC/F10 to clear input";
             }
-            
+
           } else if(inputtext.length == 6) { // 6 is the number of characters in F62399 i.e. after user has entered exiting and entering player's number
               if(!app.check_in_game(inputtext.substring(4), home)) {
               inputvalidator.innerText = "#" + inputtext.substring(4,6) + " subbing in for #" + inputtext.substring(2,4) + ". Press ENTER to save play";
@@ -1771,7 +1777,7 @@ var app = new Vue({
         } else {
           inputvalidator.innerText = "#" + inputtext.substring(1) + " is not currently in the game. Press ESC/F10 to clear input.";
         }
-        
+
       }
    },
    //fouls
@@ -1932,7 +1938,7 @@ var app = new Vue({
             app.log_free_throw(13, false);  // 13 is shot code for ENTER
           }
         }
-        
+
       } else if(char_entered == 'R') {
         inputvalidator.innerText = "OFFENSIVE: player ## or M for team rebound or B for deadball\n" + "DEFENSIVE: D then player ## or DM for team rebound or DB for deadball";
       } else if(char_entered == 'D') {
@@ -1965,7 +1971,7 @@ var app = new Vue({
               //app.rb_normal(inputtext);
               inputvalidator.innerText = "Offensive rebound for  #" + player_number + ". Press ENTER to save play.";
             }
-            
+
           } else {
             inputvalidator.innerText = "Player #" + player_number + " is not in the game. Press ESC/F10 to clear input.";
           }
@@ -1996,7 +2002,7 @@ var app = new Vue({
                   } else {
                     inputvalidator.innerText = "Player #" + player_number + " is not in the game. Press ESC/F10 to clear input.";
                   }
-                  
+
               }
            }
          }
@@ -2014,7 +2020,7 @@ var app = new Vue({
                   } else {
                     inputvalidator.innerText = "Player #" + player_number + " is not in the game. Press ESC/F10 to clear input.";
                   }
-                  
+
               }
            }
          }
@@ -2033,7 +2039,7 @@ var app = new Vue({
                 app.home_possession();
               } else {
                 inputvalidator.innerText = "Player #" + player_number + " is not in the game. Press ESC/F10 to clear input.";
-              } 
+              }
             }
          }
       } else {
@@ -2059,11 +2065,11 @@ var app = new Vue({
       if(defensive_rebound) {
         if(home) {
           app.vis_totals.rb_def += 1;
-          ipc.send('add-play', "R M H");
+          ipc.send('add-play', "R M D H");
           app.vis_possession();
         } else {
           app.home_totals.rb_def += 1;
-          ipc.send('add-play', "R M V");
+          ipc.send('add-play', "R M D V");
           app.home_possession();
         }
 
@@ -2071,8 +2077,10 @@ var app = new Vue({
       } else {
         if(home) {
           app.home_totals.rb_off += 1;
+          ipc.send('add-play', "R M H");
         } else {
           app.vis_totals.rb_off += 1;
+          ipc.send('add-play', "R M V");
         }
         app.add_play("Offensive Team Rebound");
       }
@@ -2198,7 +2206,7 @@ var app = new Vue({
                 home_stats.ftp = Number.parseFloat((app.home_totals.ftm/app.home_totals.fta)*100).toFixed(2);
               }
             }
-            
+
           } else {
             for(index = 0; index < app.vis_team.length; index++) {
               if(ft_player_num == app.vis_team[index].number) {
