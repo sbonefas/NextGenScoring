@@ -35,13 +35,13 @@ var app = new Vue({
   data: {
     message: "SELECT A GAME",
     games: [
-            {date: "2018-04-12", time: "17:00", site: "Madison, WI", site_code: 0, league: 1, schedule_note: "On time",
+            {home_name: "Wisconsin", vis_name: "Ohio State", date: "2018-04-12", time: "17:00", site: "Madison, WI", site_code: 0, league: 1, schedule_note: "On time",
             quarters: true, min_period: 20, min_ot: 5, vis_team: "MINN", home_team: "WISC", vis_record: "0-1", home_record: "1-0",
             officials: ["ref1", "ref2", "ref3"], attendance: 20000, comments: "comments"},
-            {date: "2018-04-13", time: "18:00", site: "Greg Gard", site_code: 1, league: 0, schedule_note: "On time",
+            {home_name: "Wisconsin", vis_name: "Ohio State", date: "2018-04-13", time: "18:00", site: "Greg Gard", site_code: 1, league: 0, schedule_note: "On time",
             quarters: true, min_period: 20, min_ot: 5, vis_team: "MINN", home_team: "WISC", vis_record: "0-1", home_record: "1-0",
             officials: ["ref1", "ref2", "ref3"], attendance: 20000, comments: "comments"},
-            {date: "2018-04-14", time: "19:00", site: "Greg Gard", site_code: 2, league: 0, schedule_note: "On time",
+            {home_name: "Wisconsin", vis_name: "Ohio State", date: "2018-04-14", time: "19:00", site: "Greg Gard", site_code: 2, league: 0, schedule_note: "On time",
             quarters: true, min_period: 20, min_ot: 5, vis_team: "MINN", home_team: "WISC", vis_record: "0-1", home_record: "1-0",
             officials: ["ref1", "ref2", "ref3"], attendance: 20000, comments: "comments"}
           ],
@@ -66,10 +66,6 @@ var app = new Vue({
       if(e.keyCode == 13) {
         app.edit_game();
       }
-      // <N> --> Add New game
-//      else if (e.keyCode == 78 && (document.getElementById('searched') != document.activeElement)) {
-//        app.add_new_game();
-//      }
       // <F9> --> Delete game
       else if (e.keyCode == 120) {
         app.delete_game();
@@ -85,6 +81,11 @@ var app = new Vue({
       if(app.selected_game.date != undefined) {
         // See laptop for game edit screen
         // Might require loading from backend
+
+        date_time = "2018-04-12_17:00"
+//        curr_game.date + "_" + curr_game.time;
+        console.log(date_time)
+        ipc.send("get-game", date_time)
 
         making_new_game = false;
 
@@ -122,13 +123,15 @@ var app = new Vue({
             }
         }
 
+        document.getElementsByName("home_name")[0].value = app.selected_game.home_name;
+        document.getElementsByName("vis_name")[0].value = app.selected_game.vis_name;
         document.getElementsByName("game_date")[0].value = app.selected_game.date;
         document.getElementsByName("game_time")[0].value = app.selected_game.time;
         document.getElementsByName("game_site")[0].value = app.selected_game.site;
-        document.getElementById("select_site").selectedIndex = 1;//0 = home, 1 = away, 2 = neutral
-        document.getElementById("select_league").selectedIndex = 1;//0 = Yes, 1 = No
+        document.getElementById("select_site").selectedIndex = 0;//0 = home, 1 = away, 2 = neutral
+        document.getElementById("select_league").selectedIndex = 0;//0 = Yes, 1 = No
         document.getElementsByName("sched_note")[0].value = app.selected_game.schedule_note;
-        document.getElementById("select_halves").selectedIndex = 1;//0 = halves, 1 = quarters
+        document.getElementById("select_halves").selectedIndex = 0;//0 = halves, 1 = quarters
         document.getElementsByName("min_period")[0].value = app.selected_game.min_period;
         document.getElementsByName("min_ot")[0].value = app.selected_game.min_ot;
         document.getElementsByName("vis_code")[0].value = app.selected_game.vis_team;
@@ -202,9 +205,16 @@ var app = new Vue({
         var is_existing = false;
         if(making_new_game) {
             curr_game = []
-            //add code for team names
-            curr_game.push("Wisconsin")
-            curr_game.push("Ohio State")
+
+            home_name = document.getElementsByName("home_name")[0].value;
+            if(home_name != "") {
+                curr_game.push(home_name)
+            }
+
+            vis_name = document.getElementsByName("vis_name")[0].value;
+            if(vis_name != "") {
+                curr_game.push(vis_name)
+            }
 
             home_code = document.getElementsByName("home_code")[0].value;
             if(home_code != "") {
@@ -292,10 +302,9 @@ var app = new Vue({
             }
         }
         else {
+
             window.location = "./index.html";
         }
-          // UPDATE BACKEND
-
     },
     // If F9 is pressed
     delete_game() {
