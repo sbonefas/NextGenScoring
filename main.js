@@ -401,7 +401,7 @@ function initGame(args){
  ipc.on('delete-team', function(event,team_code){
 	try {
 		trw.delete_file(team_code);
-	} catch {
+	} catch (e){
 		console.log("Could not delete team " + team_code + ": "+ e);
 		event.sender.send('delete-team-failure', team_code);
 		return;
@@ -409,15 +409,15 @@ function initGame(args){
 	event.sender.send('delete-team-success', team_code);
  });
 
- ipc.on('add-team', function(event,team_code){
+ ipc.on('add-team', function(event,team){
 	try {
-		trw.create_team(team_code);
-	} catch {
-		console.log("Could not create team " + team_code + ": "+ e);
-		event.sender.send('create-team-failure', team_code);
+		trw.create_team(team.get_name(), team.to_array());
+	} catch (e){
+		console.log("Could not create team " + team.get_code() + ": "+ e);
+		event.sender.send('create-team-failure', team.get_code());
 		return;
 	}
-	event.sender.send('create-team-success', team_code);
+	event.sender.send('create-team-success', team.get_code());
  });
  
  
