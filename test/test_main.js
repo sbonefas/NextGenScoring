@@ -1,4 +1,4 @@
-const Application = require("spectron").Application;
+/* const Application = require("spectron").Application;
 const assert = require("assert");
 const electron = require("electron"); // Require Electron from the binaries included in node_modules.
 const path = require("path");
@@ -107,4 +107,3 @@ describe('Application launch', function () {
            //assert.strictEqual("Please enter the password to access this site.\nSubmit Forgot Password", pswrd);
          })
      });*/
-  });
