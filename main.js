@@ -221,7 +221,6 @@ function addPlay(keystrokes){
 			assist(statArray[0], input[1]);
 			return;
 		case 'f':
-			console.log(input[1].charAt(0));
 			if (input[1].charAt(0) === 't'){	//technical foul (input[1] = 'T##')
 				statArray[1] = input[1].substring(1,3);	//take last two characters for player number
 				console.log("technical foul");
@@ -362,6 +361,8 @@ function wrongBasket(team){
 	else if (t === 0) activeTeam = 1;
 	drw.write_team_stats([activeTeam,2,0,0,0,0,0,0,0]);
 }
+
+
 /*
  *  INITIALIZE GAME FUNCTION
  *
