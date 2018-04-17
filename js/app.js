@@ -1271,7 +1271,7 @@ var app = new Vue({
          person.tp += 2;
          totals.fa += 1;
          totals.fg += 1;
-         stats.paint += 1;
+         stats.paint += 2;
 
          //increase bench points
          if(!person.starter) {
@@ -1331,8 +1331,8 @@ var app = new Vue({
         totals.fa += 1;
 
         // update fast break and in the paint
-        stats.fastb += 1;
-        stats.paint += 1;
+        stats.fastb += 2;
+        stats.paint += 2;
 
         // add to playby play
          app.add_play(`Fast Break: ${person.name} made a shot in the paint`);
@@ -1379,7 +1379,7 @@ var app = new Vue({
         totals.fa += 1;
 
         // update fast break
-        stats.fastb += 1;
+        stats.fastb += 2;
 
         // add to playby play
          app.add_play(`Fast Break: ${person.name} made a shot`);
@@ -1568,15 +1568,18 @@ var app = new Vue({
       if(keyCode == 13) char_entered = "ENTER";
       inputtext = inputtext + char_entered;
       if(char_entered == "ENTER") {
+        home_has_possession = home;
         var player_number = inputtext.substring(1,3);
         if(app.check_in_game(player_number, home)) {
-          if(home) {
+          if(!home) {
              for(index = 0; index < app.home_team.length; index++)
              {
                 if(player_number == app.home_team[index].number)
                 {
+                    home = true;
                     app.home_team[index].stl += 1;
                     app.home_totals.stl += 1;
+                    home_stats.steals += 1;
                     app.add_play("Steal by " + app.home_team[index].name);
                     ipc.send('add-play', "S " + player_number + " H");
                 }
@@ -1587,14 +1590,17 @@ var app = new Vue({
              {
                 if(player_number == app.vis_team[index].number)
                 {
+                    home = false;
                     app.vis_team[index].stl += 1;
                     app.vis_totals.stl += 1;
+                    vis_stats.steals += 1;
                     app.add_play("Steal by " + app.vis_team[index].name);
                     ipc.send('add-play', "S " + player_number + " V");
                 }
              }
            }
         }
+        home = home_has_possession;
       } else if(char_entered == 'S') {
         inputvalidator.innerText = "Steal by: Key in a player ##.";
       } else if(!isNaN(char_entered) && inputtext.length == 3) {
@@ -1618,11 +1624,13 @@ var app = new Vue({
             home_stats.tvs += 1;
             app.home_totals.to += 1
             ipc.send('add-play', "T M H");
+            app.add_play("Turnover by " + app.teams[0]);
             app.vis_possession(); // switch possession
           } else {
             vis_stats.tvs += 1;
             app.vis_totals.to += 1
             ipc.send('add-play', "T M V");
+            app.add_play("Turnover by " + app.teams[1]);
             app.home_possession(); // switch possession
           }
         } else {
@@ -1674,19 +1682,30 @@ var app = new Vue({
       if(keyCode == 13) char_entered = "ENTER";
       inputtext = inputtext + char_entered;
       if(char_entered == "ENTER") {
+        home_has_possession = home;  // Stores whether the home team has possession in this variable. Useful becuase we set home to T/F depending on which team commits the foul (for add_play())
         if(inputtext.substring(2,3) == 'B') {
           if(inputtext.substring(1,2) == 'H') {
             home = true;
-            home_stats.tvs += 1;
-            app.home_totals.to += 1
-            app.home_totals.pf += 1
+            if(home_has_possession) {  // Offensive fouls should count as turnovers
+              home_stats.tvs += 1;
+              app.home_totals.to += 1;
+            }
+            if(!home_has_possession) {  // offensive fouls are not team fouls
+              app.home_totals.pf += 1;
+              app.home_fouls += 1;
+            }
             app.add_play("Bench foul on the home team.");
             app.vis_possession(); // switch possession
         } else {
             home = false;
-            vis_stats.tvs += 1;
-            app.vis_totals.to += 1
-            app.vis_totals.pf += 1;
+            if(!home_has_possession) {  // offensive fouls should count as turnovers
+              vis_stats.tvs += 1;
+              app.vis_totals.to += 1;
+            }
+            if(home_has_possession) {  // offensive fouls are not team fouls
+              app.vis_totals.pf += 1;
+              app.vis_fouls += 1;
+            }
             app.add_play("Bench foul on the visiting team.");
             app.home_possession(); // switch possession
         }
@@ -1698,14 +1717,21 @@ var app = new Vue({
            {
               if(player_number == app.home_team[index].number)
               {
-                  app.home_team[index].pf += 1; //Technical fouls are not personal fouls
-                  app.home_team[index].to += 1;  // Offensive fouls are turnovers
+                  app.home_team[index].pf += 1; //Technical fouls are personal fouls
+                  if(home_has_possession) {
+                    app.home_team[index].to += 1;  // Offensive fouls are turnovers
+                  }
                   app.add_play("Technical foul on " + app.home_team[index].name);
               }
            }
+           if(home_has_possession) {
             home_stats.tvs += 1;
-            app.home_totals.to += 1
-            app.home_totals.pf += 1
+            app.home_totals.to += 1;
+           }
+            if(!home_has_possession) {  // offensive fouls are not team fouls
+              app.home_totals.pf += 1;
+              app.home_fouls += 1;
+            }
             app.vis_possession(); // switch possession
         } else {
             home = false;
@@ -1714,14 +1740,21 @@ var app = new Vue({
              {
                 if(player_number == app.vis_team[index].number)
                 {
-                    app.vis_team[index].pf += 1; //Technical fouls are not personal fouls
-                    app.vis_team[index].to += 1;  // Offensive fouls are turnovers
+                    app.vis_team[index].pf += 1; //Technical fouls are personal fouls
+                    if(!home_has_possession) {
+                      app.vis_team[index].to += 1;  // Offensive fouls are turnovers
+                    }
                     app.add_play("Technical foul on " + app.vis_team[index].name);
                 }
              }
-            vis_stats.tvs += 1;
-            app.vis_totals.to += 1
-            app.vis_totals.pf += 1;
+             if(!home_has_possession) {
+              vis_stats.tvs += 1;
+              app.vis_totals.to += 1
+             }
+            if(home_has_possession) {  // offensive fouls are not team fouls
+              app.vis_totals.pf += 1;
+              app.vis_fouls += 1;
+            }
             app.home_possession(); // switch possession
         }
       } else {  // not a bench or technical foul
@@ -1733,13 +1766,20 @@ var app = new Vue({
               if(player_number == app.home_team[index].number)
               {
                   app.home_team[index].pf += 1;
-                  app.home_team[index].to += 1;  // Offensive fouls are turnovers
+                  if(home_has_possession) {
+                    app.home_team[index].to += 1;  // Offensive fouls are turnovers
+                  }
                   app.add_play("Foul on " + app.home_team[index].name);
               }
            }
-          home_stats.tvs += 1;
-          app.home_totals.to += 1
-          app.home_totals.pf += 1
+          if(home_has_possession) {
+            home_stats.tvs += 1;
+            app.home_totals.to += 1;
+          }
+          if(!home_has_possession) {  // offensive fouls are not team fouls
+            app.home_totals.pf += 1;
+            app.home_fouls += 1;
+          }
           app.vis_possession(); // switch possession
         } else {
           home = false;
@@ -1749,13 +1789,20 @@ var app = new Vue({
                 if(player_number == app.vis_team[index].number)
                 {
                     app.vis_team[index].pf += 1;
-                    app.vis_team[index].to += 1;  // Offensive fouls are turnovers
+                    if(!home_has_possession) {
+                      app.vis_team[index].to += 1;  // Offensive fouls are turnovers
+                    }
                     app.add_play("Foul on " + app.vis_team[index].name);
                 }
              }
-             vis_stats.tvs += 1;
-             app.vis_totals.to += 1
-             app.vis_totals.pf += 1
+             if(!home_has_possession) {
+              vis_stats.tvs += 1;
+              app.vis_totals.to += 1
+             }
+             if(home_has_possession) {  // offensive fouls are not team fouls
+              app.vis_totals.pf += 1
+              app.vis_fouls += 1;
+             }
              app.home_possession(); // switch possession
         }
       }
