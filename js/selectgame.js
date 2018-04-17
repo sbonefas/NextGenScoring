@@ -34,10 +34,10 @@ var app = new Vue({
       if(e.keyCode == 13) {
         app.edit_game();
       }
-      // <N> --> Add New game
-      else if (e.keyCode == 78 && (document.getElementById('searched') != document.activeElement)) {
-        app.add_new_game();
-      }
+//      // <N> --> Add New game
+//      else if (e.keyCode == 78 && (document.getElementById('searched') != document.activeElement)) {
+//        app.add_new_game();
+//      }
       // <F9> --> Delete game
       else if (e.keyCode == 120) {
         app.delete_game();
