@@ -308,6 +308,7 @@ var app = new Vue({
             {
               app.games.splice(index, 1);
               //UPDATE BACKEND HERE
+							app.selected_game = {};
               break;
             }
           }

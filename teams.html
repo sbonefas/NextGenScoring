@@ -17,7 +17,7 @@
 
           <!-- Modal content -->
           <div class="modal-content">
-              <span id="closeModal" class="close">&times;</span>
+              <span id="close_team_entry" class="close">&times;</span>
               <h3>HELP MENU: TEAM SELECTION</h3>
               <p>ENTER: Edit team</p>
               <p>N: Create new team</p>
@@ -25,7 +25,6 @@
           </div>
       </div>
     </div>
-
     <h1 id="page_title">TEAM SELECTION</h1>
     <div id="team_app">
       <table id="static_top">
@@ -46,7 +45,53 @@
           </tr>
         </table>
       </div>
-      <dialog id="team_name_entry"><h3>ENTER NEW TEAM NAME</h3><input id="team_box" v-on:keyup.enter="set_team_name(document.getElementById("team_box").value)"placeholder="New team name..."></dialog>
+
+      <!-- The Modal -->
+      <div id='team_entry' class='modal'>
+        <!-- Modal content -->
+        <div id='team_content' class="modal-content">
+          <span id="closeModal" class="close">&times;</span>
+          <h1>TEAM DETAILS</h1>
+          <h4>TEAM NAME:&emsp;
+              <input id = "userinput" type = "text" name = "team_name">
+          </h4>
+          <h4>TEAM CODE:&emsp;
+              <input id = "userinput" type = "text" name = "team_code">
+          </h4>
+          <h4>HEAD COACH:&emsp;
+              <input id = "userinput" type = "text" name = "team_coach">
+          </h4>
+          <h4>ASSISTANT COACHES (Example: Coach One, Coach Two, Etc.):&emsp;
+              <input id = "userinput" type = "text" name = "team_assistants">
+          </h4>
+          <h4>HOME STADIUM:&emsp;
+              <input id = "userinput" type = "text" name = "team_stadium">
+          </h4>
+          <h4>ROSTER SIZE:&emsp;
+              <select id="roster_size">
+                  <option value="five">5</option>
+                  <option value="six">6</option>
+                  <option value="seven">7</option>
+                  <option value="eight">8</option>
+                  <option value="nine">9</option>
+                  <option value="ten">10</option>
+                  <option value="eleven">11</option>
+                  <option value="twelve">12</option>
+                  <option value="thirteen">13</option>
+                  <option value="fourteen">14</option>
+                  <option value="fifteen">15</option>
+              </select>
+          </h4>
+          <button class='submit_button' v-on:click="submit_team_data">SUBMIT AND GO TO ROSTER ENTRY</button>
+        </div>
+      </div>
+      <div id='team_roster_entry'>
+        <div id='player_content' class="modal-content">
+          <h4>PLAYER NAME:&emsp;
+              <input id = "userinput" type = "text" name = "player_name">
+          </h4>
+        </div>
+      </div>
     </div>
     <script type="text/javascript" src="js/vue.js"></script>
     <script type="text/javascript" src="js/teams.js"></script>
