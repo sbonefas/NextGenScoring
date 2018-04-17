@@ -128,10 +128,10 @@ var app = new Vue({
         document.getElementsByName("game_date")[0].value = app.selected_game.date;
         document.getElementsByName("game_time")[0].value = app.selected_game.time;
         document.getElementsByName("game_site")[0].value = app.selected_game.site;
-        document.getElementById("select_site").selectedIndex = 1;//0 = home, 1 = away, 2 = neutral
-        document.getElementById("select_league").selectedIndex = 1;//0 = Yes, 1 = No
+        document.getElementById("select_site").selectedIndex = 0;//0 = home, 1 = away, 2 = neutral
+        document.getElementById("select_league").selectedIndex = 0;//0 = Yes, 1 = No
         document.getElementsByName("sched_note")[0].value = app.selected_game.schedule_note;
-        document.getElementById("select_halves").selectedIndex = 1;//0 = halves, 1 = quarters
+        document.getElementById("select_halves").selectedIndex = 0;//0 = halves, 1 = quarters
         document.getElementsByName("min_period")[0].value = app.selected_game.min_period;
         document.getElementsByName("min_ot")[0].value = app.selected_game.min_ot;
         document.getElementsByName("vis_code")[0].value = app.selected_game.vis_team;
@@ -205,9 +205,16 @@ var app = new Vue({
         var is_existing = false;
         if(making_new_game) {
             curr_game = []
-            //add code for team names
-            curr_game.push("Wisconsin")
-            curr_game.push("Ohio State")
+
+            home_name = document.getElementsByName("home_name")[0].value;
+            if(home_name != "") {
+                curr_game.push(home_name)
+            }
+
+            vis_name = document.getElementsByName("vis_name")[0].value;
+            if(vis_name != "") {
+                curr_game.push(vis_name)
+            }
 
             home_code = document.getElementsByName("home_code")[0].value;
             if(home_code != "") {
