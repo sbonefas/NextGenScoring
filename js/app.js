@@ -2030,7 +2030,6 @@ var app = new Vue({
         // if(inputtext.substring(2,3) == 'D') {
         //   home = !home;
         // }
-        console.log(inputtext);
         if(inputtext.substring(3,4) == 'E') {
           var ft_player_num = inputtext.substring(1,3);
           if(home) {
@@ -2065,15 +2064,17 @@ var app = new Vue({
             }
           }
         } else if(inputtext.substring(3,4) == 'M') {
+          var ft_player_num = inputtext.substring(1,3);
           if(home) {
-          for(index = 0; index < app.home_team.length; index++) {
-            if(ft_player_num == app.home_team[index].number) {
-              app.home_team[index].fta += 1;
-              app.home_totals.fta += 1;
-              app.add_play("Missed free throw by " + app.home_team[index].name);
-              home_stats.ftp = Number.parseFloat((app.home_totals.ftm/app.home_totals.fta)*100).toFixed(2);
+            for(index = 0; index < app.home_team.length; index++) {
+              console.log("index: " + index + " ft_player_num: " + ft_player_num);
+              if(ft_player_num == app.home_team[index].number) {
+                app.home_team[index].fta += 1;
+                app.home_totals.fta += 1;
+                app.add_play("Missed free throw by " + app.home_team[index].name);
+                home_stats.ftp = Number.parseFloat((app.home_totals.ftm/app.home_totals.fta)*100).toFixed(2);
+              }
             }
-          }
         } else {
           for(index = 0; index < app.vis_team.length; index++) {
             if(ft_player_num == app.vis_team[index].number) {
