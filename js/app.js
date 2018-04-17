@@ -1693,19 +1693,30 @@ var app = new Vue({
       if(keyCode == 13) char_entered = "ENTER";
       inputtext = inputtext + char_entered;
       if(char_entered == "ENTER") {
+        home_has_possession = home;  // Stores whether the home team has possession in this variable. Useful becuase we set home to T/F depending on which team commits the foul (for add_play())
         if(inputtext.substring(2,3) == 'B') {
           if(inputtext.substring(1,2) == 'H') {
             home = true;
-            home_stats.tvs += 1;
-            app.home_totals.to += 1
-            app.home_totals.pf += 1
+            if(home_has_possession) {  // Offensive fouls should count as turnovers
+              home_stats.tvs += 1;
+              app.home_totals.to += 1;
+            }
+            if(!home_has_possession) {  // offensive fouls are not team fouls
+              app.home_totals.pf += 1;
+              app.home_fouls += 1;
+            }
             app.add_play("Bench foul on the home team.");
             app.vis_possession(); // switch possession
         } else {
             home = false;
-            vis_stats.tvs += 1;
-            app.vis_totals.to += 1
-            app.vis_totals.pf += 1;
+            if(!home_has_possession) {  // offensive fouls should count as turnovers
+              vis_stats.tvs += 1;
+              app.vis_totals.to += 1;
+            }
+            if(home_has_possession) {  // offensive fouls are not team fouls
+              app.vis_totals.pf += 1;
+              app.vis_fouls += 1;
+            }
             app.add_play("Bench foul on the visiting team.");
             app.home_possession(); // switch possession
         }
@@ -1717,14 +1728,21 @@ var app = new Vue({
            {
               if(player_number == app.home_team[index].number)
               {
-                  app.home_team[index].pf += 1; //Technical fouls are not personal fouls
-                  app.home_team[index].to += 1;  // Offensive fouls are turnovers
+                  app.home_team[index].pf += 1; //Technical fouls are personal fouls
+                  if(home_has_possession) {
+                    app.home_team[index].to += 1;  // Offensive fouls are turnovers
+                  }
                   app.add_play("Technical foul on " + app.home_team[index].name);
               }
            }
+           if(home_has_possession) {
             home_stats.tvs += 1;
-            app.home_totals.to += 1
-            app.home_totals.pf += 1
+            app.home_totals.to += 1;
+           }
+            if(!home_has_possession) {  // offensive fouls are not team fouls
+              app.home_totals.pf += 1;
+              app.home_fouls += 1;
+            }
             app.vis_possession(); // switch possession
         } else {
             home = false;
@@ -1733,14 +1751,21 @@ var app = new Vue({
              {
                 if(player_number == app.vis_team[index].number)
                 {
-                    app.vis_team[index].pf += 1; //Technical fouls are not personal fouls
-                    app.vis_team[index].to += 1;  // Offensive fouls are turnovers
+                    app.vis_team[index].pf += 1; //Technical fouls are personal fouls
+                    if(!home_has_possession) {
+                      app.vis_team[index].to += 1;  // Offensive fouls are turnovers
+                    }
                     app.add_play("Technical foul on " + app.vis_team[index].name);
                 }
              }
-            vis_stats.tvs += 1;
-            app.vis_totals.to += 1
-            app.vis_totals.pf += 1;
+             if(!home_has_possession) {
+              vis_stats.tvs += 1;
+              app.vis_totals.to += 1
+             }
+            if(home_has_possession) {  // offensive fouls are not team fouls
+              app.vis_totals.pf += 1;
+              app.vis_fouls += 1;
+            }
             app.home_possession(); // switch possession
         }
       } else {  // not a bench or technical foul
@@ -1752,13 +1777,20 @@ var app = new Vue({
               if(player_number == app.home_team[index].number)
               {
                   app.home_team[index].pf += 1;
-                  app.home_team[index].to += 1;  // Offensive fouls are turnovers
+                  if(home_has_possession) {
+                    app.home_team[index].to += 1;  // Offensive fouls are turnovers
+                  }
                   app.add_play("Foul on " + app.home_team[index].name);
               }
            }
-          home_stats.tvs += 1;
-          app.home_totals.to += 1
-          app.home_totals.pf += 1
+          if(home_has_possession) {
+            home_stats.tvs += 1;
+            app.home_totals.to += 1;
+          }
+          if(!home_has_possession) {  // offensive fouls are not team fouls
+            app.home_totals.pf += 1;
+            app.home_fouls += 1;
+          }
           app.vis_possession(); // switch possession
         } else {
           home = false;
@@ -1768,13 +1800,20 @@ var app = new Vue({
                 if(player_number == app.vis_team[index].number)
                 {
                     app.vis_team[index].pf += 1;
-                    app.vis_team[index].to += 1;  // Offensive fouls are turnovers
+                    if(!home_has_possession) {
+                      app.vis_team[index].to += 1;  // Offensive fouls are turnovers
+                    }
                     app.add_play("Foul on " + app.vis_team[index].name);
                 }
              }
-             vis_stats.tvs += 1;
-             app.vis_totals.to += 1
-             app.vis_totals.pf += 1
+             if(!home_has_possession) {
+              vis_stats.tvs += 1;
+              app.vis_totals.to += 1
+             }
+             if(home_has_possession) {  // offensive fouls are not team fouls
+              app.vis_totals.pf += 1
+              app.vis_fouls += 1;
+             }
              app.home_possession(); // switch possession
         }
       }
@@ -2215,7 +2254,6 @@ var app = new Vue({
           }
           if(!home) {
               for(index = 0; index < app.home_team.length; index++) {
-                  console.log("blocker: " + blocker + " index_num: " + app.vis_team[index].number);
                   if(blocker == app.home_team[index].number && app.check_in_game(blocker, true)) {
                     app.home_team[index].blk += 1;
                     home_stats.blocks += 1;
@@ -2226,7 +2264,6 @@ var app = new Vue({
           }
           else {
             for(index = 0; index < app.vis_team.length; index++) {
-                console.log("blocker: " + blocker + " index_num: " + app.vis_team[index].number);
                 if(blocker == app.vis_team[index].number && app.check_in_game(blocker, false)) {
                   app.vis_team[index].blk += 1;
                   vis_stats.blocks += 1;
