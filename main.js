@@ -1,6 +1,7 @@
 console.log('main process loaded');
 
 var drw = require('./data_read_write.js');
+var trw = require('./team_read_write.js');
 
 const electron = require("electron");
 const app = electron.app;
@@ -11,7 +12,7 @@ const fs = require("fs");	//node.js filesystem
 const ipc = electron.ipcMain;
 const dialog = electron.dialog;
 const indiv_stat_headers = ['player_number','fg','fga','m3','3a','ft','fta','offr','defr','ast','pf','tf','blk','trn','stl','pts'];
-const team_stat_headers = ['home/away', 'total_points', 'made_in_paint', 'fast_break', 'team_turnover', 'team_rebound', 'team_fouls', 'partial_timeouts_taken','full_timeouts_taken'];
+const team_stat_headers = ['total_points', 'made_in_paint', 'fast_break', 'team_turnover', 'team_rebound', 'team_fouls', 'partial_timeouts_taken','full_timeouts_taken'];
 const Team = require('./Team.js');	//team object import
 const Player = require('./Player.js'); 	//player object import
 var teams = new Array();
@@ -41,6 +42,7 @@ function createWindow() {
 	win.on('closed', () => {
 		win = null;
 		//drw.delete_file(test_file_name);
+		trw.delete_file("WIS");
 		app.quit();
 	})
 };
@@ -50,15 +52,22 @@ function createTeam(name, code, head_coach, asst_coach, stadium){
 
 	var team = new Team(name, code, head_coach, asst_coach, stadium);
 	team.add_player_to_roster(new Player("Frank Kaminsky", 44, "center"));
-	teams.push(team);
-	console.log("Team name: " + teams[0].get_name());
-	console.log("Team code:" + teams[0].get_code());
-	console.log("Head coach: " + teams[0].get_head_coach());
-	console.log("Assistant coach: " + teams[0].get_asst_coach());
-	console.log("Stadium: " + teams[0].get_stadium());
+	console.log("Adding team " + name + "...");
+	try {
+		trw.create_team(team.get_code(), team.to_array());
+	} catch (e){
+		console.log("Unable to add team " + name + ": " + e);
+		return;
+	}
+	console.log("Successfully added team " + name);
+	console.log("Team name: " + team.get_name());
+	console.log("Team code:" + team.get_code());
+	console.log("Head coach: " + team.get_head_coach());
+	console.log("Assistant coach: " + team.get_asst_coach());
+	console.log("Stadium: " + team.get_stadium());
 	console.log("Active Roster: ");
-	for (var i = 0; i < teams[0].get_active_roster().length; i++){
-		var player = teams[0].get_active_roster()[i];
+	for (var i = 0; i < team.get_active_roster().length; i++){
+		var player = team.get_active_roster()[i];
 		console.log("[" + i + "] " + player.get_name() + " #" + player.get_number() + " " + player.get_position() + "\n");
 	}
 	try {
@@ -388,7 +397,30 @@ function initGame(args){
  *
  */
 
+ 
+ ipc.on('delete-team', function(event,team_code){
+	try {
+		trw.delete_file(team_code);
+	} catch {
+		console.log("Could not delete team " + team_code + ": "+ e);
+		event.sender.send('delete-team-failure', team_code);
+		return;
+	}
+	event.sender.send('delete-team-success', team_code);
+ });
 
+ ipc.on('add-team', function(event,team_code){
+	try {
+		trw.create_team(team_code);
+	} catch {
+		console.log("Could not create team " + team_code + ": "+ e);
+		event.sender.send('create-team-failure', team_code);
+		return;
+	}
+	event.sender.send('create-team-success', team_code);
+ });
+ 
+ 
  ipc.on('get-game', function (event,game_name){
 	try {
 		var game_info = drw.get_game_information(game_name);
