@@ -103,17 +103,12 @@ function createTeam(name, code, head_coach, asst_coach, stadium){
  * TEAM STATARRY FORMAT:
  *
  *
- * [HOME/AWAY, POINTS, MADE_IN_PAINT, FAST_BREAK, TEAM_TURNOVER, TEAM_REBOUND, PARTIAL_TIMEOUTS_TAKEN, FULL_TIMEOUTS_TAKEN]
+ * [HOME/AWAY, POINTS, MADE_IN_PAINT, FAST_BREAK, TEAM_TURNOVER]
  *
  * [7]-[12] ARE EDITED IN SUBPLAY FUNCTIONS BELOW
  *
  * TO: T (TEAM TURNOVER)
  * TO: D (DEAD BALL)
- *
- *
- * TIMEOUT FORMAT:
- *
- * [O, (T FOR MEDIA, 3 FOR PARTIAL, M FOR FULL), HOME/AWAY]
  *
  *
  */
@@ -137,8 +132,6 @@ function addPlay(keystrokes){
 		case 'y':
 			statArray[5] = 1;	//3 attempt
 		case 'w':
-			wrongBasket(statArray[0], input[2]);
-			return;
 		case 'j':
 		case 'p':
 		case 'l':
@@ -219,7 +212,7 @@ function addPlay(keystrokes){
 			if (input[1] == 'm') {
 				if (input[2] == 'r') teamRebound(statArray[0]);
 				else if (input[2] == 'd') teamRebound(statArray[0],1);
-			}	
+			}
 			if (input[2] == 'r') rebound(statArray[0], input[1]);
 			else if (input[2] == 'd') rebound(statArray[0], input[1],1);
 
@@ -228,9 +221,8 @@ function addPlay(keystrokes){
 			assist(statArray[0], input[1]);
 			return;
 		case 'f':
-			console.log(input[1].charAt(0));
 			if (input[1].charAt(0) === 't'){	//technical foul (input[1] = 'T##')
-				statArray[1] = input[1].substring(1,3);	//take last two characters for player number 
+				statArray[1] = input[1].substring(1,3);	//take last two characters for player number
 				console.log("technical foul");
 				statArray[12] = 1;
 				teamFoul(statArray[0]);
@@ -273,13 +265,6 @@ function addPlay(keystrokes){
 		case 'f2':
 			chg(input[input.length-1], input[1], input[2]);
 			return;
-		case 'o':
-			if (input[1] === '3'){
-				timeout("p");	
-			}
-			else if (input[1] === 'm'){
-				timeout("f");
-			}
 	}
 	console.log("in addPlay: " + statArray);
 	if (statArray[15] != 0) add_team_points(statArray[0],statArray[15]);
@@ -292,7 +277,7 @@ function addPlay(keystrokes){
  *	CALLED BY ADDPLAY()
  *
  */
- 
+
 function rebound(team, player_number, def_rebound){
 	var statArray;
 	if (def_rebound != null){
@@ -302,7 +287,7 @@ function rebound(team, player_number, def_rebound){
 		var statArray = [team, player_number,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0];
 	} else {
 
-		var statArray = [team, player_number,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0];	
+		var statArray = [team, player_number,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0];
 	}
 	drw.write_player_stats_to_game_file(statArray, current_game);
 }
@@ -315,12 +300,12 @@ function assist(t, player_number){
 function block(team, player_number, from_shot_attempt){
 	//team to block will be opposite of team who attempted shot
 	var activeTeam;
-	
+
 	if(from_shot_attempt != null){
 		if (team === 1) activeTeam = 0;
 		else if (team === 0) activeTeam = 1;
 	}
-	
+
 	var statArray = [activeTeam, player_number,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0];
 	drw.write_player_stats_to_game_file(statArray, current_game);
 }
@@ -366,7 +351,7 @@ function timeout(team,type){
 	if (type === "p"){
 		drw.write_team_stats_to_game_file([team,0,0,0,0,0,0,1,0]);
 	} else if (type === "f"){
-		drw.write_team_stats_to_game_file([team,0,0,0,0,0,0,0,1]);		
+		drw.write_team_stats_to_game_file([team,0,0,0,0,0,0,0,1]);
 	}
 }
 
@@ -376,6 +361,8 @@ function wrongBasket(team){
 	else if (t === 0) activeTeam = 1;
 	drw.write_team_stats([activeTeam,2,0,0,0,0,0,0,0]);
 }
+
+
 /*
  *  INITIALIZE GAME FUNCTION
  *
@@ -400,6 +387,7 @@ function initGame(args){
  *	IPC EVENT HANDLER
  *
  */
+
 
  ipc.on('get-game', function (event,game_name){
 	try {
