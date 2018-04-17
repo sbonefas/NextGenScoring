@@ -1534,10 +1534,12 @@ var app = new Vue({
           if(home) {
             home_stats.tvs += 1;
             app.home_totals.to += 1
+            app.add_play("Turnover by " + app.teams[0]);
             app.vis_possession(); // switch possession
           } else {
             vis_stats.tvs += 1;
             app.vis_totals.to += 1
+            app.add_play("Turnover by " + app.teams[1]);
             app.home_possession(); // switch possession
           }
         } else {
