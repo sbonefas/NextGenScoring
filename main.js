@@ -387,10 +387,9 @@ function initGame(args){
  *
  */
 
-
  ipc.on('get-game', function (event,game_name){
 	try {
-		var game_info = get_game_information(game_name);
+		var game_info = drw.get_game_information(game_name);
 	} catch (e) {
 		//if failure
 		console.log("An error occurred in file writing: " + e);
