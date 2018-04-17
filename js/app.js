@@ -5,14 +5,6 @@ var home = true;
 var inputtext = "";
 var currentlyInputtingPlay = "";
 var join_two_plays = "";
-//result_code_prompt = `
-//PRESS A RESULT CODE...
-//
-//G (or Q) - GOOD FIELD GOAL               F - GOOD FG ON A FAST BREAK
-//Y - GOOD 3PT FIELD GOAL                  R - MISSED SHOT (REBOUND)
-//P - GOOD FG IN THE PAINT                  X - MISSED 3PT SHOT (REBOUND)
-//Z - GOOD FG- FAST BREAK & PAINT   K - BLOCKED SHOT
-//`;
 
 var home_stats = {fg: Number.parseFloat(0.00).toFixed(2), tfg: Number.parseFloat(0.00).toFixed(2), ftp: Number.parseFloat(0.00).toFixed(2), tvs: 0, blocks: 0, steals: 0, paint: 0, offto: 0, sndch: 0, fastb: 0, fga: 0, tfga: 0, benchpts: 0}
 Vue.component('home_team_stats', {
@@ -205,6 +197,12 @@ var app = new Vue({
      if(e.keyCode == 27) { // Esc key pressed
         app.clear_input();
      }
+     //Q - back to main menu
+     if(e.keyCode == 81) {
+        if(confirm("Are you sure you want to go back to the main menu? Changes will be lost")) {
+            window.location = "./mainmenu.html"
+        }
+     }
 
      // alt + h - Help menu
      if(e.altKey && e.keyCode == 72) {
@@ -332,110 +330,6 @@ var app = new Vue({
         currentlyInputtingPlay = "shotattempt";
         userinput.value = "";
         app.shot_attempt(e.keyCode);
-      /*
-       who_did_it = window.prompt("SHOT BY: (Key in a player ##)");
-       while(!app.check_in_game(who_did_it, home)) {
-           if(who_did_it == null) {
-                return
-           }
-            who_did_it = window.prompt("Player " + who_did_it + " is not in the game!\n\nSHOT BY: (Key in a player ##)");
-       }
-       result_code = window.prompt(result_code_prompt);
-       if(home == true) {
-         for(index = 0; index < app.home_team.length; index++)
-         {
-         console.log(who_did_it);
-           // J then G or Q - good field goal (2 points)
-           if(who_did_it == app.home_team[index].number && (result_code == "g" || result_code == "G" || result_code == "q" || result_code == "Q"))
-           {
-               app.jgq_good(app.home_team[index], app.home_team, app.home_totals, home_stats);
-               break;
-           }
-           // J then Y - good 3pt field goal
-           else if((who_did_it == app.home_team[index].number && (result_code == "y" || result_code == "Y"))) {
-               app.jy_good_3(app.home_team[index], app.home_team, app.home_totals, home_stats);
-               break;
-           }
-           // J then R - missed shot (rebound)
-           else if (who_did_it == app.home_team[index].number && (result_code == "r" || result_code == "R")) {
-               app.jr_missed(app.home_team[index], app.home_team, app.home_totals, home_stats);
-               break;
-           }
-           // J then P - field goal in the paint
-           else if (who_did_it == app.home_team[index].number && (result_code == "p" || result_code == "P")) {
-               app.jp_good_paint(app.home_team[index], app.home_team, app.home_totals, home_stats);
-               break;
-           }
-           // J then Z - GOOD FG-FAST BREAK & PAINT
-           else if (who_did_it == app.home_team[index].number && (result_code == "z" || result_code == "Z")) {
-               app.jz_good_fastb_paint(app.home_team[index], app.home_team, app.home_totals, home_stats);
-               break;
-           }
-           // J then F - GOOD FG ON A FAST BREAK
-           else if (who_did_it == app.home_team[index].number && (result_code == "f" || result_code == "F")) {
-                 app.jf_good_fastb(app.home_team[index], app.home_team, app.home_totals, home_stats);
-                 break;
-           }
-           // J then X - MISSED 3PT SHOT (REBOUND)
-           else if (who_did_it == app.home_team[index].number && (result_code == "x" || result_code == "X")) {
-               app.jx_missed_3(app.home_team[index], app.home_team, app.home_totals, home_stats);
-               break;
-           }
-           // J then K - BLOCKED SHOT
-           else if (who_did_it == app.home_team[index].number && (result_code == "k" || result_code == "K")) {
-               app.jk_blocked_shot(app.home_team[index], app.home_team, app.home_totals, home_stats);
-               break;
-           }
-         }
-       } //end home calculations
-       else {  // Visitor calculations
-         for(index = 0; index < app.vis_team.length; index++)
-         {
-         console.log("who did it: " + who_did_it);
-           // J then G or Q - good field goal (2 points)
-           if(who_did_it == app.vis_team[index].number && (result_code == "g" || result_code == "G" || result_code == "q" || result_code == "Q"))
-           {
-               app.jgq_good(app.vis_team[index], app.vis_team, app.vis_totals, vis_stats);
-               break;
-           }
-           // J then Y - good 3pt field goal
-           else if((who_did_it == app.vis_team[index].number && (result_code == "y" || result_code == "Y"))) {
-               app.jy_good_3(app.vis_team[index], app.vis_team, app.vis_totals, vis_stats);
-               break;
-           }
-           // J then R - missed shot (rebound)
-           else if (who_did_it == app.vis_team[index].number && (result_code == "r" || result_code == "R")) {
-               app.jr_missed(app.vis_team[index], app.vis_team, app.vis_totals, vis_stats);
-               break;
-           }
-           // J then P - field goal in the paint
-           else if (who_did_it == app.vis_team[index].number && (result_code == "p" || result_code == "P")) {
-               app.jp_good_paint(app.vis_team[index], app.vis_team, app.vis_totals, vis_stats);
-               break;
-           }
-           // J then Z - GOOD FG-FAST BREAK & PAINT
-           else if (who_did_it == app.home_team[index].number && (result_code == "z" || result_code == "Z")) {
-               app.jz_good_fastb_paint(app.vis_team[index], app.vis_team, app.vis_totals, vis_stats);
-               break;
-           }
-           // J then F - GOOD FG ON A FAST BREAK
-           else if (who_did_it == app.vis_team[index].number && (result_code == "f" || result_code == "F")) {
-               app.jf_good_fastb(app.vis_team[index], app.vis_team, app.vis_totals, vis_stats);
-               break;
-           }
-           // J then X - MISSED 3PT SHOT (REBOUND)
-           else if (who_did_it == app.vis_team[index].number && (result_code == "x" || result_code == "X")) {
-               app.jx_missed_3(app.vis_team[index], app.vis_team, app.vis_totals, vis_stats);
-               break;
-           }
-           // J then K - BLOCKED SHOT
-           else if (who_did_it == app.vis_team[index].number && (result_code == "k" || result_code == "K")) {
-               app.jk_blocked_shot(app.vis_team[index], app.vis_team, app.vis_totals, vis_stats);
-               break;
-           }
-         }
-       }//end visitor calculations
-       */
      }// end J
 
      // K - blocked shot
@@ -2308,5 +2202,7 @@ var app = new Vue({
           }
       }
    }
+	 
 }
+
 })

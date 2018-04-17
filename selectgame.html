@@ -12,32 +12,13 @@
         <a href="./mainmenu.html">Back to the Main Menu</a>
     </div>
 
-    <!--N - New Game (fill out the following fields:)-->
-        <!--Game Date-->
-        <!--Game Time-->
-        <!--Site of Game-->
-        <!--Site Code (Home, Away, Neutral)-->
-        <!--League Game (Y/N)-->
-        <!--Schedule Note-->
-        <!--Quarters or Halves (Men/Women)-->
-        <!--# Mins per period-->
-        <!--# Mins in Overtime-->
-        <!--Visiting Team Code-->
-        <!--Home Team code-->
-        <!--Visitors Record-->
-        <!--Home Team record-->
-        <!--Officials-->
-        <!--Attendance-->
-        <!--Box Score Comments (4 Lines)-->
-    <!--Enter - Edit Game-->
-        <!--Edit the info above-->
-
     <div id="selectapp">
         <h1 id="page_title">GAME SELECTION</h1>
         <div id="">
-            <p class="game_option" id="edit">{{game_options[0].name}}
-            &emsp;&emsp;&emsp;{{game_options[1].name}}
-            &emsp;&emsp;&emsp;{{game_options[2].name}}
+            <p class="game_option" id="edit">
+                {{game_options[0].name}}
+                &emsp;&emsp;&emsp;<button v-on:click="add_new_game">{{game_options[1].name}}</button><!--&emsp; is a tab-->
+                &emsp;&emsp;&emsp;{{game_options[2].name}}
             </p>
         </div>
 
