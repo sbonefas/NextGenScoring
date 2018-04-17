@@ -11,7 +11,7 @@ def configure_index():
     index_path = 'file:///' + path + '/index.html'
     return index_path.replace("\\", '/')
 
-class TestShotCodes(unittest.TestCase):
+class TestShotCodes2(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         __class__.driver = webdriver.Firefox()
