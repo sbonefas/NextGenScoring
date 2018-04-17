@@ -411,11 +411,11 @@ function initGame(args){
 	try {
 		trw.create_team(team.get_name(), team.to_array());
 	} catch (e){
-		console.log("Could not create team " + team_code + ": "+ e);
-		event.sender.send('create-team-failure', team.get_name());
+		console.log("Could not create team " + team.get_code() + ": "+ e);
+		event.sender.send('create-team-failure', team.get_code());
 		return;
 	}
-	event.sender.send('create-team-success', team.get_name());
+	event.sender.send('create-team-success', team.get_code());
  });
  
  
