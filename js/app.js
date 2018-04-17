@@ -1199,7 +1199,7 @@ var app = new Vue({
          person.tp += 2;
          totals.fa += 1;
          totals.fg += 1;
-         stats.paint += 1;
+         stats.paint += 2;
 
          //increase bench points
          if(!person.starter) {
@@ -1259,8 +1259,8 @@ var app = new Vue({
         totals.fa += 1;
 
         // update fast break and in the paint
-        stats.fastb += 1;
-        stats.paint += 1;
+        stats.fastb += 2;
+        stats.paint += 2;
 
         // add to playby play
          app.add_play(`Fast Break: ${person.name} made a shot in the paint`);
@@ -1307,7 +1307,7 @@ var app = new Vue({
         totals.fa += 1;
 
         // update fast break
-        stats.fastb += 1;
+        stats.fastb += 2;
 
         // add to playby play
          app.add_play(`Fast Break: ${person.name} made a shot`);
@@ -1487,15 +1487,18 @@ var app = new Vue({
       if(keyCode == 13) char_entered = "ENTER";
       inputtext = inputtext + char_entered;
       if(char_entered == "ENTER") {
+        home_has_possession = home;
         var player_number = inputtext.substring(1,3);
         if(app.check_in_game(player_number, home)) {
-          if(home) {
+          if(!home) {
              for(index = 0; index < app.home_team.length; index++)
              {
                 if(player_number == app.home_team[index].number)
                 {
+                    home = true;
                     app.home_team[index].stl += 1;
                     app.home_totals.stl += 1;
+                    home_stats.steals += 1;
                     app.add_play("Steal by " + app.home_team[index].name);
                 }
              }
@@ -1505,13 +1508,16 @@ var app = new Vue({
              {
                 if(player_number == app.vis_team[index].number)
                 {
+                    home = false;
                     app.vis_team[index].stl += 1;
                     app.vis_totals.stl += 1;
+                    vis_stats.steals += 1;
                     app.add_play("Steal by " + app.vis_team[index].name);
                 }
              }
            }
         }
+        home = home_has_possession;
       } else if(char_entered == 'S') {
         inputvalidator.innerText = "Steal by: Key in a player ##.";
       } else if(!isNaN(char_entered) && inputtext.length == 3) {
