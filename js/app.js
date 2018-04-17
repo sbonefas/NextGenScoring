@@ -1717,7 +1717,7 @@ var app = new Vue({
            {
               if(player_number == app.home_team[index].number)
               {
-                  // app.home_team[index].pf += 1; Technical fouls are not personal fouls
+                  app.home_team[index].pf += 1; //Technical fouls are not personal fouls
                   app.home_team[index].to += 1;  // Offensive fouls are turnovers
                   app.add_play("Technical foul on " + app.home_team[index].name);
               }
@@ -1733,7 +1733,7 @@ var app = new Vue({
              {
                 if(player_number == app.vis_team[index].number)
                 {
-                    // app.vis_team[index].pf += 1; Technical fouls are not personal fouls
+                    app.vis_team[index].pf += 1; //Technical fouls are not personal fouls
                     app.vis_team[index].to += 1;  // Offensive fouls are turnovers
                     app.add_play("Technical foul on " + app.vis_team[index].name);
                 }
