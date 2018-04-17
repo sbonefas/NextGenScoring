@@ -225,7 +225,7 @@ class TestShotCodes2(unittest.TestCase):
         self.assertNotEqual(home_color, home_color2)
         self.assertEqual(visitor_color, "red")
         
-    def test_bench_foul_pbp(self):
+    #def test_bench_foul_pbp(self):
         
         
     ## BUG PENDING ##
