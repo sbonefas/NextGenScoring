@@ -89,11 +89,7 @@ exports.create_game_file = function(individual_stat_labels, team_stat_labels, fi
 	try {
     	fs.writeFileSync(file_path, file_contents);
 	} catch (e) {
-		console.log("CREATE GAME FILE ERROR:", e);
-
-		//TODO: throw error instead of returning false
-
-    	return false;
+		throw "File Creation Failed: " + e;
 	}
 	return true;
 }
@@ -142,7 +138,7 @@ function get_initial_game_file_contents(individual_stat_labels, team_stat_labels
 		}
 	}
 	contents += "\n" + semicolon_replacement + "FOOTER\n";
-	contents += footer.toString().replace(/,/g,'(&h#@d!`_');
+	contents += footer.toString().replace(/,/g, comma_replacement);
 
 	return contents;
 }
