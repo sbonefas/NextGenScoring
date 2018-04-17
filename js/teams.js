@@ -7,10 +7,20 @@ const ipc = electron.ipcRenderer;
 const Team = require('./Team.js'); // Imports stuff from the Team.js backend file
 const Player = require('./Player.js'); // Imports stuff from the Player.js backend file
 /*
+// Creating a new team (note: empty roster is created by the constructor, therefore is not passed as a parameter)
+var team = new Team(name, code, coach, assistants, home_stadium, <team_roster>);
 
-var team = new Team(name, code, coach, assistants, home_stadium, team_roster)
-when getting a team,
+// Creating a new player
+var player = new Player(name, number, position);
 
+// Add a team to the backend
+ipc.send('add-team', team_object);
+
+// Delete a team from the backend
+ipc.send('delete-team', team_code);
+
+note:
+    Need to add success and failure event handlers for adding and deleting a team
 */
 
 function help() {
