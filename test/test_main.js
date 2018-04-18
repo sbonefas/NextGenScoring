@@ -3,9 +3,10 @@ const assert = require("assert");
 const electron = require("electron"); // Require Electron from the binaries included in node_modules.
 const path = require("path");
 const app = electron.app;
-const ipc = electron.ipcRenderer;
+const ipc = require("electron").ipcRenderer;
+
 let args = ["Wisconsin", "Ohio State", "796", "518", "100-0", "0-100", "3-12-19", "4pm", "Kohl Center", "Kohl-Center-code", "1", ["schedule notes"], "quarters", "15", "15", ["Official Names"], ["Box comments"],"attendance"];
-ipc.send('init-game', args);
+//ipc.send('init-game', args);
 
 let fieldgoal_off_rebound = "j 02 r 05 h";  //offensive rebound (shot made by home #2, rebound home #5)
 let fieldgoal_def_rebound = "j 02 d 03 h";  //defensive rebound (shot made by home #2, rebound visit #3)
@@ -22,7 +23,7 @@ let team_rebound = "r m d h";								//team rebound
 let tech_foul = "f t10 h";									//technical foul
 let pers_foul = "f 12 h";										//personal foul
 let bench_foul = "f b h";										//bench foul
-ipc.send('add-play', fieldgoal_off_rebound);
+/*ipc.send('add-play', fieldgoal_off_rebound);
 ipc.send('add-play', fieldgoal_def_rebound);
 ipc.send('add-play', fieldgoal_no_rebound);
 ipc.send('add-play', fieldgoal_assist);
@@ -43,7 +44,7 @@ ipc.on('init-game-failure', function(event,args) {
 
 ipc.on('init-game-success', function(event,args) {
 	console.log("Successfully initialized game: " + args);
-});
+});*/
 describe('Application launch', function () {
   this.timeout(10000)
 
@@ -105,6 +106,5 @@ describe('Application launch', function () {
               return this.app.client.element('//*[@id="menu"]/div/button[1]').click();
            //this.app.client.setValue('#pswrd', 'fafds');
            //assert.strictEqual("Please enter the password to access this site.\nSubmit Forgot Password", pswrd);
-         })
-     });*/
-  });
+         })*/
+});
