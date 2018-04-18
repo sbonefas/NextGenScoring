@@ -76,7 +76,8 @@ ipc.on('get-game-failure', function(event,game_name) {
 ipc.on('init-game-success', function(event,args) {
 	console.log("init-game-success: " + args);
 	curr_game = args;
-	app.games.push(curr_game);
+//	app.games.push(curr_game);
+	console.log("game: " + curr_game + "date: " + curr_game.date + "time: " + curr_game.time)
 //	window.location = "./index.html"
 });
 
@@ -205,6 +206,13 @@ var app = new Vue({
     // If N is pressed
     add_new_game() {
         making_new_game = true;
+
+        app.games.push(
+        {home_name: "", vis_name: "", date: "", time: "", site: "", site_code: 0, league: 0, schedule_note: "",
+        quarters: 0, min_period: "", min_ot: "", vis_team: "", home_team: "", vis_record: "", home_record: "",
+        officials: [], attendance: "", comments: ""}
+        );
+
         // Get the modal
         var modal = document.getElementById('myModal');
         // Get the <span> element that closes the modal
@@ -267,72 +275,87 @@ var app = new Vue({
             home_name = document.getElementsByName("home_name")[0].value;
             if(home_name != "") {
                 curr_game.push(home_name)
+                app.games[app.games.length-1].home_name = home_name
             }
 
             vis_name = document.getElementsByName("vis_name")[0].value;
             if(vis_name != "") {
                 curr_game.push(vis_name)
+                app.games[app.games.length-1].vis_name = vis_name
             }
 
             home_code = document.getElementsByName("home_code")[0].value;
             if(home_code != "") {
                 curr_game.push(home_code)
+                app.games[app.games.length-1].home_code = home_code
             }
 
             vis_code = document.getElementsByName("vis_code")[0].value;
             if(vis_code != "") {
                 curr_game.push(vis_code)
+                app.games[app.games.length-1].vis_code = vis_code
             }
 
             home_record = document.getElementsByName("home_record")[0].value;
             if(home_record != "") {
                 curr_game.push(home_record)
+                app.games[app.games.length-1].home_record = home_record
             }
 
             vis_record = document.getElementsByName("vis_record")[0].value;
             if(vis_record != "") {
                 curr_game.push(vis_record)
+                app.games[app.games.length-1].vis_record = vis_record
             }
 
             game_date = document.getElementsByName("game_date")[0].value;
             if(game_date != "") {
                 curr_game.push(game_date)
+                app.games[app.games.length-1].date = game_date
             }
 
             game_time = document.getElementsByName("game_time")[0].value;
             if(game_time != "") {
                 curr_game.push(game_time)
+                app.games[app.games.length-1].time = game_time
             }
 
             game_site = document.getElementsByName("game_site")[0].value;
             if(game_site != "") {
                 curr_game.push(game_site)
+                app.games[app.games.length-1].site = game_site
             }
 
             select_site = document.getElementById("select_site").selectedIndex;//0 = home, 1 = away, 2 = neutral
             curr_game.push(select_site)
+            app.games[app.games.length-1].site_code = select_site
 
             league = document.getElementById("select_league").selectedIndex;//0 = Yes, 1 = No
             curr_game.push(league)
+            app.games[app.games.length-1].league = league
 
             sched_note_array = []
             sched_note = document.getElementsByName("sched_note")[0].value;
             sched_note_array.push(sched_note)
             if(sched_note != "") {
                 curr_game.push(sched_note_array)
+                app.games[app.games.length-1].schedule_note = sched_note
             }
 
             halves = document.getElementById("select_halves").selectedIndex;//0 = halves, 1 = quarters
             curr_game.push(halves)
+            app.games[app.games.length-1].quarters = halves
 
             min_period = document.getElementsByName("min_period")[0].value;
             if(min_period != "") {
                 curr_game.push(min_period)
+                app.games[app.games.length-1].min_period = min_period
             }
 
             min_ot = document.getElementsByName("min_ot")[0].value;
             if(min_ot != "") {
                 curr_game.push(min_ot)
+                app.games[app.games.length-1].min_ot = min_ot
             }
 
             officials_array = []
@@ -340,6 +363,7 @@ var app = new Vue({
             officials_array.push(officials)
             if(officials != "") {
                 curr_game.push(officials_array)
+                app.games[app.games.length-1].officials = officials_array
             }
 
             comments_array = []
@@ -347,11 +371,13 @@ var app = new Vue({
             comments_array.push(comments)
             if(comments != "") {
                 curr_game.push(comments_array)
+                app.games[app.games.length-1].comments = comments
             }
 
             atten = document.getElementsByName("atten")[0].value;
             if(atten != "") {
                 curr_game.push(atten)
+                app.games[app.games.length-1].attendance = atten
             }
 
             // UNCOMMENT TO TEST INIT-GAME-FAILURE
@@ -359,6 +385,7 @@ var app = new Vue({
 
             if(curr_game.length == 18) {
                 console.log(curr_game)
+//                app.games.push(curr_game)
                 ipc.send("init-game", curr_game)
             }
         }
@@ -422,13 +449,6 @@ var app = new Vue({
       app.games = app.games_hold;
       app.search_active = false;
     }
-//    // Sets game date when entered in
-//    set_game_date(entered_date) {
-//      this.new_game = {date: "2018-04-19", time: "17:00", site: "Greg Gard", site_code: "Home", league: true, schedule_note: "On time",
-//                      quarters: true, min_period: 20, min_ot: 5, vis_team: "MINN", home_team: "WISC", vis_record: "0-1", home_record: "1-0",
-//                      officials: ["ref1", "ref2", "ref3"], attendance: 20000, comments: "comments"};
-//      return game;
-//    }
   }
 
 })
