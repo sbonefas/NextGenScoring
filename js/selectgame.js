@@ -3,19 +3,19 @@ var app = new Vue({
   data: {
     message: "SELECT A GAME",
     games: [
-            {date: "2018-04-12", time: "17:00", site: "Madison, WI", site_code: 0, league: 1, schedule_note: "On time",
+            {home_name: "Wisconsin", vis_name: "Ohio State", date: "2018-04-12", time: "17:00", site: "Madison, WI", site_code: 0, league: 1, schedule_note: "On time",
             quarters: true, min_period: 20, min_ot: 5, vis_team: "MINN", home_team: "WISC", vis_record: "0-1", home_record: "1-0",
             officials: ["ref1", "ref2", "ref3"], attendance: 20000, comments: "comments"},
-            {date: "2018-04-13", time: "18:00", site: "Greg Gard", site_code: 1, league: 0, schedule_note: "On time",
+            {home_name: "Wisconsin", vis_name: "Ohio State", date: "2018-04-13", time: "18:00", site: "Greg Gard", site_code: 1, league: 0, schedule_note: "On time",
             quarters: true, min_period: 20, min_ot: 5, vis_team: "MINN", home_team: "WISC", vis_record: "0-1", home_record: "1-0",
             officials: ["ref1", "ref2", "ref3"], attendance: 20000, comments: "comments"},
-            {date: "2018-04-14", time: "19:00", site: "Greg Gard", site_code: 2, league: 0, schedule_note: "On time",
+            {home_name: "Wisconsin", vis_name: "Ohio State", date: "2018-04-14", time: "19:00", site: "Greg Gard", site_code: 2, league: 0, schedule_note: "On time",
             quarters: true, min_period: 20, min_ot: 5, vis_team: "MINN", home_team: "WISC", vis_record: "0-1", home_record: "1-0",
             officials: ["ref1", "ref2", "ref3"], attendance: 20000, comments: "comments"}
           ],
     game_options: [
       {name: "<ENTER> - EDIT GAME"},
-      {name: "N - CREATE NEW GAME"},
+      {name: "CREATE NEW GAME"},
       {name: "F9 - DELETE GAME"}
     ],
     games_hold: [],
@@ -33,10 +33,6 @@ var app = new Vue({
       // <Enter> --> Edit game
       if(e.keyCode == 13) {
         app.edit_game();
-      }
-      // <N> --> Add New game
-      else if (e.keyCode == 78 && (document.getElementById('searched') != document.activeElement)) {
-        app.add_new_game();
       }
       // <F9> --> Delete game
       else if (e.keyCode == 120) {
@@ -90,6 +86,8 @@ var app = new Vue({
             }
         }
 
+        document.getElementsByName("home_name")[0].value = app.selected_game.home_name;
+        document.getElementsByName("vis_name")[0].value = app.selected_game.vis_name;
         document.getElementsByName("game_date")[0].value = app.selected_game.date;
         document.getElementsByName("game_time")[0].value = app.selected_game.time;
         document.getElementsByName("game_site")[0].value = app.selected_game.site;
@@ -205,8 +203,6 @@ var app = new Vue({
         else {
             window.location = "./index.html";
         }
-          // UPDATE BACKEND
-
     },
     // If F9 is pressed
     delete_game() {

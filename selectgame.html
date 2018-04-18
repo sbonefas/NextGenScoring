@@ -12,32 +12,13 @@
         <a href="./mainmenu.html">Back to the Main Menu</a>
     </div>
 
-    <!--N - New Game (fill out the following fields:)-->
-        <!--Game Date-->
-        <!--Game Time-->
-        <!--Site of Game-->
-        <!--Site Code (Home, Away, Neutral)-->
-        <!--League Game (Y/N)-->
-        <!--Schedule Note-->
-        <!--Quarters or Halves (Men/Women)-->
-        <!--# Mins per period-->
-        <!--# Mins in Overtime-->
-        <!--Visiting Team Code-->
-        <!--Home Team code-->
-        <!--Visitors Record-->
-        <!--Home Team record-->
-        <!--Officials-->
-        <!--Attendance-->
-        <!--Box Score Comments (4 Lines)-->
-    <!--Enter - Edit Game-->
-        <!--Edit the info above-->
-
     <div id="selectapp">
         <h1 id="page_title">GAME SELECTION</h1>
         <div id="">
-            <p class="game_option" id="edit">{{game_options[0].name}}
-            &emsp;&emsp;&emsp;{{game_options[1].name}}
-            &emsp;&emsp;&emsp;{{game_options[2].name}}
+            <p class="game_option" id="edit">
+                {{game_options[0].name}}
+                &emsp;&emsp;&emsp;<button v-on:click="add_new_game">{{game_options[1].name}}</button><!--&emsp; is a tab-->
+                &emsp;&emsp;&emsp;{{game_options[2].name}}
             </p>
         </div>
 
@@ -49,6 +30,24 @@
                 <span id="closeModal" class="close">&times;</span>
                 <h1>GAME DETAILS</h1>
 
+                <h4>Home Team Name:&emsp;
+                    <input id = "userinput" type = "text" name = "home_name">
+                </h4>
+                <h4>Home Team Code (Example: WISC):&emsp;
+                    <input id = "userinput" type = "text" name = "home_code">
+                </h4>
+                <h4>Home Team Record (Wins-Losses):&emsp;
+                    <input id = "userinput" type = "text" name = "home_record">
+                </h4>
+                <h4>Visting Team Name:&emsp;
+                    <input id = "userinput" type = "text" name = "vis_name">
+                </h4>
+                <h4>Visiting Team Code (Example: WISC):&emsp;
+                    <input id = "userinput" type = "text" name = "vis_code">
+                </h4>
+                <h4>Visitor Team Record (Wins-Losses):&emsp;
+                    <input id = "userinput" type = "text" name = "vis_record">
+                </h4>
                 <h4>Game Date:&emsp;
                     <input id = "userinput" type = "date" name = "game_date">
                 </h4>
@@ -85,18 +84,6 @@
                 </h4>
                 <h4># Mins in Overtime:&emsp;
                     <input id = "userinput" type = "text" name = "min_ot">
-                </h4>
-                <h4>Visiting Team Code (Example: WISC):&emsp;
-                    <input id = "userinput" type = "text" name = "vis_code">
-                </h4>
-                <h4>Home Team Code (Example: WISC):&emsp;
-                    <input id = "userinput" type = "text" name = "home_code">
-                </h4>
-                <h4>Visitor Team Record (Wins-Losses):&emsp;
-                    <input id = "userinput" type = "text" name = "vis_record">
-                </h4>
-                <h4>Home Team Record (Wins-Losses):&emsp;
-                    <input id = "userinput" type = "text" name = "home_record">
                 </h4>
                 <h4>Officials:&emsp;
                     <input id = "userinput" type = "text" name = "officials">
