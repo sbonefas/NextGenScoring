@@ -15,7 +15,7 @@ var app = new Vue({
           ],
     game_options: [
       {name: "<ENTER> - EDIT GAME"},
-      {name: "N - CREATE NEW GAME"},
+      {name: "CREATE NEW GAME"},
       {name: "F9 - DELETE GAME"}
     ],
     games_hold: [],
