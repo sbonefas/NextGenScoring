@@ -2117,16 +2117,16 @@ var app = new Vue({
       if(keyCode == 13) char_entered = "ENTER";
       inputtext = inputtext + char_entered;
       if(char_entered == "ENTER") {
-        console.log("home before switch:" + home);
-        if(!switch_possession) {
-            home = !home;
-          }
-        console.log("home after switch:" + home);
+        // console.log("home before switch:" + home);
+        // if(!switch_possession) {
+        //     home = !home;
+        //   }
+        // console.log("home after switch:" + home);
         // if(inputtext.substring(2,3) == 'D') {
         //   home = !home;
         // }
-        console.log(inputtext);
         if(inputtext.substring(3,4) == 'E') {
+          var ft_player_num = inputtext.substring(1,3);
           if(home) {
             for(index = 0; index < app.home_team.length; index++) {
               if(ft_player_num == app.home_team[index].number) {
@@ -2137,6 +2137,7 @@ var app = new Vue({
                 app.home_totals.fta += 1;
                 app.home_totals.tp += 1;
                 app.home_score += 1;
+                console.log("index:" + index);
                 app.add_play("Made free throw by " + app.home_team[index].name);
                 home_stats.ftp = Number.parseFloat((app.home_totals.ftm/app.home_totals.fta)*100).toFixed(2);
               }
@@ -2158,15 +2159,17 @@ var app = new Vue({
             }
           }
         } else if(inputtext.substring(3,4) == 'M') {
+          var ft_player_num = inputtext.substring(1,3);
           if(home) {
-          for(index = 0; index < app.home_team.length; index++) {
-            if(ft_player_num == app.home_team[index].number) {
-              app.home_team[index].fta += 1;
-              app.home_totals.fta += 1;
-              app.add_play("Missed free throw by " + app.home_team[index].name);
-              home_stats.ftp = Number.parseFloat((app.home_totals.ftm/app.home_totals.fta)*100).toFixed(2);
+            for(index = 0; index < app.home_team.length; index++) {
+              console.log("index: " + index + " ft_player_num: " + ft_player_num);
+              if(ft_player_num == app.home_team[index].number) {
+                app.home_team[index].fta += 1;
+                app.home_totals.fta += 1;
+                app.add_play("Missed free throw by " + app.home_team[index].name);
+                home_stats.ftp = Number.parseFloat((app.home_totals.ftm/app.home_totals.fta)*100).toFixed(2);
+              }
             }
-          }
         } else {
           for(index = 0; index < app.vis_team.length; index++) {
             if(ft_player_num == app.vis_team[index].number) {
@@ -2227,9 +2230,11 @@ var app = new Vue({
           }
         }
       } else if(char_entered == 'E' && inputtext.length == 4) {
+        var ft_player_num = inputtext.substring(1,3);
         inputvalidator.innerText = "Made FT by player #" + ft_player_num + ". Press ENTER to save play.";
       } else if(char_entered == 'M' && inputtext.length == 4) {
         // miss, no rebound
+        var ft_player_num = inputtext.substring(1,3);
         inputvalidator.innerText = "Missed FT by player #" + ft_player_num + ". Press ENTER to save play.";
       } else if(char_entered == 'R' && inputtext.length == 4) {
         //miss, rebound
