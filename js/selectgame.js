@@ -8,85 +8,8 @@ window.onload = function(){
 }
 
 ipc.on('get-game-success', function(event,args) {
-	console.log("get-game-success");
-	curr_game = args;
-});
-
-ipc.on('get-game-failure', function(event,args) {
-	console.log("get-game-failure");
-	window.alert("ERROR: GAME DOESN'T EXIST");
-});
-
-ipc.on('init-game-success', function(event,args) {
-	console.log("init-game-success");
-	curr_game = args;
-	app.games = curr_game;
-	window.location = "./index.html"
-});
-
-ipc.on('init-game-failure', function(event,args) {
-	console.log("init-game-failure");
-	window.alert("ERROR: GAME ALREADY EXISTS");
-});
-
-
-var app = new Vue({
-  el: '#selectapp',
-  data: {
-    message: "SELECT A GAME",
-    games: [
-            {home_name: "Wisconsin", vis_name: "Ohio State", date: "2018-04-12", time: "17:00", site: "Madison, WI", site_code: 0, league: 1, schedule_note: "On time",
-            quarters: true, min_period: 20, min_ot: 5, vis_team: "MINN", home_team: "WISC", vis_record: "0-1", home_record: "1-0",
-            officials: ["ref1", "ref2", "ref3"], attendance: 20000, comments: "comments"},
-            {home_name: "Wisconsin", vis_name: "Ohio State", date: "2018-04-13", time: "18:00", site: "Greg Gard", site_code: 1, league: 0, schedule_note: "On time",
-            quarters: true, min_period: 20, min_ot: 5, vis_team: "MINN", home_team: "WISC", vis_record: "0-1", home_record: "1-0",
-            officials: ["ref1", "ref2", "ref3"], attendance: 20000, comments: "comments"},
-            {home_name: "Wisconsin", vis_name: "Ohio State", date: "2018-04-14", time: "19:00", site: "Greg Gard", site_code: 2, league: 0, schedule_note: "On time",
-            quarters: true, min_period: 20, min_ot: 5, vis_team: "MINN", home_team: "WISC", vis_record: "0-1", home_record: "1-0",
-            officials: ["ref1", "ref2", "ref3"], attendance: 20000, comments: "comments"}
-          ],
-    game_options: [
-      {name: "<ENTER> - EDIT GAME"},
-      {name: "N - CREATE NEW GAME"},
-      {name: "F9 - DELETE GAME"}
-    ],
-    games_hold: [],
-    selected_game: {},
-    search_active: false,
-    making_new_game: false
-  },
-  created() {
-   document.addEventListener('keydown', this.keyevent);
-  },
-  methods: {
-    keyevent(e) {
-      console.log(e.keyCode);
-
-      // <Enter> --> Edit game
-      if(e.keyCode == 13) {
-        app.edit_game();
-      }
-      // <F9> --> Delete game
-      else if (e.keyCode == 120) {
-        app.delete_game();
-      }
-      else if (e.keyCode == 8 && app.search_active == true)
-      {
-        document.getElementById('searched').value = "";
-        app.reset_game_table();
-      }
-    },
-    // If Enter is pressed (Runs search if no game selected)
-    edit_game() {
-      if(app.selected_game.date != undefined) {
-        // See laptop for game edit screen
-        // Might require loading from backend
-
-        date_time = "2018-04-12_17:00"
-//        curr_game.date + "_" + curr_game.time;
-        console.log(date_time)
-        ipc.send("get-game", date_time)
-
+	console.log("get-game-success: " + args);
+	app.selected_game = args;
         making_new_game = false;
 
         // Get the modal
@@ -128,10 +51,10 @@ var app = new Vue({
         document.getElementsByName("game_date")[0].value = app.selected_game.date;
         document.getElementsByName("game_time")[0].value = app.selected_game.time;
         document.getElementsByName("game_site")[0].value = app.selected_game.site;
-        document.getElementById("select_site").selectedIndex = 0;//0 = home, 1 = away, 2 = neutral
-        document.getElementById("select_league").selectedIndex = 0;//0 = Yes, 1 = No
+        document.getElementById("select_site").selectedIndex = app.selected_game.site_code;//0 = home, 1 = away, 2 = neutral
+        document.getElementById("select_league").selectedIndex = app.selected_game.league;//0 = Yes, 1 = No
         document.getElementsByName("sched_note")[0].value = app.selected_game.schedule_note;
-        document.getElementById("select_halves").selectedIndex = 0;//0 = halves, 1 = quarters
+        document.getElementById("select_halves").selectedIndex = app.selected_game.quarters;//0 = halves, 1 = quarters
         document.getElementsByName("min_period")[0].value = app.selected_game.min_period;
         document.getElementsByName("min_ot")[0].value = app.selected_game.min_ot;
         document.getElementsByName("vis_code")[0].value = app.selected_game.vis_team;
@@ -141,6 +64,139 @@ var app = new Vue({
         document.getElementsByName("officials")[0].value = app.selected_game.officials;
         document.getElementsByName("atten")[0].value = app.selected_game.attendance;
         document.getElementsByName("Text1")[0].value = app.selected_game.comments;
+});
+
+ipc.on('get-game-failure', function(event,game_name) {
+//	app.selected_game = null;
+    get_game_fail = true;
+	console.log("get-game-failure: " + game_name + get_game_fail);
+	window.alert("ERROR: GAME DOESN'T EXIST");
+});
+
+ipc.on('init-game-success', function(event,args) {
+	console.log("init-game-success: " + args);
+	curr_game = args;
+	app.games.push(curr_game);
+//	window.location = "./index.html"
+});
+
+ipc.on('init-game-failure', function(event,args) {
+	console.log("init-game-failure: " + args);
+	window.alert("ERROR: GAME ALREADY EXISTS");
+	curr_game = [];
+});
+
+
+var app = new Vue({
+  el: '#selectapp',
+  data: {
+    message: "SELECT A GAME",
+    games: [
+            {home_name: "Wisconsin", vis_name: "Ohio State", date: "2018-04-12", time: "17:00", site: "Madison, WI", site_code: 0, league: 1, schedule_note: "On time",
+            quarters: 1, min_period: 20, min_ot: 5, vis_team: "MINN", home_team: "WISC", vis_record: "0-1", home_record: "1-0",
+            officials: ["ref1", "ref2", "ref3"], attendance: 20000, comments: "comments"},
+            {home_name: "Wisconsin", vis_name: "Ohio State", date: "2018-04-13", time: "18:00", site: "Greg Gard", site_code: 1, league: 0, schedule_note: "On time",
+            quarters: 0, min_period: 20, min_ot: 5, vis_team: "MINN", home_team: "WISC", vis_record: "0-1", home_record: "1-0",
+            officials: ["ref1", "ref2", "ref3"], attendance: 20000, comments: "comments"},
+            {home_name: "Wisconsin", vis_name: "Ohio State", date: "2018-04-14", time: "19:00", site: "Greg Gard", site_code: 2, league: 0, schedule_note: "On time",
+            quarters: 0, min_period: 20, min_ot: 5, vis_team: "MINN", home_team: "WISC", vis_record: "0-1", home_record: "1-0",
+            officials: ["ref1", "ref2", "ref3"], attendance: 20000, comments: "comments"}
+          ],
+    game_options: [
+      {name: "<ENTER> - EDIT GAME"},
+      {name: "N - CREATE NEW GAME"},
+      {name: "F9 - DELETE GAME"}
+    ],
+    games_hold: [],
+    selected_game: {},
+    search_active: false,
+    making_new_game: false
+  },
+  created() {
+   document.addEventListener('keydown', this.keyevent);
+  },
+  methods: {
+    keyevent(e) {
+      console.log(e.keyCode);
+
+      // <Enter> --> Edit game
+      if(e.keyCode == 13) {
+        app.edit_game();
+      }
+      // <F9> --> Delete game
+      else if (e.keyCode == 120) {
+        app.delete_game();
+      }
+      else if (e.keyCode == 8 && app.search_active == true)
+      {
+        document.getElementById('searched').value = "";
+        app.reset_game_table();
+      }
+    },
+    // If Enter is pressed (Runs search if no game selected)
+    edit_game() {
+      if(app.selected_game.date != undefined) {
+
+        date_time = app.selected_game.date + "_" + app.selected_game.time + ".txt";
+        //UNCOMMENT TO TEST GET-GAME
+//        date_time = "3-12-19_4pm.txt"
+        console.log(date_time)
+        ipc.send("get-game", date_time)
+
+//        making_new_game = false;
+//
+//        // Get the modal
+//        var modal = document.getElementById('myModal');
+//        // Get the <span> element that closes the modal
+//        var span = document.getElementById("closeModal");
+//
+//        // show modal
+//        modal.style.display = "block";
+//
+//        // When the user clicks on <span> (x), close the modal
+//        span.onclick = function() {
+//            modal.style.display = "none";
+//        }
+//
+//        // When the user clicks anywhere outside of the modal, close it
+//        window.onclick = function(event) {
+//            if (event.target == modal) {
+//                modal.style.display = "none";
+//            }
+//        }
+//
+//        // When the user hits ESC, close it
+//        document.onkeydown = function(e) {
+//            e = e || window.event;
+//            var isEscape = false;
+//            if ("key" in e) {
+//                isEscape = (e.key == "Escape" || e.key == "Esc");
+//            } else {
+//                isEscape = (e.keyCode == 27);
+//            }
+//            if (isEscape) {
+//                modal.style.display = "none";
+//            }
+//        }
+//
+//        document.getElementsByName("home_name")[0].value = app.selected_game.home_name;
+//        document.getElementsByName("vis_name")[0].value = app.selected_game.vis_name;
+//        document.getElementsByName("game_date")[0].value = app.selected_game.date;
+//        document.getElementsByName("game_time")[0].value = app.selected_game.time;
+//        document.getElementsByName("game_site")[0].value = app.selected_game.site;
+//        document.getElementById("select_site").selectedIndex = app.selected_game.site_code;//0 = home, 1 = away, 2 = neutral
+//        document.getElementById("select_league").selectedIndex = app.selected_game.league;//0 = Yes, 1 = No
+//        document.getElementsByName("sched_note")[0].value = app.selected_game.schedule_note;
+//        document.getElementById("select_halves").selectedIndex = app.selected_game.quarters;//0 = halves, 1 = quarters
+//        document.getElementsByName("min_period")[0].value = app.selected_game.min_period;
+//        document.getElementsByName("min_ot")[0].value = app.selected_game.min_ot;
+//        document.getElementsByName("vis_code")[0].value = app.selected_game.vis_team;
+//        document.getElementsByName("home_code")[0].value = app.selected_game.home_team;
+//        document.getElementsByName("vis_record")[0].value = app.selected_game.vis_record;
+//        document.getElementsByName("home_record")[0].value = app.selected_game.home_record;
+//        document.getElementsByName("officials")[0].value = app.selected_game.officials;
+//        document.getElementsByName("atten")[0].value = app.selected_game.attendance;
+//        document.getElementsByName("Text1")[0].value = app.selected_game.comments;
       }
       else {
         app.run_search();
@@ -184,6 +240,8 @@ var app = new Vue({
             }
         }
 
+        document.getElementsByName("home_name")[0].value = "";
+        document.getElementsByName("vis_name")[0].value = "";
         document.getElementsByName("game_date")[0].value = "";
         document.getElementsByName("game_time")[0].value = "";
         document.getElementsByName("game_site")[0].value = "";
@@ -296,13 +354,15 @@ var app = new Vue({
                 curr_game.push(atten)
             }
 
+            // UNCOMMENT TO TEST INIT-GAME-FAILURE
+//            curr_game = ["Wisconsin", "Ohio State", "796", "518", "100/0", "0/100", "3/12/19", "4pm", "Kohl Center", "H|V|N", "league", ["schedule notes"], "quarters", "15", "15", ["Official Names"], ["Box comments"], "attendance"];
+
             if(curr_game.length == 18) {
                 console.log(curr_game)
                 ipc.send("init-game", curr_game)
             }
         }
         else {
-
             window.location = "./index.html";
         }
     },
@@ -317,7 +377,7 @@ var app = new Vue({
             {
               app.games.splice(index, 1);
               //UPDATE BACKEND HERE
-							app.selected_game = {};
+			  app.selected_game = {};
               break;
             }
           }
