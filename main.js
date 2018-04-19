@@ -395,7 +395,7 @@ function initGame(args){
  *
  */
 
- 
+
  ipc.on('delete-team', function(event,team_code){
 	try {
 		trw.delete_file(team_code);
@@ -417,8 +417,8 @@ function initGame(args){
 	}
 	event.sender.send('create-team-success', team.get_code());
  });
- 
- 
+
+
  ipc.on('get-game', function (event,game_name){
 	try {
 		var game_info = drw.get_game_information(game_name);
