@@ -140,7 +140,7 @@ var app = new Vue({
 
         date_time = app.selected_game.date + "_" + app.selected_game.time + ".txt";
         //UNCOMMENT TO TEST GET-GAME
-//        date_time = "3-12-19_4pm.txt"
+		date_time = "3-12-19_4pm"
         console.log(date_time)
         ipc.send("get-game", date_time)
 

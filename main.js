@@ -380,13 +380,12 @@ function wrongBasket(team){
  */
 
 function initGame(args){
-	try {
-		var game_file = args[6] + "_" + args[7];
-		drw.create_game_file(indiv_stat_headers, team_stat_headers, game_file, args);
-		current_game = game_file;
-	} catch (e){
-		console.log("Exception in creating game file: " + e);
+	var game_file = args[6] + "_" + args[7];
+	if (drw.create_game_file(indiv_stat_headers, team_stat_headers, game_file, args) == false){
+		throw "File already exists";
+		return;
 	}
+	current_game = game_file;
 	console.log("Successfully made game file: " + current_game);
 }
 
@@ -421,14 +420,14 @@ function initGame(args){
  
  ipc.on('get-game', function (event,game_name){
 	try {
-		var game_info = drw.get_game_information(game_name);
+		var game_info = drw.read_game_file(game_name);
 	} catch (e) {
 		//if failure
-		console.log("An error occurred in file writing: " + e);
+		console.log("An error occurred in file reading: " + e);
 		event.sender.send('get-game-failure',game_name);
 		return;
 	}
-	event.sender.send('get-game-success',game_info);
+	event.sender.send('get-game-success',game_info[4]);
 });
 
 ipc.on('add-play', function (event,keystrokes){
