@@ -1,4 +1,4 @@
-const Application = require("spectron").Application;
+/* const Application = require("spectron").Application;
 const assert = require("assert");
 const electron = require("electron"); // Require Electron from the binaries included in node_modules.
 const path = require("path");
@@ -45,7 +45,7 @@ ipc.on('init-game-failure', function(event,args) {
 ipc.on('init-game-success', function(event,args) {
 	console.log("Successfully initialized game: " + args);
 });*/
-describe('Application launch', function () {
+/*describe('Application launch', function () {
   this.timeout(10000)
 
   before(function () {
@@ -106,5 +106,5 @@ describe('Application launch', function () {
               return this.app.client.element('//*[@id="menu"]/div/button[1]').click();
            //this.app.client.setValue('#pswrd', 'fafds');
            //assert.strictEqual("Please enter the password to access this site.\nSubmit Forgot Password", pswrd);
-         })*/
-});
+         })
+});*/

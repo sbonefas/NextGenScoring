@@ -4,4 +4,3 @@ node_js:
 # command to run tests
 script:
   - npm test
-  
