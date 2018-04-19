@@ -2139,6 +2139,7 @@ var app = new Vue({
                 app.home_score += 1;
                 console.log("index:" + index);
                 app.add_play("Made free throw by " + app.home_team[index].name);
+                ipc.send('add-play', "E " + ft_player_num + " E H");
                 home_stats.ftp = Number.parseFloat((app.home_totals.ftm/app.home_totals.fta)*100).toFixed(2);
               }
             }
@@ -2154,6 +2155,7 @@ var app = new Vue({
                 app.vis_totals.tp += 1;
                 app.vis_score += 1;
                 app.add_play("Made free throw by " + app.vis_team[index].name);
+                ipc.send('add-play', "E " + ft_player_num + " E V");
                 vis_stats.ftp = Number.parseFloat((app.vis_totals.ftm/app.vis_totals.fta)*100).toFixed(2);
               }
             }
@@ -2167,6 +2169,7 @@ var app = new Vue({
                 app.home_team[index].fta += 1;
                 app.home_totals.fta += 1;
                 app.add_play("Missed free throw by " + app.home_team[index].name);
+                ipc.send('add-play', "E " + ft_player_num + " M H");
                 home_stats.ftp = Number.parseFloat((app.home_totals.ftm/app.home_totals.fta)*100).toFixed(2);
               }
             }
@@ -2176,6 +2179,7 @@ var app = new Vue({
               app.vis_team[index].fta += 1;
               app.vis_totals.fta += 1;
               app.add_play("Missed free throw by " + app.vis_team[index].name);
+              ipc.send('add-play', "E " + ft_player_num + " M V");
               vis_stats.ftp = Number.parseFloat((app.vis_totals.ftm/app.vis_totals.fta)*100).toFixed(2);
             }
           }
@@ -2189,6 +2193,7 @@ var app = new Vue({
               app.home_team[index].fta += 1;
               app.home_totals.fta += 1;
               app.add_play("Missed free throw by " + app.home_team[index].name);
+              ipc.send('add-play', "E " + ft_player_num + " R H");
               home_stats.ftp = Number.parseFloat((app.home_totals.ftm/app.home_totals.fta)*100).toFixed(2);
             }
           }
@@ -2198,6 +2203,7 @@ var app = new Vue({
               app.vis_team[index].fta += 1;
               app.vis_totals.fta += 1;
               app.add_play("Missed free throw by " + app.vis_team[index].name);
+              ipc.send('add-play', "E " + ft_player_num + " R V");
               vis_stats.ftp = Number.parseFloat((app.vis_totals.ftm/app.vis_totals.fta)*100).toFixed(2);
             }
           }
