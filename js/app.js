@@ -35,36 +35,58 @@ Vue.component('vis_team_stats', {
 })
 
 function launchClockPrompt() { // called when the user clicks on the game clock in the scorebar. Is used to edit the clock time and change between half 1, half 2, and OT
-  var period = prompt("Please enter the current period\n1: Period 1\n2: Period 2\nOT: First overtime\n2OT: Second overtime\n30T: Third overtime\n40T: Fourth overtime\n50T: Fifth overtime\n60T: Sixth overtime\n\nWARNING: Changing periods will reset the clock to 20:00 (or 5:00 for OT periods)");
-  if(period == null || period == "") {
-    console.log("User canceleld the clock prompt");
-  } else {
-    if(period == 1) {
-      app.period = 'Half 1';
-      // $('#clockdiv #clockh2').html('20:00');
-    } else if(period == 2) {
-      app.period = 'Half 2';
-      // $('#clockdiv #clockh2').html('20:00');
-    } else if(period == 'OT' || period == 'ot') {
-      app.period = 'OT';
-      // $('#clockdiv #clockh2').html('05:00');
-    } else if(period == '2OT' || period == '2ot') {
-      app.period = '2OT';
-      // $('#clockdiv #clockh2').html('05:00');
-    } else if(period == '3OT' || period == '3ot') {
-      app.period = '3OT';
-      // $('#clockdiv #clockh2').html('05:00');
-    } else if(period == '4OT' || period == '4ot') {
-      app.period = '4OT';
-      // $('#clockdiv #clockh2').html('05:00');
-    } else if(period == '5OT' || period == '5ot') {
-      app.period = '5OT';
-      // $('#clockdiv #clockh2').html('05:00');
-    } else if(period == '6OT' || period == '6ot') {
-      app.period = '6OT';
-      // $('#clockdiv #clockh2').html('05:00');
+  var result = window.confirm("Press OK to advance to new period.");
+  if(result == true) {
+    if(app.period == "Half 1") {
+      app.period = "Half 2";
+    } else if(app.period == "Half 2") {
+      app.period = "OT";
+    } else if(app.period == "OT") {
+      app.period = "2OT";
+    } else if(app.period == "2OT") {
+      app.period = "3OT";
+    } else if(app.period == "3OT") {
+      app.period = "4OT";
+    } else if(app.period == "4OT") {
+      app.period = "5OT";
+    } else if(app.period == "5OT") {
+      app.period = "6OT";
+    } else if(app.period == "6OT") {
+      app.period = "7OT";
+    } else if(app.period == "7OT") {
+      window.alert("Maximum overtimes reached.");
     }
   }
+  // var period = prompt("Please enter the current period\n1: Period 1\n2: Period 2\nOT: First overtime\n2OT: Second overtime\n30T: Third overtime\n40T: Fourth overtime\n50T: Fifth overtime\n60T: Sixth overtime\n\nWARNING: Changing periods will reset the clock to 20:00 (or 5:00 for OT periods)");
+  // if(period == null || period == "") {
+  //   console.log("User canceleld the clock prompt");
+  // } else {
+  //   if(period == 1) {
+  //     app.period = 'Half 1';
+  //     // $('#clockdiv #clockh2').html('20:00');
+  //   } else if(period == 2) {
+  //     app.period = 'Half 2';
+  //     // $('#clockdiv #clockh2').html('20:00');
+  //   } else if(period == 'OT' || period == 'ot') {
+  //     app.period = 'OT';
+  //     // $('#clockdiv #clockh2').html('05:00');
+  //   } else if(period == '2OT' || period == '2ot') {
+  //     app.period = '2OT';
+  //     // $('#clockdiv #clockh2').html('05:00');
+  //   } else if(period == '3OT' || period == '3ot') {
+  //     app.period = '3OT';
+  //     // $('#clockdiv #clockh2').html('05:00');
+  //   } else if(period == '4OT' || period == '4ot') {
+  //     app.period = '4OT';
+  //     // $('#clockdiv #clockh2').html('05:00');
+  //   } else if(period == '5OT' || period == '5ot') {
+  //     app.period = '5OT';
+  //     // $('#clockdiv #clockh2').html('05:00');
+  //   } else if(period == '6OT' || period == '6ot') {
+  //     app.period = '6OT';
+  //     // $('#clockdiv #clockh2').html('05:00');
+  //   }
+  // }
 }
 
 function startClock(startingTime) {
@@ -184,6 +206,8 @@ var app = new Vue({
           app.log_free_throw(e.keyCode, false);
         } else if(currentlyInputtingPlay == "shotattempt") {
           app.shot_attempt(e.keyCode);
+        } else if(currentlyInputtingPlay == "changeClock") {
+          app.change_clock(e.keyCode);
         }
         app.clear_input();
         //save play
@@ -251,10 +275,24 @@ var app = new Vue({
           app.subs(false, e.keyCode);
         }
      }
+     // F7 - Change clock
+     else if(e.keyCode == 118) {
+        timer.pause();
+        if(!paused) {
+            $("#clockisstopped").toggle();
+            paused = true;
+        }
+        currentlyInputtingPlay = "changeClock";
+        inputvalidator.innerText = "Enter new clock time as mmss format then press ENTER to change clock time.";
+      }
 
      // F10 - clear and do not complete any partially keyed action
      else if(e.keyCode == 121) {
         app.clear_input();
+     }
+
+     else if(e.keyCode == 186) {
+        app.change_clock(e.keyCode);
      }
 
      // A - assist
@@ -464,6 +502,8 @@ var app = new Vue({
           app.log_free_throw(e.keyCode, false);
         } else if(currentlyInputtingPlay == "shotattempt") {
           app.shot_attempt(e.keyCode);
+        } else if(currentlyInputtingPlay == "changeClock") {
+          app.change_clock(e.keyCode);
         }
      }
 
@@ -489,6 +529,8 @@ var app = new Vue({
           app.log_free_throw(e.keyCode, false);
         } else if(currentlyInputtingPlay == "shotattempt") {
           app.shot_attempt(e.keyCode);
+        } else if(currentlyInputtingPlay == "changeClock") {
+          app.change_clock(e.keyCode);
         }
      }
 
@@ -514,6 +556,8 @@ var app = new Vue({
           app.log_free_throw(e.keyCode, false);
         } else if(currentlyInputtingPlay == "shotattempt") {
           app.shot_attempt(e.keyCode);
+        } else if(currentlyInputtingPlay == "changeClock") {
+          app.change_clock(e.keyCode);
         }
      }
 
@@ -541,6 +585,8 @@ var app = new Vue({
           app.log_free_throw(e.keyCode, false);
         } else if(currentlyInputtingPlay == "shotattempt") {
           app.shot_attempt(e.keyCode);
+        } else if(currentlyInputtingPlay == "changeClock") {
+          app.change_clock(e.keyCode);
         }
      }
 
@@ -566,6 +612,8 @@ var app = new Vue({
           app.log_free_throw(e.keyCode, false);
         } else if(currentlyInputtingPlay == "shotattempt") {
           app.shot_attempt(e.keyCode);
+        } else if(currentlyInputtingPlay == "changeClock") {
+          app.change_clock(e.keyCode);
         }
      }
 
@@ -591,6 +639,8 @@ var app = new Vue({
           app.log_free_throw(e.keyCode, false);
         } else if(currentlyInputtingPlay == "shotattempt") {
           app.shot_attempt(e.keyCode);
+        } else if(currentlyInputtingPlay == "changeClock") {
+          app.change_clock(e.keyCode);
         }
      }
 
@@ -616,6 +666,8 @@ var app = new Vue({
           app.log_free_throw(e.keyCode, false);
         } else if(currentlyInputtingPlay == "shotattempt") {
           app.shot_attempt(e.keyCode);
+        } else if(currentlyInputtingPlay == "changeClock") {
+          app.change_clock(e.keyCode);
         }
      }
 
@@ -641,6 +693,8 @@ var app = new Vue({
           app.log_free_throw(e.keyCode, false);
         } else if(currentlyInputtingPlay == "shotattempt") {
           app.shot_attempt(e.keyCode);
+        } else if(currentlyInputtingPlay == "changeClock") {
+          app.change_clock(e.keyCode);
         }
      }
 
@@ -666,6 +720,8 @@ var app = new Vue({
           app.log_free_throw(e.keyCode, false);
         } else if(currentlyInputtingPlay == "shotattempt") {
           app.shot_attempt(e.keyCode);
+        } else if(currentlyInputtingPlay == "changeClock") {
+          app.change_clock(e.keyCode);
         }
      }
 
@@ -691,6 +747,8 @@ var app = new Vue({
           app.log_free_throw(e.keyCode, false);
         } else if(currentlyInputtingPlay == "shotattempt") {
           app.shot_attempt(e.keyCode);
+        } else if(currentlyInputtingPlay == "changeClock") {
+          app.change_clock(e.keyCode);
         }
      }
 
@@ -701,6 +759,27 @@ var app = new Vue({
         userinput.value = "";  // clears the text box
         currentlyInputtingPlay = "";
         join_two_plays = "";
+   },
+   change_clock(keyCode) {
+      var char_entered = String.fromCharCode(keyCode);  // will be upper case
+      if(keyCode == 13) char_entered = "ENTER";
+      inputtext = inputtext + char_entered;
+      if(inputtext.length == 9) {
+        console.log(inputtext);
+        var minutes = parseInt(inputtext.substring(0,2));
+        var seconds = parseInt(inputtext.substring(2,4));
+        var number_of_seconds = (minutes * 60) + seconds;
+        timer.stop();
+        timer.start({countdown: true, startValues: {seconds: number_of_seconds}});
+        timer.pause();
+        $('#clockdiv #clockminutes').html(minutes);
+        if(seconds < 10) {
+          $('#clockdiv #clockseconds').html("0" + seconds);
+        } else {
+          $('#clockdiv #clockseconds').html(seconds);
+        }
+        
+      }
    },
    home_possession() {
        home = true;
