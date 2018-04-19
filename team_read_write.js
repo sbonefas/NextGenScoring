@@ -1,5 +1,5 @@
 /********************************************************************
- *																	*		
+ *																	*
  *					TEAM DATA READING AND WRITING 					*
  *																	*
  *	This js file controls all reading/writing to team data files	*													*
@@ -12,7 +12,7 @@
  *			- changes the directory that team files are stored		*
  *		3. create_team(file_name, content)							*
  *			- creates a team file and fills it with 				*
- 			  the given content										* 
+ 			  the given content										*
  *		4. read_team(file_name)										*
  *			- gets the contents of a given team file 		 		*
  *		5. overwrite_team(file_name, content)						*
@@ -20,12 +20,11 @@
  *		6. get_all_teams()											*
  *			- returns an array of the contents in all of the 		*
  *			  team files 									 		*
- *																	*	
+ *																	*
   *******************************************************************/
 
 
 const fs = require("fs");	//node.js filesystem
-
 /** path to the folder where team data is kept */
 var team_directory = "team/";
 
@@ -35,7 +34,7 @@ const open_replacement   = "u^#q@3.>{";
 const close_replacement  = ":p2$%_1=*";
 const subarray_separator = "@i+b&*-~r";
 
-/** 
+/**
  * Returns the filepath of a file with a given name
  *
  * @param file_name Name of the file
@@ -179,7 +178,7 @@ function string_to_team(team_str) {
 /***************
  * FOR TESTING *
  ***************/
- 
+
 exports.test_team_to_string = function(team_array) {
 	return team_to_string(team_array);
 }

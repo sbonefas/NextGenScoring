@@ -1,17 +1,27 @@
 /*
   player-format:
         object: array[name: "Giannis", number: 34, position: "everything"]
-        Joe Krabbenhoft, Dean Oliver
 */
 const electron = require("electron");
 const ipc = electron.ipcRenderer;
-const Team = require('./Team.js'); //imports stuff from the Team.js backend file
-const Player = require('./Player.js'); //imports stuff from the Player.js backend file
+const Team = require('./Team.js'); // Imports stuff from the Team.js backend file
+const Player = require('./Player.js'); // Imports stuff from the Player.js backend file
+const TRW = require('./team_read_write.js'); // Imports stuff from the team_read_write.js backend file
 /*
+// Creating a new team (note: empty roster is created by the constructor, therefore is not passed as a parameter)
+var team = new Team(name, code, coach, assistants, home_stadium, <team_roster>);
 
-var team = new Team(name, code, coach, assistants, home_stadium, team_roster)
-when getting a team,
+// Creating a new player
+var player = new Player(name, number, position);
 
+// Add a team to the backend
+ipc.send('add-team', team_object);
+
+// Delete a team from the backend
+ipc.send('delete-team', team_code);
+
+note:
+    Need to add success and failure event handlers for adding and deleting a team
 */
 
 function help() {
@@ -50,22 +60,17 @@ function help() {
         }
     }
 }
-
+/*
+  on load event handler to fill the teams array
+  by calling get_all_teams from the back-end
+*/
 
 var new_team = {};
 var app = new Vue({
   el: '#team_app',
   data: {
     message: "SELECT A TEAM",
-    teams: [
-            {name: "WISCONSIN", team_code: "WISC", head_coach: "Greg Gard", assistants: "Howard Moore, Joe Krabbenhoft, Dean Oliver",  home_stadium: "Kohl Center", team_roster: []},
-            {name: "MARQUETTE", team_code: "", head_coach: "", assistants: "", home_stadium: "", team_roster: []},
-            {name: "MINNESOTA", team_code: "", head_coach: "", assistants: "",  home_stadium: "", team_roster: []},
-            {name: "PURDUE", team_code: "", head_coach: "", assistants: "",  home_stadium: "", team_roster: []},
-            {name: "MARYLAND", team_code: "", head_coach: "", assistants: "",  home_stadium: "", team_roster: []},
-            {name: "NORTHWESTERN", team_code: "", head_coach: "", assistants: "",  home_stadium: "", team_roster: []},
-            {name: "ILLINOIS", team_code: "", head_coach: "", assistants: "",  home_stadium: "", team_roster: []}
-          ],
+    teams: TRW.get_all_teams(),
     roster_options: [
       {name: "<ENTER> - EDIT TEAM"},
       {name: "N - CREATE NEW TEAM"},
@@ -73,7 +78,9 @@ var app = new Vue({
     ],
     teams_hold: [],
     selected_team: {},
-    search_active: false
+    search_active: false,
+    adding_team: false,
+    temp_team_size: 0,
   },
   created() {
    document.addEventListener('keydown', this.keyevent);
@@ -87,12 +94,12 @@ var app = new Vue({
       }
 
       // <Enter> --> Edit Team
-      if(e.keyCode == 13) {
+      if(e.keyCode == 13 && app.adding_team == false) {
         app.edit_team();
       }
       // <N> --> Add New Team
       else if (e.keyCode == 78 && (document.getElementById('searched') != document.activeElement)) {
-        app.add_new_team();
+        app.enter_team_information();
       }
       // <F9> --> Delete Team
       else if (e.keyCode == 120) {
@@ -116,40 +123,36 @@ var app = new Vue({
       }
     },
     // If N is pressed
-    add_new_team : function() {
-      // NEED TO REPLACE PROMPT
-      //team_name = window.prompt("Enter a new team name").toUpperCase();
-      document.getElementById("team_name_entry").showModal();
-
-      if(new_team.name != "")
-      {
-        team.name = new_team.name;
-        var is_existing = false;
-        for(var index = 0; index < app.teams.length; index++)
-        {
-          if(app.teams[index].name == team.name)
-          {
-            is_existing = true;
-          }
-        }
-        if(is_existing == true)
-        {
-          window.alert("ERROR TEAM ALREADY EXISTS");
-        }
-        else
-        {
-          if(app.search_active == true)
-          {
-            app.teams_hold.push(team);
-          }
-          else
-          {
-            app.teams.push(team);
-          }
-
-          // UPDATE BACKEND
-        }
+    enter_team_information : function() {
+      app.adding_team = true;
+      var modal = document.getElementById('team_entry');
+      // Get the <span> element that closes the modal
+      var span = document.getElementById("close_team_entry");
+      // show modal
+      modal.style.display = "block";
+      // When the user clicks on <span> (x), close the modal
+      span.onclick = function() {
+          modal.style.display = "none";
       }
+      // When the user clicks anywhere outside of the modal, close it
+      window.onclick = function(event) {
+          if (event.target == modal) {
+              modal.style.display = "none";
+          }
+      }
+      // When the user hits ESC, close it
+      document.onkeydown = function(e) {
+          e = e || window.event;
+          var isEscape = false;
+          if ("key" in e) {
+              isEscape = (e.key == "Escape" || e.key == "Esc");
+          } else {
+              isEscape = (e.keyCode == 27);
+          }
+          if (isEscape) {
+              modal.style.display = "none";
+          }
+        }
     },
     // If F9 is pressed
     delete_team : function() {
@@ -166,9 +169,10 @@ var app = new Vue({
               // Create team object to send to the backend to delete
               var del_team = new Team("Badgers", "WIS", "Bo Ryan", "I Forgot", "Kohl Center");
               // Send the request to delete the team
-              ipc.send('delete-team', del_team);
+              ipc.send('delete-team', "WIS");
               */
               app.teams.splice(index, 1);
+              app.selected_team = {};
               break;
             }
           }
@@ -199,7 +203,7 @@ var app = new Vue({
     },
     // Registers which team is currently selected
     select_team : function(team) {
-      console.log("Clicked "+team.name);
+      console.log("Clicked "+team[0]);
       app.selected_team = team;
       app.input_selected = false;
     },
@@ -213,12 +217,47 @@ var app = new Vue({
       app.teams = app.teams_hold;
       app.search_active = false;
     },
-    // Sets team name when entered in
-    set_team_name : function(entered_name) {
-      this.new_team = {name: entered_name, team_code: "", head_coach: "", assistant: "", team_roster: [], home_stadium: ""};
-      document.getElementById("team_name_entry").close();
-      return team;
+    // Submit new team data
+    submit_team_data : function() {
+      // Retreive information about the new team
+      var name = document.getElementsByName("team_name")[0].value;
+      var code = document.getElementsByName("team_code")[0].value;
+      var coach = document.getElementsByName("team_coach")[0].value;
+      var assistants = document.getElementsByName("team_assistants")[0].value;
+      var stadium = document.getElementsByName("team_stadium")[0].value;
+      app.temp_team_size = document.getElementById('roster_size').selectedIndex + 5; // Note: Index 0 = 5 players, so add 5 to the selected index
+      console.log('NAME: '+name+' CODE: '+code+' COACH: '+coach+' ASSISTANTS: '+assistants+' STADIUM: '+stadium+' ROSTER SIZE: '+app.temp_team_size);
+      // Reset the modal
+      document.getElementsByName("team_name")[0].value = "";
+      document.getElementsByName("team_code")[0].value = "";
+      document.getElementsByName("team_coach")[0].value = "";
+      document.getElementsByName("team_assistants")[0].value = "";
+      document.getElementsByName("team_stadium")[0].value = "";
+      // Verify all fields are filled out
+      if(name != "" && code != "" && coach != "" && assistants != "" && stadium != "")
+      {
+         this.new_team = new Team(name, code, coach, assistants, stadium);
+         var modal = document.getElementById('team_entry');
+         modal.style.display = "none";
+         var roster_entry = document.getElementById('team_roster_entry');
+         roster_entry.style.display = "block";
+         // When the user hits ESC, close it
+         document.onkeydown = function(e) {
+             e = e || window.event;
+             var isEscape = false;
+             if ("key" in e) {
+                 isEscape = (e.key == "Escape" || e.key == "Esc");
+             } else {
+                 isEscape = (e.keyCode == 27);
+             }
+             if (isEscape) {
+                 roster_entry.style.display = "none";
+             }
+           }
+      }
+      else {
+        window.alert("NOT ALL REQUIRED FIELDS ARE SATISFIED");
+      }
     }
   }
-
 })
