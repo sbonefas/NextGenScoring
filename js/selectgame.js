@@ -69,7 +69,7 @@ ipc.on('get-game-success', function(event,args) {
 ipc.on('get-game-failure', function(event,game_name) {
 //	app.selected_game = null;
     get_game_fail = true;
-	console.log("get-game-failure: " + game_name + get_game_fail);
+	console.log("get-game-failure: " + game_name + " " +get_game_fail);
 	window.alert("ERROR: GAME DOESN'T EXIST");
 });
 
@@ -105,7 +105,7 @@ var app = new Vue({
           ],
     game_options: [
       {name: "<ENTER> - EDIT GAME"},
-      {name: "N - CREATE NEW GAME"},
+      {name: "CREATE NEW GAME"},
       {name: "F9 - DELETE GAME"}
     ],
     games_hold: [],
