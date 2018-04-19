@@ -35,7 +35,7 @@
       </table>
       <table class="team_search">
         <tr v-for="team in teams">
-          <td><button id="team_cell" v-on:click="select_team(team)"><h3>{{team.name}}</h3></button></td>
+          <td><button id="team_cell" v-on:click="select_team(team)"><h3>{{team[0]}}</h3></button></td>
         </tr>
       <div>
         <table id="options">
@@ -82,17 +82,25 @@
                   <option value="fifteen">15</option>
               </select>
           </h4>
-          <button class='submit_button' v-on:click="submit_team_data">SUBMIT AND GO TO ROSTER ENTRY</button>
+          <input class="submit_button" type="button" value="SUBMIT AND GO TO ROSTER ENTRY" onclick="app.submit_team_data()">
         </div>
-      </div>
-      <div id='team_roster_entry'>
-        <div id='player_content' class="modal-content">
-          <h4>PLAYER NAME:&emsp;
-              <input id = "userinput" type = "text" name = "player_name">
-          </h4>
-        </div>
-      </div>
     </div>
+    <div id='team_roster_entry' class="modal">
+      <div id='player_content' class="modal-content">
+        <span id="closeModal" class="close">&times;</span>
+        <div id="players">
+          <table>
+            <tr v-for="n in 10">
+              <td><h4>PLAYER NAME:&emsp;<input id = "userinput" type = "text" name = "player_name"></h4></td>
+              <td><h4>PLAYER NUMEBER:&emsp;<input id = "userinput" type = "text" name = "player_number"></h4></td>
+              <td><h4>PLAYER POSITION:&emsp;<input id = "userinput" type = "text" name = "player_pos"></h4></td>
+            </tr>
+          </table>
+        </div>
+        <input class="submit_button" type="button" value="SUBMIT TEAM ROSTER" onclick="">
+    </div>
+  </div>
+  </div>
     <script type="text/javascript" src="js/vue.js"></script>
     <script type="text/javascript" src="js/teams.js"></script>
   </body>
