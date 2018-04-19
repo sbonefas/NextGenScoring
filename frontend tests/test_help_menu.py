@@ -7,8 +7,7 @@ import os
 
 def configure_index():
     cwd = os.getcwd()
-    path = os.path.abspath(os.path.join(cwd, os.pardir))
-    index_path = 'file:///' + path + '/index.html'
+    index_path = 'file:///' + cwd + '/index.html'
     return index_path.replace("\\", '/')
 
     
