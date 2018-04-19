@@ -245,12 +245,6 @@ var app = new Vue({
      if(e.keyCode == 27) { // Esc key pressed
         app.clear_input();
      }
-     //Q - back to main menu
-     if(e.keyCode == 81) {
-        if(confirm("Are you sure you want to go back to the main menu? Changes will be lost")) {
-            window.location = "./mainmenu.html"
-        }
-     }
 
      // alt + h - Help menu
      if(e.altKey && e.keyCode == 72) {
@@ -370,6 +364,10 @@ var app = new Vue({
      else if(e.keyCode == 71 || e.keyCode == 81) {
         if(currentlyInputtingPlay == "shotattempt") {
           app.shot_attempt(e.keyCode);
+        } else if(currentlyInputtingPlay == "" && e.keyCode == 81) {
+          if(confirm("Are you sure you want to go back to the main menu? Changes will be lost")) {
+            window.location = "./mainmenu.html"
+         }
         }
      }
 
