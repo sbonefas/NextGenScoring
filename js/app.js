@@ -1151,6 +1151,11 @@ var app = new Vue({
                 // inputvalidator.innerText = "Out of timeouts. Press ESC/F10 to clear input.";
               }
             }
+            if(!paused) {
+              timer.pause();
+              paused = true;
+              $("#clockisstopped").toggle();
+            }
           } else {
             inputvalidator.innerText = "Input not recognized";
           }
