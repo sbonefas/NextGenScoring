@@ -482,10 +482,6 @@ exports.test_get_file_path = function(file_name) {
 	return get_file_path(file_name);
 }
 
-exports.test_delete_file = function(file_name) {
-	return delete_file(file_name);
-}
-
 exports.test_get_initial_game_file_contents = function(individual_stat_labels, team_stat_labels, footer) {
 	return get_initial_game_file_contents(individual_stat_labels, team_stat_labels, footer);
 }
