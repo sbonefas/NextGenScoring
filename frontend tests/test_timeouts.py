@@ -3,6 +3,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.alert import Alert
 import unittest
 import os
+import time
 
 
 def configure_index():
@@ -21,8 +22,8 @@ class TestTimeOuts(unittest.TestCase):
 		
     @classmethod
     def tearDownClass(cls):
-	    #__class__.driver.quit()
-        pass
+	    __class__.driver.quit()
+        #pass
 
     def setUp(self):
         #__class__.driver = webdriver.Firefox()
@@ -200,7 +201,62 @@ class TestTimeOuts(unittest.TestCase):
         self.assertEqual("partial", play_by_play[3])
         self.assertEqual("timeout", play_by_play[4])
         self.assertEqual(home_score + "-" + away_score, play_by_play[5]) 
+        
+        
+    def test_media_stop_clock(self):
+        print("test_media_stop_clock")
+        __class__.driver.find_element_by_id("home").send_keys(Keys.SPACE)
+        time.sleep(2)     
+        self.timeout(home=False, full=False, media=True)
+        time.sleep(2)
+        
+        clock = (__class__.driver.find_element_by_id("clockminutes").text + ":" + 
+                 __class__.driver.find_element_by_id("clockseconds").text)    
+        self.assertEqual(clock, "19:58")
 
+    def test_stop_clock_home_full(self):
+        print("test_stop_clock_home_full")
+        __class__.driver.find_element_by_id("home").send_keys(Keys.SPACE)
+        time.sleep(2)     
+        self.timeout(home=True, full=True, media=False)
+        time.sleep(2)
+        
+        clock = (__class__.driver.find_element_by_id("clockminutes").text + ":" + 
+                 __class__.driver.find_element_by_id("clockseconds").text)    
+        self.assertEqual(clock, "19:50")
+
+    def test_stop_clock_home_30(self):
+        print("test_stop_clock_home_30")
+        __class__.driver.find_element_by_id("home").send_keys(Keys.SPACE)
+        time.sleep(2)     
+        self.timeout(home=True, full=False, media=False)
+        time.sleep(2)
+        
+        clock = (__class__.driver.find_element_by_id("clockminutes").text + ":" + 
+                 __class__.driver.find_element_by_id("clockseconds").text)    
+        self.assertEqual(clock, "19:52")        
+        
+    def test_stop_clock_away_full(self):
+        print("test_stop_clock_away_full")
+        __class__.driver.find_element_by_id("home").send_keys(Keys.SPACE)
+        time.sleep(2)     
+        self.timeout(home=False, full=True, media=False)
+        time.sleep(2)
+        
+        clock = (__class__.driver.find_element_by_id("clockminutes").text + ":" + 
+                 __class__.driver.find_element_by_id("clockseconds").text)    
+        self.assertEqual(clock, "19:54")
+
+    def test_stop_clock_away_30(self):
+        print("test_stop_clock_away_30")
+        __class__.driver.find_element_by_id("home").send_keys(Keys.SPACE)
+        time.sleep(2)     
+        self.timeout(home=False, full=False, media=False)
+        time.sleep(2)
+        
+        clock = (__class__.driver.find_element_by_id("clockminutes").text + ":" + 
+                 __class__.driver.find_element_by_id("clockseconds").text)    
+        self.assertEqual(clock, "19:56") 
 
     
 if __name__ == '__main__':

@@ -157,32 +157,32 @@ class TestShotCodes2(unittest.TestCase):
         self.assertEqual(home_score + "-" + away_score, play_by_play[7]) 
         
         
-    ## PENDING BUG ##  
-    # def test_make_2pt_fg_alt(self):
-        # print("test_make_2pt_fg_alt")
+    # PENDING BUG ##  
+    def test_make_2pt_fg_alt(self):
+        print("test_make_2pt_fg_alt")
         
-        # fg_before = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[4]").text
-        # fa_before = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[5]").text
-        # tp_before = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[14]").text
-        # team_fg_before = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[12]/td[4]").text
-        # team_fa_before = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[12]/td[5]").text
-        # team_tp_before = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[12]/td[14]").text
+        fg_before = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[4]").text
+        fa_before = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[5]").text
+        tp_before = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[14]").text
+        team_fg_before = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[12]/td[4]").text
+        team_fa_before = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[12]/td[5]").text
+        team_tp_before = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[12]/td[14]").text
         
-        # self.shoot_2pt("01", True, False, "02")
+        self.shoot_2pt("01", True, False, "02")
 
-        # fg_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[4]").text
-        # fa_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[5]").text
-        # tp_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[14]").text
-        # team_fg_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[12]/td[4]").text
-        # team_fa_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[12]/td[5]").text
-        # team_tp_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[12]/td[14]").text
+        fg_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[4]").text
+        fa_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[5]").text
+        tp_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[2]/td[14]").text
+        team_fg_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[12]/td[4]").text
+        team_fa_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[12]/td[5]").text
+        team_tp_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[12]/td[14]").text
     
-        # self.assertEqual(int(fg_after), int(fg_before) + 1, "FG made")
-        # self.assertEqual(int(fa_after), int(fa_before) + 1, "FG attempted")
-        # self.assertEqual(int(tp_after), int(tp_before) + 2, "Total points")
-        # self.assertEqual(int(team_fg_after), int(team_fg_before) + 1, "Team FG made")
-        # self.assertEqual(int(team_fa_after), int(team_fa_before) + 1, "Team FG attempted")
-        # self.assertEqual(int(team_tp_after), int(team_tp_before) + 2, "Team Total points")
+        self.assertEqual(int(fg_after), int(fg_before) + 1, "FG made")
+        self.assertEqual(int(fa_after), int(fa_before) + 1, "FG attempted")
+        self.assertEqual(int(tp_after), int(tp_before) + 2, "Total points")
+        self.assertEqual(int(team_fg_after), int(team_fg_before) + 1, "Team FG made")
+        self.assertEqual(int(team_fa_after), int(team_fa_before) + 1, "Team FG attempted")
+        self.assertEqual(int(team_tp_after), int(team_tp_before) + 2, "Team Total points")
         
         
     ## Other tests make sure the scoring part works, now check assists
@@ -193,14 +193,14 @@ class TestShotCodes2(unittest.TestCase):
         as_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[3]/td[11]").text
         self.assertEqual(int(as_after), int(as_before) + 1)
     
-    ## PENDING BUG ##
-    ## Other tests make sure the scoring part works, now check assists
-    # def test_assist_on_2pt_fg_alt(self):
-        # print("test_assist_on_2pt_fg_alt")
-        # as_before = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[3]/td[11]").text
-        # self.shoot_2pt("01", True, True, "02")
-        # as_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[3]/td[11]").text
-        # self.assertEqual(int(as_after), int(as_before) + 1)
+    # PENDING BUG ##
+    # Other tests make sure the scoring part works, now check assists
+    def test_assist_on_2pt_fg_alt(self):
+        print("test_assist_on_2pt_fg_alt")
+        as_before = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[3]/td[11]").text
+        self.shoot_2pt("01", True, True, "02")
+        as_after = __class__.driver.find_element_by_id("ps-home").find_element_by_xpath("table/tbody/tr[3]/td[11]").text
+        self.assertEqual(int(as_after), int(as_before) + 1)
     
     def test_paint_fg(self):
         print("test_paint_fg")       
