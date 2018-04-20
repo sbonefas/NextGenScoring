@@ -130,7 +130,7 @@ describe('data_read_write tests', function() {
              assert.strictEqual(e, "No Individual Stat Labels Provided");
            }
          });
-         it('should throw and error when writeSync fails', function() {
+         it('should throw and error when writeFileSync fails', function() {
            try {
              var reader = new FileReader();
              //files/5MB.zip is a corrupted file that can't be read
@@ -145,8 +145,20 @@ describe('data_read_write tests', function() {
          });
        });
    });
+   describe('edit_game_directory()', function() {
+     it('should change the game directory from data/ to tests/', function() {
+       fs.mkdirSync("tests/");
+       assert.strictEqual(drw.edit_game_directory("tests/"), true);
+     });
+     it('should return false that tests/ exists after deleting it and switching back to data/', function() {
+       assert.strictEqual(drw.edit_game_directory("data/"), true);
+       assert.strictEqual(fs.existsSync("tests/"), true);
+       fs.rmdirSync("tests/");
+       assert.strictEqual(drw.edit_game_directory("tests/"), false);
+     });
+   });
    describe('delete_file()', function() {
-     it('should delete a file successfully', function() {
+     it('should properly delete a file', function() {
         assert.strictEqual(drw.create_game_file(individual_stat_labels, team_stat_labels, "data_file", footer), true);
         assert.strictEqual(fs.existsSync("data/data_file.txt"), true);
         drw.delete_file("data_file");
@@ -234,7 +246,14 @@ describe('data_read_write tests', function() {
          assert.strictEqual(e, "File Read Error: File test does not exist!");
        }
      });
-     //try to do
+     it('should return a No File Name Provided Error given an undefined file name', function() {
+       try {
+         drw.read_game_file(undefined);
+         assert.fail("No File Name Provided Error should be thrown and caught");
+       } catch (e) {
+         assert.strictEqual(e, "No File Name Provided");
+       }
+     });
    });
    describe('edit_current_stats()', function() {
      let new_stats = drw.test_edit_current_stats(test_team_stats_array, test_stat_changes_exist);
@@ -283,7 +302,15 @@ describe('data_read_write tests', function() {
           assert.strictEqual(e, "File Read Error: File test does not exist!");
         }
       });
-      it('should throw and error when writeSync fails', function() {
+      it('should return a No File Name Provided Error given an undefined file name', function() {
+        try {
+          drw.test_overwrite_game_file(test_stats_with_footer, undefined);
+          assert.fail("No File Name Provided Error should be thrown and caught");
+        } catch (e) {
+          assert.strictEqual(e, "No File Name Provided");
+        }
+      });
+      it('should throw and error when writeFileSync fails', function() {
         try {
           var reader = new FileReader();
           //files/5MB.zip is a corrupted file that can't be read
@@ -427,7 +454,7 @@ describe('data_read_write tests', function() {
           });
           it('should throw a Index Error if is_home isn\'t 0 or 1', function() {
             try {
-              drw.write_player_stats_to_game_file([2, 1, 0], file_name);
+              drw.write_team_stats_to_game_file([2, 1, 0], file_name);
             } catch (e) {
               assert.strictEqual(e, "Index Error: The first index in any stat changes must be 0 or 1");
             }

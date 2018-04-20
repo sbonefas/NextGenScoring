@@ -86,11 +86,7 @@ exports.create_game_file = function(individual_stat_labels, team_stat_labels, fi
 
 	// Create file. Return false on errors
 	var file_contents = get_initial_game_file_contents(individual_stat_labels, team_stat_labels, footer);
-	try {
-    	fs.writeFileSync(file_path, file_contents);
-	} catch (e) {
-		throw "File Creation Failed: " + e;
-	}
+	fs.writeFileSync(file_path, file_contents);
 	return true;
 }
 
@@ -301,14 +297,7 @@ exports.write_player_stats_to_game_file = function(stat_changes, file_name) {
 	var player_number = stat_changes[1];
 
 	// Read team's stats
-	var current_game_stats;
-	try {
-		current_game_stats = exports.read_game_file(file_name);
-	} catch(e) {
-		console.log("READ ERROR: " + e);
-		return false;
-	}
-
+	var current_game_stats = exports.read_game_file(file_name);
 	// Edit player's stats
 	var current_team_stats = edit_current_stats(current_game_stats[1-is_home], stat_changes);
 	current_game_stats[1-is_home] = current_team_stats;
@@ -338,14 +327,7 @@ exports.write_team_stats_to_game_file = function(stat_changes, file_name) {
 	var player_number = stat_changes[1];
 
 	// Read team's stats
-	var current_game_stats;
-	try {
-		current_game_stats = exports.read_game_file(file_name);
-	} catch(e) {
-		console.log("READ ERROR: " + e);
-		return false;
-	}
-
+	var current_game_stats = exports.read_game_file(file_name);
 	// Edit team's stats
 	var team_stats = current_game_stats[3 - is_home][1];
 	for(var stat = 0; stat < team_stats.length; stat++) {
@@ -444,13 +426,7 @@ function game_array_to_string(game_array) {
 function overwrite_game_file(new_content, file_name) {
 	if (file_name == undefined) throw "No File Name Provided";
 	if(!fs.existsSync(get_file_path(file_name))) throw "File Read Error: File " + file_name + " does not exist!";
-
-	try {
-    	fs.writeFileSync(get_file_path(file_name), new_content);
-	} catch (e) {
-		console.log("OVERWRITE ERROR: " + e);
-    	return false;
-	}
+  fs.writeFileSync(get_file_path(file_name), new_content);
 	return true;
 }
 

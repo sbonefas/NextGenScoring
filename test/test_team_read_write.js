@@ -38,68 +38,58 @@ after(function() {
 	}
 });
 
-describe("team_read_write", function() {
-	describe("Edit team directory", function() {
-		it("Should return true given valid directory", function() {
+describe("team_read_write tests", function() {
+	describe("edit_team_directory()", function() {
+		it('should change the team directory from data/ to tests/', function() {
+			fs.mkdirSync("tests/");
+			assert.strictEqual(trw.edit_team_directory("tests/"), true);
+		});
+		it('should return false that tests/ exists after deleting it and switching back to data/', function() {
 			assert.strictEqual(trw.edit_team_directory(directory), true);
-		});
-		it("Should return false given invalid directory", function() {
-			assert.strictEqual(trw.edit_team_directory("directory/"), false);
+			assert.strictEqual(fs.existsSync("tests/"), true);
+			fs.rmdirSync("tests/");
+			assert.strictEqual(trw.edit_team_directory("tests/"), false);
 		});
 	});
-	describe("Convert a team to a string", function() {
+	describe("team_to_string()", function() {
 		it("should convert a team to string given array input", function() {
-			try {
-				assert.strictEqual(trw.test_team_to_string(team0_content), team0_string);
-				assert.strictEqual(trw.test_team_to_string(team1_content), team1_string);
-				assert.strictEqual(trw.test_team_to_string(team2_content), team2_string);
-				assert.strictEqual(trw.test_team_to_string(team3_content), team3_string);
-		   } catch(e) {
-			   console.log("   on error: '" + e + "'");
-		}
-		});
-		it("should return null if input is not an array", function() {
-			try {
-				const team_content = "name,code";
-				assert.strictEqual(trw.test_team_to_string(team_content), null);
-			 } catch(e) {
-				 console.log("   on error: '" + e + "'");
-		}
+			assert.strictEqual(trw.test_team_to_string(team0_content), team0_string);
+			assert.strictEqual(trw.test_team_to_string(team1_content), team1_string);
+			assert.strictEqual(trw.test_team_to_string(team2_content), team2_string);
+			assert.strictEqual(trw.test_team_to_string(team3_content), team3_string);
+	 });
+	  it("should return null if input is not an array", function() {
+			const team_content = "name,code";
+			assert.strictEqual(trw.test_team_to_string(team_content), null);
 		});
 	});
-	describe("Convert a string to team array", function() {
+	describe("string_to_team()", function() {
 		it("should successfully convert a string to team array", function() {
-			try {
-				assert.strictEqual(trw.test_string_to_team(team0_string).toString(), team0_content.toString());
-				assert.strictEqual(trw.test_string_to_team(team1_string).toString(), team1_content.toString());
-				assert.strictEqual(trw.test_string_to_team(team2_string).toString(), team2_content.toString());
-				assert.strictEqual(trw.test_string_to_team(team3_string).toString(), team3_content.toString());
-			} catch(e) {
-				  console.log("   on error: '" + e + "'");
-		  }
+			assert.strictEqual(trw.test_string_to_team(team0_string).toString(), team0_content.toString());
+			assert.strictEqual(trw.test_string_to_team(team1_string).toString(), team1_content.toString());
+			assert.strictEqual(trw.test_string_to_team(team2_string).toString(), team2_content.toString());
+			assert.strictEqual(trw.test_string_to_team(team3_string).toString(), team3_content.toString());
 		});
 		it("should have partially converted a string given an invalid delimiter replacement", function() {
-			try {
-				const team_string = "name%!_a)#$d#code%!_a)~$d#stadium";
-				assert.strictEqual(trw.test_string_to_team(team_string).toString(), "name,code%!_a)~$d#stadium");
-			} catch(e) {
-				  console.log("   on error: '" + e + "'");
-		  }
+			const team_string = "name%!_a)#$d#code%!_a)~$d#stadium";
+			assert.strictEqual(trw.test_string_to_team(team_string).toString(), "name,code%!_a)~$d#stadium");
 		});
 	});
-	describe("Delete a file", function() {
+	describe("delete_file()", function() {
 		it("should properly delete a file", function() {
-			try {
-				trw.create_team(file_names[0], "test_content");
-				trw.delete_file(file_names[0]);
-				assert.strictEqual(!fs.existsSync(get_file_path(file_names[0])), true);
-				} catch(e) {
-				   console.log("   on error: '" + e + "'");
-			}
+			trw.create_team(file_names[0], "test_content");
+			assert.strictEqual(fs.existsSync(get_file_path(file_names[0])), true);
+			trw.delete_file(file_names[0]);
+			assert.strictEqual(!fs.existsSync(get_file_path(file_names[0])), true);
+		});
+		it('shouldn\'t change anything if file doesn\'t already exist', function() {
+			assert.strictEqual(fs.existsSync(get_file_path(file_names[0])), false);
+			trw.delete_file(file_names[0]);
+			assert.strictEqual(fs.existsSync(get_file_path(file_names[0])), false);
 		});
 	});
 
-	describe("Create a team", function() {
+	describe("create_team()", function() {
 		it("should return an error indicating team already exists if recreated", function() {
 			try {
 				trw.create_team(file_names[0], team0_content);
@@ -129,16 +119,12 @@ describe("team_read_write", function() {
 		});
 	});
 
-	describe("Read team", function() {
-		it("should read a team given a valid filename", function() {
-			try {
-				var contents0 = trw.read_team(file_names[0]);
-				var contents1 = trw.read_team(file_names[1]);
-				assert.strictEqual(contents0.toString(), team0_content.toString());
-	 			assert.strictEqual(contents1.toString(), team1_content.toString());
-			} catch(e) {
-				console.log("   on error: '" + e + "'");
-			}
+	describe("read_team()", function() {
+		it("should successfully read a team given a valid filename", function() {
+			var contents0 = trw.read_team(file_names[0]);
+			var contents1 = trw.read_team(file_names[1]);
+			assert.strictEqual(contents0.toString(), team0_content.toString());
+	 		assert.strictEqual(contents1.toString(), team1_content.toString());
 		});
 		it("should throw an error given a team name not in team directory", function() {
 			try {
@@ -149,18 +135,14 @@ describe("team_read_write", function() {
 		});
 	});
 
-	describe("Overwrite team", function() {
+	describe("overwrite_team", function() {
 		it("should successfully overwrite contents a team", function() {
-			try {
-				trw.overwrite_team(file_names[0], team3_content);
-				trw.overwrite_team(file_names[1], team2_content);
-				var contents0 = trw.read_team(file_names[0]);
-				var contents1 = trw.read_team(file_names[1]);
-				assert.strictEqual(contents0.toString(), team3_content.toString());
-				assert.strictEqual(contents1.toString(), team2_content.toString());
-			} catch(e) {
-				console.log("   on error: '" + e + "'");
-			}
+			trw.overwrite_team(file_names[0], team3_content);
+			trw.overwrite_team(file_names[1], team2_content);
+			var contents0 = trw.read_team(file_names[0]);
+			var contents1 = trw.read_team(file_names[1]);
+			assert.strictEqual(contents0.toString(), team3_content.toString());
+			assert.strictEqual(contents1.toString(), team2_content.toString());
 		});
 		it("should throw an error given a team name not in team directory", function() {
 			try {
@@ -182,15 +164,11 @@ describe("team_read_write", function() {
 		});
 	});
 
-	describe("Get an array of all the teams", function() {
+	describe("get_all_teams()", function() {
 		it("should successfully retrieve an array of all the teams", function() {
-			try {
-				var teams = trw.get_all_teams();
-				assert.strictEqual(teams[0].toString(), trw.read_team(file_names[0]).toString());
-			  assert.strictEqual(teams[1].toString(), trw.read_team(file_names[1]).toString());
-			} catch(e) {
-				console.log("   on error: '" + e + "'");
-			}
+			var teams = trw.get_all_teams();
+			assert.strictEqual(teams[0].toString(), trw.read_team(file_names[0]).toString());
+			assert.strictEqual(teams[1].toString(), trw.read_team(file_names[1]).toString());
 		});
 	});
 });
