@@ -68,7 +68,7 @@ function createTeam(name, code, head_coach, asst_coach, stadium){
 	console.log("Active Roster: ");
 	for (var i = 0; i < team.get_active_roster().length; i++){
 		var player = team.get_active_roster()[i];
-		console.log("[" + i + "] " + player.get_name() + " #" + player.get_number() + " " + player.get_position() + "\n");
+		console.log("[" + i + "] " + player[0] + " #" + player[1] + " " + player[2] + "\n");
 	}
 	try {
 		team.remove_player_from_roster("Frank Kaminsky", 44);
@@ -394,7 +394,7 @@ function initGame(args){
  *
  */
 
-
+ 
  ipc.on('delete-team', function(event,team_code){
 	try {
 		trw.delete_file(team_code);
@@ -416,8 +416,8 @@ function initGame(args){
 	}
 	event.sender.send('create-team-success', team.get_code());
  });
-
-
+ 
+ 
  ipc.on('get-game', function (event,game_name){
 	try {
 		var game_info = drw.read_game_file(game_name);

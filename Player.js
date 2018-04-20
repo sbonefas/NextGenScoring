@@ -17,5 +17,7 @@ module.exports = function(name, number, position){
 	this.get_position = function(){
 		return this.position;
 	}
-
+	this.to_array = function(){
+		return [this.name, this.number, this.position];
+	}
 }
