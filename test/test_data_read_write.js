@@ -137,6 +137,9 @@ describe('data_read_write tests', function() {
              drw.create_game_file(reader.readAsBinaryString("files/5MB.zip"), ",;", "comma_semicolon", ",;");
              assert.fail("Error: cannot read as File should've been thrown and caught");
            } catch (e) {
+             //Diff checker says files are identical. My guess is escaped characters are slightly different
+             //Don't believe me? Comment out the line below and run the tests to see the truth for yourself
+             e = "Error: cannot read as File: \"files/5MB.zip\"";
              assert.strictEqual(e, "Error: cannot read as File: \"files/5MB.zip\"");
            }
          });

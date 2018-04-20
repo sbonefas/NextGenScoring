@@ -24,8 +24,10 @@ function verifyArrayInfo(array, flag) {
   //Implicit pass if both arrays are undefined
 }
 
+var t2Roster = [{name: "Amir Coffey", number: 5, position: "G"}];
 var t1 = new Team("Wisconsin", "WISC", "Bo Ryan", "Howard Moore", "Alliant Energy Center", null);
-//TODO: With null active roster
+var t2 = new Team("Minnesota", "MINN", "Richard Pitino", "Ed Conroy", "Williams Arena", t2Roster);
+
 describe('Team getters', function() {
   it('should return the team name', function() {
     assert.strictEqual(t1.get_name(), "Wisconsin");
@@ -42,9 +44,13 @@ describe('Team getters', function() {
   it('should return the name of the team\'s arena', function() {
     assert.strictEqual(t1.get_stadium(), "Alliant Energy Center");
   });
-  it('should return the active roster', function() {
+  it('should return the active roster of a null active roster', function() {
     assert.strictEqual(t1.get_active_roster(), t1.to_array()[5]);
   });
+  it("should return the active roster of an active roster with a player", function() {
+    assert.strictEqual(t2.get_active_roster(), t2Roster);
+    assert.strictEqual(t2.get_active_roster(), t2.to_array()[5]);
+  })
   it('should return all getter information as an array', function() {
     verifyArrayInfo(t1.to_array(), 0);
   });
