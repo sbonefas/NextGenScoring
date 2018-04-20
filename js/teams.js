@@ -7,6 +7,7 @@ const ipc = electron.ipcRenderer;
 const Team = require('./Team.js'); // Imports stuff from the Team.js backend file
 const Player = require('./Player.js'); // Imports stuff from the Player.js backend file
 const TRW = require('./team_read_write.js'); // Imports stuff from the team_read_write.js backend file
+//const Main = require('./main.js'); // Imports main.js team creation
 /*
 // Creating a new team (note: empty roster is created by the constructor, therefore is not passed as a parameter)
 var team = new Team(name, code, coach, assistants, home_stadium, <team_roster>);
@@ -64,7 +65,11 @@ function help() {
   on load event handler to fill the teams array
   by calling get_all_teams from the back-end
 */
-
+window.onload = function() {
+  var teams = TRW.get_all_teams();
+  console.log(teams);
+}
+var n_disabled = false;
 var new_team = {};
 var app = new Vue({
   el: '#team_app',
@@ -98,7 +103,7 @@ var app = new Vue({
         app.edit_team();
       }
       // <N> --> Add New Team
-      else if (e.keyCode == 78 && (document.getElementById('searched') != document.activeElement)) {
+      else if (e.keyCode == 78 && (document.getElementById('searched') != document.activeElement) && this.n_disabled != true) {
         app.enter_team_information();
       }
       // <F9> --> Delete Team
@@ -125,6 +130,7 @@ var app = new Vue({
     // If N is pressed
     enter_team_information : function() {
       app.adding_team = true;
+      this.n_disabled = true;
       var modal = document.getElementById('team_entry');
       // Get the <span> element that closes the modal
       var span = document.getElementById("close_team_entry");
@@ -193,9 +199,9 @@ var app = new Vue({
       app.teams_hold = app.teams;
       var query_teams = [];
       app.teams.forEach(function(team) {
-        if (team.name.includes(document.getElementById('searched').value.toUpperCase())) {
+        if (team[0].includes(document.getElementById('searched').value.toUpperCase())) {
           query_teams.push(team);
-          console.log(team.name + " was found during search");
+          console.log(team[0] + " was found during search");
         }
       });
       app.teams = query_teams;
@@ -252,12 +258,100 @@ var app = new Vue({
              }
              if (isEscape) {
                  roster_entry.style.display = "none";
+                 this.n_disabled = false;
+                 app.adding_team = false;
              }
            }
       }
       else {
         window.alert("NOT ALL REQUIRED FIELDS ARE SATISFIED");
       }
+    },
+    // Creates roster and adds it to the team object
+    submit_roster : function () {
+      this.n_disabled = false;
+      app.adding_team = false;
+      var team_entered = [];
+      var incomplete_form = false;
+      for(var i = 1; i < 16; i++)
+      {
+        // HANDLES PLAYERS NOT ENTERED INTO THE ROSTER (THIS IS ALLOWED)
+        if(document.getElementsByName("player_name_"+i)[0].value == "" && document.getElementsByName("player_number_"+i)[0].value == "" && document.getElementsByName("player_pos_"+i)[0].value == "")
+        {
+          console.log("Player "+i+ " was not entered");
+        }
+        else {
+          // HANDLES INCOMPLETE PLAYER ENTRY (THIS IS NOT OKAY)
+          if(document.getElementsByName("player_name_"+i)[0].value == "" && document.getElementsByName("player_number_"+i)[0].value != "" && document.getElementsByName("player_pos_"+i)[0].value != "")
+          {
+            window.alert("Player "+i+" was not given a name.  Please enter a name.");
+            incomplete_form = true;
+          }
+          else if(document.getElementsByName("player_name_"+i)[0].value != "" && document.getElementsByName("player_number_"+i)[0].value == "" && document.getElementsByName("player_pos_"+i)[0].value != "")
+          {
+            window.alert("Player "+i+" was not given a number.  Please enter a number.");
+            incomplete_form = true;
+          }
+          else if(document.getElementsByName("player_name_"+i)[0].value != "" && document.getElementsByName("player_number_"+i)[0].value != "" && document.getElementsByName("player_pos_"+i)[0].value == "")
+          {
+            window.alert("Player "+i+" was not given a position.  Please enter a positon.");
+            incomplete_form = true;
+          }
+          else if(document.getElementsByName("player_name_"+i)[0].value == "" && document.getElementsByName("player_number_"+i)[0].value == "" && document.getElementsByName("player_pos_"+i)[0].value == "")
+          {
+            window.alert("Player "+i+" was not given a name or number.  Please enter the missing information.");
+            incomplete_form = true;
+          }
+          else if(document.getElementsByName("player_name_"+i)[0].value != "" && document.getElementsByName("player_number_"+i)[0].value == "" && document.getElementsByName("player_pos_"+i)[0].value == "")
+          {
+            window.alert("Player "+i+" was not given a number or position.  Please enter the missing information.");
+            incomplete_form = true;
+          }
+          else if(document.getElementsByName("player_name_"+i)[0].value == "" && document.getElementsByName("player_number_"+i)[0].value != "" && document.getElementsByName("player_pos_"+i)[0].value == "")
+          {
+            window.alert("Player "+i+" was not given a name or position.  Please enter the missing information.");
+            incomplete_form = true;
+          }
+          // ALL OF THE CURRENT PLAYER DETAILS ARE ENTERED
+          else if(incomplete_form == false)
+          {
+            // CREATE PLAYER: Name, number, position
+            var player = new Player(document.getElementsByName("player_name_"+i)[0].value, document.getElementsByName("player_number_"+i)[0].value, document.getElementsByName("player_pos_"+i)[0].value);
+            console.log("NAME: "+ player.get_name() + " NUMBER: " + player.get_number() + " POSITION: " + player.get_position());
+            team_entered.unshift(player);
+          }
+        }
+      }
+      if(incomplete_form == false || team_entered.length < 5)
+      {
+        for(var i = 1; i < 16; i++)
+        {
+          // RESET EACH MODAL SPOT
+          document.getElementsByName("player_name_"+i)[0].value = "";
+          document.getElementsByName("player_number_"+i)[0].value = "";
+          document.getElementsByName("player_pos_"+i)[0].value = "";
+        }
+
+          // HIDE THE MODAL
+          var modal = document.getElementById('team_roster_entry');
+          for(var i = 0; i < team_entered.length; i++)
+          {
+            this.new_team.add_player_to_roster(team_entered[i]);
+          }
+          modal.style.display = 'none';
+          app.teams.push(this.new_team);
+          var team_file = this.new_team.get_name().toLowerCase();
+          team_file = team_file.split(' ').join('_');
+          console.log(team_file+".txt");
+          TRW.create_team(team_file, this.new_team);
+          console.log("NAME: "+this.new_team.get_name()+" CODE: "+this.new_team.get_code()+" STADIUM: "+this.new_team.get_stadium()+" ROSTER: "+this.new_team.get_active_roster()[0].get_name());
+          for(var i = 0; i < team_entered.length; i++)
+          {
+            console.log("Player "+i+": "+team_entered[i].name);
+          }
+          this.new_team = {};
+      }
+
     }
   }
 })
