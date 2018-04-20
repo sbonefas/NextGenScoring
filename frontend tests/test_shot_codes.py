@@ -30,6 +30,12 @@ class TestShotCodes2(unittest.TestCase):
         #__class__.driver.get(index)
         self.home_on_offense()
         #pass
+        
+    def resetClass(self):
+        __class__.driver.quit()
+        __class__.driver = webdriver.Firefox()
+        index = configure_index()
+        __class__.driver.get(index) 
 	
     def tearDown(self):
         #__class__.driver.quit()
@@ -109,6 +115,17 @@ class TestShotCodes2(unittest.TestCase):
         __class__.driver.find_element_by_id("userinput").send_keys("S")
         __class__.driver.find_element_by_id("userinput").send_keys(player)
         __class__.driver.find_element_by_id("userinput").send_keys(Keys.ENTER)
+    
+    def miss_fg(self, three):
+        __class__.driver.find_element_by_id("userinput").send_keys("J")
+        __class__.driver.find_element_by_id("userinput").send_keys("01")       
+        if three:
+            __class__.driver.find_element_by_id("userinput").send_keys("X")
+        else:
+            __class__.driver.find_element_by_id("userinput").send_keys("R")            
+        __class__.driver.find_element_by_id("userinput").send_keys("01")
+        __class__.driver.find_element_by_id("userinput").send_keys(Keys.ENTER)
+
     
     def test_make_2pt_fg(self):
         print("test_make_2pt_fg")
@@ -917,10 +934,64 @@ class TestShotCodes2(unittest.TestCase):
         self.assertEqual(player_name, play_by_play[4])
         self.assertEqual(home_score + "-" + away_score, play_by_play[5]) 
         
+    
+    def test_2pt_fg_perc(self):
+        print("test_2pt_fg_perc")
+        self.miss_fg(False)
+        self.miss_fg(False)
+        
+        fg_perc = __class__.driver.find_element_by_id('ps-home').find_element_by_xpath('div/p[1]').text.split(' ')[1]
+        self.assertEqual(fg_perc, "0.00")
+        
+        self.shoot_2pt("01", False, False, "02")
+        self.home_on_offense()
+        self.shoot_2pt("01", False, False, "02")
+        fg_perc = __class__.driver.find_element_by_id('ps-home').find_element_by_xpath('div/p[1]').text.split(' ')[1]
+        self.assertEqual(fg_perc, "50.00")
+        
+        self.home_on_offense()
+        self.shoot_2pt("01", False, False, "02")
+        self.home_on_offense()
+        self.shoot_2pt("01", False, False, "02")
+        fg_perc = __class__.driver.find_element_by_id('ps-home').find_element_by_xpath('div/p[1]').text.split(' ')[1]
+        self.assertEqual(fg_perc, "66.67")
+        
+        self.home_on_offense()
+        self.miss_fg(False)
+        fg_perc = __class__.driver.find_element_by_id('ps-home').find_element_by_xpath('div/p[1]').text.split(' ')[1]
+        self.assertEqual(fg_perc, "57.14")
+    
+    
+    ## BUG PENDING ##
+    # def test_3pt_fg_perc(self):
+        # print("test_3pt_fg_perc")
+        # self.resetClass()
+        # self.miss_fg(True)
+        # self.miss_fg(True)
+        
+        # fg_perc = __class__.driver.find_element_by_id('ps-home').find_element_by_xpath('div/p[1]').text.split(' ')[1]
+        # self.assertEqual(fg_perc, "0.00")
+        
+        # self.shoot_3pt("J", "01", False, "02")
+        # self.home_on_offense()
+        # self.shoot_3pt("J", "01", False, "02")
+        # fg_perc = __class__.driver.find_element_by_id('ps-home').find_element_by_xpath('div/p[1]').text.split(' ')[1]
+        # self.assertEqual(fg_perc, "50.00")
+        
+        # self.home_on_offense()
+        # self.shoot_3pt("J", "01", False, "02")
+        # self.home_on_offense()
+        # self.shoot_3pt("J", "01", False, "02")
+        # fg_perc = __class__.driver.find_element_by_id('ps-home').find_element_by_xpath('div/p[1]').text.split(' ')[1]
+        # self.assertEqual(fg_perc, "66.67")
+        
+        # self.home_on_offense()
+        # self.miss_fg(True)
+        # fg_perc = __class__.driver.find_element_by_id('ps-home').find_element_by_xpath('div/p[1]').text.split(' ')[1]
+        # self.assertEqual(fg_perc, "57.14")
         
         
-        
-    ## PENDING BUGS ##
+    ## PENDING TESTS ##
     #def test_rebound_from_block(self):
     #def test_dunk(self):
     #def test_layup(self):
@@ -929,7 +1000,6 @@ class TestShotCodes2(unittest.TestCase):
     #def test_block_dunk(self):
     #def test_block_layup(self):
     #def test_block_3noj(self):
-    #def fg %
 
         
 if __name__ == '__main__':
