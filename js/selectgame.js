@@ -69,7 +69,7 @@ ipc.on('get-game-success', function(event,args) {
 ipc.on('get-game-failure', function(event,game_name) {
 //	app.selected_game = null;
     get_game_fail = true;
-	console.log("get-game-failure: " + game_name + get_game_fail);
+	console.log("get-game-failure: " + game_name + " " +get_game_fail);
 	window.alert("ERROR: GAME DOESN'T EXIST");
 });
 
@@ -105,7 +105,7 @@ var app = new Vue({
           ],
     game_options: [
       {name: "<ENTER> - EDIT GAME"},
-      {name: "N - CREATE NEW GAME"},
+      {name: "CREATE NEW GAME"},
       {name: "F9 - DELETE GAME"}
     ],
     games_hold: [],
@@ -140,7 +140,7 @@ var app = new Vue({
 
         date_time = app.selected_game.date + "_" + app.selected_game.time + ".txt";
         //UNCOMMENT TO TEST GET-GAME
-//        date_time = "3-12-19_4pm.txt"
+		date_time = "3-12-19_4pm"
         console.log(date_time)
         ipc.send("get-game", date_time)
 
@@ -381,7 +381,7 @@ var app = new Vue({
             }
 
             // UNCOMMENT TO TEST INIT-GAME-FAILURE
-//            curr_game = ["Wisconsin", "Ohio State", "796", "518", "100/0", "0/100", "3/12/19", "4pm", "Kohl Center", "H|V|N", "league", ["schedule notes"], "quarters", "15", "15", ["Official Names"], ["Box comments"], "attendance"];
+            curr_game = ["Wisconsin", "Ohio State", "796", "518", "100/0", "0/100", "3/12/19", "4pm", "Kohl Center", "H|V|N", "league", ["schedule notes"], "quarters", "15", "15", ["Official Names"], ["Box comments"], "attendance"];
 
             if(curr_game.length == 18) {
                 console.log(curr_game)
