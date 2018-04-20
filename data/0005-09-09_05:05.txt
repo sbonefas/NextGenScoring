@@ -1,0 +1,10 @@
+HOME
+player_number(&h#@d!`_fg(&h#@d!`_fga(&h#@d!`_m3(&h#@d!`_3a(&h#@d!`_ft(&h#@d!`_fta(&h#@d!`_offr(&h#@d!`_defr(&h#@d!`_ast(&h#@d!`_pf(&h#@d!`_tf(&h#@d!`_blk(&h#@d!`_trn(&h#@d!`_stl(&h#@d!`_pts
+/Od@&?l#iAWAY
+player_number(&h#@d!`_fg(&h#@d!`_fga(&h#@d!`_m3(&h#@d!`_3a(&h#@d!`_ft(&h#@d!`_fta(&h#@d!`_offr(&h#@d!`_defr(&h#@d!`_ast(&h#@d!`_pf(&h#@d!`_tf(&h#@d!`_blk(&h#@d!`_trn(&h#@d!`_stl(&h#@d!`_pts
+/Od@&?l#iTEAM
+total_points(&h#@d!`_made_in_paint(&h#@d!`_fast_break(&h#@d!`_team_turnover(&h#@d!`_team_rebound(&h#@d!`_team_fouls(&h#@d!`_partial_timeouts_taken(&h#@d!`_full_timeouts_taken
+0(&h#@d!`_0(&h#@d!`_0(&h#@d!`_0(&h#@d!`_0(&h#@d!`_0(&h#@d!`_0(&h#@d!`_0
+0(&h#@d!`_0(&h#@d!`_0(&h#@d!`_0(&h#@d!`_0(&h#@d!`_0(&h#@d!`_0(&h#@d!`_0
+/Od@&?l#iFOOTER
+m(&h#@d!`_m(&h#@d!`_m(&h#@d!`_m(&h#@d!`_m(&h#@d!`_m(&h#@d!`_0005-09-09(&h#@d!`_05:05(&h#@d!`_m(&h#@d!`_0(&h#@d!`_0(&h#@d!`_m(&h#@d!`_0(&h#@d!`_m(&h#@d!`_m(&h#@d!`_m(&h#@d!`_m(&h#@d!`_m
