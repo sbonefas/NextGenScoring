@@ -10,7 +10,7 @@ const file_name = "data_test";
 const file_path = "data/data_test.txt";
 const individual_stat_labels = ['number', 'fg', 'fga', 'pts'];
 const team_stat_labels = ['team fouls', 'timeouts left'];
-const footer = ['test', 1,'test2/test3/4', 'test5'];
+const footer = ['test', 1,'test2/test3/test4', 'test5'];
 
 /** UNIT TEST DATA */
 const test_stats = "HOME\nnumber(&h#@d!`_fg(&h#@d!`_fga(&h#@d!`_pts\n"
@@ -20,7 +20,9 @@ const test_stats = "HOME\nnumber(&h#@d!`_fg(&h#@d!`_fga(&h#@d!`_pts\n"
 + "/Od@&?l#iTEAM\nteam fouls(&h#@d!`_timeouts left\n"
 + "9(&h#@d!`_4\n"
 + "8(&h#@d!`_3";
-const test_stats_with_footer = test_stats + "\n/Od@&?l#iFOOTER\n" + footer.toString().replace(/,/g,'(&h#@d!`_');
+const test_pbp = '<play vh="V" time="00:47" uni="12" team="MICH" checkname="ABDUR-RAHKMAN,M-A" action="GOOD" type="FT" vscore="78" hscore="69"></play>';
+const test_pbp_addition = test_pbp + '\n<play vh="V" time="09:49" uni="13" team="MICH" checkname="WAGNER,MORITZ" action="FOUL"></play>';
+const test_stats_with_footer_and_pbp = test_stats + "\n/Od@&?l#iFOOTER\n" + footer.toString().replace(/,/g,'(&h#@d!`_') + "\n/Od@&?l#iPBP\n" + test_pbp;
 const test_team_stats = "HOME\nnumber(&h#@d!`_fg(&h#@d!`_fga(&h#@d!`_pts\n30(&h#@d!`_2(&h#@d!`_4(&h#@d!`_6\n\
 31(&h#@d!`_3(&h#@d!`_3(&h#@d!`_7\n44(&h#@d!`_5(&h#@d!`_7(&h#@d!`_12\n02(&h#@d!`_1(&h#@d!`_5(&h#@d!`_2";
 const test_stats_array = [
@@ -76,6 +78,9 @@ function test() {
 	test_read_game_file_full();
 	test_write_player_stats_to_game_file();
 	test_write_team_stats_to_game_file();
+	test_get_string_play_for_xml();
+	test_read_pbp();
+	test_add_pbp();
 
 	clean();
 }
@@ -105,7 +110,7 @@ function test_create_game_file() {
 	var contents = "HOME\nnumber(&h#@d!`_fg(&h#@d!`_fga(&h#@d!`_pts\n"
 					+ "/Od@&?l#iAWAY\nnumber(&h#@d!`_fg(&h#@d!`_fga(&h#@d!`_pts\n"
 					+ "/Od@&?l#iTEAM\nteam fouls(&h#@d!`_timeouts left\n0(&h#@d!`_0\n0(&h#@d!`_0\n"
-					+ "/Od@&?l#iFOOTER\n" + footer.toString().replace(/,/g,'(&h#@d!`_');
+					+ "/Od@&?l#iFOOTER\n" + footer.toString().replace(/,/g,'(&h#@d!`_') + "\n/Od@&?l#iPBP";
 	drw.create_game_file(individual_stat_labels, team_stat_labels, file_name, footer);
 	if(fs.readFileSync(file_path, 'utf8') == contents) test_success("test_create_game_file");
 	else test_fail("test_create_game_file");
@@ -116,7 +121,7 @@ function test_initial_game_file_contents() {
 	var contents = "HOME\nnumber(&h#@d!`_fg(&h#@d!`_fga(&h#@d!`_pts\n"
 					+ "/Od@&?l#iAWAY\nnumber(&h#@d!`_fg(&h#@d!`_fga(&h#@d!`_pts\n"
 					+ "/Od@&?l#iTEAM\nteam fouls(&h#@d!`_timeouts left\n0(&h#@d!`_0\n0(&h#@d!`_0\n"
-					+ "/Od@&?l#iFOOTER\n" + footer.toString().replace(/,/g,'(&h#@d!`_');
+					+ "/Od@&?l#iFOOTER\n" + footer.toString().replace(/,/g,'(&h#@d!`_') + "\n/Od@&?l#iPBP";
 	if(drw.test_get_initial_game_file_contents(individual_stat_labels, team_stat_labels, footer) == contents) test_success("test_initial_game_file_contents");
 	else test_fail("test_initial_game_file_contents");
 }
@@ -126,7 +131,7 @@ function test_get_game_file_contents() {
 	var contents = "HOME\nnumber(&h#@d!`_fg(&h#@d!`_fga(&h#@d!`_pts\n"
 					+ "/Od@&?l#iAWAY\nnumber(&h#@d!`_fg(&h#@d!`_fga(&h#@d!`_pts\n"
 					+ "/Od@&?l#iTEAM\nteam fouls(&h#@d!`_timeouts left\n0(&h#@d!`_0\n0(&h#@d!`_0\n"
-					+ "/Od@&?l#iFOOTER\n" + footer.toString().replace(/,/g,'(&h#@d!`_');
+					+ "/Od@&?l#iFOOTER\n" + footer.toString().replace(/,/g,'(&h#@d!`_') + "\n/Od@&?l#iPBP";;
 	if(drw.test_get_game_file_contents(file_path) == contents) test_success("test_get_game_file_contents");
 	else test_fail("test_get_game_file_contents");
 }
@@ -195,7 +200,7 @@ function test_get_game_information_string() {
 }
 
 function test_overwrite_game_file() {
-	drw.test_overwrite_game_file(test_stats_with_footer, file_name);
+	drw.test_overwrite_game_file(test_stats_with_footer_and_pbp, file_name);
 	if(drw.read_game_file(file_name).toString() == test_stats_array.toString()) test_success("test_overwrite_game_file");
 	else test_fail("test_overwrite_game_file");
 }
@@ -214,7 +219,7 @@ function test_write_player_stats_to_game_file() {
 ['29',0,1,0] ],
 [ [ 'team fouls', 'timeouts left' ], [ '9', '4' ] ],
 [ [ 'team fouls', 'timeouts left' ], [ '8', '3' ] ],
-[ 'test', '1', 'test2/test3/4', 'test5' ] ];
+[ 'test', '1', 'test2/test3/test4', 'test5' ] ];
 
 	drw.write_player_stats_to_game_file(test_stat_changes_exist, file_name);
 	drw.write_player_stats_to_game_file(test_stat_changes_exist, file_name);
@@ -238,7 +243,7 @@ function test_write_team_stats_to_game_file() {
 ['29',0,1,0] ],
 [ [ 'team fouls', 'timeouts left' ], [ '10', '4' ] ],
 [ [ 'team fouls', 'timeouts left' ], [ '8', '1' ] ],
-[ 'test', '1', 'test2/test3/4', 'test5' ] ];
+[ 'test', '1', 'test2/test3/test4', 'test5' ] ];
 
 	drw.write_team_stats_to_game_file([1, 1, 0], file_name);
 	drw.write_team_stats_to_game_file([0, 0, -2], file_name);
@@ -262,8 +267,45 @@ function test_read_game_file_full() {
 ['03',4,5,8] ],
 [ [ 'team fouls', 'timeouts left' ], [ '9', '4' ] ],
 [ [ 'team fouls', 'timeouts left' ], [ '8', '3' ] ],
-[ 'test', '1', 'test2/test3/4', 'test5' ] ];
+[ 'test', '1', 'test2/test3/test4', 'test5' ] ];
 
 	if(drw.read_game_file(file_name).toString() == result_array.toString()) test_success("test_read_game_file (full)");
 	else test_fail("test_read_game_file (full)");
+}
+
+function test_get_string_play_for_xml() {
+	var vh = 'V';
+	var time = '00:47';
+	var uni = '12';
+	var team = 'MICH';
+	var checkname = 'ABDUR-RAHKMAN,M-A';
+	var action = 'GOOD';
+	var type = 'FT';
+	var vscore = '78';
+	var hscore = '69';
+
+	var xml = drw.test_get_string_play_for_xml(vh, time, uni, team, checkname, action, type, vscore, hscore);
+
+	if(xml == test_pbp) test_success("test_get_string_play_for_xml");
+	else test_fail("test_get_string_play_for_xml");
+}
+
+function test_read_pbp() {
+	var pbp_string = drw.test_read_pbp(file_name);
+	if(pbp_string == "PBP\n" + test_pbp) test_success("test_read_pbp");
+	else test_fail("test_read_pbp");
+}
+
+function test_add_pbp() {
+	'<play vh="V" time="09:49" uni="13" team="MICH" checkname="WAGNER,MORITZ" action="FOUL"></play>'
+	var vh = 'V';
+	var time = '09:49';
+	var uni = '13';
+	var team = 'MICH';
+	var checkname = 'WAGNER,MORITZ';
+	var action = 'FOUL';
+
+	drw.add_pbp(file_name, vh, time, uni, team, checkname, action, null, null, null);
+	if(drw.test_read_pbp(file_name) == "PBP\n" + test_pbp_addition) test_success("test_add_pbp");
+	else test_fail("test_add_pbp");
 }
