@@ -10,34 +10,8 @@ loaded_vis_team = "";
 window.onload = function(){
 	let args = ["Wisconsin", "Ohio State", "796", "518", "100/0", "0/100", "3/12/19", "4pm", "Kohl Center", "H|V|N", "league", ["schedule notes"], "quarters", "15", "15", ["Official Names"], ["Box comments"], "attendance"];
 
-    //TODO: LOAD GAMES FROM BACKEND HERE--need get_all_games function
+    //LOAD GAMES FROM BACKEND
     ipc.send("get-all-games");
-
-//	for(i = 0; i < args.length; i++) {
-//        app.games.push(
-//        {home_name: "", vis_name: "", date: "", time: "", site: "", site_code: 0, league: 0, schedule_note: "",
-//        quarters: 0, min_period: "", min_ot: "", vis_team: "", home_team: "", vis_record: "", home_record: "",
-//        officials: [], attendance: "", comments: ""}
-//        );
-//        app.games[app.games.length-1].home_name = args[0]
-//        app.games[app.games.length-1].vis_name = args[1]
-//        app.games[app.games.length-1].home_code = args[2]
-//        app.games[app.games.length-1].vis_code = args[3]
-//        app.games[app.games.length-1].home_record = args[4]
-//        app.games[app.games.length-1].vis_record = args[5]
-//        app.games[app.games.length-1].date = args[6]
-//        app.games[app.games.length-1].time = args[7]
-//        app.games[app.games.length-1].site = args[8]
-//        app.games[app.games.length-1].site_code = args[9]
-//        app.games[app.games.length-1].league = args[10]
-//        app.games[app.games.length-1].schedule_note = args[11]
-//        app.games[app.games.length-1].quarters = args[12]
-//        app.games[app.games.length-1].min_period = args[13]
-//        app.games[app.games.length-1].min_ot = args[14]
-//        app.games[app.games.length-1].officials = args[15]
-//        app.games[app.games.length-1].comments = args[16]
-//        app.games[app.games.length-1].attendance = args[17]
-//	}
 }
 
 function get_home_team() {
@@ -57,41 +31,36 @@ ipc.on('get-all-games-success', function(event, gameArray) {
     console.log("get-all-games-success");
 
 	for(i = 0; i < gameArray.length; i++) {
-	    for(j = 0; j < gameArray.length; j++) {
-            console.log(i + " "+j)
-            app.games.push(
-            {home_name: "", vis_name: "", date: "", time: "", site: "", site_code: 0, league: 0, schedule_note: "",
-            quarters: 0, min_period: "", min_ot: "", vis_team: "", home_team: "", vis_record: "", home_record: "",
-            officials: [], attendance: "", comments: ""}
-            );
-            app.games[app.games.length-1].home_name = gameArray[0]
-            app.games[app.games.length-1].vis_name = gameArray[1]
-            app.games[app.games.length-1].home_code = gameArray[2]
-            app.games[app.games.length-1].vis_code = gameArray[3]
-            app.games[app.games.length-1].home_record = gameArray[4]
-            app.games[app.games.length-1].vis_record = gameArray[5]
-            app.games[app.games.length-1].date = gameArray[6]
-            app.games[app.games.length-1].time = gameArray[7]
-            app.games[app.games.length-1].site = gameArray[8]
-            app.games[app.games.length-1].site_code = gameArray[9]
-            app.games[app.games.length-1].league = gameArray[10]
-            app.games[app.games.length-1].schedule_note = gameArray[11]
-            app.games[app.games.length-1].quarters = gameArray[12]
-            app.games[app.games.length-1].min_period = gameArray[13]
-            app.games[app.games.length-1].min_ot = gameArray[14]
-            app.games[app.games.length-1].officials = gameArray[15]
-            app.games[app.games.length-1].comments = gameArray[16]
-            app.games[app.games.length-1].attendance = gameArray[17]
-        }
+        console.log(i)
+        app.games.push(
+        {home_name: "", vis_name: "", date: "", time: "", site: "", site_code: 0, league: 0, schedule_note: "",
+        quarters: 0, min_period: "", min_ot: "", vis_team: "", home_team: "", vis_record: "", home_record: "",
+        officials: [], attendance: "", comments: ""}
+        );
+        app.games[app.games.length-1].home_name = gameArray[i][gameArray[i].length-1][0]
+        app.games[app.games.length-1].vis_name = gameArray[i][gameArray[i].length-1][1]
+        app.games[app.games.length-1].home_code = gameArray[i][gameArray[i].length-1][2]
+        app.games[app.games.length-1].vis_code = gameArray[i][gameArray[i].length-1][3]
+        app.games[app.games.length-1].home_record = gameArray[i][gameArray[i].length-1][4]
+        app.games[app.games.length-1].vis_record = gameArray[i][gameArray[i].length-1][5]
+        app.games[app.games.length-1].date = gameArray[i][gameArray[i].length-1][6]
+        app.games[app.games.length-1].time = gameArray[i][gameArray[i].length-1][7]
+        app.games[app.games.length-1].site = gameArray[i][gameArray[i].length-1][8]
+        app.games[app.games.length-1].site_code = gameArray[i][gameArray[i].length-1][9]
+        app.games[app.games.length-1].league = gameArray[i][gameArray[i].length-1][10]
+        app.games[app.games.length-1].schedule_note = gameArray[i][gameArray[i].length-1][11]
+        app.games[app.games.length-1].quarters = gameArray[i][gameArray[i].length-1][12]
+        app.games[app.games.length-1].min_period = gameArray[i][gameArray[i].length-1][13]
+        app.games[app.games.length-1].min_ot = gameArray[i][gameArray[i].length-1][14]
+        app.games[app.games.length-1].officials = gameArray[i][gameArray[i].length-1][15]
+        app.games[app.games.length-1].comments = gameArray[i][gameArray[i].length-1][16]
+        app.games[app.games.length-1].attendance = gameArray[i][gameArray[i].length-1][17]
+//        console.log("games: " + app.games[app.games.length-1])
 	}
-
-//    for(j = 0; j < app.games.length; j++) {
-	    console.log("games: " + app.games[app.games.length-1].date)
-//	}
 });
 
 ipc.on('get-game-success', function(event,args) {
-	console.log("get-game-success: " + args +"games: "+app.games);
+	console.log("get-game-success: " + args +" games: "+app.games);
 
 	for(i = 0; i < app.games.length; i++) {
 	    if(app.games[i].date == args[6] && app.games[i].time == args[7]) {
@@ -146,8 +115,8 @@ ipc.on('get-game-success', function(event,args) {
     document.getElementById("select_halves").selectedIndex = app.selected_game.quarters;//0 = halves, 1 = quarters
     document.getElementsByName("min_period")[0].value = app.selected_game.min_period;
     document.getElementsByName("min_ot")[0].value = app.selected_game.min_ot;
-    document.getElementsByName("vis_code")[0].value = app.selected_game.vis_team;
-    document.getElementsByName("home_code")[0].value = app.selected_game.home_team;
+    document.getElementsByName("vis_code")[0].value = app.selected_game.vis_code;
+    document.getElementsByName("home_code")[0].value = app.selected_game.home_code;
     document.getElementsByName("vis_record")[0].value = app.selected_game.vis_record;
     document.getElementsByName("home_record")[0].value = app.selected_game.home_record;
     document.getElementsByName("officials")[0].value = app.selected_game.officials;
@@ -430,8 +399,8 @@ var app = new Vue({
                 }
             }
 //            getGame(app.selected_game)
-            loaded_home_team = home_name
-            loaded_vis_team = vis_name
+//            loaded_home_team = home_name
+//            loaded_vis_team = vis_name
             window.location = "./index.html";
         }
     },
