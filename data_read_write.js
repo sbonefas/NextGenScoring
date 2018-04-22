@@ -67,6 +67,12 @@ exports.edit_game_directory = function(new_path) {
  */
 exports.get_all_games = function() {
 	file_names = fs.readdirSync(game_directory);
+	for(var i = 0; i < file_names.length; i++) {
+		if(file_names[i].substring(0,1) == '.') {
+			file_names.splice(i, 1);
+		}
+	}
+
 	games = Array(file_names.length);
 
 	// Convert file names in teams to contents

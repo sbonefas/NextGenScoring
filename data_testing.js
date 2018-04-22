@@ -81,6 +81,7 @@ function test() {
 	test_get_string_play_for_xml();
 	test_read_pbp();
 	test_add_pbp();
+	test_get_all_games();
 
 	clean();
 }
@@ -308,4 +309,12 @@ function test_add_pbp() {
 	drw.add_pbp(file_name, vh, time, uni, team, checkname, action, null, null, null);
 	if(drw.test_read_pbp(file_name) == "PBP\n" + test_pbp_addition) test_success("test_add_pbp");
 	else test_fail("test_add_pbp");
+}
+
+function test_get_all_games() {
+	var num_files = drw.get_all_games().length;
+	drw.create_game_file(['test'],['test2'],'.DS_STORE','footer');
+
+	if(drw.get_all_games().length == num_files) test_success("test_get_all_games");
+	else test_fail("test_get_all_games");
 }
