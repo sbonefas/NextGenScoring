@@ -432,7 +432,7 @@ var app = new Vue({
                  app.editing_team = false;
              }
            }
-         }
+         
          for(var i = 0; i < roster.length; i++)
          {
            document.getElementsByName("player_name_"+i)[1].value = roster[i].get_name();
