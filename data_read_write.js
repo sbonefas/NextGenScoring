@@ -493,6 +493,27 @@ function get_game_information_string(file_name) {
 	return game_information;
 }
 
+/** 
+ * Adds a play to the gamefile. This is for the XML file.
+ *
+ * @params vh "V" for visitor and "H" for home play
+ * @param time Time that the play happened
+ * @param uni Jersey number of the player that did the play
+ * @param team Team abbrev of the player that did the action (e.g. "WISC")
+ * @param checkname Name of the player that did the play
+ * @param action Kind of play that was performed (e.g. "BLOCK")
+ * @param type Additional information regarding the play (e.g. "DEFENSIVE")
+ * @param vscore Visitor's score after the play
+ * @param hscore Home score after the play
+ */
+exports.add_pbp = function(file_name, vh, time, uni, team, checkname, 
+								action, type, vscore, hscore) {
+	
+
+}
+
+
+
 /** These functions make private functions public for data_testing.js */
 
 exports.test_get_file_path = function(file_name) {
