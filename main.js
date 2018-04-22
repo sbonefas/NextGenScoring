@@ -15,7 +15,6 @@ const indiv_stat_headers = ['player_number','fg','fga','m3','3a','ft','fta','off
 const team_stat_headers = ['total_points', 'made_in_paint', 'fast_break', 'team_turnover', 'team_rebound', 'team_fouls', 'partial_timeouts_taken','full_timeouts_taken'];
 const Team = require('./Team.js');	//team object import
 const Player = require('./Player.js'); 	//player object import
-var teams = new Array();
 var current_game;
 
 let win;
@@ -247,7 +246,7 @@ function addPlay(keystrokes){
 		case 'f':
 			if (input[1].charAt(0) === 't'){		//technical foul (input[1] = 'T##')
 				statArray[1] = input[1].substring(1,3);		//take last two characters for player number
-				statArray[12] = 1;
+				statArray[12] = 1;		//technical foul
 				teamFoul(statArray[0]);
 			} else if (input[1] === 'b'){		//bench foul (team stat)
 				teamFoul(statArray[0]);
@@ -291,7 +290,7 @@ function addPlay(keystrokes){
 	}
 	console.log("in addPlay: " + statArray);
 	if (statArray[16] != 0) add_team_points(statArray[0],statArray[16]);
-	//play_by_play()
+	//drw.add_play(team, )
 	drw.write_player_stats_to_game_file(statArray, current_game);
 }
 
@@ -429,7 +428,7 @@ function timeout(team,type){
 }
 
 /*
-	What are you doing, dude?
+	Dude, what are you doing?
 	Scores 2 pts for other team
 */
 function wrongBasket(team){
