@@ -36,12 +36,12 @@ function createWindow() {
 	if(TESTING) {
 		//drw.create_game_file(stat_headers, test_file_name, args);
 		//drw.read_game_file(test_file_name);
-		createTeam("Badgers", "WIS", "Bo Ryan", "I Forgot", "Kohl Center");
+		//createTeam("Badgers", "WIS", "Bo Ryan", "I Forgot", "Kohl Center");
 	}
 	win.on('closed', () => {
 		win = null;
 		//drw.delete_file(test_file_name);
-		trw.delete_file("WIS");
+		//trw.delete_file("WIS");
 		app.quit();
 	})
 };
@@ -50,7 +50,7 @@ function createWindow() {
 function createTeam(name, code, head_coach, asst_coach, stadium){
 
 	var team = new Team(name, code, head_coach, asst_coach, stadium);
-	team.add_player_to_roster(new Player("Frank Kaminsky", 44, "center"));
+	team.add_player_to_roster(new Player("Frank Kaminsky", 44, "center", "super senior"));
 	console.log("Adding team " + name + "...");
 	try {
 		trw.create_team(team.get_code(), team.to_array());
@@ -84,33 +84,40 @@ function createTeam(name, code, head_coach, asst_coach, stadium){
  * INPUT HOLDS ARGUMENTS FROM FRONTEND
  * FORMAT:
  *
- * FOR FIELD GOALS: [PLAY_CODE, PLAYER_NUMBER, RESULT_CODE (R FOR OFF REBOUND, D FOR DEF REBOUND), REBOUND/ASSIST/BLOCK_PLAYER (REBOUND IF RESULT_CODE = 'R or X or D' / BLOCK IF RESULT_CODE = 'K' / ASSIST IF ANYTHING ELSE), HOME/AWAY, TIME_OF_PLAY, PRIMARY_PLAYER_NAME, SECONDARY_PLAYER_NAME (IF ASSIST OR REBOUND), VISITOR_SCORE, HOME_SCORE]
- *                  [    0    ,       1      ,                    2                              ,                                                             3                                                              ,     4    ,      5      ,           6        ,                  7                          ,       8      ,     9     ]          
+ * FOR FIELD GOALS: [PLAY_CODE, PLAYER_NUMBER, RESULT_CODE (R FOR OFF REBOUND, D FOR DEF REBOUND), REBOUND/ASSIST/BLOCK_PLAYER (REBOUND IF RESULT_CODE = 'R or X or D' / BLOCK IF RESULT_CODE = 'K' / ASSIST IF ANYTHING ELSE), HOME/AWAY, TIME_OF_PLAY, PRIMARY_PLAYER_NAME, SECONDARY_PLAYER_NAME (IF ASSIST OR REBOUND), VISITOR_SCORE, HOME_SCORE, PRIMARY_TEAM_CODE, SECONDARY_TEAM_CODE]
+ *                  [    0    ,       1      ,                    2                              ,                                                             3                                                              ,     4    ,      5      ,           6        ,                  7                          ,       8      ,     9     ,         10       ,         11         ]          
  *
  *
- * FOR FREETHROWS: [E, PLAYER_NUMBER, RESULT_CODE, REBOUND_PLAYER_NUMBER (IF RESULT_CODE IS R/D), HOME/AWAY, TIME_OF_PLAY, PRIMARY_PLAYER_NAME, SECONDARY_PLAYER_NAME (IF REBOUND), VISITOR_SCORE, HOME_SCORE]
- *
- *
- *
- * FOR REBOUNDS/ASSISTS/TURNOVERS/STEALS: [PLAY_CODE, PLAYER_NUMBER OR M (FOR TEAM TURNOVER), HOME/AWAY, TIME_OF_PLAY, PRIMARY_PLAYER_NAME, SECONDARY_PLAYER_NAME, VISITOR_SCORE, HOME_SCORE]
+ * FOR FREETHROWS: [E, PLAYER_NUMBER, RESULT_CODE, REBOUND_PLAYER_NUMBER (IF RESULT_CODE IS R/D), HOME/AWAY, TIME_OF_PLAY, PRIMARY_PLAYER_NAME, SECONDARY_PLAYER_NAME (IF REBOUND), VISITOR_SCORE, HOME_SCORE, PRIMARY_TEAM_CODE, SECONDARY_TEAM_CODE]
  *
  *
  *
- *
- * FOR FOULS: [F, T+PLAYER_NUMBER (IF TECHNICAL) OR B+PLAYER_NUMBER (IF BENCH FOUL) OR PLAYER_NUMBER, HOME/AWAY, TIME_OF_PLAY, PRIMARY_PLAYER_NAME, SECONDARY_PLAYER_NAME (IF ASSIST OR REBOUND), VISITOR_SCORE, HOME_SCORE]
+ * FOR REBOUNDS/ASSISTS/TURNOVERS/STEALS: [PLAY_CODE, PLAYER_NUMBER OR M (FOR TEAM TURNOVER), HOME/AWAY, TIME_OF_PLAY, PRIMARY_PLAYER_NAME, SECONDARY_PLAYER_NAME, VISITOR_SCORE, HOME_SCORE, PRIMARY_TEAM_CODE, SECONDARY_TEAM_CODE]
  *
  *
  *
  *
- * FOR CHANGING JERSEY: [F2, PLAYER_NUMBER, NEW_PLAYER_NUMBER, HOME/AWAY, TIME_OF_PLAY, PRIMARY_PLAYER_NAME, SECONDARY_PLAYER_NAME (IF ASSIST OR REBOUND), VISITOR_SCORE, HOME_SCORE]
+ * FOR FOULS: [F, T+PLAYER_NUMBER (IF TECHNICAL) OR B+PLAYER_NUMBER (IF BENCH FOUL) OR PLAYER_NUMBER, HOME/AWAY, TIME_OF_PLAY, PRIMARY_PLAYER_NAME, SECONDARY_PLAYER_NAME (IF ASSIST OR REBOUND), VISITOR_SCORE, HOME_SCORE, PRIMARY_TEAM_CODE, SECONDARY_TEAM_CODE]
  *
  *
  *
  *
- * FOR BLOCKS: [K, PLAYER_NUMBER, REBOUND?, HOME/AWAY, TIME_OF_PLAY, PRIMARY_PLAYER_NAME, SECONDARY_PLAYER_NAME (IF ASSIST OR REBOUND), VISITOR_SCORE, HOME_SCORE]
+ * FOR CHANGING JERSEY: [F2, PLAYER_NUMBER, NEW_PLAYER_NUMBER, HOME/AWAY, TIME_OF_PLAY, PRIMARY_PLAYER_NAME, SECONDARY_PLAYER_NAME (IF ASSIST OR REBOUND), VISITOR_SCORE, HOME_SCORE, PRIMARY_TEAM_CODE, SECONDARY_TEAM_CODE]
  *
  *
  *
+ *
+ * FOR BLOCKS: [K, PLAYER_NUMBER, REBOUND?, HOME/AWAY, TIME_OF_PLAY, PRIMARY_PLAYER_NAME, SECONDARY_PLAYER_NAME (IF ASSIST OR REBOUND), VISITOR_SCORE, HOME_SCORE, PRIMARY_TEAM_CODE, SECONDARY_TEAM_CODE]
+ *
+ * PLAY-BY-PLAY PARAMETERS GUIDE: 
+ * input.length-8 = home/away
+ * input.length-7 = time of play
+ * input.length-6 = primary player name
+ * input.length-5 = secondary player name
+ * input.length-4 = visitor score
+ * input.length-3 = home score
+ * input.length-2 = primary team code 
+ * input.length-1 = secondary team code
  *
  * PLAYER STATARRAY GETS SUBMITTED TO GAME FILE
  * FORMAT:
@@ -143,7 +150,14 @@ function addPlay(keystrokes){
 
 	//input parsing
 	statArray[1] = input[1];	//add player's number
-	var team = input[input.length-5];	//home or away always before [time_of_play, primary_player_name, secondary_player_name, visitor_score, home_score]
+	var team = input[input.length-8];	//home or away always before [time_of_play, primary_player_name, secondary_player_name, visitor_score, home_score]
+	var time_of_play = input[input.length-7];
+	var primary_player_name = input[input.length-6];
+	var secondary_player_name = input[input.length-5];
+	var visit_score = input[input.length-4];
+	var home_score = input[input.length-3];
+	var primary_team_code = input[input.length-2];
+	var secondary_team_code = input[input.length-1];
 	var actingPlayer;
 
 	if (team === 'h')
@@ -276,9 +290,12 @@ function addPlay(keystrokes){
 			}
 			else if (input[2] === 'd')
 			{
-				if (input[3] === 'm'){
+				if (input[3] === 'm')
+				{
 					teamRebound(statArray[0],1);
-				} else {
+				}
+				else 
+				{	
 					actingPlayer = input[3];
 					rebound(statArray[0],actingPlayer,1);
 				}
@@ -290,7 +307,7 @@ function addPlay(keystrokes){
 	}
 	console.log("in addPlay: " + statArray);
 	if (statArray[16] != 0) add_team_points(statArray[0],statArray[16]);
-	//drw.add_play(team, )
+	//drw.add_play(current_game, team, time_of_play, statArray[1], team_code, primary_player_name, action?, type?, visit_score, home_score);
 	drw.write_player_stats_to_game_file(statArray, current_game);
 }
 
@@ -308,8 +325,10 @@ function addPlay(keystrokes){
 	-Otherwise, just register rebound on current team
 */ 
 function rebound(team, player_number, def_rebound){
+	var t;
 	var statArray;
-	if (def_rebound != null){
+	if (def_rebound != null)
+	{
 		if (team === 1) t = 0;
 		else if (team === 0) t = 1;
 		statArray = [team, player_number,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0];
@@ -322,8 +341,8 @@ function rebound(team, player_number, def_rebound){
 /*
 	Assist made by player
 */
-function assist(t, player_number){
-	var statArray = [t, player_number,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0];
+function assist(team, player_number){
+	var statArray = [team, player_number,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0];
 	drw.write_player_stats_to_game_file(statArray, current_game);
 }
 
@@ -433,8 +452,8 @@ function timeout(team,type){
 */
 function wrongBasket(team){
 	var activeTeam;
-	if (t === 1) activeTeam = 0;
-	else if (t === 0) activeTeam = 1;
+	if (team === 1) activeTeam = 0;
+	else if (team === 0) activeTeam = 1;
 	drw.write_team_stats([activeTeam,2,0,0,0,0,0,0,0]);
 }
 

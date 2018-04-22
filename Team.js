@@ -57,7 +57,7 @@ module.exports = function (name, code, head_coach, asst_coach, stadium, roster){
 
 	this.add_player_to_roster = function(player){
 		//var p = new Player(name, number, position);
-		if (player.get_name() == null || player.get_number() == null || player.get_position() == null)
+		if (player.get_name() == null || player.get_number() == null || player.get_position() == null || player.get_year() == null)
 			throw "add_player_to_roster Error: object passed is not a player";
 
 		this.active_roster.push(player.to_array());
