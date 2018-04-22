@@ -5,6 +5,7 @@ var home = true;
 var inputtext = "";
 var currentlyInputtingPlay = "";
 var join_two_plays = "";
+var shot_code = "";
 
 var home_stats = {fg: Number.parseFloat(0.00).toFixed(2), tfg: Number.parseFloat(0.00).toFixed(2), ftp: Number.parseFloat(0.00).toFixed(2), tvs: 0, blocks: 0, steals: 0, paint: 0, offto: 0, sndch: 0, fastb: 0, fga: 0, tfga: 0, benchpts: 0}
 Vue.component('home_team_stats', {
@@ -322,6 +323,7 @@ var app = new Vue({
      else if(e.keyCode == 68) {
         if(currentlyInputtingPlay == "") {
           currentlyInputtingPlay = "shotattempt";
+          shot_code = "dunk";
           app.shot_attempt(e.keyCode);
         } else if(currentlyInputtingPlay == "rebound") {
           app.rebound(e.keyCode);
@@ -364,6 +366,15 @@ var app = new Vue({
      // J (or L,W) - Shot attempt - Note: Y and P are tested in another else if further down
      else if(e.keyCode == 74 || e.keyCode == 76 || e.keyCode == 87) {
         currentlyInputtingPlay = "shotattempt";
+        if(e.keyCode == 74) {
+          shot_code = "jumper";
+        }
+        if(e.keyCode == 76) {
+          shot_code = "layup";
+        }
+        if(e.keyCode == 87) {
+          shot_code = "wrongbasket";
+        }
         userinput.value = "";
         app.shot_attempt(e.keyCode);
      }// end J
@@ -409,6 +420,7 @@ var app = new Vue({
      else if(e.keyCode == 80) {
         if(currentlyInputtingPlay == "") {
           currentlyInputtingPlay = "shotattempt";
+          shot_code = "tipin";
           app.shot_attempt(e.keyCode);
         } else if(currentlyInputtingPlay == "shotattempt") {
           app.shot_attempt(e.keyCode);
@@ -453,6 +465,7 @@ var app = new Vue({
      // W - used in shot_attempt() for wrong basket
      else if(e.keyCode == 87) {
         currentlyInputtingPlay = "shotattempt";
+        shot_code = "wrongbasket";
         app.shot_attempt(e.keyCode);
      }
 
@@ -467,6 +480,7 @@ var app = new Vue({
      else if(e.keyCode == 89) {
         if(currentlyInputtingPlay == "") {
           currentlyInputtingPlay = "shotattempt";
+          shot_code = "3pointshot";
           app.shot_attempt(e.keyCode);
         } else if(currentlyInputtingPlay == "shotattempt") {
           app.shot_attempt(e.keyCode);
@@ -759,6 +773,7 @@ var app = new Vue({
         userinput.value = "";  // clears the text box
         currentlyInputtingPlay = "";
         join_two_plays = "";
+        shot_code = "";
    },
    change_clock(keyCode) {
       var char_entered = String.fromCharCode(keyCode);  // will be upper case
@@ -879,7 +894,7 @@ var app = new Vue({
             app.home_score += 2;
           }
           app.add_play("Scored in wrong basket");
-        } else if(inputtext.substring(0,1) == 'J') {
+        } else if(inputtext.substring(0,1) == 'J' || inputtext.substring(0,1) == 'Y' || inputtext.substring(0,1) == 'D' || inputtext.substring(0,1) == 'L' || inputtext.substring(0,1) == 'P') {
           if(inputtext.substring(3,4) == 'G' || inputtext.substring(3,4) == 'Q') {
             if(home) {
               app.jgq_good(app.home_team[app.get_player_index(inputtext.substring(1,3), true)], app.home_team, app.home_totals, home_stats);
@@ -1164,6 +1179,9 @@ var app = new Vue({
    },
    // J then G or Q - good field goal (2 points)
    jgq_good(person, team, totals, stats) {
+    if(inputtext.substring(0,1) == 'Y') {
+      app.jy_good_3(person, team, totals, stats);
+    } else {
          person.fg += 1;
          person.fa += 1;
          person.tp += 2;
@@ -1187,8 +1205,21 @@ var app = new Vue({
          }
 
          totals.tp = score;
+
+         console.log("shot_code:" + shot_code);
          // add to play by play
-         app.add_play(`${person.name} made a jump shot`);
+         if(shot_code == "jumper") {
+            app.add_play(`${person.name} made a jump shot`);
+         } else if(shot_code == "dunk") {
+            app.add_play(`${person.name} made a dunk`);
+         } else if(shot_code == "layup") {
+            app.add_play(`${person.name} made a layup`);
+         } else if(shot_code == "tipin") {
+            app.add_play(`${person.name} made a tip-in`);
+         } else if(shot_code == "3pointshot") {
+            app.add_play(`${person.name} made a 3 point shot`);
+         }
+         
 
          var total_attempts = 0;
          var total_fgs = 0;
@@ -1206,6 +1237,8 @@ var app = new Vue({
          else {
             app.home_possession();
          }
+    }
+         
    },
    // J then Y - good 3pt field goal
    jy_good_3(person, team, totals, stats) {
@@ -1263,7 +1296,18 @@ var app = new Vue({
          person.fa += 1;
          totals.fa += 1;
          // add to play by play - VIS
-         app.add_play(`${person.name} missed a field goal`);
+         if(shot_code == "jumper") {
+            app.add_play(`${person.name} missed a jump shot`);
+         } else if(shot_code == "dunk") {
+            app.add_play(`${person.name} missed a dunk`);
+         } else if(shot_code == "layup") {
+            app.add_play(`${person.name} missed a layup`);
+         } else if(shot_code == "tipin") {
+            app.add_play(`${person.name} missed a tip-in`);
+         } else if(shot_code == "3pointshot") {
+            app.add_play(`${person.name} missed a 3 point shot`);
+         }
+         // app.add_play(`${person.name} missed a field goal`);
          var total_attempts = 0;
          var total_fgs = 0;
          for(players = 0; players < team.length; players++)
@@ -1298,7 +1342,18 @@ var app = new Vue({
             score = app.vis_score;
          }
          totals.tp = score;
-         app.add_play(`${person.name} made a shot in the paint`);
+         if(shot_code == "jumper") {
+            app.add_play(`${person.name} made a jump shot in the paint`);
+         } else if(shot_code == "dunk") {
+            app.add_play(`${person.name} made a dunk in the paint`);
+         } else if(shot_code == "layup") {
+            app.add_play(`${person.name} made a layup in the paint`);
+         } else if(shot_code == "tipin") {
+            app.add_play(`${person.name} made a tip-in in the paint`);
+         } else if(shot_code == "3pointshot") {
+            app.add_play(`${person.name} made a 3 point shot in the paint`);
+         }
+         // app.add_play(`${person.name} made a shot in the paint`);
          var total_attempts = 0;
          var total_fgs = 0;
          for(players = 0; players < team.length; players++)
@@ -1345,7 +1400,18 @@ var app = new Vue({
         stats.paint += 2;
 
         // add to playby play
-         app.add_play(`Fast Break: ${person.name} made a shot in the paint`);
+        if(shot_code == "jumper") {
+            app.add_play(`Fast Break: ${person.name} made a jump shot in the paint`);
+         } else if(shot_code == "dunk") {
+            app.add_play(`Fast Break: ${person.name} made a dunk in the paint`);
+         } else if(shot_code == "layup") {
+            app.add_play(`Fast Break: ${person.name} made a layup in the paint`);
+         } else if(shot_code == "tipin") {
+            app.add_play(`Fast Break: ${person.name} made a tip-in in the paint`);
+         } else if(shot_code == "3pointshot") {
+            app.add_play(`Fast Break: ${person.name} made a 3 point shot in the paint`);
+         }
+         // app.add_play(`Fast Break: ${person.name} made a shot in the paint`);
          var total_attempts = 0;
          var total_fgs = 0;
          for(players = 0; players < team.length; players++)
@@ -1392,7 +1458,18 @@ var app = new Vue({
         stats.fastb += 2;
 
         // add to playby play
-         app.add_play(`Fast Break: ${person.name} made a shot`);
+        if(shot_code == "jumper") {
+            app.add_play(`Fast Break: ${person.name} made a jump shot`);
+         } else if(shot_code == "dunk") {
+            app.add_play(`Fast Break: ${person.name} made a dunk`);
+         } else if(shot_code == "layup") {
+            app.add_play(`Fast Break: ${person.name} made a layup`);
+         } else if(shot_code == "tipin") {
+            app.add_play(`Fast Break: ${person.name} made a tip-in`);
+         } else if(shot_code == "3pointshot") {
+            app.add_play(`Fast Break: ${person.name} made a 3 point shot`);
+         }
+         // app.add_play(`Fast Break: ${person.name} made a shot`);
          var total_attempts = 0;
          var total_fgs = 0;
          for(players = 0; players < team.length; players++)
