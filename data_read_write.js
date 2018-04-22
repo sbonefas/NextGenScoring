@@ -61,6 +61,23 @@ exports.edit_game_directory = function(new_path) {
 }
 
 /**
+ * Returns an array of array representations of games as defined in read_game
+ *
+ * @return array of games
+ */
+exports.get_all_games = function() {
+	file_names = fs.readdirSync(game_directory);
+	games = Array(file_names.length);
+
+	// Convert file names in teams to contents
+	for(var el_no = 0; el_no < file_names.length; el_no++) {
+		games[el_no] = exports.read_team(file_names[el_no].replace(".txt",""));
+	}
+
+	return teams;
+}
+
+/**
  * Creates an empty .txt game file with the given file_name.
  *
  * @param file_name Name of the file to create. The file name should
