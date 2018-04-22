@@ -32,6 +32,9 @@ var game_directory = "data/";
 const comma_replacement		= "(&h#@d!`_";
 const semicolon_replacement = "/Od@&?l#i";
 
+/** location of the old xml file to overwrite */
+const xml_file_path = "data/xml_file.xml";
+
 /**
  * Returns the filepath of a file with a given name
  *
@@ -615,6 +618,16 @@ function read_pbp(file_name) {
 	var pbp = stats_string_arr[4];
 
 	return pbp;
+}
+
+/** 
+ * Creates an XML file from a game file with the given file name. Stores it at
+ * the file path defined in xml_file_path defined at the top of this file.
+ *
+ * @param game_file_name name of the game file to generate xml file from
+ */
+exports.create_xml_file = function(game_file_name) {
+	
 }
 
 
