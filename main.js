@@ -414,6 +414,7 @@ function initGame(args){
 		event.sender.send('create-team-failure', team.get_code());
 		return;
 	}
+	console.log("Successfully created team " + team.get_name());
 	event.sender.send('create-team-success', team.get_code());
  });
 
