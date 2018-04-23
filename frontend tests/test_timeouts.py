@@ -18,6 +18,7 @@ class TestTimeOuts(unittest.TestCase):
         __class__.driver = webdriver.Firefox()
         index = configure_index()
         __class__.driver.get(index) 
+        __class__.driver.implicitly_wait(1)
         pass
 		
     @classmethod
@@ -202,7 +203,24 @@ class TestTimeOuts(unittest.TestCase):
         self.assertEqual("timeout", play_by_play[4])
         self.assertEqual(home_score + "-" + away_score, play_by_play[5]) 
         
+    def test_z_media_timeout_pbp(self):
+        print("test_z_media_timeout_pbp")
         
+        ## START WITH A HOME TEAM FULL TIMEOUT ##
+        home_score = __class__.driver.find_element_by_id("home").find_element_by_class_name("score").find_element_by_xpath("h2[2]").text;
+        away_score = __class__.driver.find_element_by_id("visitor").find_element_by_class_name("score").find_element_by_xpath("h2[2]").text;
+        clock = (__class__.driver.find_element_by_id("clockminutes").text + ":" + 
+                 __class__.driver.find_element_by_id("clockseconds").text)
+        
+        self.timeout(home=False, full=False, media=True)
+        
+        play_by_play = __class__.driver.find_element_by_id("playbyplaybox").find_element_by_xpath("table/tbody/tr[2]").text.split(" ")
+        
+        self.assertEqual(clock, play_by_play[0])
+        self.assertEqual("Media", play_by_play[1])
+        self.assertEqual("timeout", play_by_play[2])
+        self.assertEqual(home_score + "-" + away_score, play_by_play[3])     
+    
     def test_media_stop_clock(self):
         print("test_media_stop_clock")
         __class__.driver.find_element_by_id("home").send_keys(Keys.SPACE)

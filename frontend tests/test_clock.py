@@ -57,6 +57,7 @@ class TestClock(unittest.TestCase):
         __class__.driver = webdriver.Firefox()
         path = configure_index()
         __class__.driver.get(path)
+        __class__.driver.implicitly_wait(2)
         
     def tearDown(self):
          __class__.driver.quit()
@@ -103,43 +104,52 @@ class TestClock(unittest.TestCase):
         self.assertNotEqual(period_before, period_after, "Switching periods")
         self.assertEqual(period_after, "HALF 2", "Switch to 2nd half")
 
-        __class__.driver.find_element_by_id("clockminutes").click()        
+        __class__.driver.find_element_by_id("clockminutes").click()  
+        time.sleep(1.5)
         Alert(__class__.driver).accept()
         period_after = __class__.driver.find_element_by_id("clockdiv").find_element_by_xpath('h2').text
         self.assertEqual(period_after, "OT")
         
-        __class__.driver.find_element_by_id("clockminutes").click()        
+        __class__.driver.find_element_by_id("clockminutes").click()   
+        time.sleep(1.5)        
         Alert(__class__.driver).accept()
         period_after = __class__.driver.find_element_by_id("clockdiv").find_element_by_xpath('h2').text
         self.assertEqual(period_after, "2OT")
         
-        __class__.driver.find_element_by_id("clockminutes").click()        
+        __class__.driver.find_element_by_id("clockminutes").click()   
+        time.sleep(1.5)        
         Alert(__class__.driver).accept()
         period_after = __class__.driver.find_element_by_id("clockdiv").find_element_by_xpath('h2').text
         self.assertEqual(period_after, "3OT")
         
-        __class__.driver.find_element_by_id("clockminutes").click()        
+        __class__.driver.find_element_by_id("clockminutes").click()  
+        time.sleep(1.5)        
         Alert(__class__.driver).accept()
         period_after = __class__.driver.find_element_by_id("clockdiv").find_element_by_xpath('h2').text
         self.assertEqual(period_after, "4OT")
         
-        __class__.driver.find_element_by_id("clockminutes").click()        
+        __class__.driver.find_element_by_id("clockminutes").click()  
+        time.sleep(1.5)        
         Alert(__class__.driver).accept()
         period_after = __class__.driver.find_element_by_id("clockdiv").find_element_by_xpath('h2').text
         self.assertEqual(period_after, "5OT")
         
-        __class__.driver.find_element_by_id("clockminutes").click()        
+        __class__.driver.find_element_by_id("clockminutes").click() 
+        time.sleep(1.5)        
         Alert(__class__.driver).accept()
         period_after = __class__.driver.find_element_by_id("clockdiv").find_element_by_xpath('h2').text
         self.assertEqual(period_after, "6OT")
         
-        __class__.driver.find_element_by_id("clockminutes").click()        
+        __class__.driver.find_element_by_id("clockminutes").click()
+        time.sleep(1.5)        
         Alert(__class__.driver).accept()
         period_after = __class__.driver.find_element_by_id("clockdiv").find_element_by_xpath('h2').text
         self.assertEqual(period_after, "7OT")
         
-        __class__.driver.find_element_by_id("clockminutes").click()    
-        Alert(__class__.driver).accept()        
+        __class__.driver.find_element_by_id("clockminutes").click()
+        time.sleep(1.5)        
+        Alert(__class__.driver).accept()   
+        time.sleep(1.5)
         text = Alert(__class__.driver).text
         self.assertEqual(text, "Maximum overtimes reached.")
         
