@@ -1,4 +1,4 @@
-// const electron = require("electron");
+const electron = require("electron");
 const ipc = electron.ipcRenderer;
 
 window.onload = function(){
@@ -1331,13 +1331,13 @@ var app = new Vue({
             if(inputtext.substring(1,2) == 'T') { // media timeout
               app.add_play("Media timeout");
               var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-              ipc.send('add-play', "O T N " + curr_time + " null null " + app.vis_score + " " + app.home_score);
+              ipc.send('add-play', "O T N " + curr_time + " null null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
             } else if(inputtext.substring(1,2) == 'H' && inputtext.substring(2,3) == 'M') { // home full timeout
               if(app.home_full > 0) {
                 app.home_full -= 1;
                 app.add_play(app.teams[0] + " full timeout");
                 var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-                ipc.send('add-play', "O M H " + curr_time + " null null " + app.vis_score + " " + app.home_score);
+                ipc.send('add-play', "O M H " + curr_time + " null null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
               } else {
                 // inputvalidator.innerText = "Out of timeouts. Press ESC/F10 to clear input.";
               }
@@ -1346,7 +1346,7 @@ var app = new Vue({
                 app.home_partial -= 1;
                 app.add_play(app.teams[0] + " partial timeout");
                 var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-                ipc.send('add-play', "O 3 H " + curr_time + " null null " + app.vis_score + " " + app.home_score);
+                ipc.send('add-play', "O 3 H " + curr_time + " null null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
               } else {
                 // inputvalidator.innerText = "Out of timeouts. Press ESC/F10 to clear input.";
               }
@@ -1355,7 +1355,7 @@ var app = new Vue({
                 app.vis_full -= 1;
                 app.add_play(app.teams[1] + " full timeout");
                 var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-                ipc.send('add-play', "O M V " + curr_time + " null null " + app.vis_score + " " + app.home_score);
+                ipc.send('add-play', "O M V " + curr_time + " null null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
               } else {
                 // inputvalidator.innerText = "Out of timeouts. Press ESC/F10 to clear input.";
               }
@@ -1364,7 +1364,7 @@ var app = new Vue({
                 app.vis_partial -= 1;
                 app.add_play(app.teams[1] + " partial timeout");
                 var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-                ipc.send('add-play', "O 3 v " + curr_time + " null null " + app.vis_score + " " + app.home_score);
+                ipc.send('add-play', "O 3 v " + curr_time + " null null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
               } else {
                 // inputvalidator.innerText = "Out of timeouts. Press ESC/F10 to clear input.";
               }
@@ -1818,7 +1818,7 @@ var app = new Vue({
                     app.add_play("Assist by " + app.home_team[index].name);
                     
                     var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-                    ipc.send('add-play', "A " + player_number + " H " + curr_time + " " + app.get_player_name(player_number, true) + " null " + app.vis_score + " " + app.home_score);
+                    ipc.send('add-play', "A " + player_number + " H " + curr_time + " " + app.get_player_name(player_number, true) + " null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
 
                 }
              }
@@ -1833,7 +1833,7 @@ var app = new Vue({
                     app.add_play("Assist by " + app.vis_team[index].name);
 										
 										var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-                    ipc.send('add-play', "A " + player_number + " V " + curr_time + " " + app.get_player_name(player_number, false) + " null " + app.vis_score + " " + app.home_score);
+                    ipc.send('add-play', "A " + player_number + " V " + curr_time + " " + app.get_player_name(player_number, false) + " null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
                 }
              }
            }
@@ -1870,7 +1870,7 @@ var app = new Vue({
                     home_stats.steals += 1;
                     app.add_play("Steal by " + app.home_team[index].name);
                     var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-                    ipc.send('add-play', "S " + player_number + " H " + curr_time + " " + app.get_player_name(player_number, true) + " null " + app.vis_score + " " + app.home_score);
+                    ipc.send('add-play', "S " + player_number + " H " + curr_time + " " + app.get_player_name(player_number, true) + " null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
                 }
              }
            }
@@ -1885,7 +1885,7 @@ var app = new Vue({
                     vis_stats.steals += 1;
                     app.add_play("Steal by " + app.vis_team[index].name);
                     var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-                    ipc.send('add-play', "S " + player_number + " V " + curr_time + " " + app.get_player_name(player_number, false) + " null " + app.vis_score + " " + app.home_score);
+                    ipc.send('add-play', "S " + player_number + " V " + curr_time + " " + app.get_player_name(player_number, false) + " null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
                 }
              }
            }
@@ -1914,14 +1914,14 @@ var app = new Vue({
             home_stats.tvs += 1;
             app.home_totals.to += 1
             var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-            ipc.send('add-play', "T M H " + curr_time + " null null " + app.vis_score + " " + app.home_score);
+            ipc.send('add-play', "T M H " + curr_time + " null null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
             app.add_play("Turnover by " + app.teams[0]);
             app.vis_possession(); // switch possession
           } else {
             vis_stats.tvs += 1;
             app.vis_totals.to += 1
             var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-            ipc.send('add-play', "T M V " + curr_time + " null null " + app.vis_score + " " + app.home_score);
+            ipc.send('add-play', "T M V " + curr_time + " null null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
             app.add_play("Turnover by " + app.teams[1]);
             app.home_possession(); // switch possession
           }
@@ -1934,7 +1934,7 @@ var app = new Vue({
                   app.home_team[index].to += 1;
                   app.add_play("Turnover by " + app.home_team[index].name);
                   var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-                  ipc.send('add-play', "T " + player_number + " H " + curr_time + " " + app.get_player_name(player_number, true) + " null " + app.vis_score + " " + app.home_score);
+                  ipc.send('add-play', "T " + player_number + " H " + curr_time + " " + app.get_player_name(player_number, true) + " null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
                   break;
               }
             }
@@ -1947,7 +1947,7 @@ var app = new Vue({
                     app.vis_team[index].to += 1;
                     app.add_play("Turnover by " + app.vis_team[index].name);
                     var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-                    ipc.send('add-play', "T " + player_number + " V " + curr_time + " " + app.get_player_name(player_number, false) + " null " + app.vis_score + " " + app.home_score);
+                    ipc.send('add-play', "T " + player_number + " V " + curr_time + " " + app.get_player_name(player_number, false) + " null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
                     break;
                 }
            }
@@ -1990,7 +1990,7 @@ var app = new Vue({
             }
             app.add_play("Bench foul on the home team.");
             var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-            ipc.send('add-play', "F B H " + curr_time + " null null " + app.vis_score + " " + app.home_score);
+            ipc.send('add-play', "F B H " + curr_time + " null null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
             app.vis_possession(); // switch possession
         } else {
             home = false;
@@ -2004,7 +2004,7 @@ var app = new Vue({
             }
             app.add_play("Bench foul on the visiting team.");
             var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-            ipc.send('add-play', "F B V " + curr_time + " null null " + app.vis_score + " " + app.home_score);
+            ipc.send('add-play', "F B V " + curr_time + " null null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
             app.home_possession(); // switch possession
         }
       } else if(inputtext.substring(2,3) == 'T') {
@@ -2021,7 +2021,7 @@ var app = new Vue({
                   }
                   app.add_play("Technical foul on " + app.home_team[index].name);
                   var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-                  ipc.send('add-play', "F T " + player_number + " H " + curr_time + " " + app.get_player_name(player_number, true) + " null " + app.vis_score + " " + app.home_score);
+                  ipc.send('add-play', "F T " + player_number + " H " + curr_time + " " + app.get_player_name(player_number, true) + " null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
               }
            }
            if(home_has_possession) {
@@ -2046,7 +2046,7 @@ var app = new Vue({
                     }
                     app.add_play("Technical foul on " + app.vis_team[index].name);
                     var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-                    ipc.send('add-play', "F T " + player_number + " V " + curr_time + " " + app.get_player_name(player_number, false) + " null " + app.vis_score + " " + app.home_score);
+                    ipc.send('add-play', "F T " + player_number + " V " + curr_time + " " + app.get_player_name(player_number, false) + " null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
                 }
              }
              if(!home_has_possession) {
@@ -2073,7 +2073,7 @@ var app = new Vue({
                   }
                   app.add_play("Foul on " + app.home_team[index].name);
                   var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-                  ipc.send('add-play', "F " + player_number + " H " + curr_time + " " + app.get_player_name(player_number, true) + " null " + app.vis_score + " " + app.home_score);
+                  ipc.send('add-play', "F " + player_number + " H " + curr_time + " " + app.get_player_name(player_number, true) + " null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
               }
            }
           if(home_has_possession) {
@@ -2098,7 +2098,7 @@ var app = new Vue({
                     }
                     app.add_play("Foul on " + app.vis_team[index].name);
                     var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-                    ipc.send('add-play', "F " + player_number + " V " + curr_time + " " + app.get_player_name(player_number, false) + " null " + app.vis_score + " " + app.home_score);
+                    ipc.send('add-play', "F " + player_number + " V " + curr_time + " " + app.get_player_name(player_number, false) + " null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
                 }
              }
              if(!home_has_possession) {
@@ -2239,7 +2239,7 @@ var app = new Vue({
                     app.home_totals.rb_def += 1;
                     app.add_play("Defensive rebound by " + app.home_team[index].name);
                     var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-                    ipc.send('add-play', "R " + player_number + " D V " + curr_time + " " + app.get_player_name(player_number, true) + " null " + app.vis_score + " " + app.home_score);
+                    ipc.send('add-play', "R " + player_number + " D V " + curr_time + " " + app.get_player_name(player_number, true) + " null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
                     app.home_possession();
                   } else {
                     inputvalidator.innerText = "Player #" + player_number + " is not in the game. Press ESC/F10 to clear input.";
@@ -2258,7 +2258,7 @@ var app = new Vue({
                     app.vis_totals.rb_def += 1;
                     app.add_play("Defensive rebound by " + app.vis_team[index].name);
                     var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-                    ipc.send('add-play', "R " + player_number + " D H " + curr_time + " " + app.get_player_name(player_number, false) + " null " + app.vis_score + " " + app.home_score);
+                    ipc.send('add-play', "R " + player_number + " D H " + curr_time + " " + app.get_player_name(player_number, false) + " null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
                     app.vis_possession();
                   } else {
                     inputvalidator.innerText = "Player #" + player_number + " is not in the game. Press ESC/F10 to clear input.";
@@ -2279,7 +2279,7 @@ var app = new Vue({
                 app.home_totals.rb_off += 1;
                 app.add_play("Offensive rebound by " + app.home_team[index].name);
                 var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-                ipc.send('add-play', "R " + player_number + " R H " + curr_time + " " + app.get_player_name(player_number, true) + " null " + app.vis_score + " " + app.home_score);
+                ipc.send('add-play', "R " + player_number + " R H " + curr_time + " " + app.get_player_name(player_number, true) + " null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
                 app.home_possession();
               } else {
                 inputvalidator.innerText = "Player #" + player_number + " is not in the game. Press ESC/F10 to clear input.";
@@ -2293,9 +2293,8 @@ var app = new Vue({
                 app.vis_team[index].rb_off += 1;
                 app.vis_totals.rb_off += 1;
                 app.add_play("Offensive rebound by " + app.vis_team[index].name);
-                ipc.send('add-play', "R " + player_number + " R V");
                 var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-                ipc.send('add-play', "R " + player_number + " R V " + curr_time + " " + app.get_player_name(player_number, false) + " null " + app.vis_score + " " + app.home_score);
+                ipc.send('add-play', "R " + player_number + " R V " + curr_time + " " + app.get_player_name(player_number, false) + " null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
                 app.vis_possession();
               } else {
                 inputvalidator.innerText = "Player #" + player_number + " is not in the game. Press ESC/F10 to clear input.";
@@ -2312,12 +2311,12 @@ var app = new Vue({
         if(home) {
           app.vis_totals.rb_def += 1;
           var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-          ipc.send('add-play', "R M D H " + curr_time + " null null " + app.vis_score + " " + app.home_score);
+          ipc.send('add-play', "R M D H " + curr_time + " null null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
           app.vis_possession();
         } else {
           app.home_totals.rb_def += 1;
           var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-          ipc.send('add-play', "R M D V " + curr_time + " null null " + app.vis_score + " " + app.home_score);
+          ipc.send('add-play', "R M D V " + curr_time + " null null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
           app.home_possession();
         }
 
@@ -2326,11 +2325,11 @@ var app = new Vue({
         if(home) {
           app.home_totals.rb_off += 1;
           var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-          ipc.send('add-play', "R M H " + curr_time + " null null " + app.vis_score + " " + app.home_score);
+          ipc.send('add-play', "R M H " + curr_time + " null null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
         } else {
           app.vis_totals.rb_off += 1;
           var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-          ipc.send('add-play', "R M V " + curr_time + " null null " + app.vis_score + " " + app.home_score);
+          ipc.send('add-play', "R M V " + curr_time + " null null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
         }
         app.add_play("Offensive Team Rebound");
       }
@@ -2432,14 +2431,6 @@ var app = new Vue({
       if(keyCode == 13) char_entered = "ENTER";
       inputtext = inputtext + char_entered;
       if(char_entered == "ENTER") {
-        // console.log("home before switch:" + home);
-        // if(!switch_possession) {
-        //     home = !home;
-        //   }
-        // console.log("home after switch:" + home);
-        // if(inputtext.substring(2,3) == 'D') {
-        //   home = !home;
-        // }
         if(inputtext.substring(3,4) == 'E') {
           var ft_player_num = inputtext.substring(1,3);
           if(home) {
@@ -2452,9 +2443,9 @@ var app = new Vue({
                 app.home_totals.fta += 1;
                 app.home_totals.tp += 1;
                 app.home_score += 1;
-                console.log("index:" + index);
                 app.add_play("Made free throw by " + app.home_team[index].name);
-                ipc.send('add-play', "E " + ft_player_num + " E H");
+                var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
+                ipc.send('add-play', "E " + ft_player_num + " E H " + curr_time + " " + app.get_player_name(ft_player_num, true) + " null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
                 home_stats.ftp = Number.parseFloat((app.home_totals.ftm/app.home_totals.fta)*100).toFixed(2);
               }
             }
@@ -2470,7 +2461,8 @@ var app = new Vue({
                 app.vis_totals.tp += 1;
                 app.vis_score += 1;
                 app.add_play("Made free throw by " + app.vis_team[index].name);
-                ipc.send('add-play', "E " + ft_player_num + " E V");
+                var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
+                ipc.send('add-play', "E " + ft_player_num + " E V " + curr_time + " " + app.get_player_name(ft_player_num, false) + " null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
                 vis_stats.ftp = Number.parseFloat((app.vis_totals.ftm/app.vis_totals.fta)*100).toFixed(2);
               }
             }
@@ -2484,7 +2476,8 @@ var app = new Vue({
                 app.home_team[index].fta += 1;
                 app.home_totals.fta += 1;
                 app.add_play("Missed free throw by " + app.home_team[index].name);
-                ipc.send('add-play', "E " + ft_player_num + " M H");
+                var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
+                ipc.send('add-play', "E " + ft_player_num + " M H " + curr_time + " " + app.get_player_name(ft_player_num, true) + " null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
                 home_stats.ftp = Number.parseFloat((app.home_totals.ftm/app.home_totals.fta)*100).toFixed(2);
               }
             }
@@ -2494,7 +2487,8 @@ var app = new Vue({
               app.vis_team[index].fta += 1;
               app.vis_totals.fta += 1;
               app.add_play("Missed free throw by " + app.vis_team[index].name);
-              ipc.send('add-play', "E " + ft_player_num + " M V");
+              var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
+              ipc.send('add-play', "E " + ft_player_num + " M V " + curr_time + " " + app.get_player_name(ft_player_num, false) + " null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
               vis_stats.ftp = Number.parseFloat((app.vis_totals.ftm/app.vis_totals.fta)*100).toFixed(2);
             }
           }
@@ -2508,7 +2502,8 @@ var app = new Vue({
               app.home_team[index].fta += 1;
               app.home_totals.fta += 1;
               app.add_play("Missed free throw by " + app.home_team[index].name);
-              ipc.send('add-play', "E " + ft_player_num + " R H");
+              var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
+              ipc.send('add-play', "E " + ft_player_num + " R H " + curr_time + " " + app.get_player_name(ft_player_num, true) + " null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
               home_stats.ftp = Number.parseFloat((app.home_totals.ftm/app.home_totals.fta)*100).toFixed(2);
             }
           }
@@ -2519,6 +2514,8 @@ var app = new Vue({
               app.vis_totals.fta += 1;
               app.add_play("Missed free throw by " + app.vis_team[index].name);
               ipc.send('add-play', "E " + ft_player_num + " R V");
+              var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
+              ipc.send('add-play', "E " + ft_player_num + " R V " + curr_time + " " + app.get_player_name(ft_player_num, false) + " null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
               vis_stats.ftp = Number.parseFloat((app.vis_totals.ftm/app.vis_totals.fta)*100).toFixed(2);
             }
           }
@@ -2580,7 +2577,8 @@ var app = new Vue({
                   if(blocker == app.home_team[index].number && app.check_in_game(blocker, true)) {
                     app.home_team[index].blk += 1;
                     home_stats.blocks += 1;
-                    ipc.send('add-play', "K " + blocker + " H");
+                    var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
+                    ipc.send('add-play', "K " + blocker + " H " + curr_time + " " + app.get_player_name(blocker, true) + " null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
                     app.vis_possession();
                     break;
                   }
@@ -2591,7 +2589,8 @@ var app = new Vue({
                 if(blocker == app.vis_team[index].number && app.check_in_game(blocker, false)) {
                   app.vis_team[index].blk += 1;
                   vis_stats.blocks += 1;
-                  ipc.send('add-play', "K " + blocker + " V");
+                  var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
+                  ipc.send('add-play', "K " + blocker + " V " + curr_time + " " + app.get_player_name(blocker, false) + " null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
                   app.home_possession();
                   break;
                 }
