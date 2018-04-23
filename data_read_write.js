@@ -22,7 +22,6 @@
  *																	*
   *******************************************************************/
 
-
 const fs = require("fs");	//node.js filesystem
 
 /** path to the folder where data is kept */
@@ -58,6 +57,23 @@ exports.edit_game_directory = function(new_path) {
 	if(!fs.existsSync(new_path)) return false;
 	game_directory = new_path;
 	return true;
+}
+
+/**
+ * Returns an array of array representations of games as defined in read_game
+ *
+ * @return array of games
+ */
+exports.get_all_games = function() {
+	file_names = fs.readdirSync(game_directory);
+	games = Array(file_names.length);
+
+	// Convert file names in teams to contents
+	for(var el_no = 0; el_no < file_names.length; el_no++) {
+		games[el_no] = exports.read_game_file(file_names[el_no].replace(".txt",""));
+	}
+
+	return games;
 }
 
 /**
@@ -475,6 +491,27 @@ function get_game_information_string(file_name) {
 
 	return game_information;
 }
+
+/**
+ * Adds a play to the gamefile. This is for the XML file.
+ *
+ * @params vh "V" for visitor and "H" for home play
+ * @param time Time that the play happened
+ * @param uni Jersey number of the player that did the play
+ * @param team Team abbrev of the player that did the action (e.g. "WISC")
+ * @param checkname Name of the player that did the play
+ * @param action Kind of play that was performed (e.g. "BLOCK")
+ * @param type Additional information regarding the play (e.g. "DEFENSIVE")
+ * @param vscore Visitor's score after the play
+ * @param hscore Home score after the play
+ */
+exports.add_pbp = function(file_name, vh, time, uni, team, checkname,
+								action, type, vscore, hscore) {
+
+
+}
+
+
 
 /** These functions make private functions public for data_testing.js */
 

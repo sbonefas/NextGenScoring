@@ -60,7 +60,8 @@
                         F7 - Change the clock time</br>
                         F10 - Clear and do not complete any partially keyed action</br>
                         SPACEBAR - Start or Stop the Clock</br>
-                        ESC - Return to Main Menu
+                        ESC - Return to Main Menu</br>
+                        To change period (Half 1, Half 2, OT, 2OT, etc) click on the clock to advance to the next period. Max: 7 overtime periods.</br>
                         </p>
                     </div>
                 </div>
@@ -260,7 +261,7 @@
 			//Keep clock functionality on the frontend
 			// Uses EasyTimer.js from Github https://albert-gonzalez.github.io/easytimer.js/
 			var timer = new Timer();
-  			timer.start({countdown: true, startValues: {seconds: 1200}});
+  			timer.start({countdown: true, startValues: {minutes: 20}});
   			timer.pause();
   			var paused = true;
 			$('#clockdiv #clockh2').html(timer.getTimeValues().toString());
@@ -279,6 +280,10 @@
 			    $('#clockdiv #clockminutes').html('00');
 			    $('#clockdiv #clockseconds').html('00');
 			});
+            timer.addEventListener('reset', function (e) {
+                $('#clockdiv #clockminutes').html('20');
+                $('#clockdiv #clockseconds').html('00');
+            });
 
 			document.body.onkeyup = function(e){
     			if(e.keyCode == 32){  // used to have  && e.target == document.body but with the new user input methods we had to remove it
