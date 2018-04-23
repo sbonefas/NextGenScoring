@@ -853,12 +853,17 @@ var app = new Vue({
        }
    },
    add_play(myPlayDcsrp) {
-        if(home) {
+        if(myPlayDcsrp == "Media timeout") {
+          currTeam = " ";
+        } else {
+          if(home) {
             currTeam = app.teams[0];
-        }
-        else {
+          }
+          else {
             currTeam = app.teams[1]
+          }
         }
+        
         app.playlist.unshift({ time: document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText, team: currTeam, playdscrp: myPlayDcsrp, score: app.home_score + "-" + app.vis_score })
    },
    // Returns player index or -1 if they cannot be found
