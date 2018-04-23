@@ -38,10 +38,13 @@ window.onload = function(){
 	ipc.send('add-play', pers_foul);
 	ipc.send('add-play', bench_foul);
 
+//    app.teams[0] = loaded_home_name
+//    app.teams[1] = loaded_vis_name
 }
 
 ipc.on('init-game-failure', function(event,args) {
-	console.log("An error occurred in initializing game " + args + " to file : " + e);
+	console.log("An error occurred in initializing game " + args + " to file : " );
+	//+ e);
 });
 
 ipc.on('init-game-success', function(event,args) {
@@ -83,9 +86,9 @@ Vue.component('vis_team_stats', {
   }
 })
 
-function getGame(args) {
-    console.log(args)
-}
+//function getGame(args) {
+//    console.log(args)
+//}
 
 function launchClockPrompt() { // called when the user clicks on the game clock in the scorebar. Is used to edit the clock time and change between half 1, half 2, and OT
   var result = window.confirm("Press OK to advance to new period.");
