@@ -1274,8 +1274,9 @@ var app = new Vue({
            total_threes += team[players].m3;
            total_threes_attmept += team[players].a3;
          }
-         stats.fg = Number.parseFloat(total_fgs/total_attempts).toFixed(2);
-         stats.tfg = Number.parseFloat(total_threes/total_threes_attmept).toFixed(2);
+         stats.fg = Number.parseFloat((total_fgs/total_attempts)*100).toFixed(2);
+         stats.tfg = Number.parseFloat((total_threes/total_threes_attmept)*100).toFixed(2);
+         console.log("sfg: " + stats.fg);
          if(home) {
             app.home_score += 3;
             score = app.home_score;
