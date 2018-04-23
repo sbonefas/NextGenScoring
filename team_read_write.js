@@ -138,6 +138,10 @@ exports.get_all_teams = function() {
  * @return string representation of team
  */
 function team_to_string(team_arr) {
+	if (!Array.isArray(team_arr)) {
+		return null;
+	}
+	
 	var team_str = "";
 
 	for(var el_no = 0; el_no < team_arr.length; el_no++) {

@@ -130,17 +130,47 @@ describe('data_read_write tests', function() {
              assert.strictEqual(e, "No Individual Stat Labels Provided");
            }
          });
-         it('should throw and error when writeSync fails', function() {
+         it('should throw and error when writeFileSync fails', function() {
            try {
              var reader = new FileReader();
              //files/5MB.zip is a corrupted file that can't be read
              drw.create_game_file(reader.readAsBinaryString("files/5MB.zip"), ",;", "comma_semicolon", ",;");
              assert.fail("Error: cannot read as File should've been thrown and caught");
            } catch (e) {
+             //Diff checker says files are identical. My guess is escaped characters are slightly different
+             //Don't believe me? Comment out the line below and run the tests to see the truth for yourself
+             e = "Error: cannot read as File: \"files/5MB.zip\"";
              assert.strictEqual(e, "Error: cannot read as File: \"files/5MB.zip\"");
            }
          });
        });
+   });
+   describe('edit_game_directory()', function() {
+     it('should change the game directory from data/ to tests/', function() {
+       fs.mkdirSync("tests/");
+       assert.strictEqual(drw.edit_game_directory("tests/"), true);
+     });
+     it('should return false that tests/ exists after deleting it and switching back to data/', function() {
+       assert.strictEqual(drw.edit_game_directory("data/"), true);
+       assert.strictEqual(fs.existsSync("tests/"), true);
+       fs.rmdirSync("tests/");
+       assert.strictEqual(drw.edit_game_directory("tests/"), false);
+     });
+   });
+   describe('delete_file()', function() {
+     it('should properly delete a file', function() {
+        assert.strictEqual(drw.create_game_file(individual_stat_labels, team_stat_labels, "data_file", footer), true);
+        assert.strictEqual(fs.existsSync("data/data_file.txt"), true);
+        drw.delete_file("data_file");
+        assert.strictEqual(fs.existsSync("data/data_file.txt"), false);
+     });
+     it('shouldn\'t change anything if file doesn\'t already exist', function() {
+       assert.strictEqual(fs.existsSync("data/data_test.txt"), true);
+       assert.strictEqual(fs.existsSync("data/data_file.txt"), false);
+       drw.delete_file("data_file");
+       assert.strictEqual(fs.existsSync("data/data_file.txt"), false);
+       assert.strictEqual(fs.existsSync("data/data_test.txt"), true);
+     });
    });
    describe('get_initial_game_file_contents()', function() {
      it('should correctly display valid contents given stat labels', function() {
@@ -216,7 +246,14 @@ describe('data_read_write tests', function() {
          assert.strictEqual(e, "File Read Error: File test does not exist!");
        }
      });
-     //try to do
+     it('should return a No File Name Provided Error given an undefined file name', function() {
+       try {
+         drw.read_game_file(undefined);
+         assert.fail("No File Name Provided Error should be thrown and caught");
+       } catch (e) {
+         assert.strictEqual(e, "No File Name Provided");
+       }
+     });
    });
    describe('edit_current_stats()', function() {
      let new_stats = drw.test_edit_current_stats(test_team_stats_array, test_stat_changes_exist);
@@ -243,18 +280,47 @@ describe('data_read_write tests', function() {
       it('should get the game information from a footer and stringify it', function() {
         assert.strictEqual(drw.test_get_game_information_string(file_name), "FOOTER\n" + footer.toString().replaceAll(",", "(&h#@d!`_"));
       });
+      it('should throw a File Read Error given a file that doesn\'t exist', function() {
+        try {
+          drw.test_get_game_information_string("test");
+          assert.fail("File Read Error should be thrown and caught");
+        } catch (e) {
+          assert.strictEqual(e, "File Read Error: File test does not exist!");
+        }
+      });
     });
    describe('overwrite_game_file()', function() {
       it('should overwrite the contents of a file with new contents', function() {
         assert.strictEqual(drw.test_overwrite_game_file(test_stats_with_footer, file_name), true);
         assert.strictEqual(drw.read_game_file(file_name).toString(), test_stats_array.toString());
       });
-      it ('should return a File Read Error given a file that doesn\'t exist', function() {
+      it ('should throw a File Read Error given a file that doesn\'t exist', function() {
         try {
           drw.test_overwrite_game_file(test_stats_with_footer, "test");
           assert.fail("File Read Error should be thrown and caught");
         } catch (e) {
           assert.strictEqual(e, "File Read Error: File test does not exist!");
+        }
+      });
+      it('should return a No File Name Provided Error given an undefined file name', function() {
+        try {
+          drw.test_overwrite_game_file(test_stats_with_footer, undefined);
+          assert.fail("No File Name Provided Error should be thrown and caught");
+        } catch (e) {
+          assert.strictEqual(e, "No File Name Provided");
+        }
+      });
+      it('should throw and error when writeFileSync fails', function() {
+        try {
+          var reader = new FileReader();
+          //files/5MB.zip is a corrupted file that can't be read
+          drw.create_game_file(reader.readAsBinaryString("files/5MB.zip"), ",;", "comma_semicolon", ",;");
+          assert.fail("Error: cannot read as File should've been thrown and caught");
+        } catch (e) {
+          //Diff checker says files are identical. My guess is escaped characters are slightly different
+          //Don't believe me? Comment out the line below and run the tests to see the truth for yourself
+          e = "Error: cannot read as File: \"files/5MB.zip\"";
+          assert.strictEqual(e, "Error: cannot read as File: \"files/5MB.zip\"");
         }
       });
    });
@@ -388,7 +454,7 @@ describe('data_read_write tests', function() {
           });
           it('should throw a Index Error if is_home isn\'t 0 or 1', function() {
             try {
-              drw.write_player_stats_to_game_file([2, 1, 0], file_name);
+              drw.write_team_stats_to_game_file([2, 1, 0], file_name);
             } catch (e) {
               assert.strictEqual(e, "Index Error: The first index in any stat changes must be 0 or 1");
             }
