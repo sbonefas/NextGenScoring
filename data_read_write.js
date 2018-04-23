@@ -32,8 +32,8 @@ var game_directory = "data/";
 const comma_replacement		= "(&h#@d!`_";
 const semicolon_replacement = "/Od@&?l#i";
 
-/** location of the old xml file to overwrite */
-const xml_file_path = "data/xml_file.xml";
+/** version number of the software for xml creation purposes */
+var version = "0.3.2";
 
 /**
  * Returns the filepath of a file with a given name
@@ -45,6 +45,11 @@ function get_file_path(file_name) {
 	return game_directory + file_name + '.txt';
 }
 
+/** 
+ * Deltes a file with a given filename from the game directory
+ *
+ * @param file_name Name of the file
+ */
 exports.delete_file = function(file_name) {
 	if(fs.existsSync(get_file_path(file_name))) fs.unlinkSync(get_file_path(file_name));
 }
@@ -71,7 +76,7 @@ exports.edit_game_directory = function(new_path) {
 exports.get_all_games = function() {
 	file_names = fs.readdirSync(game_directory);
 	for(var i = 0; i < file_names.length; i++) {
-		if(file_names[i].substring(0,1) == '.') {
+		if(file_names[i].substring(0,1) == '.' || file_names[i].slice(-4) == '.xml') {
 			file_names.splice(i, 1);
 		}
 	}
@@ -101,10 +106,10 @@ exports.get_all_games = function() {
  */
 exports.create_game_file = function(individual_stat_labels, team_stat_labels, file_name, footer) {
 	// Error Handling:
-	if(individual_stat_labels == undefined) throw "No Individual Stat Labels Provided";
-	if(team_stat_labels == undefined) throw "No Team Stat Labels Provided";
-	if(file_name == undefined) throw "No File Name Provided";
-	if(footer == undefined) throw "No Footer Provided";
+	if(individual_stat_labels == undefined) throw "create_game_file: No Individual Stat Labels Provided";
+	if(team_stat_labels == undefined) throw "create_game_file: No Team Stat Labels Provided";
+	if(file_name == undefined) throw "create_game_file: No File Name Provided";
+	if(footer == undefined) throw "create_game_file: No Footer Provided";
 
 	// Check if file exists
 	var file_path = get_file_path(file_name);
@@ -115,7 +120,7 @@ exports.create_game_file = function(individual_stat_labels, team_stat_labels, fi
 	try {
     	fs.writeFileSync(file_path, file_contents);
 	} catch (e) {
-		throw "File Creation Failed: " + e;
+		throw "create_game_file: File Creation Failed: " + e;
 	}
 	return true;
 }
@@ -188,12 +193,12 @@ function get_initial_game_file_contents(individual_stat_labels, team_stat_labels
  */
 exports.read_game_file = function(file_name) {
 	// Get string version of file contents
-	if (file_name == undefined) throw "No File Name Provided";
+	if (file_name == undefined) throw "read_game_file: No File Name Provided";
 	var file_path = get_file_path(file_name);
 	//if (!fs.existsSync(file_path)) throw "File Name Doesn't Exist";
 	var file_contents = get_game_file_contents(file_path);
 	if(file_contents == null) {
-		throw "File Read Error: File " + file_name + " does not exist!";
+		throw "read_game_file: File Read Error: File " + file_name + " does not exist!";
 	}
 
 	// Convert to three separate strings. Cut off last newline.
@@ -297,7 +302,7 @@ function scrape_team_stats(stats_string_arr, team_no) {
  * @return 2d array with unitialized elements.
  */
 function create_2d_array(num_rows, num_cols) {
-	if (num_rows <= 0 || num_cols <= 0) throw "Invalid Index Error";
+	if (num_rows <= 0 || num_cols <= 0) throw "create_2d_array: Invalid Index Error";
 	var arr = [];
 	for(var row = 0; row < num_rows; row++) {
 		arr[row] = [];
@@ -319,14 +324,14 @@ function create_2d_array(num_rows, num_cols) {
  * @return True if write is successful, false otherwise.
  */
 exports.write_player_stats_to_game_file = function(stat_changes, file_name) {
-	if(stat_changes == undefined) throw "No Stat Changes Provided";
-	if(file_name == undefined) throw "No File Name Provided";
-	if(!fs.existsSync(get_file_path(file_name))) throw "File Read Error: File " + file_name + " does not exist!";
+	if(stat_changes == undefined) throw "write_player_stats_to_game_file: No Stat Changes Provided";
+	if(file_name == undefined) throw "write_player_stats_to_game_file: No File Name Provided";
+	if(!fs.existsSync(get_file_path(file_name))) throw "write_player_stats_to_game_file: File Read Error: File " + file_name + " does not exist!";
 
 	// Set player's team and player number for stat change
 	var is_home = stat_changes[0];
 	if(!(is_home == 1 || is_home == 0)) {
-		throw "Index Error: The first index in any stat changes must be 0 or 1";
+		throw "write_player_stats_to_game_file: Index Error: The first index in any stat changes must be 0 or 1";
 	}
 	var player_number = stat_changes[1];
 
@@ -335,7 +340,7 @@ exports.write_player_stats_to_game_file = function(stat_changes, file_name) {
 	try {
 		current_game_stats = exports.read_game_file(file_name);
 	} catch(e) {
-		console.log("READ ERROR: " + e);
+		console.log("write_player_stats_to_game_file: READ ERROR: " + e);
 		return false;
 	}
 
@@ -359,12 +364,12 @@ exports.write_player_stats_to_game_file = function(stat_changes, file_name) {
  * @return True if write is successful, false otherwise.
  */
 exports.write_team_stats_to_game_file = function(stat_changes, file_name) {
-	if(stat_changes == undefined) throw "No Stat Changes Provided";
-	if(file_name == undefined) throw "No File Name Provided";
-	if(!fs.existsSync(get_file_path(file_name))) throw "File Read Error: File " + file_name + " does not exist!";
+	if(stat_changes == undefined) throw "write_team_stats_to_game_file: No Stat Changes Provided";
+	if(file_name == undefined) throw "write_team_stats_to_game_file: No File Name Provided";
+	if(!fs.existsSync(get_file_path(file_name))) throw "write_team_stats_to_game_file: File Read Error: File " + file_name + " does not exist!";
 	var is_home = stat_changes[0];
 	if(!(is_home == 1 || is_home == 0)) {
-		throw "Index Error: The first index in any stat changes must be 0 or 1";
+		throw "write_team_stats_to_game_file: Index Error: The first index in any stat changes must be 0 or 1";
 	}
 	var player_number = stat_changes[1];
 
@@ -373,7 +378,7 @@ exports.write_team_stats_to_game_file = function(stat_changes, file_name) {
 	try {
 		current_game_stats = exports.read_game_file(file_name);
 	} catch(e) {
-		console.log("READ ERROR: " + e);
+		console.log("write_team_stats_to_game_file: READ ERROR: " + e);
 		return false;
 	}
 
@@ -475,8 +480,8 @@ function game_array_to_string(game_array) {
  * @return True if overwrite is successful, false otherwise.
  */
 function overwrite_game_file(new_content, file_name) {
-	if (file_name == undefined) throw "No File Name Provided";
-	if(!fs.existsSync(get_file_path(file_name))) throw "File Read Error: File " + file_name + " does not exist!";
+	if (file_name == undefined) throw "overwrite_game_file: No File Name Provided";
+	if(!fs.existsSync(get_file_path(file_name))) throw "overwrite_game_file: File Read Error: File " + file_name + " does not exist!";
 
 	try {
     	fs.writeFileSync(get_file_path(file_name), new_content);
@@ -499,7 +504,7 @@ function get_game_information_string(file_name) {
 	var file_path = get_file_path(file_name);
 	var file_contents = get_game_file_contents(file_path);
 	if(file_contents == null) {
-		throw "File Read Error: File " + file_name + " does not exist!";
+		throw "get_game_information_string: File Read Error: File " + file_name + " does not exist!";
 	}
 
 	// Get footer from stats_string_arr
@@ -527,12 +532,12 @@ function get_game_information_string(file_name) {
 exports.add_pbp = function(file_name, vh, time, uni, team, checkname, 
 								action, type, vscore, hscore) {
 	// Check that all required fields are there
-	if(vh == null) throw "vh is null";
-	if(time == null) throw "time is null";
-	if(uni == null) throw "uni is null";
-	if(team == null) throw "team is null";
-	if(checkname == null) throw "checkname is null";
-	if(action == null) throw "action is null";
+	if(vh == null) throw "add_pbp: vh is null";
+	if(time == null) throw "add_pbp: time is null";
+	if(uni == null) throw "add_pbp: uni is null";
+	if(team == null) throw "add_pbp: team is null";
+	if(checkname == null) throw "add_pbp: checkname is null";
+	if(action == null) throw "add_pbp: action is null";
 
 	// get new pbp to add
 	var xml_play = get_string_play_for_xml(vh, time, uni, team, checkname, 
@@ -547,6 +552,9 @@ exports.add_pbp = function(file_name, vh, time, uni, team, checkname,
 	overwrite_game_file(game_array_to_string(current_game_stats) + "\n" + semicolon_replacement +
 							   get_game_information_string(file_name) + "\n" + semicolon_replacement +
 							   curr_pbp, file_name);
+
+	// update the xml file
+	exports.create_xml_file(file_name);
 }
 
 /** 
@@ -572,7 +580,7 @@ function get_string_play_for_xml(vh, time, uni, team, checkname,
 
 	/** Add required sections */
 	//vh
-	if(vh != "H" && vh != "V") throw "invalid vh value: must be H or V. vh is " + vh;
+	if(vh != "H" && vh != "V") throw "get_string_play_for_xml: invalid vh value: must be H or V. vh is " + vh;
 	play += ' vh="' + vh + '"';
 	//time
 	play += ' time="' + time + '"';
@@ -610,7 +618,7 @@ function read_pbp(file_name) {
 	var file_path = get_file_path(file_name);
 	var file_contents = get_game_file_contents(file_path);
 	if(file_contents == null) {
-		throw "File Read Error: File " + file_name + " does not exist!";
+		throw "read_pbp: File Read Error: File " + file_name + " does not exist!";
 	}
 
 	// Get footer from stats_string_arr
@@ -627,7 +635,65 @@ function read_pbp(file_name) {
  * @param game_file_name name of the game file to generate xml file from
  */
 exports.create_xml_file = function(game_file_name) {
-	
+	// test if game_file_name is valid
+	if(!fs.existsSync(get_file_path(game_file_name))) throw "create_xml_file: File Read Error: File " + game_file_name + " does not exist!";
+	var xml_file_path = get_file_path(game_file_name).slice(0,-4) + ".xml";
+	// test if xml_file_path is valid
+	/**if(!fs.existsSync(xml_file_path)) {
+		//throw "create_xml_file: XML File " + xml_file_path + " does not exist!";
+		try {
+			fs.writeFileSync("", xml_file_path);
+		} catch(e) {
+			console.log("create_xml_file: File writing error: " + e);
+		}
+	}*/
+
+	// create xml file from pbp and game information
+	var xml_string = '<bbgame source="STAT CREW Basketball" version="' + version + '" generated="' + xml_get_date() + '">\n';
+	xml_string += xml_get_venue(game_file_name) + "\n";
+	xml_string += xml_get_status(game_file_name) + "\n";
+	xml_string += xml_get_teams(game_file_name) + "\n";
+	xml_string += xml_get_byprdsummaries(game_file_name) + "\n";
+	xml_string += xml_get_plays(game_file_name) + "\n";
+	xml_string += "</bbgame>";
+
+	// store file in xml_file_path
+	try {
+		fs.writeFileSync(xml_file_path, xml_string);
+	} catch(e) {
+		console.log("create_xml_file: File writing error: " + e);
+	}
+}
+
+function xml_get_date() {
+	let today = new Date();
+	var date_string = "";
+
+	date_string += today.getMonth()+1 + "/";
+	date_string += today.getDate() + "/";
+	date_string += today.getFullYear();
+
+	return date_string;
+}
+
+function xml_get_venue(game_file_name) {
+	//TODO
+}
+
+function xml_get_status(game_file_name) {
+	//TODO
+}
+
+function xml_get_teams(game_file_name) {
+	//TODO
+}
+
+function xml_get_byprdsummaries(game_file_name) {
+	//TODO
+}
+
+function xml_get_plays(game_file_name) {
+	//TODO
 }
 
 

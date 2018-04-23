@@ -8,6 +8,7 @@ const fs = require('fs');
 
 const file_name = "data_test";
 const file_path = "data/data_test.txt";
+const xml_path = "data/data_test.xml";
 const individual_stat_labels = ['number', 'fg', 'fga', 'pts'];
 const team_stat_labels = ['team fouls', 'timeouts left'];
 const footer = ['test', 1,'test2/test3/test4', 'test5'];
@@ -59,6 +60,8 @@ function test_fail(test_name) {
 
 function clean() {
 	if(fs.existsSync(file_path)) drw.delete_file(file_name);
+	if(fs.existsSync('data/.DS_STORE.txt')) drw.delete_file('.DS_STORE');
+	if(fs.existsSync(xml_path)) fs.unlinkSync(xml_path);
 }
 
 function test() {
