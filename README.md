@@ -9,8 +9,10 @@ To run NextGenScoring, you must first download Node.js and install Electron. Dow
 Once you have Node downloaded, install Electron and other dependencies using npm by running
 
 > npm install Electron
+
 Install nyc for code coverage metrics
 > npm install nyc
+
 Install filereader
 > npm install filereader
 
