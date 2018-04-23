@@ -17,14 +17,6 @@ window.onload = function(){
 //    localStorage.setItem("storageName",getInput);
 }
 
-//function get_home_team() {
-//    return loaded_home_team;
-//}
-//
-//function get_vis_team() {
-//    return loaded_vis_team;
-//}
-
 ipc.on('get-all-games-failure', function(event) {
 	console.log("get-all-games-failure");
 	window.alert("ERROR: CANNOT LOAD GAMES");
@@ -141,6 +133,8 @@ ipc.on('init-game-success', function(event,args) {
 //	loaded_vis_team = args[1]
 	localStorage.setItem("homeName",args[0]);
 	localStorage.setItem("visName",args[1]);
+	localStorage.setItem("gameDate",args[6]);
+	localStorage.setItem("gameTime",args[7]);
 	window.location = "./index.html"
 });
 
@@ -411,6 +405,8 @@ var app = new Vue({
 //            console.log("home: " +app.loaded_home_team+" vis: " +app.loaded_vis_team)
 	        localStorage.setItem("homeName",app.selected_game.home_name);
 	        localStorage.setItem("visName",app.selected_game.vis_name);
+	        localStorage.setItem("gameDate",app.selected_game.date);
+	        localStorage.setItem("gameTime",app.selected_game.time);
 //	        localStorage.setItem("currGame",app.selected_game);
 //	        console.log(app.selected_game)
 //	        console.log(localStorage.getItem("currGame"))

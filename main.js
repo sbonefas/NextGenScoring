@@ -616,12 +616,12 @@ Response:
 	Success + array of current game data
 	Failure
 */
-ipc.on('get-data', function(event)
+ipc.on('get-data', function(event, file_name)
 {
 	try
 	{
 		var data = [];
-		data = drw.read_game_file(current_game);
+		data = drw.read_game_file(file_name);
 		console.log(data);
 	}
 	catch (e)

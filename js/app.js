@@ -40,7 +40,12 @@ window.onload = function(){
 
 //    app.teams[0] = localStorage.getItem("homeName")
 //    app.teams[1] = localStorage.getItem("visName")
-//    console.log(localStorage.getItem("currGame"))
+    console.log(localStorage.getItem("gameDate"))
+    console.log(localStorage.getItem("gameTime"))
+
+    date_time = localStorage.getItem("gameDate") + "_" + localStorage.getItem("gameTime");
+        console.log(date_time)
+    ipc.send("get-data", date_time)
 //    app.curr_game = localStorage.getItem("currGame")
 //    console.log(app.curr_game[2])
 //    alert(localStorage.getItem("currGame"));
@@ -53,6 +58,77 @@ ipc.on('init-game-failure', function(event,args) {
 
 ipc.on('init-game-success', function(event,args) {
 	console.log("Successfully initialized game: " + args);
+});
+
+ipc.on('get-data-success', function(event,args) {
+	console.log("get-data-success: " + args);
+	console.log("0: "+args[0])
+	console.log("1: "+args[1])
+	console.log("2: "+args[2])
+	console.log("3: "+args[3])
+	console.log("4: "+args[4])
+	console.log("5: "+args[5])
+
+//    home_team: [
+//                {starter: true, in_game: "*", number: "01", name: "Player_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+
+	//home team
+	for(i = 0; i < args[0].length; i++) {
+        console.log(i)
+        app.home_team.push(
+        {starter: true, in_game: "", number: "", name: "", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0,
+        fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+        );
+        app.home_team[app.home_team.length-1].number = args[0][i][0]
+//        app.games[app.games.length-1].vis_name = gameArray[i][gameArray[i].length-1][1]
+//        app.games[app.games.length-1].home_code = gameArray[i][gameArray[i].length-1][2]
+//        app.games[app.games.length-1].vis_code = gameArray[i][gameArray[i].length-1][3]
+//        app.games[app.games.length-1].home_record = gameArray[i][gameArray[i].length-1][4]
+//        app.games[app.games.length-1].vis_record = gameArray[i][gameArray[i].length-1][5]
+//        app.games[app.games.length-1].date = gameArray[i][gameArray[i].length-1][6]
+//        app.games[app.games.length-1].time = gameArray[i][gameArray[i].length-1][7]
+//        app.games[app.games.length-1].site = gameArray[i][gameArray[i].length-1][8]
+//        app.games[app.games.length-1].site_code = gameArray[i][gameArray[i].length-1][9]
+//        app.games[app.games.length-1].league = gameArray[i][gameArray[i].length-1][10]
+//        app.games[app.games.length-1].schedule_note = gameArray[i][gameArray[i].length-1][11]
+//        app.games[app.games.length-1].quarters = gameArray[i][gameArray[i].length-1][12]
+//        app.games[app.games.length-1].min_period = gameArray[i][gameArray[i].length-1][13]
+//        app.games[app.games.length-1].min_ot = gameArray[i][gameArray[i].length-1][14]
+//        app.games[app.games.length-1].officials = gameArray[i][gameArray[i].length-1][15]
+//        app.games[app.games.length-1].comments = gameArray[i][gameArray[i].length-1][16]
+//        app.games[app.games.length-1].attendance = gameArray[i][gameArray[i].length-1][17]
+        console.log("home1: " + app.home_team[app.home_team.length-1].number)
+	}
+
+	//visitor team
+	for(i = 1; i < args[1].length; i++) {
+        console.log(i)
+        app.vis_team.push(
+        {starter: true, in_game: "*", number: "", name: "", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0,
+        fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+        );
+        app.vis_team[app.vis_team.length-1].number = args[1][i][0]
+        app.vis_team[app.vis_team.length-1].fg = parseInt(args[1][i][1])
+        app.vis_team[app.vis_team.length-1].fa = parseInt(args[1][i][2])
+        app.vis_team[app.vis_team.length-1].m3 = parseInt(args[1][i][3])
+        app.vis_team[app.vis_team.length-1].a3 = parseInt(args[1][i][4])
+        app.vis_team[app.vis_team.length-1].ftm = parseInt(args[1][i][5])
+        app.vis_team[app.vis_team.length-1].fta = parseInt(args[1][i][6])
+        app.vis_team[app.vis_team.length-1].rb_off = parseInt(args[1][i][7])
+        app.vis_team[app.vis_team.length-1].rb_def = parseInt(args[1][i][8])
+        app.vis_team[app.vis_team.length-1].as = parseInt(args[1][i][9])
+        app.vis_team[app.vis_team.length-1].pf = parseInt(args[1][i][10])
+//        app.vis_team[app.vis_team.length-1].tf = parseInt(args[1][i][11])
+        app.vis_team[app.vis_team.length-1].blk = parseInt(args[1][i][12])
+        app.vis_team[app.vis_team.length-1].to = parseInt(args[1][i][13])
+        app.vis_team[app.vis_team.length-1].stl = parseInt(args[1][i][14])
+        app.vis_team[app.vis_team.length-1].tp = parseInt(args[1][i][15])
+        console.log("number: " + app.vis_team[app.vis_team.length-1].number)
+	}
+});
+
+ipc.on('get-data-failure', function(event) {
+	console.log("get-data-failure");
 });
 
 
@@ -208,30 +284,30 @@ var app = new Vue({
     vis_partial: 4,
     curr_game: {},
     home_team: [
-                {starter: true, in_game: "*", number: "01", name: "Player_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {starter: true, in_game: "*", number: "02", name: "Player_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {starter: true, in_game: "*", number: "03", name: "Player_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {starter: true, in_game: "*", number: "04", name: "Player_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {starter: true, in_game: "*", number: "05", name: "Player_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {starter: false, in_game: " ", number: "06", name: "Bench_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {starter: false, in_game: " ", number: "07", name: "Bench_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {starter: false, in_game: " ", number: "08", name: "Bench_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {starter: false, in_game: " ", number: "09", name: "Bench_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {starter: false, in_game: " ", number: "10", name: "Bench_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0}
+//                {starter: true, in_game: "*", number: "01", name: "Player_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+//                {starter: true, in_game: "*", number: "02", name: "Player_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+//                {starter: true, in_game: "*", number: "03", name: "Player_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+//                {starter: true, in_game: "*", number: "04", name: "Player_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+//                {starter: true, in_game: "*", number: "05", name: "Player_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+//                {starter: false, in_game: " ", number: "06", name: "Bench_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+//                {starter: false, in_game: " ", number: "07", name: "Bench_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+//                {starter: false, in_game: " ", number: "08", name: "Bench_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+//                {starter: false, in_game: " ", number: "09", name: "Bench_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+//                {starter: false, in_game: " ", number: "10", name: "Bench_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0}
               ],
     home_totals: {in_game: " ", number: " ", name: "Totals", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
 
     vis_team: [
-                {starter: true, in_game: "*", number: "01", name: "Player_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {starter: true, in_game: "*", number: "02", name: "Player_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {starter: true, in_game: "*", number: "03", name: "Player_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {starter: true, in_game: "*", number: "04", name: "Player_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {starter: true, in_game: "*", number: "05", name: "Player_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {starter: false, in_game: " ", number: "06", name: "Bench_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {starter: false, in_game: " ", number: "07", name: "Bench_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {starter: false, in_game: " ", number: "08", name: "Bench_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {starter: false, in_game: " ", number: "09", name: "Bench_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
-                {starter: false, in_game: " ", number: "10", name: "Bench_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0}
+//                {starter: true, in_game: "*", number: "01", name: "Player_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+//                {starter: true, in_game: "*", number: "02", name: "Player_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+//                {starter: true, in_game: "*", number: "03", name: "Player_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+//                {starter: true, in_game: "*", number: "04", name: "Player_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+//                {starter: true, in_game: "*", number: "05", name: "Player_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+//                {starter: false, in_game: " ", number: "06", name: "Bench_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+//                {starter: false, in_game: " ", number: "07", name: "Bench_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+//                {starter: false, in_game: " ", number: "08", name: "Bench_3", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+//                {starter: false, in_game: " ", number: "09", name: "Bench_4", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+//                {starter: false, in_game: " ", number: "10", name: "Bench_5", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0}
               ],
     vis_totals: {in_game: " ", number: " ", name: "Totals", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
 
