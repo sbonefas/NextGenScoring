@@ -155,4 +155,9 @@ class TestClock(unittest.TestCase):
         
  
 if __name__ == '__main__':
+<<<<<<< HEAD
+    unittest.main() 
+    
+=======
     unittest.main()
+>>>>>>> frontend_testing

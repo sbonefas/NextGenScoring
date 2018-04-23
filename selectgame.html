@@ -107,12 +107,14 @@
         </table>
         <table class="game_search">
             <tr v-for="game in games">
-                <td><button id="game_cell" v-on:click="select_game(game)"><h3>{{game.date}}</h3><h3>&emsp;&emsp;{{game.vis_team}}</h3><h3 class="game_site">&emsp;&emsp;{{game.site}}</h3></button></td>
+                <!--<td><button id="game_cell" v-on:click="select_game(game)"><h3>{{game.home_name}}</h3></button></td>-->
+                <td><button id="game_cell" v-on:click="select_game(game)"><h3>{{game.date}}</h3><h3>&emsp;&emsp;{{game.time}}</h3><h3>&emsp;&emsp;{{game.vis_name}}</h3><h3 class="game_site">&emsp;&emsp;{{game.site}}</h3></button></td>
             </tr>
             <!--<dialog id="game_date_entry"><h3>ENTER NEW GAME DATE</h3><input id="game_box" v-on:keyup.enter="set_game_date(document.getElementById("game_box").value)"placeholder="New game name..."></dialog>-->
         </table>
     </div>
     <script type="text/javascript" src="js/vue.js"></script>
+    <!--<script type="text/javascript" src="js/app.js"></script>-->
     <script type="text/javascript" src="js/selectgame.js"></script>
 </body>
 </html>
