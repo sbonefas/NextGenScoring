@@ -108,6 +108,7 @@ exports.create_game_file = function(individual_stat_labels, team_stat_labels, fi
 
 	// Check if file exists
 	var file_path = get_file_path(file_name);
+	console.log("file_path: " + file_path);
 	if(fs.existsSync(file_path)) return false;
 
 	// Create file. Return false on errors

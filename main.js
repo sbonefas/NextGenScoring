@@ -18,9 +18,7 @@ const Player = require('./Player.js'); 	//player object import
 var current_game;
 
 let win;
-const TESTING = true;
-const file_name = 'test_read_game_file';
-const test_file_name = "test_drw_file";
+const TESTING = false;
 
 function createWindow() {
 	win = new BrowserWindow();
@@ -34,14 +32,11 @@ function createWindow() {
 	/** SIMPLE BACKEND TESTING */
 	/** TODO: DELETE WHEN PUT IN TEST SUITE */
 	if(TESTING) {
-		//drw.create_game_file(stat_headers, test_file_name, args);
-		//drw.read_game_file(test_file_name);
-		//createTeam("Badgers", "WIS", "Bo Ryan", "I Forgot", "Kohl Center");
+		createTeam("Badgers", "WIS", "Bo Ryan", "I Forgot", "Kohl Center");
+		
 	}
 	win.on('closed', () => {
 		win = null;
-		//drw.delete_file(test_file_name);
-		//trw.delete_file("WIS");
 		app.quit();
 	})
 };
@@ -105,7 +100,7 @@ function createTeam(name, code, head_coach, asst_coach, stadium){
  * FOR CHANGING JERSEY: [F2, PLAYER_NUMBER, NEW_PLAYER_NUMBER, HOME/AWAY, TIME_OF_PLAY, PRIMARY_PLAYER_NAME, SECONDARY_PLAYER_NAME (IF ASSIST OR REBOUND), VISITOR_SCORE, HOME_SCORE, PRIMARY_TEAM_CODE, SECONDARY_TEAM_CODE]
  *
  *
- *
+ * FOR TIMEOUTS: [O, T (MEDIA)/3 (30 SEC)/M (MINUTE), HOME/AWAY, TIME_OF_PLAY, PRIMARY_PLAYER_NAME, SECONDARY_PLAYER_NAME (IF ASSIST OR REBOUND), VISITOR_SCORE, HOME_SCORE, PRIMARY_TEAM_CODE, SECONDARY_TEAM_CODE]
  *
  * FOR BLOCKS: [K, PLAYER_NUMBER, REBOUND?, HOME/AWAY, TIME_OF_PLAY, PRIMARY_PLAYER_NAME, SECONDARY_PLAYER_NAME (IF ASSIST OR REBOUND), VISITOR_SCORE, HOME_SCORE, PRIMARY_TEAM_CODE, SECONDARY_TEAM_CODE]
  *
@@ -132,9 +127,8 @@ function createTeam(name, code, head_coach, asst_coach, stadium){
  * TEAM STATARRY FORMAT:
  *
  *
- * [HOME/AWAY, POINTS, MADE_IN_PAINT, FAST_BREAK, TEAM_TURNOVER]
+ * [HOME/AWAY, POINTS, MADE_IN_PAINT, FAST_BREAK, TEAM_TURNOVERS, TEAM_REBOUNDS, TEAM_FOULS, PARTIAL_TIMEOUTS_TAKEN, FULL_TIMEOUTS_TAKEN]
  *
- * [7]-[12] ARE EDITED IN SUBPLAY FUNCTIONS BELOW
  *
  * TO: T (TEAM TURNOVER)
  * TO: D (DEAD BALL)
@@ -144,13 +138,14 @@ function createTeam(name, code, head_coach, asst_coach, stadium){
 
 
 function addPlay(keystrokes){
+	console.log("current_game: " + current_game);
 	var statArray = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 	var input = keystrokes.split(/ /);
 	if(TESTING) console.log(input);
 
 	//input parsing
 	statArray[1] = input[1];	//add player's number
-	var team = input[input.length-8];	//home or away always before [time_of_play, primary_player_name, secondary_player_name, visitor_score, home_score]
+	var team = input[input.length-8];	//home or away always before [time_of_play, primary_player_name, secondary_player_name, visitor_score, home_score, primary_team_code, secondary_team_code]
 	var time_of_play = input[input.length-7];
 	var primary_player_name = input[input.length-6];
 	var secondary_player_name = input[input.length-5];
@@ -159,155 +154,241 @@ function addPlay(keystrokes){
 	var primary_team_code = input[input.length-2];
 	var secondary_team_code = input[input.length-1];
 	var actingPlayer;
+	
+	var action;
+	var type;
 
 	if (team === 'h')
 		statArray[0] = 1;
 	else if (team === 'v')
 		statArray[0] = 0;
+	team = team.toUpperCase();
+	//console.log("Primary team code: " + primary_team_code);
 	switch(input[0]){
 		case 'y':
 			statArray[5] = 1;	//3 attempt
 		case 'w':
+			wrongBasket(statArray[0]);
+			return;
 		case 'j':
 		case 'p':
 		case 'l':
 		case 'd':
 
 			//fieldgoal attempt cases
-
+			var paint;
+			var fastb;
+			
+			if (input[0] == 'y') type="3PTR";
+			else if (input[0] == 'w') type = "WRONGB";
+			else if (input[0] == 'j') type = "JUMPER";
+			else if (input[0] == 'p') type = "TIPIN";
+			else if (input[0] == 'l') type = "LAYUP";
+			else if (input[0] == 'd') type = "DUNK";
+			
 			statArray[3] = 1;	//fieldgoal attempt
 			if (team != input[3]) actingPlayer = input[3];	//if the 4th arg in input is not the team, it must be a stealing/rebounding/etc. player
 			switch(input[2]){
 				case 'g' || 'G' || 'q' || 'Q':
 					statArray[2] = 1;	//fieldgoal
-					if (input[3] != '')
-					{
-						assist(statArray[0], actingPlayer);	//If there's an assist, record it
-					}
+					action = "GOOD";
 					statArray[16] = 2;
+					console.log("Action: " + action);
+					break;
+				case 'a':	
+					action = "GOOD";
+					if (input[0] == 'y')
+					{
+						statArray[16] = 3;
+						statArray[2] = 1;	//fieldgoal
+						statArray[4] = 1;	//made 3-pointer
+					}
+					else 
+					{	
+						statArray[16] = 2;
+					}
+					assist(statArray[0], actingPlayer, time_of_play, secondary_player_name, visit_score, home_score, primary_team_code);	//If there's an assist, record it
 					break;
 				case 'y':
 					statArray[2] = 1;	//fieldgoal
 					statArray[4] = 1;	//made 3-pointer
-					if (input[3] != '')
-					{
-						assist(statArray[0], actingPlayer);	//If there's an assist, record it
-						//play_by_play()
-					}
+					action = "GOOD";
 					statArray[16] = 3;
 					break;
 				case 'r':
-					rebound(statArray[0], actingPlayer);	//Offensive rebound
+					action = "MISS";
+					rebound(statArray[0], actingPlayer, time_of_play, secondary_player_name, visit_score, home_score, primary_team_code);	//Offensive rebound
 					break;
 				case 'x':
-					rebound(statArray[0], actingPlayer);	//Offensive rebound
+					action = "MISS";
+					rebound(statArray[0], actingPlayer, time_of_play, secondary_player_name, visit_score, home_score, primary_team_code);	//Offensive rebound
 					break;
 				case 'd':
-					rebound(statArray[0], actingPlayer, 1);	//Defensive rebound
+					action = "MISS";
+					rebound(statArray[0], actingPlayer, time_of_play, secondary_player_name, visit_score, home_score, secondary_team_code, 1);	//Defensive rebound
 					break;
 				case 'k':
-					block(statArray[0], actingPlayer, 1);
+					action = "MISS";
+					block(statArray[0], actingPlayer, time_of_play, secondary_player_name, visit_score, home_score, secondary_team_code, 1);		//Block
 					break;
 				case 'p':
+					paint = "Y";
 					inPaint(statArray[0]);
 					statArray[16] = 2;
 					break;
 				case 'f':
+					fastb = "Y";
 					fastBreak(statArray[0]);
 					statArray[16] = 2;
 					break;
 				case 'z':
-					inPaint(statArray[0]);
+					paint = "Y";
+					fastb = "Y";
 					fastBreak(statArray[0]);
+					inPaint(statArray[0]);
 					statArray[16] = 2;
 					break;
 			}
 			break;
 
 		case 'e':
-
 			//freethrow attempt cases
 
 			statArray[7] = 1; 	//freethrow attempt
+			type = "FT";
 			if (input[2] === 'e')
 			{
+				action = "GOOD";
 				statArray[6] = 1;		//good freethrow, no rebound
 				statArray[16] = 1;
 			}
 			else if (input[2] === 'r')		//missed freethrow, rebound
 			{
+				action = "MISS";
 				actingPlayer = input[3];
-				rebound(statArray[0], actingPlayer);		//offensive rebound
+				rebound(statArray[0], actingPlayer, time_of_play, secondary_player_name, visit_score, home_score, primary_team_code);		//offensive rebound
 			}
 			else if (input[2] === 'd')
 			{
+				action = "MISS";
 				actingPlayer = input[3];
-				rebound(statArray[0], actingPlayer, 1);		//defensive rebound
+				rebound(statArray[0], actingPlayer, time_of_play, secondary_player_name, visit_score, home_score, secondary_team_code, 1);		//defensive rebound
 			}
 			break;
 		case 'r':
-			if (input[1] == 'm') {
-				if (input[2] == 'r') teamRebound(statArray[0]);		//offensive team rebound
-				else if (input[2] == 'd') teamRebound(statArray[0],1);		//defensive team rebound
+			if (input[1] == 'm') 
+			{
+				primary_player_name = "TEAM";
+				if (input[2] == 'r')
+				{
+					teamRebound(statArray[0], time_of_play, primary_player_name, visit_score, home_score, primary_team_code);		//offensive team rebound
+				}					
+				else if (input[2] == 'd') 
+				{	
+					teamRebound(statArray[0], time_of_play, primary_player_name, visit_score, home_score, primary_team_code);		//defensive team rebound
+				}
+				else if (input[2] == 'b')
+				{
+					teamRebound(statArray[0], time_of_play, primary_player_name, visit_score, home_score, primary_team_code, null, 1);		//dead ball rebound
+				}
 			}
-			if (input[2] == 'r') rebound(statArray[0], input[1]);		//offensive rebound
-			else if (input[2] == 'd') rebound(statArray[0], input[1],1);		//defensive rebound
-
+			else 
+			{	
+				if (input[2] == 'r')
+				{
+					rebound(statArray[0], input[1], time_of_play, primary_player_name, visit_score, home_score, primary_team_code);		//offensive rebound
+				}
+				else if (input[2] == 'd') 
+				{	
+					rebound(statArray[0], input[1], time_of_play, primary_player_name, visit_score, home_score, primary_team_code, 1);		//defensive rebound
+				}
+			}	
 			return;
 		case 'a':
-			assist(statArray[0], input[1]);		//assist by player. Literally the simplest thing this function does
+			assist(statArray[0], input[1], time_of_play, primary_player_name, visit_score, home_score, primary_team_code);		//assist by player. Literally the simplest thing this function does
 			return;
 		case 'f':
-			if (input[1].charAt(0) === 't'){		//technical foul (input[1] = 'T##')
+			action = "FOUL";
+			if (input[1].charAt(0) === 't')		//technical foul (input[1] = 'T##')
+			{	
+				type = "TECH";
 				statArray[1] = input[1].substring(1,3);		//take last two characters for player number
 				statArray[12] = 1;		//technical foul
 				teamFoul(statArray[0]);
-			} else if (input[1] === 'b'){		//bench foul (team stat)
+			} 
+			else if (input[1] === 'b')	//bench foul (team stat)
+			{	
+				drw.add_pbp(current_game, team, time_of_play, "TM", primary_team_code, "TEAM", "FOUL", "BENCH", visit_score, home_score);
 				teamFoul(statArray[0]);
 				return;
-			} else {
+			} 
+			else 
+			{
+				type = "PERSONAL";
 				statArray[11] = 1;	//personal foul
 				teamFoul(statArray[0]);
 			}
 			break;
 		case 't':
-			if (input[1] == 'm'){
-				teamTurnover(statArray[0]);
+			action = "TURNOVER";
+			if (input[1] == 'm')
+			{
+				teamTurnover(statArray[0], time_of_play, primary_player_name, visit_score, home_score, primary_team_code);
 				return;
 			}
 			statArray[14] = 1; //turnover
 			break;
 		case 's':
+			action = "STEAL";
 			statArray[15] = 1;	//steal
 			break;
 		case 'k':
+			action = "BLOCK";
 			statArray[13] = 1; //block
 			if (input[2] === 'r')
 			{
 				actingPlayer = input[3];
-				rebound(statArray[0],actingPlayer);
+				rebound(statArray[0], actingPlayer, time_of_play, primary_player_name, visit_score, home_score, primary_team_code);
 				//break;
 			}
 			else if (input[2] === 'd')
 			{
 				if (input[3] === 'm')
 				{
-					teamRebound(statArray[0],1);
+					teamRebound(statArray[0], time_of_play, primary_player_name, visit_score, home_score, secondary_team_code, 1);
 				}
 				else 
 				{	
 					actingPlayer = input[3];
-					rebound(statArray[0],actingPlayer,1);
+					rebound(statArray[0], actingPlayer, time_of_play, primary_player_name, visit_score, home_score, secondary_team_code, 1);
 				}
 			}
 			break;
-		case 'f2':
-			chg(input[input.length-1], input[1], input[2]);
+		case 'f2':		//jersey change
+			chg(statArray[0], input[1], input[2]);
+			return;
+		case 'o':		//timeout
+			
+			if (input[1] == "3")
+			{
+				type = "30SEC";
+			}
+			else if (input[1] == "m")
+			{
+				type = "TEAM";
+			}	
+			else 
+			{
+				type = "media";
+			}
+			timeout(statArray[0], input[1]);
+			drw.add_pbp(current_game, team, time_of_play, "TM", primary_team_code, "TEAM", "TIMEOUT", type, visit_score, home_score);
 			return;
 	}
 	console.log("in addPlay: " + statArray);
 	if (statArray[16] != 0) add_team_points(statArray[0],statArray[16]);
-	//drw.add_play(current_game, team, time_of_play, statArray[1], team_code, primary_player_name, action?, type?, visit_score, home_score);
+	console.log("Primary team code: " + primary_team_code);
+	drw.add_pbp(current_game, team, time_of_play, statArray[1], primary_team_code, primary_player_name, action, type, visit_score, home_score);
 	drw.write_player_stats_to_game_file(statArray, current_game);
 }
 
@@ -324,26 +405,42 @@ function addPlay(keystrokes){
 	as the one who attempted the shot, so switch teams before registering rebound
 	-Otherwise, just register rebound on current team
 */ 
-function rebound(team, player_number, def_rebound){
-	var t;
+function rebound(team, player_number, time_of_play, primary_player_name, visit_score, home_score, primary_team_code, def_rebound){
+	var altTeam;
 	var statArray;
 	if (def_rebound != null)
 	{
-		if (team === 1) t = 0;
-		else if (team === 0) t = 1;
-		statArray = [team, player_number,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0];
-	} else {
+		if (team === 1) altTeam = 0;
+		else if (team === 0) altTeam = 1;
+		statArray = [altTeam, player_number,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0];
+		
+		if (altTeam === 0) team = 'V';
+		else if (altTeam === 1) team = 'H';
+		console.log("Primary team code: " + primary_team_code);
+		drw.add_pbp(current_game, team, time_of_play, player_number, primary_team_code, primary_player_name, "REBOUND", "DEF", visit_score, home_score);
+	} 
+	else 
+	{
 		statArray = [team, player_number,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0];
-	}
+		if (team === 0) team = 'V';
+		else if (team === 1) team = 'H';
+		console.log("Primary team code: " + primary_team_code);
+		drw.add_pbp(current_game, team, time_of_play, player_number, primary_team_code, primary_player_name, "REBOUND", "OFF", visit_score, home_score);
+	}	
 	drw.write_player_stats_to_game_file(statArray, current_game);
 }
 
 /*
 	Assist made by player
 */
-function assist(team, player_number){
+function assist(team, player_number, time_of_play, primary_player_name, visit_score, home_score, primary_team_code)
+{
 	var statArray = [team, player_number,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0];
 	drw.write_player_stats_to_game_file(statArray, current_game);
+	if (team === 0) team = 'V';
+	else if (team === 1) team = 'H';
+	drw.add_pbp(current_game, team, time_of_play, player_number, primary_team_code, primary_player_name, "ASSIST", null, visit_score, home_score);
+
 }
 
 
@@ -353,15 +450,20 @@ function assist(team, player_number){
 	as the one who attempted the shot, so switch teams before registering block
 	-Otherwise, just register block on current team 
 */
-function block(team, player_number, from_shot_attempt){
+function block(team, player_number, time_of_play, primary_player_name, visit_score, home_score, primary_team_code, from_shot_attempt)
+{
 	//team to block will be opposite of team who attempted shot
 	var activeTeam;
-	if(from_shot_attempt != null){
+	if (from_shot_attempt != null)
+	{
 		if (team === 1) activeTeam = 0;
 		else if (team === 0) activeTeam = 1;
 	}
-
+	
 	var statArray = [activeTeam, player_number,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0];
+	if (team === 0) team = 'V';
+	else if (team === 1) team = 'H';
+	drw.add_pbp(current_game, team, time_of_play, player_number, primary_team_code, primary_player_name, "BLOCK", null, visit_score, home_score);
 	drw.write_player_stats_to_game_file(statArray, current_game);
 }
 
@@ -369,7 +471,8 @@ function block(team, player_number, from_shot_attempt){
 /*
 	Changes jersey number
 */
-function chg(t, player_number, new_player_number){
+function chg(t, player_number, new_player_number)
+{
 	var playerSub = [t, "CHG", player_number, new_player_number];
 	drw.write_player_stats_to_game_file(statArray, current_game);
 }
@@ -378,7 +481,8 @@ function chg(t, player_number, new_player_number){
 /*
 	Increments team point counter
 */
-function add_team_points(team,numPoints){
+function add_team_points(team,numPoints)
+{
 	drw.write_team_stats_to_game_file([team,numPoints,0,0,0,0,0,0,0], current_game);
 }
 
@@ -387,7 +491,8 @@ function add_team_points(team,numPoints){
 	Shot made in paint 
 	Increments team in paint counter
 */
-function inPaint(team){
+function inPaint(team)
+{
 	drw.write_team_stats_to_game_file([team,0,1,0,0,0,0,0,0], current_game);
 }
 
@@ -396,7 +501,8 @@ function inPaint(team){
 	Fast break shot made 
 	Increments team fast break counter
 */
-function fastBreak(team){
+function fastBreak(team)
+{
 	drw.write_team_stats_to_game_file([team,0,0,1,0,0,0,0,0], current_game);
 
 }
@@ -406,8 +512,12 @@ function fastBreak(team){
 	Turnover credited to the team, not a single player
 	Increments team turnover counter
 */
-function teamTurnover(team){
+function teamTurnover(team, time_of_play, primary_player_name, visit_score, home_score, primary_team_code)
+{
 	drw.write_team_stats_to_game_file([team,0,0,0,1,0,0,0,0], current_game);
+	if (team === 0) team = 'V';
+	else if (team === 1) team = 'H';
+	drw.add_pbp(current_game, team, time_of_play, "TM", primary_team_code, "TEAM", "TURNOVER", "TEAM", visit_score, home_score);
 }
 
 
@@ -415,13 +525,20 @@ function teamTurnover(team){
 	Rebound credited to the team, not a single player
 	Increments team rebound counter
 */
-function teamRebound(team,def_rebound){
-	var activeTeam;
-	if (def_rebound === 1){
-		if (team === 1) activeTeam = 0;
-		else if (team === 0) activeTeam = 1;
-	}
-	drw.write_team_stats_to_game_file([activeTeam,0,0,0,0,1,0,0,0], current_game);
+function teamRebound(team, time_of_play, primary_player_name, visit_score, home_score, primary_team_code, def_rebound, dead_ball)
+{
+	var type = null;
+	if (dead_ball === 1) type = "DEADB";
+	else if (def_rebound === 1){
+		if (team === 1) team = 0;
+		else if (team === 0) team = 1;
+		type = "DEF";
+	} 
+	drw.write_team_stats_to_game_file([team,0,0,0,0,1,0,0,0], current_game);
+	if (team === 0) team = 'V';
+	else if (team === 1) team = 'H';
+	drw.add_pbp(current_game, team, time_of_play, "TM", primary_team_code, "TEAM", "REBOUND", type, visit_score, home_score);
+
 }
 
 
@@ -429,7 +546,8 @@ function teamRebound(team,def_rebound){
 	All fouls committed by team
 	Increments team foul counter
 */
-function teamFoul(team){
+function teamFoul(team)
+{
 	drw.write_team_stats_to_game_file([team,0,0,0,0,0,1,0,0], current_game);
 }
 
@@ -438,11 +556,12 @@ function teamFoul(team){
 	Timeout taken by current team
 	Increments either partial or full timeouts taken by team
 */
-function timeout(team,type){
-	if (type === "p"){
-		drw.write_team_stats_to_game_file([team,0,0,0,0,0,0,1,0]);
-	} else if (type === "f"){
-		drw.write_team_stats_to_game_file([team,0,0,0,0,0,0,0,1]);
+function timeout(team,type)
+{
+	if (type === "3"){
+		drw.write_team_stats_to_game_file([team,0,0,0,0,0,0,1,0], current_game);
+	} else if (type === "m"){
+		drw.write_team_stats_to_game_file([team,0,0,0,0,0,0,0,1], current_game);
 	}
 }
 
@@ -450,11 +569,12 @@ function timeout(team,type){
 	Dude, what are you doing?
 	Scores 2 pts for other team
 */
-function wrongBasket(team){
+function wrongBasket(team)
+{
 	var activeTeam;
 	if (team === 1) activeTeam = 0;
 	else if (team === 0) activeTeam = 1;
-	drw.write_team_stats([activeTeam,2,0,0,0,0,0,0,0]);
+	drw.write_team_stats([activeTeam,2,0,0,0,0,0,0,0], current_game);
 }
 
 
@@ -467,7 +587,8 @@ function wrongBasket(team){
  *
  *  throws: "File already exists" if game args date_time passed in are not unique
  */
-function initGame(args){
+function initGame(args)
+{
 	var game_file = args[6] + "_" + args[7];
 	if (drw.create_game_file(indiv_stat_headers, team_stat_headers, game_file, args) == false)
 	{
@@ -576,6 +697,7 @@ ipc.on('get-game', function (event,game_name)
 		event.sender.send('get-game-failure',game_name);
 		return;
 	}
+	current_game = game_name;
 	event.sender.send('get-game-success',game_info[4]);
 });
 
@@ -598,7 +720,8 @@ ipc.on('add-play', function (event,keystrokes)
 	{
 		//if failure
 		console.log("An error occurred in file writing: " + e);
-		event.sender.send('add-play-failure',keystrokes);
+		event.sender.send('add-play-failure',e);
+		e.stack;
 		return;
 	}
 	event.sender.send('add-play-success',keystrokes);
