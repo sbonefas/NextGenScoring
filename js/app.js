@@ -93,6 +93,7 @@ ipc.on('get-data-success', function(event,args) {
 	console.log("3: "+args[3])
 	console.log("4: "+args[4])
 
+    start = 1;
 	//home team
 	for(i = 1; i < args[0].length; i++) {
 //        console.log(i)
@@ -100,6 +101,10 @@ ipc.on('get-data-success', function(event,args) {
         {starter: true, in_game: "", number: "", name: "", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0,
         fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
         );
+        if(start <= 5) {
+            app.home_team[app.home_team.length-1].in_game = "*"
+            start++;
+        }
         app.home_team[app.home_team.length-1].number = args[0][i][0]
         app.home_team[app.home_team.length-1].fg = parseInt(args[0][i][1])
         app.home_team[app.home_team.length-1].fa = parseInt(args[0][i][2])
@@ -120,12 +125,17 @@ ipc.on('get-data-success', function(event,args) {
 	}
 
 	//visitor team
+	start = 1;
 	for(i = 1; i < args[1].length; i++) {
 //        console.log(i)
         app.vis_team.push(
-        {starter: true, in_game: "*", number: "", name: "", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0,
+        {starter: true, in_game: "", number: "", name: "", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0,
         fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
         );
+        if(start <= 5) {
+            app.vis_team[app.vis_team.length-1].in_game = "*"
+            start++;
+        }
         app.vis_team[app.vis_team.length-1].number = args[1][i][0]
         app.vis_team[app.vis_team.length-1].fg = parseInt(args[1][i][1])
         app.vis_team[app.vis_team.length-1].fa = parseInt(args[1][i][2])

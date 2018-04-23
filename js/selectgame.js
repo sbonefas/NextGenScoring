@@ -99,10 +99,12 @@ ipc.on('get-game-success', function(event,args) {
         }
     }
 
+    full_time = app.selected_game.time + ":00"
+
     document.getElementsByName("home_name")[0].value = app.selected_game.home_name;
     document.getElementsByName("vis_name")[0].value = app.selected_game.vis_name;
     document.getElementsByName("game_date")[0].value = app.selected_game.date;
-    document.getElementsByName("game_time")[0].value = app.selected_game.time.split(/:/)[0];
+    document.getElementsByName("game_time")[0].value = full_time;
     document.getElementsByName("game_site")[0].value = app.selected_game.site;
     document.getElementById("select_site").selectedIndex = app.selected_game.site_code;//0 = home, 1 = away, 2 = neutral
     document.getElementById("select_league").selectedIndex = app.selected_game.league;//0 = Yes, 1 = No
@@ -198,6 +200,7 @@ var app = new Vue({
       if(app.selected_game.date != undefined) {
 
         date_time = app.selected_game.date + "_" + app.selected_game.time.split(/:/)[0];
+//            console.log(app.selected_game.time.split(/:/)[0])
         //UNCOMMENT TO TEST GET-GAME
 //		date_time = "3-12-19_4pm"
         console.log(date_time)
@@ -318,7 +321,7 @@ var app = new Vue({
                 app.games[app.games.length-1].date = game_date
             }
 
-            game_time = document.getElementsByName("game_time")[0].value;
+            game_time = document.getElementsByName("game_time")[0].value.split(/:/)[0];
             if(game_time != "") {
                 curr_game.push(game_time)
                 app.games[app.games.length-1].time = game_time
