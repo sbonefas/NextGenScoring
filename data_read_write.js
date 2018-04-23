@@ -22,7 +22,6 @@
  *																	*
   *******************************************************************/
 
-
 const fs = require("fs");	//node.js filesystem
 
 /** path to the folder where data is kept */
@@ -31,9 +30,6 @@ var game_directory = "data/";
 /** comma and semicolon replacements */
 const comma_replacement		= "(&h#@d!`_";
 const semicolon_replacement = "/Od@&?l#i";
-
-/** location of the old xml file to overwrite */
-const xml_file_path = "data/xml_file.xml";
 
 /**
  * Returns the filepath of a file with a given name
@@ -70,12 +66,6 @@ exports.edit_game_directory = function(new_path) {
  */
 exports.get_all_games = function() {
 	file_names = fs.readdirSync(game_directory);
-	for(var i = 0; i < file_names.length; i++) {
-		if(file_names[i].substring(0,1) == '.') {
-			file_names.splice(i, 1);
-		}
-	}
-
 	games = Array(file_names.length);
 
 	// Convert file names in teams to contents
@@ -108,7 +98,6 @@ exports.create_game_file = function(individual_stat_labels, team_stat_labels, fi
 
 	// Check if file exists
 	var file_path = get_file_path(file_name);
-	console.log("file_path: " + file_path);
 	if(fs.existsSync(file_path)) return false;
 
 	// Create file. Return false on errors
@@ -137,8 +126,6 @@ exports.create_game_file = function(individual_stat_labels, team_stat_labels, fi
  * [away team stats]
  * ;FOOTER
  * [game information]
- * ;PBP
- * [pbp string]
  *
  * @param labels Array of stat labels to be used in the stat file
  * @return String of initial file contents.
@@ -168,8 +155,6 @@ function get_initial_game_file_contents(individual_stat_labels, team_stat_labels
 	}
 	contents += "\n" + semicolon_replacement + "FOOTER\n";
 	contents += footer.toString().replace(/,/g, comma_replacement);
-
-	contents += "\n" + semicolon_replacement + "PBP";
 
 	return contents;
 }
@@ -345,8 +330,7 @@ exports.write_player_stats_to_game_file = function(stat_changes, file_name) {
 	current_game_stats[1-is_home] = current_team_stats;
 
 	return overwrite_game_file(game_array_to_string(current_game_stats) + "\n" + semicolon_replacement +
-							   get_game_information_string(file_name) + "\n" + semicolon_replacement +
-							   read_pbp(file_name), file_name);
+							   get_game_information_string(file_name), file_name);
 }
 
 /**
@@ -387,8 +371,7 @@ exports.write_team_stats_to_game_file = function(stat_changes, file_name) {
 	current_game_stats[3 - is_home][1] = team_stats;
 
 	return overwrite_game_file(game_array_to_string(current_game_stats) + "\n" + semicolon_replacement+
-							   get_game_information_string(file_name) + "\n" + semicolon_replacement +
-							   read_pbp(file_name), file_name);
+							   get_game_information_string(file_name), file_name);
 
 }
 
@@ -431,8 +414,7 @@ function edit_current_stats(current_stats, stat_changes) {
 }
 
 /**
- * Converts the given 3D array of game stats into a string. Does not include
- * footer or play-by-play
+ * Converts the given 3D array of game stats into a string.
  *
  * @param game_array 3D array of game stats
  * @return string representation of the game to be stored in the game file.
@@ -506,15 +488,13 @@ function get_game_information_string(file_name) {
 	// Get footer from stats_string_arr
 	var stats_string_arr = file_contents.split(semicolon_replacement);
 	var game_information = stats_string_arr[3];
-	if(game_information.slice(-1) == '\n') game_information = game_information.substring(0, game_information.length-1);
 
 	return game_information;
 }
 
-/** 
+/**
  * Adds a play to the gamefile. This is for the XML file.
  *
- * @param file_name name of the file with the pbps
  * @params vh "V" for visitor and "H" for home play
  * @param time Time that the play happened
  * @param uni Jersey number of the player that did the play
@@ -525,110 +505,10 @@ function get_game_information_string(file_name) {
  * @param vscore Visitor's score after the play
  * @param hscore Home score after the play
  */
-exports.add_pbp = function(file_name, vh, time, uni, team, checkname, 
-								action, type, vscore, hscore) {
-	// Check that all required fields are there
-	if(vh == null) throw "vh is null";
-	if(time == null) throw "time is null";
-	if(uni == null) throw "uni is null";
-	if(team == null) throw "team is null";
-	if(checkname == null) throw "checkname is null";
-	if(action == null) throw "action is null";
-
-	// get new pbp to add
-	var xml_play = get_string_play_for_xml(vh, time, uni, team, checkname, 
-										   action, type, vscore, hscore);
-	// get current pbp string and add new pbp
-	var curr_pbp = read_pbp(file_name);
-	curr_pbp += "\n" + xml_play;
-	// get current game array
-	current_game_stats = exports.read_game_file(file_name);
-
-	// overwrite
-	overwrite_game_file(game_array_to_string(current_game_stats) + "\n" + semicolon_replacement +
-							   get_game_information_string(file_name) + "\n" + semicolon_replacement +
-							   curr_pbp, file_name);
-}
-
-/** 
- * Converts the given parameters into a valid xml tag that represents
- * a play in the media printout of play-by-plays.
- *
- * @param file_name name of the file with the pbps
- * @params vh "V" for visitor and "H" for home play
- * @param time Time that the play happened
- * @param uni Jersey number of the player that did the play
- * @param team Team abbrev of the player that did the action (e.g. "WISC")
- * @param checkname Name of the player that did the play
- * @param action Kind of play that was performed (e.g. "BLOCK")
- * @param type Additional information regarding the play (e.g. "DEFENSIVE")
- * @param vscore Visitor's score after the play
- * @param hscore Home score after the play
- */
-function get_string_play_for_xml(vh, time, uni, team, checkname, 
+exports.add_pbp = function(file_name, vh, time, uni, team, checkname,
 								action, type, vscore, hscore) {
 
-	// Init xml play tag
-	var play = "<play";
 
-	/** Add required sections */
-	//vh
-	if(vh != "H" && vh != "V") throw "invalid vh value: must be H or V. vh is " + vh;
-	play += ' vh="' + vh + '"';
-	//time
-	play += ' time="' + time + '"';
-	//uni
-	play += ' uni="' + uni + '"';
-	//team
-	play += ' team="' + team + '"';
-	//checkname
-	play += ' checkname="' + checkname + '"';
-	//action
-	play += ' action="' + action + '"';
-	//type
-	if(type != null) play += ' type="' + type + '"';
-	//vscore & hscore
-	if(vscore != null && hscore != null) {
-		play += ' vscore="' + vscore + '"';
-		play += ' hscore="' + hscore + '"';
-	}
-
-	// Close xml play tag
-	play += '></play>';
-
-	return play;
-}
-
-/** 
- * Reads the file with the given file_name and returns a string of the
- * play-by-play list in that file. Includes the first line PBP\n.
- * 
- * @param file_name name of the file
- * @return string representation of the play-by-plays
- */
-function read_pbp(file_name) {
-	// Get string version of file contents
-	var file_path = get_file_path(file_name);
-	var file_contents = get_game_file_contents(file_path);
-	if(file_contents == null) {
-		throw "File Read Error: File " + file_name + " does not exist!";
-	}
-
-	// Get footer from stats_string_arr
-	var stats_string_arr = file_contents.split(semicolon_replacement);
-	var pbp = stats_string_arr[4];
-
-	return pbp;
-}
-
-/** 
- * Creates an XML file from a game file with the given file name. Stores it at
- * the file path defined in xml_file_path defined at the top of this file.
- *
- * @param game_file_name name of the game file to generate xml file from
- */
-exports.create_xml_file = function(game_file_name) {
-	
 }
 
 
@@ -673,14 +553,4 @@ exports.test_overwrite_game_file = function(new_content, file_name) {
 
 exports.test_get_game_information_string = function(file_name) {
 	return get_game_information_string(file_name);
-}
-
-exports.test_get_string_play_for_xml = function(vh, time, uni, team, checkname, 
-								action, type, vscore, hscore) {
-	return get_string_play_for_xml(vh, time, uni, team, checkname, 
-								action, type, vscore, hscore);
-}
-
-exports.test_read_pbp = function(file_name) {
-	return read_pbp(file_name);
 }
