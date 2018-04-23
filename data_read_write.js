@@ -728,8 +728,25 @@ function xml_get_byprdsummaries(game_file_name) {
 	//TODO
 }
 
+var HARDCODED_TIME_PER_PERIOD = "20:00";
 function xml_get_plays(game_file_name) {
-	//TODO
+	// split pbp array of periods
+	var pbp_split = read_pbp(game_file_name).replace('PBP\n','').split('\n' + game_period_delimiter + '\n');
+
+	// create plays_string
+	var plays_string = '<plays format="tokens">\n';
+	for(var i = 1; i <= pbp_split.length; i++) {
+		plays_string += '<period number="' + i + '" time="' + HARDCODED_TIME_PER_PERIOD + '">\n';
+		
+		// TODO: include special stats and summary stats
+		// ...
+		
+		plays_string += pbp_split[i-1];
+		plays_string += '\n</period>\n';
+	}
+	plays_string += '</plays>';
+
+	return plays_string;
 }
 
 
