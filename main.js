@@ -139,7 +139,6 @@ function createTeam(name, code, head_coach, asst_coach, stadium){
 
 
 function addPlay(keystrokes){
-	console.log("current_game: " + current_game);
 	var statArray = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 	var input = keystrokes.split(/ /);
 	if(TESTING) console.log(input);
@@ -166,26 +165,26 @@ function addPlay(keystrokes){
 	team = team.toUpperCase();
 	//console.log("Primary team code: " + primary_team_code);
 	switch(input[0]){
-		case 'y':
+		case 'y' || 'Y':
 			statArray[5] = 1;	//3 attempt
-		case 'w':
+		case 'w' || 'W':
 			wrongBasket(statArray[0]);
 			return;
-		case 'j':
-		case 'p':
-		case 'l':
-		case 'd':
+		case 'j' || 'J':
+		case 'p' || 'P':
+		case 'l' || 'L':
+		case 'd' || 'D':
 
 			//fieldgoal attempt cases
 			var paint;
 			var fastb;
 			
-			if (input[0] == 'y') type="3PTR";
-			else if (input[0] == 'w') type = "WRONGB";
-			else if (input[0] == 'j') type = "JUMPER";
-			else if (input[0] == 'p') type = "TIPIN";
-			else if (input[0] == 'l') type = "LAYUP";
-			else if (input[0] == 'd') type = "DUNK";
+			if (input[0] == 'y' || input[0] == 'Y') type="3PTR";
+			else if (input[0] == 'w' || input[0] == 'W') type = "WRONGB";
+			else if (input[0] == 'j' || input[0] == 'J') type = "JUMPER";
+			else if (input[0] == 'p' || input[0] == 'P') type = "TIPIN";
+			else if (input[0] == 'l' || input[0] == 'L') type = "LAYUP";
+			else if (input[0] == 'd' || input[0] == 'D') type = "DUNK";
 			
 			statArray[3] = 1;	//fieldgoal attempt
 			if (team != input[3]) actingPlayer = input[3];	//if the 4th arg in input is not the team, it must be a stealing/rebounding/etc. player
@@ -196,9 +195,9 @@ function addPlay(keystrokes){
 					statArray[16] = 2;
 					console.log("Action: " + action);
 					break;
-				case 'a':	
+				case 'a' || 'A':	
 					action = "GOOD";
-					if (input[0] == 'y')
+					if (input[0] == 'y' || input[0] == 'Y')
 					{
 						statArray[16] = 3;
 						statArray[2] = 1;	//fieldgoal
@@ -210,39 +209,39 @@ function addPlay(keystrokes){
 					}
 					assist(statArray[0], actingPlayer, time_of_play, secondary_player_name, visit_score, home_score, primary_team_code);	//If there's an assist, record it
 					break;
-				case 'y':
+				case 'y' || 'Y':
 					statArray[2] = 1;	//fieldgoal
 					statArray[4] = 1;	//made 3-pointer
 					action = "GOOD";
 					statArray[16] = 3;
 					break;
-				case 'r':
+				case 'r' || 'R':
 					action = "MISS";
 					rebound(statArray[0], actingPlayer, time_of_play, secondary_player_name, visit_score, home_score, primary_team_code);	//Offensive rebound
 					break;
-				case 'x':
+				case 'x' || 'X':
 					action = "MISS";
 					rebound(statArray[0], actingPlayer, time_of_play, secondary_player_name, visit_score, home_score, primary_team_code);	//Offensive rebound
 					break;
-				case 'd':
+				case 'd' || 'D':
 					action = "MISS";
 					rebound(statArray[0], actingPlayer, time_of_play, secondary_player_name, visit_score, home_score, secondary_team_code, 1);	//Defensive rebound
 					break;
-				case 'k':
+				case 'k' || 'K':
 					action = "MISS";
 					block(statArray[0], actingPlayer, time_of_play, secondary_player_name, visit_score, home_score, secondary_team_code, 1);		//Block
 					break;
-				case 'p':
+				case 'p' || 'P':
 					paint = "Y";
 					inPaint(statArray[0]);
 					statArray[16] = 2;
 					break;
-				case 'f':
+				case 'f' || 'F':
 					fastb = "Y";
 					fastBreak(statArray[0]);
 					statArray[16] = 2;
 					break;
-				case 'z':
+				case 'z' || 'Z':
 					paint = "Y";
 					fastb = "Y";
 					fastBreak(statArray[0]);
@@ -252,7 +251,7 @@ function addPlay(keystrokes){
 			}
 			break;
 
-		case 'e':
+		case 'e' || 'E':
 			//freethrow attempt cases
 
 			statArray[7] = 1; 	//freethrow attempt
@@ -276,7 +275,7 @@ function addPlay(keystrokes){
 				rebound(statArray[0], actingPlayer, time_of_play, secondary_player_name, visit_score, home_score, secondary_team_code, 1);		//defensive rebound
 			}
 			break;
-		case 'r':
+		case 'r' || 'R':
 			if (input[1] == 'm') 
 			{
 				primary_player_name = "TEAM";
@@ -305,19 +304,25 @@ function addPlay(keystrokes){
 				}
 			}	
 			return;
-		case 'a':
+		case 'a' || 'A':
 			assist(statArray[0], input[1], time_of_play, primary_player_name, visit_score, home_score, primary_team_code);		//assist by player. Literally the simplest thing this function does
 			return;
-		case 'f':
+		case 'F':
+			console.log("Foul: " + input[2]);
+			if (input[2] == 'H'){
+				statArray[0] = 0;
+			} else if (input[2] == 'V'){
+				statArray[0] = 1;
+			}
 			action = "FOUL";
-			if (input[1].charAt(0) === 't')		//technical foul (input[1] = 'T##')
+			if (input[1].charAt(0) === 'T')		//technical foul (input[1] = 'T##')
 			{	
 				type = "TECH";
-				statArray[1] = input[1].substring(1,3);		//take last two characters for player number
+				statArray[1] = input[2].substring(1,3);		//take last two characters for player number
 				statArray[12] = 1;		//technical foul
 				teamFoul(statArray[0]);
 			} 
-			else if (input[1] === 'b')	//bench foul (team stat)
+			else if (input[1] === 'B')	//bench foul (team stat)
 			{	
 				drw.add_pbp(current_game, team, time_of_play, "TM", primary_team_code, "TEAM", "FOUL", "BENCH", visit_score, home_score);
 				teamFoul(statArray[0]);
@@ -330,7 +335,7 @@ function addPlay(keystrokes){
 				teamFoul(statArray[0]);
 			}
 			break;
-		case 't':
+		case 't' || 'T':
 			action = "TURNOVER";
 			if (input[1] == 'm')
 			{
@@ -339,11 +344,11 @@ function addPlay(keystrokes){
 			}
 			statArray[14] = 1; //turnover
 			break;
-		case 's':
+		case 's' || 'S':
 			action = "STEAL";
 			statArray[15] = 1;	//steal
 			break;
-		case 'k':
+		case 'k' || 'K':
 			action = "BLOCK";
 			statArray[13] = 1; //block
 			if (input[2] === 'r')
@@ -368,7 +373,7 @@ function addPlay(keystrokes){
 		case 'f2':		//jersey change
 			chg(statArray[0], input[1], input[2]);
 			return;
-		case 'o':		//timeout
+		case 'o' || 'O':		//timeout
 			
 			if (input[1] == "3")
 			{
@@ -562,6 +567,7 @@ function timeout(team,type)
 	if (type === "3"){
 		drw.write_team_stats_to_game_file([team,0,0,0,0,0,0,1,0], current_game);
 	} else if (type === "m"){
+		console.log("Full min");
 		drw.write_team_stats_to_game_file([team,0,0,0,0,0,0,0,1], current_game);
 	}
 }
@@ -590,7 +596,7 @@ function wrongBasket(team)
  */
 function initGame(args)
 {
-	var game_file = args[6] + "_" + args[7];
+	var game_file = args[6] + "_" + args[7].split(/:/)[0];
 	if (drw.create_game_file(indiv_stat_headers, team_stat_headers, game_file, args) == false)
 	{
 		throw "File already exists";
