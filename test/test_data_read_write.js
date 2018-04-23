@@ -9,21 +9,26 @@ var FileReader = require('filereader');
 
 const file_name = "data_test";
 const file_path = "data/data_test.txt";
+const xml_path = "data/data_test.xml";
 const individual_stat_labels = ['number', 'fg', 'fga', 'pts'];
 const team_stat_labels = ['team fouls', 'timeouts left'];
+const footer = ['test', 1,'test2/test3/test4', 'test5'];
 
 String.prototype.replaceAll = function(target, replacement) {
   return this.split(target).join(replacement);
 };
 
-var footer = ['test', 1,'test2/test3/test4', 'test5'];
 // UNIT TEST DATA
-var contents = "HOME\nnumber,fg,fga,pts\n"
+/*var contents = "HOME\nnumber,fg,fga,pts\n"
         + ";AWAY\nnumber,fg,fga,pts\n"
         + ";TEAM\nteam fouls,timeouts left\n0,0\n0,0\n"
-        + ";FOOTER\n" + footer.toString();
+        + ";FOOTER\n" + footer.toString() + "\n/;PBP";
 contents = contents.replaceAll(",", "(&h#@d!`_");
-contents = contents.replaceAll(";", "/Od@&?l#i");
+contents = contents.replaceAll(";", "/Od@&?l#i");*/
+var contents ="HOME\nnumber(&h#@d!`_fg(&h#@d!`_fga(&h#@d!`_pts\n"
+					+ "/Od@&?l#iAWAY\nnumber(&h#@d!`_fg(&h#@d!`_fga(&h#@d!`_pts\n"
+					+ "/Od@&?l#iTEAM\nteam fouls(&h#@d!`_timeouts left\n0(&h#@d!`_0\n0(&h#@d!`_0\n"
+					+ "/Od@&?l#iFOOTER\n" + footer.toString().replace(/,/g,'(&h#@d!`_') + "\n/Od@&?l#iPBP";
 
 var test_stats = "HOME\nnumber,fg,fga,pts\n"
 + "30,2,4,6\n31,3,3,7\n44,5,7,12\n02,1,5,2\n"
@@ -59,6 +64,7 @@ const test_empty_team_stats_array = [[ 'number', 'fg', 'fga', 'pts' ]];
 
 const test_pbp = '<play vh="V" time="00:47" uni="12" team="MICH" checkname="ABDUR-RAHKMAN,M-A" action="GOOD" type="FT" vscore="78" hscore="69"></play>';
 const test_pbp_addition = test_pbp + '\n<play vh="V" time="09:49" uni="13" team="MICH" checkname="WAGNER,MORITZ" action="FOUL"></play>';
+const test_stats_with_footer_and_pbp = test_stats + "\n/Od@&?l#iFOOTER\n" + footer.toString().replace(/,/g,'(&h#@d!`_') + "\n/Od@&?l#iPBP\n" + test_pbp;
 // ADDITIONAL INTEGRATION TEST DATA
 //data
 
@@ -293,7 +299,7 @@ describe('data_read_write tests', function() {
     });
    describe('overwrite_game_file()', function() {
       it('should overwrite the contents of a file with new contents', function() {
-        assert.strictEqual(drw.test_overwrite_game_file(test_stats_with_footer, file_name), true);
+        assert.strictEqual(drw.test_overwrite_game_file(test_stats_with_footer_and_pbp, file_name), true);
         assert.strictEqual(drw.read_game_file(file_name).toString(), test_stats_array.toString());
       });
       it ('should throw a File Read Error given a file that doesn\'t exist', function() {

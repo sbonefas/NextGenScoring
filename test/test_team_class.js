@@ -8,8 +8,8 @@ function verifyArrayInfo(array, flag) {
     testArray = ["Wisconsin", "WISC", "Bo Ryan", "Howard Moore", "Alliant Energy Center", []]
   }
   else {
-    testArray = ["Wisconsin Badgers", "WIS", "Greg Gard", "Dean Oliver", "Kohl Center", [{name: "Ethan Happ",
-    number: 22, position: "F"}]]
+    testArray = ["Wisconsin Badgers", "WIS", "Greg Gard", "Dean Oliver", "Kohl Center", ["Ethan Happ",
+    22, "F", "junior"]]
   }
   assert.strictEqual(array[0], testArray[0]);
   assert.strictEqual(array[1], testArray[1]);
@@ -17,9 +17,10 @@ function verifyArrayInfo(array, flag) {
   assert.strictEqual(array[3], testArray[3]);
   assert.strictEqual(array[4], testArray[4]);
   if (array[5][0] && testArray[5][0]) {
-    assert.strictEqual(array[5][0]["name"], testArray[5][0]["name"]);
-    assert.strictEqual(array[5][0]["number"], testArray[5][0]["number"]);
-    assert.strictEqual(array[5][0]["position"], testArray[5][0]["position"]);
+    assert.strictEqual(array[5][0][0], testArray[5][0]);
+    assert.strictEqual(array[5][0][1], testArray[5][1]);
+    assert.strictEqual(array[5][0][2], testArray[5][2]);
+    assert.strictEqual(array[5][0][3], testArray[5][3]);
   }
   //Implicit pass if both arrays are undefined
 }
@@ -78,18 +79,20 @@ describe('Team tests', function() {
       assert.strictEqual(t1.get_stadium(), "Kohl Center");
     });
     it('should add a player to the roster', function() {
-      var p1 = new Player("Ethan Happ", 22, "F");
+      var p1 = new Player("Ethan Happ", 22, "F", "junior");
       t1.add_player_to_roster(p1);
-      assert.strictEqual(t1.get_active_roster()[0]["name"], "Ethan Happ");
-      assert.strictEqual(t1.get_active_roster()[0]["number"], 22);
-      assert.strictEqual(t1.get_active_roster()[0]["position"], "F");
+      assert.strictEqual(t1.get_active_roster()[0][0], "Ethan Happ");
+      assert.strictEqual(t1.get_active_roster()[0][1], 22);
+      assert.strictEqual(t1.get_active_roster()[0][2], "F");
+      assert.strictEqual(t1.get_active_roster()[0][3], "junior");
     });
     it('should add another player to the roster', function() {
-       var p2 = new Player("Khalil Iverson", 21, "G");
+       var p2 = new Player("Khalil Iverson", 21, "G", "junior");
        t1.add_player_to_roster(p2);
-       assert.strictEqual(t1.get_active_roster()[1]["name"], "Khalil Iverson");
-       assert.strictEqual(t1.get_active_roster()[1]["number"], 21);
-       assert.strictEqual(t1.get_active_roster()[1]["position"], "G");
+       assert.strictEqual(t1.get_active_roster()[1][0], "Khalil Iverson");
+       assert.strictEqual(t1.get_active_roster()[1][1], 21);
+       assert.strictEqual(t1.get_active_roster()[1][2], "G");
+       assert.strictEqual(t1.get_active_roster()[1][3], "junior");
     });
     it('should remove a player from the roster', function() {
        t1.remove_player_from_roster("Khalil Iverson", 21);
@@ -101,17 +104,19 @@ describe('Team tests', function() {
        } catch(e) {
          assert.strictEqual(e, "remove_player_from_roster Error: player could not be found: (name: Ethan Hap number: 22)\n");
        }
-       assert.strictEqual(t1.get_active_roster()[0]["name"], "Ethan Happ");
-       assert.strictEqual(t1.get_active_roster()[0]["number"], 22);
-       assert.strictEqual(t1.get_active_roster()[0]["position"], "F");
+       assert.strictEqual(t1.get_active_roster()[0][0], "Ethan Happ");
+       assert.strictEqual(t1.get_active_roster()[0][1], 22);
+       assert.strictEqual(t1.get_active_roster()[0][2], "F");
+       assert.strictEqual(t1.get_active_roster()[0][3], "junior");
     });
     it('should return all new information as an array', function() {
       verifyArrayInfo(t1.to_array(), 1);
     });
     it('should throw an error if passed in a null argument when adding a new player', function() {
-      var p3 = new Player(null, 22, "F");
+      var p3 = new Player(null, 22, "F", "senior");
       try {
         t1.add_player_to_roster(p3);
+        assert.fail("Should've thrown an error if given a null argument")
       } catch (e) {
         assert.strictEqual(e, "add_player_to_roster Error: object passed is not a player");
       }
