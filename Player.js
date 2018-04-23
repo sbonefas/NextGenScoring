@@ -24,6 +24,6 @@ module.exports = function(name, number, position, year){
 	}
 	
 	this.to_array = function(){
-		return [this.name, this.number, this.position. this.year];
+		return [this.name, this.number, this.position, this.year];
 	}
 }
