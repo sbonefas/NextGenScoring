@@ -418,6 +418,7 @@ var app = new Vue({
          this.new_team = new Team(name, code, coach, assistants, stadium);
          var modal = document.getElementById('team_edit');
          modal.style.display = "none";
+         app.selected_team = {};
          var edited_team_file = app.selected_team[0].toLowerCase().split(' ').join('_'); // Dervive filename from team name
          var team = TRW.read_team(edited_team_file); // Read team file into an array
          console.log("TEAM: \n"+team);
@@ -472,6 +473,7 @@ var app = new Vue({
              if (isEscape) {
                  roster_modal.style.display = "none";
                  app.editing_team = false;
+                 app.selected_team = {};
              }
            }
          var players = [];
