@@ -102,7 +102,7 @@ ipc.on('get-game-success', function(event,args) {
     document.getElementsByName("home_name")[0].value = app.selected_game.home_name;
     document.getElementsByName("vis_name")[0].value = app.selected_game.vis_name;
     document.getElementsByName("game_date")[0].value = app.selected_game.date;
-    document.getElementsByName("game_time")[0].value = app.selected_game.time;
+    document.getElementsByName("game_time")[0].value = app.selected_game.time.split(/:/)[0];
     document.getElementsByName("game_site")[0].value = app.selected_game.site;
     document.getElementById("select_site").selectedIndex = app.selected_game.site_code;//0 = home, 1 = away, 2 = neutral
     document.getElementById("select_league").selectedIndex = app.selected_game.league;//0 = Yes, 1 = No
@@ -197,7 +197,7 @@ var app = new Vue({
     edit_game() {
       if(app.selected_game.date != undefined) {
 
-        date_time = app.selected_game.date + "_" + app.selected_game.time;
+        date_time = app.selected_game.date + "_" + app.selected_game.time.split(/:/)[0];
         //UNCOMMENT TO TEST GET-GAME
 //		date_time = "3-12-19_4pm"
         console.log(date_time)
@@ -397,7 +397,7 @@ var app = new Vue({
         }
         else {
             for(i = 0; i < app.games.length; i++) {
-                if(app.games[i].date == app.selected_game.date && app.games[i].time == app.selected_game.time) {
+                if(app.games[i].date == app.selected_game.date && app.games[i].time == app.selected_game.time.split(/:/)[0]) {
 //                    console.log(app.games[i])
                     app.selected_game = app.games[i];
                 }
@@ -409,7 +409,7 @@ var app = new Vue({
 	        localStorage.setItem("homeName",app.selected_game.home_name);
 	        localStorage.setItem("visName",app.selected_game.vis_name);
 	        localStorage.setItem("gameDate",app.selected_game.date);
-	        localStorage.setItem("gameTime",app.selected_game.time);
+	        localStorage.setItem("gameTime",app.selected_game.time.split(/:/)[0]);
 //	        localStorage.setItem("currGame",app.selected_game);
 //	        console.log(app.selected_game)
 //	        console.log(localStorage.getItem("currGame"))
@@ -419,14 +419,14 @@ var app = new Vue({
     // If F9 is pressed
     delete_game() {
       if(app.selected_game.date != undefined) {
-        if(window.confirm("DELETE GAME: "+ app.selected_game.date + " at " + app.selected_game.time + "?"))
+        if(window.confirm("DELETE GAME: "+ app.selected_game.date + " at " + app.selected_game.time.split(/:/)[0] + "?"))
         {
           for(var index = 0; index < app.games.length; index++)
           {
             if(app.games[index].date == app.selected_game.date)
             {
               app.games.splice(index, 1);
-              date_time = app.selected_game.date + "_" + app.selected_game.time;
+              date_time = app.selected_game.date + "_" + app.selected_game.time.split(/:/)[0];
 
               //UNCOMMENT to test delete_file
 //              date_time = "0006-08-08_18:06";

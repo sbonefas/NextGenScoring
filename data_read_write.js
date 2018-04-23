@@ -22,6 +22,7 @@
  *																	*
   *******************************************************************/
 
+
 const fs = require("fs");	//node.js filesystem
 
 /** path to the folder where data is kept */
@@ -30,6 +31,9 @@ var game_directory = "data/";
 /** comma and semicolon replacements */
 const comma_replacement		= "(&h#@d!`_";
 const semicolon_replacement = "/Od@&?l#i";
+
+/** version number of the software for xml creation purposes */
+var version = "0.3.2";
 
 /**
  * Returns the filepath of a file with a given name
@@ -41,6 +45,11 @@ function get_file_path(file_name) {
 	return game_directory + file_name + '.txt';
 }
 
+/** 
+ * Deltes a file with a given filename from the game directory
+ *
+ * @param file_name Name of the file
+ */
 exports.delete_file = function(file_name) {
 	if(fs.existsSync(get_file_path(file_name))) fs.unlinkSync(get_file_path(file_name));
 }
@@ -66,6 +75,12 @@ exports.edit_game_directory = function(new_path) {
  */
 exports.get_all_games = function() {
 	file_names = fs.readdirSync(game_directory);
+	for(var i = 0; i < file_names.length; i++) {
+		if(file_names[i].substring(0,1) == '.' || file_names[i].slice(-4) == '.xml') {
+			file_names.splice(i, 1);
+		}
+	}
+
 	games = Array(file_names.length);
 
 	// Convert file names in teams to contents
@@ -91,10 +106,10 @@ exports.get_all_games = function() {
  */
 exports.create_game_file = function(individual_stat_labels, team_stat_labels, file_name, footer) {
 	// Error Handling:
-	if(individual_stat_labels == undefined) throw "No Individual Stat Labels Provided";
-	if(team_stat_labels == undefined) throw "No Team Stat Labels Provided";
-	if(file_name == undefined) throw "No File Name Provided";
-	if(footer == undefined) throw "No Footer Provided";
+	if(individual_stat_labels == undefined) throw "create_game_file: No Individual Stat Labels Provided";
+	if(team_stat_labels == undefined) throw "create_game_file: No Team Stat Labels Provided";
+	if(file_name == undefined) throw "create_game_file: No File Name Provided";
+	if(footer == undefined) throw "create_game_file: No Footer Provided";
 
 	// Check if file exists
 	var file_path = get_file_path(file_name);
@@ -105,7 +120,7 @@ exports.create_game_file = function(individual_stat_labels, team_stat_labels, fi
 	try {
     	fs.writeFileSync(file_path, file_contents);
 	} catch (e) {
-		throw "File Creation Failed: " + e;
+		throw "create_game_file: File Creation Failed: " + e;
 	}
 	return true;
 }
@@ -126,6 +141,8 @@ exports.create_game_file = function(individual_stat_labels, team_stat_labels, fi
  * [away team stats]
  * ;FOOTER
  * [game information]
+ * ;PBP
+ * [pbp string]
  *
  * @param labels Array of stat labels to be used in the stat file
  * @return String of initial file contents.
@@ -156,6 +173,8 @@ function get_initial_game_file_contents(individual_stat_labels, team_stat_labels
 	contents += "\n" + semicolon_replacement + "FOOTER\n";
 	contents += footer.toString().replace(/,/g, comma_replacement);
 
+	contents += "\n" + semicolon_replacement + "PBP";
+
 	return contents;
 }
 
@@ -174,12 +193,12 @@ function get_initial_game_file_contents(individual_stat_labels, team_stat_labels
  */
 exports.read_game_file = function(file_name) {
 	// Get string version of file contents
-	if (file_name == undefined) throw "No File Name Provided";
+	if (file_name == undefined) throw "read_game_file: No File Name Provided";
 	var file_path = get_file_path(file_name);
 	//if (!fs.existsSync(file_path)) throw "File Name Doesn't Exist";
 	var file_contents = get_game_file_contents(file_path);
 	if(file_contents == null) {
-		throw "File Read Error: File " + file_name + " does not exist!";
+		throw "read_game_file: File Read Error: File " + file_name + " does not exist!";
 	}
 
 	// Convert to three separate strings. Cut off last newline.
@@ -283,7 +302,7 @@ function scrape_team_stats(stats_string_arr, team_no) {
  * @return 2d array with unitialized elements.
  */
 function create_2d_array(num_rows, num_cols) {
-	if (num_rows <= 0 || num_cols <= 0) throw "Invalid Index Error";
+	if (num_rows <= 0 || num_cols <= 0) throw "create_2d_array: Invalid Index Error";
 	var arr = [];
 	for(var row = 0; row < num_rows; row++) {
 		arr[row] = [];
@@ -305,14 +324,14 @@ function create_2d_array(num_rows, num_cols) {
  * @return True if write is successful, false otherwise.
  */
 exports.write_player_stats_to_game_file = function(stat_changes, file_name) {
-	if(stat_changes == undefined) throw "No Stat Changes Provided";
-	if(file_name == undefined) throw "No File Name Provided";
-	if(!fs.existsSync(get_file_path(file_name))) throw "File Read Error: File " + file_name + " does not exist!";
+	if(stat_changes == undefined) throw "write_player_stats_to_game_file: No Stat Changes Provided";
+	if(file_name == undefined) throw "write_player_stats_to_game_file: No File Name Provided";
+	if(!fs.existsSync(get_file_path(file_name))) throw "write_player_stats_to_game_file: File Read Error: File " + file_name + " does not exist!";
 
 	// Set player's team and player number for stat change
 	var is_home = stat_changes[0];
 	if(!(is_home == 1 || is_home == 0)) {
-		throw "Index Error: The first index in any stat changes must be 0 or 1";
+		throw "write_player_stats_to_game_file: Index Error: The first index in any stat changes must be 0 or 1";
 	}
 	var player_number = stat_changes[1];
 
@@ -321,7 +340,7 @@ exports.write_player_stats_to_game_file = function(stat_changes, file_name) {
 	try {
 		current_game_stats = exports.read_game_file(file_name);
 	} catch(e) {
-		console.log("READ ERROR: " + e);
+		console.log("write_player_stats_to_game_file: READ ERROR: " + e);
 		return false;
 	}
 
@@ -330,7 +349,8 @@ exports.write_player_stats_to_game_file = function(stat_changes, file_name) {
 	current_game_stats[1-is_home] = current_team_stats;
 
 	return overwrite_game_file(game_array_to_string(current_game_stats) + "\n" + semicolon_replacement +
-							   get_game_information_string(file_name), file_name);
+							   get_game_information_string(file_name) + "\n" + semicolon_replacement +
+							   read_pbp(file_name), file_name);
 }
 
 /**
@@ -344,12 +364,12 @@ exports.write_player_stats_to_game_file = function(stat_changes, file_name) {
  * @return True if write is successful, false otherwise.
  */
 exports.write_team_stats_to_game_file = function(stat_changes, file_name) {
-	if(stat_changes == undefined) throw "No Stat Changes Provided";
-	if(file_name == undefined) throw "No File Name Provided";
-	if(!fs.existsSync(get_file_path(file_name))) throw "File Read Error: File " + file_name + " does not exist!";
+	if(stat_changes == undefined) throw "write_team_stats_to_game_file: No Stat Changes Provided";
+	if(file_name == undefined) throw "write_team_stats_to_game_file: No File Name Provided";
+	if(!fs.existsSync(get_file_path(file_name))) throw "write_team_stats_to_game_file: File Read Error: File " + file_name + " does not exist!";
 	var is_home = stat_changes[0];
 	if(!(is_home == 1 || is_home == 0)) {
-		throw "Index Error: The first index in any stat changes must be 0 or 1";
+		throw "write_team_stats_to_game_file: Index Error: The first index in any stat changes must be 0 or 1";
 	}
 	var player_number = stat_changes[1];
 
@@ -358,7 +378,7 @@ exports.write_team_stats_to_game_file = function(stat_changes, file_name) {
 	try {
 		current_game_stats = exports.read_game_file(file_name);
 	} catch(e) {
-		console.log("READ ERROR: " + e);
+		console.log("write_team_stats_to_game_file: READ ERROR: " + e);
 		return false;
 	}
 
@@ -371,7 +391,8 @@ exports.write_team_stats_to_game_file = function(stat_changes, file_name) {
 	current_game_stats[3 - is_home][1] = team_stats;
 
 	return overwrite_game_file(game_array_to_string(current_game_stats) + "\n" + semicolon_replacement+
-							   get_game_information_string(file_name), file_name);
+							   get_game_information_string(file_name) + "\n" + semicolon_replacement +
+							   read_pbp(file_name), file_name);
 
 }
 
@@ -414,7 +435,8 @@ function edit_current_stats(current_stats, stat_changes) {
 }
 
 /**
- * Converts the given 3D array of game stats into a string.
+ * Converts the given 3D array of game stats into a string. Does not include
+ * footer or play-by-play
  *
  * @param game_array 3D array of game stats
  * @return string representation of the game to be stored in the game file.
@@ -458,8 +480,8 @@ function game_array_to_string(game_array) {
  * @return True if overwrite is successful, false otherwise.
  */
 function overwrite_game_file(new_content, file_name) {
-	if (file_name == undefined) throw "No File Name Provided";
-	if(!fs.existsSync(get_file_path(file_name))) throw "File Read Error: File " + file_name + " does not exist!";
+	if (file_name == undefined) throw "overwrite_game_file: No File Name Provided";
+	if(!fs.existsSync(get_file_path(file_name))) throw "overwrite_game_file: File Read Error: File " + file_name + " does not exist!";
 
 	try {
     	fs.writeFileSync(get_file_path(file_name), new_content);
@@ -482,19 +504,21 @@ function get_game_information_string(file_name) {
 	var file_path = get_file_path(file_name);
 	var file_contents = get_game_file_contents(file_path);
 	if(file_contents == null) {
-		throw "File Read Error: File " + file_name + " does not exist!";
+		throw "get_game_information_string: File Read Error: File " + file_name + " does not exist!";
 	}
 
 	// Get footer from stats_string_arr
 	var stats_string_arr = file_contents.split(semicolon_replacement);
 	var game_information = stats_string_arr[3];
+	if(game_information.slice(-1) == '\n') game_information = game_information.substring(0, game_information.length-1);
 
 	return game_information;
 }
 
-/**
+/** 
  * Adds a play to the gamefile. This is for the XML file.
  *
+ * @param file_name name of the file with the pbps
  * @params vh "V" for visitor and "H" for home play
  * @param time Time that the play happened
  * @param uni Jersey number of the player that did the play
@@ -505,10 +529,171 @@ function get_game_information_string(file_name) {
  * @param vscore Visitor's score after the play
  * @param hscore Home score after the play
  */
-exports.add_pbp = function(file_name, vh, time, uni, team, checkname,
+exports.add_pbp = function(file_name, vh, time, uni, team, checkname, 
+								action, type, vscore, hscore) {
+	// Check that all required fields are there
+	if(vh == null) throw "add_pbp: vh is null";
+	if(time == null) throw "add_pbp: time is null";
+	if(uni == null) throw "add_pbp: uni is null";
+	if(team == null) throw "add_pbp: team is null";
+	if(checkname == null) throw "add_pbp: checkname is null";
+	if(action == null) throw "add_pbp: action is null";
+
+	// get new pbp to add
+	var xml_play = get_string_play_for_xml(vh, time, uni, team, checkname, 
+										   action, type, vscore, hscore);
+	// get current pbp string and add new pbp
+	var curr_pbp = read_pbp(file_name);
+	curr_pbp += "\n" + xml_play;
+	// get current game array
+	current_game_stats = exports.read_game_file(file_name);
+
+	// overwrite
+	overwrite_game_file(game_array_to_string(current_game_stats) + "\n" + semicolon_replacement +
+							   get_game_information_string(file_name) + "\n" + semicolon_replacement +
+							   curr_pbp, file_name);
+
+	// update the xml file
+	exports.create_xml_file(file_name);
+}
+
+/** 
+ * Converts the given parameters into a valid xml tag that represents
+ * a play in the media printout of play-by-plays.
+ *
+ * @param file_name name of the file with the pbps
+ * @params vh "V" for visitor and "H" for home play
+ * @param time Time that the play happened
+ * @param uni Jersey number of the player that did the play
+ * @param team Team abbrev of the player that did the action (e.g. "WISC")
+ * @param checkname Name of the player that did the play
+ * @param action Kind of play that was performed (e.g. "BLOCK")
+ * @param type Additional information regarding the play (e.g. "DEFENSIVE")
+ * @param vscore Visitor's score after the play
+ * @param hscore Home score after the play
+ */
+function get_string_play_for_xml(vh, time, uni, team, checkname, 
 								action, type, vscore, hscore) {
 
+	// Init xml play tag
+	var play = "<play";
 
+	/** Add required sections */
+	//vh
+	if(vh != "H" && vh != "V") throw "get_string_play_for_xml: invalid vh value: must be H or V. vh is " + vh;
+	play += ' vh="' + vh + '"';
+	//time
+	play += ' time="' + time + '"';
+	//uni
+	play += ' uni="' + uni + '"';
+	//team
+	play += ' team="' + team + '"';
+	//checkname
+	play += ' checkname="' + checkname + '"';
+	//action
+	play += ' action="' + action + '"';
+	//type
+	if(type != null) play += ' type="' + type + '"';
+	//vscore & hscore
+	if(vscore != null && hscore != null) {
+		play += ' vscore="' + vscore + '"';
+		play += ' hscore="' + hscore + '"';
+	}
+
+	// Close xml play tag
+	play += '></play>';
+
+	return play;
+}
+
+/** 
+ * Reads the file with the given file_name and returns a string of the
+ * play-by-play list in that file. Includes the first line PBP\n.
+ * 
+ * @param file_name name of the file
+ * @return string representation of the play-by-plays
+ */
+function read_pbp(file_name) {
+	// Get string version of file contents
+	var file_path = get_file_path(file_name);
+	var file_contents = get_game_file_contents(file_path);
+	if(file_contents == null) {
+		throw "read_pbp: File Read Error: File " + file_name + " does not exist!";
+	}
+
+	// Get footer from stats_string_arr
+	var stats_string_arr = file_contents.split(semicolon_replacement);
+	var pbp = stats_string_arr[4];
+
+	return pbp;
+}
+
+/** 
+ * Creates an XML file from a game file with the given file name. Stores it at
+ * the file path defined in xml_file_path defined at the top of this file.
+ *
+ * @param game_file_name name of the game file to generate xml file from
+ */
+exports.create_xml_file = function(game_file_name) {
+	// test if game_file_name is valid
+	if(!fs.existsSync(get_file_path(game_file_name))) throw "create_xml_file: File Read Error: File " + game_file_name + " does not exist!";
+	var xml_file_path = get_file_path(game_file_name).slice(0,-4) + ".xml";
+	// test if xml_file_path is valid
+	/**if(!fs.existsSync(xml_file_path)) {
+		//throw "create_xml_file: XML File " + xml_file_path + " does not exist!";
+		try {
+			fs.writeFileSync("", xml_file_path);
+		} catch(e) {
+			console.log("create_xml_file: File writing error: " + e);
+		}
+	}*/
+
+	// create xml file from pbp and game information
+	var xml_string = '<bbgame source="STAT CREW Basketball" version="' + version + '" generated="' + xml_get_date() + '">\n';
+	xml_string += xml_get_venue(game_file_name) + "\n";
+	xml_string += xml_get_status(game_file_name) + "\n";
+	xml_string += xml_get_teams(game_file_name) + "\n";
+	xml_string += xml_get_byprdsummaries(game_file_name) + "\n";
+	xml_string += xml_get_plays(game_file_name) + "\n";
+	xml_string += "</bbgame>";
+
+	// store file in xml_file_path
+	try {
+		fs.writeFileSync(xml_file_path, xml_string);
+	} catch(e) {
+		console.log("create_xml_file: File writing error: " + e);
+	}
+}
+
+function xml_get_date() {
+	let today = new Date();
+	var date_string = "";
+
+	date_string += today.getMonth()+1 + "/";
+	date_string += today.getDate() + "/";
+	date_string += today.getFullYear();
+
+	return date_string;
+}
+
+function xml_get_venue(game_file_name) {
+	//TODO
+}
+
+function xml_get_status(game_file_name) {
+	//TODO
+}
+
+function xml_get_teams(game_file_name) {
+	//TODO
+}
+
+function xml_get_byprdsummaries(game_file_name) {
+	//TODO
+}
+
+function xml_get_plays(game_file_name) {
+	//TODO
 }
 
 
@@ -553,4 +738,14 @@ exports.test_overwrite_game_file = function(new_content, file_name) {
 
 exports.test_get_game_information_string = function(file_name) {
 	return get_game_information_string(file_name);
+}
+
+exports.test_get_string_play_for_xml = function(vh, time, uni, team, checkname, 
+								action, type, vscore, hscore) {
+	return get_string_play_for_xml(vh, time, uni, team, checkname, 
+								action, type, vscore, hscore);
+}
+
+exports.test_read_pbp = function(file_name) {
+	return read_pbp(file_name);
 }
