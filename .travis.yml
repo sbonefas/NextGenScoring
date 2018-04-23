@@ -4,3 +4,24 @@ node_js:
 # command to run tests
 script:
   - npm test
+=======
+language: python
+python:
+  - "3.6"
+env:
+  - MOZ_HEADLESS=1
+# command to install dependencies
+install:
+  - pip install -r requirements.txt
+# command to run tests
+script:
+  - pytest # or py.test for Python versions 3.5 and below
+addons:
+  firefox: "57.0"
+before_install:
+  - wget https://github.com/mozilla/geckodriver/releases/download/v0.20.1/geckodriver-v0.20.1-linux64.tar.gz
+  - mkdir geckodriver
+  - tar -xzf geckodriver-v0.20.1-linux64.tar.gz -C geckodriver
+  - export PATH=$PATH:$PWD/geckodriver
+  
+  
