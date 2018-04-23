@@ -1,8 +1,14 @@
 var dirName = "Statcrew"
+var xmlName = "XML"
 
 function changeDir() {
     dirName = document.getElementById("userinput").value;
     console.log(dirName);
+}
+
+function changeXml() {
+    dirName = document.getElementById("xmlinput").value;
+    console.log(xmlName);
 }
 
 var app = new Vue({
@@ -11,6 +17,8 @@ var app = new Vue({
         document.addEventListener('keydown', this.keyevent);
         var x = document.getElementById("userinput");
         x.setAttribute("value", dirName);
+        var y = document.getElementById("xmlinput");
+        y.setAttribute("value", xmlName);
     },
     methods: {
         keyevent(e) {
@@ -21,6 +29,9 @@ var app = new Vue({
         },
         changeDir() {
             dirName = document.getElementById("userinput").value;
+        },
+        changeXml() {
+            xmlName = document.getElementById("xmlinput").value;
         }
     }
 })
