@@ -22,7 +22,7 @@ const test_stats = "HOME\nnumber(&h#@d!`_fg(&h#@d!`_fga(&h#@d!`_pts\n"
 + "9(&h#@d!`_4\n"
 + "8(&h#@d!`_3";
 const test_pbp = '<play vh="V" time="00:47" uni="12" team="MICH" checkname="ABDUR-RAHKMAN,M-A" action="GOOD" type="FT" vscore="78" hscore="69"></play>';
-const test_pbp_addition = test_pbp + '\n<play vh="V" time="09:49" uni="13" team="MICH" checkname="WAGNER,MORITZ" action="FOUL"></play>';
+const test_pbp_addition = test_pbp + '\n^3#!gx/?]\n<play vh="V" time="09:49" uni="13" team="MICH" checkname="WAGNER,MORITZ" action="FOUL"></play>';
 const test_stats_with_footer_and_pbp = test_stats + "\n/Od@&?l#iFOOTER\n" + footer.toString().replace(/,/g,'(&h#@d!`_') + "\n/Od@&?l#iPBP\n" + test_pbp;
 const test_team_stats = "HOME\nnumber(&h#@d!`_fg(&h#@d!`_fga(&h#@d!`_pts\n30(&h#@d!`_2(&h#@d!`_4(&h#@d!`_6\n\
 31(&h#@d!`_3(&h#@d!`_3(&h#@d!`_7\n44(&h#@d!`_5(&h#@d!`_7(&h#@d!`_12\n02(&h#@d!`_1(&h#@d!`_5(&h#@d!`_2";
@@ -304,7 +304,7 @@ function test_read_pbp() {
 }
 
 function test_add_pbp() {
-	'<play vh="V" time="09:49" uni="13" team="MICH" checkname="WAGNER,MORITZ" action="FOUL"></play>'
+	//'<play vh="V" time="09:49" uni="13" team="MICH" checkname="WAGNER,MORITZ" action="FOUL"></play>'
 	var vh = 'V';
 	var time = '09:49';
 	var uni = '13';

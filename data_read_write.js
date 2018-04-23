@@ -31,6 +31,7 @@ var game_directory = "data/";
 /** comma and semicolon replacements */
 const comma_replacement		= "(&h#@d!`_";
 const semicolon_replacement = "/Od@&?l#i";
+const game_period_delimiter = "^3#!gx/?]"
 
 /** version number of the software for xml creation purposes */
 var version = "0.3.2";
@@ -542,9 +543,14 @@ exports.add_pbp = function(file_name, vh, time, uni, team, checkname,
 	// get new pbp to add
 	var xml_play = get_string_play_for_xml(vh, time, uni, team, checkname, 
 										   action, type, vscore, hscore);
-	// get current pbp string and add new pbp
+
+	// get current pbp string and add new pbp. add period delimiter if period ended.
 	var curr_pbp = read_pbp(file_name);
+	if(get_last_pbp_timestamp(file_name) < mmss_to_seconds(time)) {
+		curr_pbp += "\n" + game_period_delimiter;
+	}
 	curr_pbp += "\n" + xml_play;
+
 	// get current game array
 	current_game_stats = exports.read_game_file(file_name);
 
@@ -628,6 +634,9 @@ function read_pbp(file_name) {
 	return pbp;
 }
 
+/**
+ * Gets the number of seconds until 00:00 of the time of the last play in the given file.
+ */
 function get_last_pbp_timestamp(file_name) {
 	// split pbp into array of plays
 	var pbp_split = read_pbp(file_name).replace(/><\/play>/g,'').replace('PBP\n<play','').split('<play');
@@ -644,6 +653,9 @@ function get_last_pbp_timestamp(file_name) {
 	return mmss_to_seconds(timestamp);
 }
 
+/**
+ * Converts a string formatted as mm:ss into the number of seconds until 00:00.
+ */
 function mmss_to_seconds(mmss) {
 	var ms = mmss.split(':');
 	var seconds = Number(ms[0])*60 + Number(ms[1])*1;
