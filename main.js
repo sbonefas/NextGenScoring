@@ -36,7 +36,6 @@ function createWindow() {
 	if(TESTING) {
 		//drw.create_game_file(stat_headers, test_file_name, args);
 		//drw.read_game_file(test_file_name);
-		createTeam("Badgers", "WIS", "Bo Ryan", "I Forgot", "Kohl Center");
 	}
 	win.on('closed', () => {
 		win = null;
@@ -85,7 +84,7 @@ function createTeam(name, code, head_coach, asst_coach, stadium){
  * FORMAT:
  *
  * FOR FIELD GOALS: [PLAY_CODE, PLAYER_NUMBER, RESULT_CODE (R FOR OFF REBOUND, D FOR DEF REBOUND), REBOUND/ASSIST/BLOCK_PLAYER (REBOUND IF RESULT_CODE = 'R or X or D' / BLOCK IF RESULT_CODE = 'K' / ASSIST IF ANYTHING ELSE), HOME/AWAY, TIME_OF_PLAY, PRIMARY_PLAYER_NAME, SECONDARY_PLAYER_NAME (IF ASSIST OR REBOUND), VISITOR_SCORE, HOME_SCORE]
- *                  [    0    ,       1      ,                    2                              ,                                                             3                                                              ,     4    ,      5      ,           6        ,                  7                          ,       8      ,     9     ]          
+ *                  [    0    ,       1      ,                    2                              ,                                                             3                                                              ,     4    ,      5      ,           6        ,                  7                          ,       8      ,     9     ]
  *
  *
  * FOR FREETHROWS: [E, PLAYER_NUMBER, RESULT_CODE, REBOUND_PLAYER_NUMBER (IF RESULT_CODE IS R/D), HOME/AWAY, TIME_OF_PLAY, PRIMARY_PLAYER_NAME, SECONDARY_PLAYER_NAME (IF REBOUND), VISITOR_SCORE, HOME_SCORE]
@@ -306,7 +305,7 @@ function addPlay(keystrokes){
 	-If it was a defensive rebound, the rebounding player is on the opposite team
 	as the one who attempted the shot, so switch teams before registering rebound
 	-Otherwise, just register rebound on current team
-*/ 
+*/
 function rebound(team, player_number, def_rebound){
 	var statArray;
 	if (def_rebound != null){
@@ -330,9 +329,9 @@ function assist(t, player_number){
 
 /*
 	Block credited to player
-	-If it was from a shot attempt, the blocking player is on the opposite team 
+	-If it was from a shot attempt, the blocking player is on the opposite team
 	as the one who attempted the shot, so switch teams before registering block
-	-Otherwise, just register block on current team 
+	-Otherwise, just register block on current team
 */
 function block(team, player_number, from_shot_attempt){
 	//team to block will be opposite of team who attempted shot
@@ -365,7 +364,7 @@ function add_team_points(team,numPoints){
 
 
 /*
-	Shot made in paint 
+	Shot made in paint
 	Increments team in paint counter
 */
 function inPaint(team){
@@ -374,7 +373,7 @@ function inPaint(team){
 
 
 /*
-	Fast break shot made 
+	Fast break shot made
 	Increments team fast break counter
 */
 function fastBreak(team){
@@ -453,8 +452,8 @@ function initGame(args){
 	if (drw.create_game_file(indiv_stat_headers, team_stat_headers, game_file, args) == false)
 	{
 		throw "File already exists";
-	} 
-	else 
+	}
+	else
 	{
 		current_game = game_file;
 		console.log("Successfully made game file: " + current_game);
@@ -466,21 +465,21 @@ function initGame(args){
  *
  */
 
- 
- 
+
+
 /*
 Call: signal to send list of all existing games
 Response:
 	Success + array of all games, or
 	Failure
-*/ 
+*/
 ipc.on('get-all-games', function(event)
 {
 	var gameArray;
-	try 
+	try
 	{
 		gameArray = drw.get_all_games();
-	} 
+	}
 	catch (e)
 	{
 		console.log("Could not retrieve all games: " + e);
@@ -500,10 +499,10 @@ Response:
 */
 ipc.on('delete-team', function(event,team_code)
 {
-	try 
+	try
 	{
 		trw.delete_file(team_code);
-	} 
+	}
 	catch (e)
 	{
 		console.log("Could not delete team " + team_code + ": "+ e);
@@ -519,13 +518,13 @@ Call: signal to create a team, team object
 Response:
 	Success + code of team created, or
 	Failure + code of team requested
-*/ 
+*/
 ipc.on('add-team', function(event,team)
 {
-	try 
+	try
 	{
 		trw.create_team(team.get_name(), team.to_array());
-	} 
+	}
 	catch (e)
 	{
 		console.log("Could not create team " + team.get_code() + ": "+ e);
@@ -542,15 +541,15 @@ ipc.on('add-team', function(event,team)
 Call: signal to send game info array, game name (date_time)
 Response:
 	Success + game info array, or
-	Failure + game name requested 
-*/ 
+	Failure + game name requested
+*/
 ipc.on('get-game', function (event,game_name)
 {
-	try 
+	try
 	{
 		var game_info = drw.read_game_file(game_name);
-	} 
-	catch (e) 
+	}
+	catch (e)
 	{
 		//if failure
 		console.log("An error occurred in file reading: " + e);
@@ -563,19 +562,19 @@ ipc.on('get-game', function (event,game_name)
 
 
 /*
-Call: signal to add play to current game, keystrokes 
+Call: signal to add play to current game, keystrokes
 Response:
 	Success + keystrokes of new play
 	Failure + keystrokes of play desired
-*/ 
+*/
 ipc.on('add-play', function (event,keystrokes)
 {
-	try 
+	try
 	{
 		console.log("adding play: " + keystrokes);
 		addPlay(keystrokes);
-	} 
-	catch (e) 
+	}
+	catch (e)
 	{
 		//if failure
 		console.log("An error occurred in file writing: " + e);
@@ -592,14 +591,14 @@ Call: signal to create a game file
 Response:
 	Success + footer info for new game
 	Failure + args passed in
-*/ 
+*/
 ipc.on('init-game', function (event,args)
 {
-	try 
+	try
 	{
 		initGame(args);
-	} 
-	catch (e) 
+	}
+	catch (e)
 	{
 		//if failure
 		console.log("An error occurred in game initializing: " + e);
@@ -616,16 +615,16 @@ Call: signal to send array of current game data
 Response:
 	Success + array of current game data
 	Failure
-*/ 
+*/
 ipc.on('get-data', function(event)
 {
-	try 
+	try
 	{
 		var data = [];
 		data = drw.read_game_file(current_game);
 		console.log(data);
-	} 
-	catch (e) 
+	}
+	catch (e)
 	{
 		//if failure
 		console.log("An error occurred in file reading: " + e);
@@ -644,4 +643,3 @@ app.on('activate', () => {
 		createWindow();
 	}
 })
-
