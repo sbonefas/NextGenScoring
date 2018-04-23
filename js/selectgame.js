@@ -391,6 +391,9 @@ var app = new Vue({
                 console.log(curr_game)
                 ipc.send("init-game", curr_game)
             }
+            else {
+                window.alert("Please fill in all fields");
+            }
         }
         else {
             for(i = 0; i < app.games.length; i++) {

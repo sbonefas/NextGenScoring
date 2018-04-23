@@ -38,17 +38,12 @@ window.onload = function(){
 	ipc.send('add-play', pers_foul);
 	ipc.send('add-play', bench_foul);
 
-//    app.teams[0] = localStorage.getItem("homeName")
-//    app.teams[1] = localStorage.getItem("visName")
     console.log(localStorage.getItem("gameDate"))
     console.log(localStorage.getItem("gameTime"))
 
     date_time = localStorage.getItem("gameDate") + "_" + localStorage.getItem("gameTime");
-        console.log(date_time)
+    console.log(date_time)
     ipc.send("get-data", date_time)
-//    app.curr_game = localStorage.getItem("currGame")
-//    console.log(app.curr_game[2])
-//    alert(localStorage.getItem("currGame"));
 }
 
 ipc.on('init-game-failure', function(event,args) {
@@ -67,42 +62,36 @@ ipc.on('get-data-success', function(event,args) {
 	console.log("2: "+args[2])
 	console.log("3: "+args[3])
 	console.log("4: "+args[4])
-	console.log("5: "+args[5])
-
-//    home_team: [
-//                {starter: true, in_game: "*", number: "01", name: "Player_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
 
 	//home team
-	for(i = 0; i < args[0].length; i++) {
-        console.log(i)
+	for(i = 1; i < args[0].length; i++) {
+//        console.log(i)
         app.home_team.push(
         {starter: true, in_game: "", number: "", name: "", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0,
         fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
         );
         app.home_team[app.home_team.length-1].number = args[0][i][0]
-//        app.games[app.games.length-1].vis_name = gameArray[i][gameArray[i].length-1][1]
-//        app.games[app.games.length-1].home_code = gameArray[i][gameArray[i].length-1][2]
-//        app.games[app.games.length-1].vis_code = gameArray[i][gameArray[i].length-1][3]
-//        app.games[app.games.length-1].home_record = gameArray[i][gameArray[i].length-1][4]
-//        app.games[app.games.length-1].vis_record = gameArray[i][gameArray[i].length-1][5]
-//        app.games[app.games.length-1].date = gameArray[i][gameArray[i].length-1][6]
-//        app.games[app.games.length-1].time = gameArray[i][gameArray[i].length-1][7]
-//        app.games[app.games.length-1].site = gameArray[i][gameArray[i].length-1][8]
-//        app.games[app.games.length-1].site_code = gameArray[i][gameArray[i].length-1][9]
-//        app.games[app.games.length-1].league = gameArray[i][gameArray[i].length-1][10]
-//        app.games[app.games.length-1].schedule_note = gameArray[i][gameArray[i].length-1][11]
-//        app.games[app.games.length-1].quarters = gameArray[i][gameArray[i].length-1][12]
-//        app.games[app.games.length-1].min_period = gameArray[i][gameArray[i].length-1][13]
-//        app.games[app.games.length-1].min_ot = gameArray[i][gameArray[i].length-1][14]
-//        app.games[app.games.length-1].officials = gameArray[i][gameArray[i].length-1][15]
-//        app.games[app.games.length-1].comments = gameArray[i][gameArray[i].length-1][16]
-//        app.games[app.games.length-1].attendance = gameArray[i][gameArray[i].length-1][17]
-        console.log("home1: " + app.home_team[app.home_team.length-1].number)
+        app.home_team[app.home_team.length-1].fg = parseInt(args[0][i][1])
+        app.home_team[app.home_team.length-1].fa = parseInt(args[0][i][2])
+        app.home_team[app.home_team.length-1].m3 = parseInt(args[0][i][3])
+        app.home_team[app.home_team.length-1].a3 = parseInt(args[0][i][4])
+        app.home_team[app.home_team.length-1].ftm = parseInt(args[0][i][5])
+        app.home_team[app.home_team.length-1].fta = parseInt(args[0][i][6])
+        app.home_team[app.home_team.length-1].rb_off = parseInt(args[0][i][7])
+        app.home_team[app.home_team.length-1].rb_def = parseInt(args[0][i][8])
+        app.home_team[app.home_team.length-1].as = parseInt(args[0][i][9])
+        app.home_team[app.home_team.length-1].pf = parseInt(args[0][i][10])
+//        app.home_team[app.vis_team.length-1].tf = parseInt(args[1][i][11])
+        app.home_team[app.home_team.length-1].blk = parseInt(args[0][i][12])
+        app.home_team[app.home_team.length-1].to = parseInt(args[0][i][13])
+        app.home_team[app.home_team.length-1].stl = parseInt(args[0][i][14])
+        app.home_team[app.home_team.length-1].tp = parseInt(args[0][i][15])
+//        console.log("number: " + app.home_team[app.home_team.length-1].number)
 	}
 
 	//visitor team
 	for(i = 1; i < args[1].length; i++) {
-        console.log(i)
+//        console.log(i)
         app.vis_team.push(
         {starter: true, in_game: "*", number: "", name: "", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0,
         fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
@@ -123,7 +112,33 @@ ipc.on('get-data-success', function(event,args) {
         app.vis_team[app.vis_team.length-1].to = parseInt(args[1][i][13])
         app.vis_team[app.vis_team.length-1].stl = parseInt(args[1][i][14])
         app.vis_team[app.vis_team.length-1].tp = parseInt(args[1][i][15])
-        console.log("number: " + app.vis_team[app.vis_team.length-1].number)
+//        console.log("number: " + app.vis_team[app.vis_team.length-1].number)
+	}
+
+	//home stats
+	for(i = 1; i < args[2].length; i++) {
+	    app.home_score = parseInt(args[2][i][0])
+	    home_stats.paint = parseInt(args[2][i][1])
+	    home_stats.fastb = parseInt(args[2][i][2])
+	    home_stats.tvs = parseInt(args[2][i][3])
+//	    home_stats.team_rebound = parseInt(args[2][i][4])
+	    app.home_fouls = parseInt(args[2][i][5])
+	    app.home_partial = 4 - parseInt(args[2][i][6])
+	    app.home_full = 1 - parseInt(args[2][i][7])
+//	    console.log("home score: "+app.home_score)
+	}
+
+	//vis stats
+	for(i = 1; i < args[3].length; i++) {
+	    app.vis_score = parseInt(args[3][i][0])
+	    vis_stats.paint = parseInt(args[3][i][1])
+	    vis_stats.fastb = parseInt(args[3][i][2])
+	    vis_stats.tvs = parseInt(args[3][i][3])
+//	    vis_stats.team_rebound = parseInt(args[2][i][4])
+	    app.vis_fouls = parseInt(args[3][i][5])
+	    app.vis_partial = 4 - parseInt(args[3][i][6])
+	    app.vis_full = 1 - parseInt(args[3][i][7])
+//	    console.log("vis score: "+app.vis_score)
 	}
 });
 
@@ -165,10 +180,6 @@ Vue.component('vis_team_stats', {
     return vis_stats
   }
 })
-
-//function getGame(args) {
-//    console.log(args)
-//}
 
 function launchClockPrompt() { // called when the user clicks on the game clock in the scorebar. Is used to edit the clock time and change between half 1, half 2, and OT
   var result = window.confirm("Press OK to advance to new period.");
