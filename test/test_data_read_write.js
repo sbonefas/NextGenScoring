@@ -57,6 +57,8 @@ const test_stat_changes_exist = [1, '31', 1, 1, 2];
 const test_stat_changes_no_exist = [0, '29', 0, 1, 0];
 const test_empty_team_stats_array = [[ 'number', 'fg', 'fga', 'pts' ]];
 
+const test_pbp = '<play vh="V" time="00:47" uni="12" team="MICH" checkname="ABDUR-RAHKMAN,M-A" action="GOOD" type="FT" vscore="78" hscore="69"></play>';
+const test_pbp_addition = test_pbp + '\n<play vh="V" time="09:49" uni="13" team="MICH" checkname="WAGNER,MORITZ" action="FOUL"></play>';
 // ADDITIONAL INTEGRATION TEST DATA
 //data
 
@@ -469,4 +471,39 @@ describe('data_read_write tests', function() {
           });
       });
    });
+   describe("test_get_string_play_for_xml()", function() {
+     it("ensures xml is test_pbp", function() {
+       var vh = 'V';
+     	var time = '00:47';
+     	var uni = '12';
+     	var team = 'MICH';
+     	var checkname = 'ABDUR-RAHKMAN,M-A';
+     	var action = 'GOOD';
+     	var type = 'FT';
+     	var vscore = '78';
+     	var hscore = '69';
+     	var xml = drw.test_get_string_play_for_xml(vh, time, uni, team, checkname, action, type, vscore, hscore);
+      assert.strictEqual(xml, test_pbp);
+     });
+   });
+   describe("test_read_pbp()", function() {
+     it("ensures xml is test_pbp", function() {
+      var pbp_string = drw.test_read_pbp(file_name);
+      assert.strictEqual(pbp_string, "PBP\n" + test_pbp);
+     });
+   });
+   describe("test_add_pbp()", function() {
+     it("ensures xml is test_pbp", function() {
+       '<play vh="V" time="09:49" uni="13" team="MICH" checkname="WAGNER,MORITZ" action="FOUL"></play>'
+     	var vh = 'V';
+     	var time = '09:49';
+     	var uni = '13';
+     	var team = 'MICH';
+     	var checkname = 'WAGNER,MORITZ';
+     	var action = 'FOUL';
+
+     	drw.add_pbp(file_name, vh, time, uni, team, checkname, action, null, null, null);
+      assert.strictEqual(drw.test_read_pbp(file_name), "PBP\n" + test_pbp_addition);
+   });
+  });
 });

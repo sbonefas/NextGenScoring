@@ -115,6 +115,11 @@ exports.overwrite_team = function(file_name, content) {
  */
 exports.get_all_teams = function() {
 	file_names = fs.readdirSync(team_directory);
+	for(var i = 0; i < file_names.length; i++) {
+		if(file_names[i].substring(0,1) == '.') {
+			file_names.splice(i, 1);
+		}
+	}
 	teams = Array(file_names.length);
 
 	// Convert file names in teams to contents

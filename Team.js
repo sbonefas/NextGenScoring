@@ -57,11 +57,10 @@ module.exports = function (name, code, head_coach, asst_coach, stadium, roster){
 
 	this.add_player_to_roster = function(player){
 		//var p = new Player(name, number, position);
-
-		if (player.get_name() == null || player.get_number() == null || player.get_position() == null)
+		if (player.get_name() == null || player.get_number() == null || player.get_position() == null || player.get_year() == null)
 			throw "add_player_to_roster Error: object passed is not a player";
 
-		this.active_roster.push(player);
+		this.active_roster.push(player.to_array());
 	}
 
 	this.remove_player_from_roster = function(name, number){
@@ -70,7 +69,7 @@ module.exports = function (name, code, head_coach, asst_coach, stadium, roster){
 
 		for (var i = 0; i < this.active_roster.length; i++){
 			var p = this.active_roster[i];
-			if (p.get_name() == name && p.get_number() == number){
+			if (p[0] == name && p[1] == number){
 				this.active_roster.splice(this.active_roster.indexOf(p),1);
 				//console.log("removed player: " + p.get_name());
 				return;

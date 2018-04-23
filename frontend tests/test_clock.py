@@ -8,8 +8,7 @@ import unittest
 
 def configure_index():
     cwd = os.getcwd()
-    path = os.path.abspath(os.path.join(cwd, os.pardir))
-    index_path = 'file:///' + path + '/index.html'
+    index_path = 'file:///' + cwd + '/index.html'
     return index_path.replace("\\", '/')
 
 def run_clock(sleep_time, driver):
@@ -75,12 +74,12 @@ class TestClock(unittest.TestCase):
         self.assertEqual(sleep_time, duration.seconds)      
 
         
-    def test_whole_clock(self):
-        sleep_time = 1200
-        duration = run_clock(sleep_time, __class__.driver)
+    # def test_whole_clock(self):
+        # sleep_time = 1200
+        # duration = run_clock(sleep_time, __class__.driver)
         
-        # Verification that duration is expected value
-        self.assertEqual(sleep_time, duration.seconds)
+        # # Verification that duration is expected value
+        # self.assertEqual(sleep_time, duration.seconds)
  
 if __name__ == '__main__':
 <<<<<<< HEAD

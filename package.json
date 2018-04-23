@@ -4,14 +4,14 @@
 	"description": "506 best project",
 	"main": "main.js",
 	"devDependencies": {
-		"chromedriver": "^2.37.0",
-		"electron": "^1.8.4",
-		"mocha": "^5.1.0",
+        "chromedriver": "^2.37.0",
+		"electron": "1.8.4",
+        "mocha": "^5.0.5",
 		"spectron": "^3.8.0"
 	},
 	"scripts": {
 		"start": "electron .",
-		"test": "nyc mocha"
+        "test": "nyc mocha"
 	},
 	"repository": {
 		"type": "git",
@@ -24,11 +24,11 @@
 	},
 	"homepage": "https://github.com/sbonefas/NextGenScoring#readme",
 	"dependencies": {
+        "npm": "^5.8.0",
+        "nyc": "^11.6.0",
 		"filereader": "^0.10.3",
 		"ipc": "0.0.1",
 		"node": "^9.11.0",
-		"npm": "^5.8.0",
-		"nyc": "^11.6.0",
 		"vex-js": "^4.1.0"
 	}
 }

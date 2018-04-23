@@ -38,10 +38,13 @@ window.onload = function(){
 	ipc.send('add-play', pers_foul);
 	ipc.send('add-play', bench_foul);
 
+//    app.teams[0] = loaded_home_name
+//    app.teams[1] = loaded_vis_name
 }
 
 ipc.on('init-game-failure', function(event,args) {
-	console.log("An error occurred in initializing game " + args + " to file : " + e);
+	console.log("An error occurred in initializing game " + args + " to file : " );
+	//+ e);
 });
 
 ipc.on('init-game-success', function(event,args) {
@@ -53,14 +56,7 @@ var home = true;
 var inputtext = "";
 var currentlyInputtingPlay = "";
 var join_two_plays = "";
-//result_code_prompt = `
-//PRESS A RESULT CODE...
-//
-//G (or Q) - GOOD FIELD GOAL               F - GOOD FG ON A FAST BREAK
-//Y - GOOD 3PT FIELD GOAL                  R - MISSED SHOT (REBOUND)
-//P - GOOD FG IN THE PAINT                  X - MISSED 3PT SHOT (REBOUND)
-//Z - GOOD FG- FAST BREAK & PAINT   K - BLOCKED SHOT
-//`;
+var shot_code = "";
 
 var home_stats = {fg: Number.parseFloat(0.00).toFixed(2), tfg: Number.parseFloat(0.00).toFixed(2), ftp: Number.parseFloat(0.00).toFixed(2), tvs: 0, blocks: 0, steals: 0, paint: 0, offto: 0, sndch: 0, fastb: 0, fga: 0, tfga: 0, benchpts: 0}
 Vue.component('home_team_stats', {
@@ -90,37 +86,63 @@ Vue.component('vis_team_stats', {
   }
 })
 
+//function getGame(args) {
+//    console.log(args)
+//}
+
 function launchClockPrompt() { // called when the user clicks on the game clock in the scorebar. Is used to edit the clock time and change between half 1, half 2, and OT
-  var period = prompt("Please enter the current period\n1: Period 1\n2: Period 2\nOT: First overtime\n2OT: Second overtime\n30T: Third overtime\n40T: Fourth overtime\n50T: Fifth overtime\n60T: Sixth overtime\n\nWARNING: Changing periods will reset the clock to 20:00 (or 5:00 for OT periods)");
-  if(period == null || period == "") {
-    console.log("User canceleld the clock prompt");
-  } else {
-    if(period == 1) {
-      app.period = 'Half 1';
-      // $('#clockdiv #clockh2').html('20:00');
-    } else if(period == 2) {
-      app.period = 'Half 2';
-      // $('#clockdiv #clockh2').html('20:00');
-    } else if(period == 'OT' || period == 'ot') {
-      app.period = 'OT';
-      // $('#clockdiv #clockh2').html('05:00');
-    } else if(period == '2OT' || period == '2ot') {
-      app.period = '2OT';
-      // $('#clockdiv #clockh2').html('05:00');
-    } else if(period == '3OT' || period == '3ot') {
-      app.period = '3OT';
-      // $('#clockdiv #clockh2').html('05:00');
-    } else if(period == '4OT' || period == '4ot') {
-      app.period = '4OT';
-      // $('#clockdiv #clockh2').html('05:00');
-    } else if(period == '5OT' || period == '5ot') {
-      app.period = '5OT';
-      // $('#clockdiv #clockh2').html('05:00');
-    } else if(period == '6OT' || period == '6ot') {
-      app.period = '6OT';
-      // $('#clockdiv #clockh2').html('05:00');
+  var result = window.confirm("Press OK to advance to new period.");
+  if(result == true) {
+    if(app.period == "Half 1") {
+      app.period = "Half 2";
+    } else if(app.period == "Half 2") {
+      app.period = "OT";
+    } else if(app.period == "OT") {
+      app.period = "2OT";
+    } else if(app.period == "2OT") {
+      app.period = "3OT";
+    } else if(app.period == "3OT") {
+      app.period = "4OT";
+    } else if(app.period == "4OT") {
+      app.period = "5OT";
+    } else if(app.period == "5OT") {
+      app.period = "6OT";
+    } else if(app.period == "6OT") {
+      app.period = "7OT";
+    } else if(app.period == "7OT") {
+      window.alert("Maximum overtimes reached.");
     }
   }
+  // var period = prompt("Please enter the current period\n1: Period 1\n2: Period 2\nOT: First overtime\n2OT: Second overtime\n30T: Third overtime\n40T: Fourth overtime\n50T: Fifth overtime\n60T: Sixth overtime\n\nWARNING: Changing periods will reset the clock to 20:00 (or 5:00 for OT periods)");
+  // if(period == null || period == "") {
+  //   console.log("User canceleld the clock prompt");
+  // } else {
+  //   if(period == 1) {
+  //     app.period = 'Half 1';
+  //     // $('#clockdiv #clockh2').html('20:00');
+  //   } else if(period == 2) {
+  //     app.period = 'Half 2';
+  //     // $('#clockdiv #clockh2').html('20:00');
+  //   } else if(period == 'OT' || period == 'ot') {
+  //     app.period = 'OT';
+  //     // $('#clockdiv #clockh2').html('05:00');
+  //   } else if(period == '2OT' || period == '2ot') {
+  //     app.period = '2OT';
+  //     // $('#clockdiv #clockh2').html('05:00');
+  //   } else if(period == '3OT' || period == '3ot') {
+  //     app.period = '3OT';
+  //     // $('#clockdiv #clockh2').html('05:00');
+  //   } else if(period == '4OT' || period == '4ot') {
+  //     app.period = '4OT';
+  //     // $('#clockdiv #clockh2').html('05:00');
+  //   } else if(period == '5OT' || period == '5ot') {
+  //     app.period = '5OT';
+  //     // $('#clockdiv #clockh2').html('05:00');
+  //   } else if(period == '6OT' || period == '6ot') {
+  //     app.period = '6OT';
+  //     // $('#clockdiv #clockh2').html('05:00');
+  //   }
+  // }
 }
 
 function startClock(startingTime) {
@@ -240,6 +262,8 @@ var app = new Vue({
           app.log_free_throw(e.keyCode, false);
         } else if(currentlyInputtingPlay == "shotattempt") {
           app.shot_attempt(e.keyCode);
+        } else if(currentlyInputtingPlay == "changeClock") {
+          app.change_clock(e.keyCode);
         }
         app.clear_input();
         //save play
@@ -252,12 +276,6 @@ var app = new Vue({
      }
      if(e.keyCode == 27) { // Esc key pressed
         app.clear_input();
-     }
-     //Q - back to main menu
-     if(e.keyCode == 81) {
-        if(confirm("Are you sure you want to go back to the main menu? Changes will be lost")) {
-            window.location = "./mainmenu.html"
-        }
      }
 
      // alt + h - Help menu
@@ -313,10 +331,24 @@ var app = new Vue({
           app.subs(false, e.keyCode);
         }
      }
+     // F7 - Change clock
+     else if(e.keyCode == 118) {
+        timer.pause();
+        if(!paused) {
+            $("#clockisstopped").toggle();
+            paused = true;
+        }
+        currentlyInputtingPlay = "changeClock";
+        inputvalidator.innerText = "Enter new clock time as mmss format then press ENTER to change clock time.";
+      }
 
      // F10 - clear and do not complete any partially keyed action
      else if(e.keyCode == 121) {
         app.clear_input();
+     }
+
+     else if(e.keyCode == 186) {
+        app.change_clock(e.keyCode);
      }
 
      // A - assist
@@ -346,6 +378,7 @@ var app = new Vue({
      else if(e.keyCode == 68) {
         if(currentlyInputtingPlay == "") {
           currentlyInputtingPlay = "shotattempt";
+          shot_code = "dunk";
           app.shot_attempt(e.keyCode);
         } else if(currentlyInputtingPlay == "rebound") {
           app.rebound(e.keyCode);
@@ -378,118 +411,27 @@ var app = new Vue({
      else if(e.keyCode == 71 || e.keyCode == 81) {
         if(currentlyInputtingPlay == "shotattempt") {
           app.shot_attempt(e.keyCode);
+        } else if(currentlyInputtingPlay == "" && e.keyCode == 81) {
+          if(confirm("Are you sure you want to go back to the main menu? Changes will be lost")) {
+            window.location = "./mainmenu.html"
+         }
         }
      }
 
      // J (or L,W) - Shot attempt - Note: Y and P are tested in another else if further down
      else if(e.keyCode == 74 || e.keyCode == 76 || e.keyCode == 87) {
         currentlyInputtingPlay = "shotattempt";
+        if(e.keyCode == 74) {
+          shot_code = "jumper";
+        }
+        if(e.keyCode == 76) {
+          shot_code = "layup";
+        }
+        if(e.keyCode == 87) {
+          shot_code = "wrongbasket";
+        }
         userinput.value = "";
         app.shot_attempt(e.keyCode);
-      /*
-       who_did_it = window.prompt("SHOT BY: (Key in a player ##)");
-       while(!app.check_in_game(who_did_it, home)) {
-           if(who_did_it == null) {
-                return
-           }
-            who_did_it = window.prompt("Player " + who_did_it + " is not in the game!\n\nSHOT BY: (Key in a player ##)");
-       }
-       result_code = window.prompt(result_code_prompt);
-       if(home == true) {
-         for(index = 0; index < app.home_team.length; index++)
-         {
-         console.log(who_did_it);
-           // J then G or Q - good field goal (2 points)
-           if(who_did_it == app.home_team[index].number && (result_code == "g" || result_code == "G" || result_code == "q" || result_code == "Q"))
-           {
-               app.jgq_good(app.home_team[index], app.home_team, app.home_totals, home_stats);
-               break;
-           }
-           // J then Y - good 3pt field goal
-           else if((who_did_it == app.home_team[index].number && (result_code == "y" || result_code == "Y"))) {
-               app.jy_good_3(app.home_team[index], app.home_team, app.home_totals, home_stats);
-               break;
-           }
-           // J then R - missed shot (rebound)
-           else if (who_did_it == app.home_team[index].number && (result_code == "r" || result_code == "R")) {
-               app.jr_missed(app.home_team[index], app.home_team, app.home_totals, home_stats);
-               break;
-           }
-           // J then P - field goal in the paint
-           else if (who_did_it == app.home_team[index].number && (result_code == "p" || result_code == "P")) {
-               app.jp_good_paint(app.home_team[index], app.home_team, app.home_totals, home_stats);
-               break;
-           }
-           // J then Z - GOOD FG-FAST BREAK & PAINT
-           else if (who_did_it == app.home_team[index].number && (result_code == "z" || result_code == "Z")) {
-               app.jz_good_fastb_paint(app.home_team[index], app.home_team, app.home_totals, home_stats);
-               break;
-           }
-           // J then F - GOOD FG ON A FAST BREAK
-           else if (who_did_it == app.home_team[index].number && (result_code == "f" || result_code == "F")) {
-                 app.jf_good_fastb(app.home_team[index], app.home_team, app.home_totals, home_stats);
-                 break;
-           }
-           // J then X - MISSED 3PT SHOT (REBOUND)
-           else if (who_did_it == app.home_team[index].number && (result_code == "x" || result_code == "X")) {
-               app.jx_missed_3(app.home_team[index], app.home_team, app.home_totals, home_stats);
-               break;
-           }
-           // J then K - BLOCKED SHOT
-           else if (who_did_it == app.home_team[index].number && (result_code == "k" || result_code == "K")) {
-               app.jk_blocked_shot(app.home_team[index], app.home_team, app.home_totals, home_stats);
-               break;
-           }
-         }
-       } //end home calculations
-       else {  // Visitor calculations
-         for(index = 0; index < app.vis_team.length; index++)
-         {
-         console.log("who did it: " + who_did_it);
-           // J then G or Q - good field goal (2 points)
-           if(who_did_it == app.vis_team[index].number && (result_code == "g" || result_code == "G" || result_code == "q" || result_code == "Q"))
-           {
-               app.jgq_good(app.vis_team[index], app.vis_team, app.vis_totals, vis_stats);
-               break;
-           }
-           // J then Y - good 3pt field goal
-           else if((who_did_it == app.vis_team[index].number && (result_code == "y" || result_code == "Y"))) {
-               app.jy_good_3(app.vis_team[index], app.vis_team, app.vis_totals, vis_stats);
-               break;
-           }
-           // J then R - missed shot (rebound)
-           else if (who_did_it == app.vis_team[index].number && (result_code == "r" || result_code == "R")) {
-               app.jr_missed(app.vis_team[index], app.vis_team, app.vis_totals, vis_stats);
-               break;
-           }
-           // J then P - field goal in the paint
-           else if (who_did_it == app.vis_team[index].number && (result_code == "p" || result_code == "P")) {
-               app.jp_good_paint(app.vis_team[index], app.vis_team, app.vis_totals, vis_stats);
-               break;
-           }
-           // J then Z - GOOD FG-FAST BREAK & PAINT
-           else if (who_did_it == app.home_team[index].number && (result_code == "z" || result_code == "Z")) {
-               app.jz_good_fastb_paint(app.vis_team[index], app.vis_team, app.vis_totals, vis_stats);
-               break;
-           }
-           // J then F - GOOD FG ON A FAST BREAK
-           else if (who_did_it == app.vis_team[index].number && (result_code == "f" || result_code == "F")) {
-               app.jf_good_fastb(app.vis_team[index], app.vis_team, app.vis_totals, vis_stats);
-               break;
-           }
-           // J then X - MISSED 3PT SHOT (REBOUND)
-           else if (who_did_it == app.vis_team[index].number && (result_code == "x" || result_code == "X")) {
-               app.jx_missed_3(app.vis_team[index], app.vis_team, app.vis_totals, vis_stats);
-               break;
-           }
-           // J then K - BLOCKED SHOT
-           else if (who_did_it == app.vis_team[index].number && (result_code == "k" || result_code == "K")) {
-               app.jk_blocked_shot(app.vis_team[index], app.vis_team, app.vis_totals, vis_stats);
-               break;
-           }
-         }
-       }//end visitor calculations
-       */
      }// end J
 
      // K - blocked shot
@@ -533,6 +475,7 @@ var app = new Vue({
      else if(e.keyCode == 80) {
         if(currentlyInputtingPlay == "") {
           currentlyInputtingPlay = "shotattempt";
+          shot_code = "tipin";
           app.shot_attempt(e.keyCode);
         } else if(currentlyInputtingPlay == "shotattempt") {
           app.shot_attempt(e.keyCode);
@@ -577,6 +520,7 @@ var app = new Vue({
      // W - used in shot_attempt() for wrong basket
      else if(e.keyCode == 87) {
         currentlyInputtingPlay = "shotattempt";
+        shot_code = "wrongbasket";
         app.shot_attempt(e.keyCode);
      }
 
@@ -591,6 +535,7 @@ var app = new Vue({
      else if(e.keyCode == 89) {
         if(currentlyInputtingPlay == "") {
           currentlyInputtingPlay = "shotattempt";
+          shot_code = "3pointshot";
           app.shot_attempt(e.keyCode);
         } else if(currentlyInputtingPlay == "shotattempt") {
           app.shot_attempt(e.keyCode);
@@ -626,6 +571,8 @@ var app = new Vue({
           app.log_free_throw(e.keyCode, false);
         } else if(currentlyInputtingPlay == "shotattempt") {
           app.shot_attempt(e.keyCode);
+        } else if(currentlyInputtingPlay == "changeClock") {
+          app.change_clock(e.keyCode);
         }
      }
 
@@ -651,6 +598,8 @@ var app = new Vue({
           app.log_free_throw(e.keyCode, false);
         } else if(currentlyInputtingPlay == "shotattempt") {
           app.shot_attempt(e.keyCode);
+        } else if(currentlyInputtingPlay == "changeClock") {
+          app.change_clock(e.keyCode);
         }
      }
 
@@ -676,6 +625,8 @@ var app = new Vue({
           app.log_free_throw(e.keyCode, false);
         } else if(currentlyInputtingPlay == "shotattempt") {
           app.shot_attempt(e.keyCode);
+        } else if(currentlyInputtingPlay == "changeClock") {
+          app.change_clock(e.keyCode);
         }
      }
 
@@ -703,6 +654,8 @@ var app = new Vue({
           app.log_free_throw(e.keyCode, false);
         } else if(currentlyInputtingPlay == "shotattempt") {
           app.shot_attempt(e.keyCode);
+        } else if(currentlyInputtingPlay == "changeClock") {
+          app.change_clock(e.keyCode);
         }
      }
 
@@ -728,6 +681,8 @@ var app = new Vue({
           app.log_free_throw(e.keyCode, false);
         } else if(currentlyInputtingPlay == "shotattempt") {
           app.shot_attempt(e.keyCode);
+        } else if(currentlyInputtingPlay == "changeClock") {
+          app.change_clock(e.keyCode);
         }
      }
 
@@ -753,6 +708,8 @@ var app = new Vue({
           app.log_free_throw(e.keyCode, false);
         } else if(currentlyInputtingPlay == "shotattempt") {
           app.shot_attempt(e.keyCode);
+        } else if(currentlyInputtingPlay == "changeClock") {
+          app.change_clock(e.keyCode);
         }
      }
 
@@ -778,6 +735,8 @@ var app = new Vue({
           app.log_free_throw(e.keyCode, false);
         } else if(currentlyInputtingPlay == "shotattempt") {
           app.shot_attempt(e.keyCode);
+        } else if(currentlyInputtingPlay == "changeClock") {
+          app.change_clock(e.keyCode);
         }
      }
 
@@ -803,6 +762,8 @@ var app = new Vue({
           app.log_free_throw(e.keyCode, false);
         } else if(currentlyInputtingPlay == "shotattempt") {
           app.shot_attempt(e.keyCode);
+        } else if(currentlyInputtingPlay == "changeClock") {
+          app.change_clock(e.keyCode);
         }
      }
 
@@ -828,6 +789,8 @@ var app = new Vue({
           app.log_free_throw(e.keyCode, false);
         } else if(currentlyInputtingPlay == "shotattempt") {
           app.shot_attempt(e.keyCode);
+        } else if(currentlyInputtingPlay == "changeClock") {
+          app.change_clock(e.keyCode);
         }
      }
 
@@ -853,6 +816,8 @@ var app = new Vue({
           app.log_free_throw(e.keyCode, false);
         } else if(currentlyInputtingPlay == "shotattempt") {
           app.shot_attempt(e.keyCode);
+        } else if(currentlyInputtingPlay == "changeClock") {
+          app.change_clock(e.keyCode);
         }
      }
 
@@ -863,6 +828,28 @@ var app = new Vue({
         userinput.value = "";  // clears the text box
         currentlyInputtingPlay = "";
         join_two_plays = "";
+        shot_code = "";
+   },
+   change_clock(keyCode) {
+      var char_entered = String.fromCharCode(keyCode);  // will be upper case
+      if(keyCode == 13) char_entered = "ENTER";
+      inputtext = inputtext + char_entered;
+      if(inputtext.length == 9) {
+        console.log(inputtext);
+        var minutes = parseInt(inputtext.substring(0,2));
+        var seconds = parseInt(inputtext.substring(2,4));
+        var number_of_seconds = (minutes * 60) + seconds;
+        timer.stop();
+        timer.start({countdown: true, startValues: {seconds: number_of_seconds}});
+        timer.pause();
+        $('#clockdiv #clockminutes').html(minutes);
+        if(seconds < 10) {
+          $('#clockdiv #clockseconds').html("0" + seconds);
+        } else {
+          $('#clockdiv #clockseconds').html(seconds);
+        }
+        
+      }
    },
    home_possession() {
        home = true;
@@ -928,7 +915,23 @@ var app = new Vue({
             currTeam = app.teams[1]
         }
         app.playlist.unshift({ time: document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText, team: currTeam, playdscrp: myPlayDcsrp, score: app.home_score + "-" + app.vis_score })
-        //let keystrokes = "O T";
+        
+				//BACKEND INPUT EXAMPLES
+				/*
+				let fieldgoal_off_rebound = "j 02 r 05 h";  //offensive rebound (shot made by home #2, rebound home #5)
+				let fieldgoal_def_rebound = "j 02 d 03 h";  //defensive rebound (shot made by home #2, rebound visit #3)
+				let fieldgoal_no_rebound = "j 02 g h";			//no rebound (good shot)
+				let fieldgoal_assist = "j 02 a 04 h";				//assist by home #4
+				let freethrow_off_rebound = "e 05 r 01 h";	//offensive rebound (shot made by home #5, rebound home #1)
+				let freethrow_def_rebound = "e 05 d 04 h";	//defensive rebound (shot made by home #5, rebound visit #4)
+				let freethrow_def_rebound = "e 05 e h";			//no rebound (good freethrow)
+				let steal = "s 03 v";												//steal
+				let block_off_rebound = "k 02 r 03 h";			//block, offensive rebound (blocked by home, recovered by away)
+				let block_def_rebound = "k 02 d 04 h"; 			//block, defensive rebound (blocked by home, recovered by home)
+				let block_no_rebound = "k 02";							//block, no rebound
+				*/
+				
+				//let keystrokes = "O T";
         //let keystroke2 = "j 16 g   h";
         //ipc.send('add-play',keystrokes);
    },
@@ -965,7 +968,7 @@ var app = new Vue({
             app.home_score += 2;
           }
           app.add_play("Scored in wrong basket");
-        } else if(inputtext.substring(0,1) == 'J') {
+        } else if(inputtext.substring(0,1) == 'J' || inputtext.substring(0,1) == 'Y' || inputtext.substring(0,1) == 'D' || inputtext.substring(0,1) == 'L' || inputtext.substring(0,1) == 'P') {
           if(inputtext.substring(3,4) == 'G' || inputtext.substring(3,4) == 'Q') {
             if(home) {
               app.jgq_good(app.home_team[app.get_player_index(inputtext.substring(1,3), true)], app.home_team, app.home_totals, home_stats);
@@ -1242,6 +1245,11 @@ var app = new Vue({
                 // inputvalidator.innerText = "Out of timeouts. Press ESC/F10 to clear input.";
               }
             }
+            if(!paused) {
+              timer.pause();
+              paused = true;
+              $("#clockisstopped").toggle();
+            }
           } else {
             inputvalidator.innerText = "Input not recognized";
           }
@@ -1250,6 +1258,9 @@ var app = new Vue({
    },
    // J then G or Q - good field goal (2 points)
    jgq_good(person, team, totals, stats) {
+    if(inputtext.substring(0,1) == 'Y') {
+      app.jy_good_3(person, team, totals, stats);
+    } else {
          person.fg += 1;
          person.fa += 1;
          person.tp += 2;
@@ -1273,8 +1284,21 @@ var app = new Vue({
          }
 
          totals.tp = score;
+
+         console.log("shot_code:" + shot_code);
          // add to play by play
-         app.add_play(`${person.name} made a jump shot`);
+         if(shot_code == "jumper") {
+            app.add_play(`${person.name} made a jump shot`);
+         } else if(shot_code == "dunk") {
+            app.add_play(`${person.name} made a dunk`);
+         } else if(shot_code == "layup") {
+            app.add_play(`${person.name} made a layup`);
+         } else if(shot_code == "tipin") {
+            app.add_play(`${person.name} made a tip-in`);
+         } else if(shot_code == "3pointshot") {
+            app.add_play(`${person.name} made a 3 point shot`);
+         }
+         
 
          var total_attempts = 0;
          var total_fgs = 0;
@@ -1292,6 +1316,8 @@ var app = new Vue({
          else {
             app.home_possession();
          }
+    }
+         
    },
    // J then Y - good 3pt field goal
    jy_good_3(person, team, totals, stats) {
@@ -1349,7 +1375,18 @@ var app = new Vue({
          person.fa += 1;
          totals.fa += 1;
          // add to play by play - VIS
-         app.add_play(`${person.name} missed a field goal`);
+         if(shot_code == "jumper") {
+            app.add_play(`${person.name} missed a jump shot`);
+         } else if(shot_code == "dunk") {
+            app.add_play(`${person.name} missed a dunk`);
+         } else if(shot_code == "layup") {
+            app.add_play(`${person.name} missed a layup`);
+         } else if(shot_code == "tipin") {
+            app.add_play(`${person.name} missed a tip-in`);
+         } else if(shot_code == "3pointshot") {
+            app.add_play(`${person.name} missed a 3 point shot`);
+         }
+         // app.add_play(`${person.name} missed a field goal`);
          var total_attempts = 0;
          var total_fgs = 0;
          for(players = 0; players < team.length; players++)
@@ -1367,7 +1404,7 @@ var app = new Vue({
          person.tp += 2;
          totals.fa += 1;
          totals.fg += 1;
-         stats.paint += 1;
+         stats.paint += 2;
 
          //increase bench points
          if(!person.starter) {
@@ -1384,7 +1421,18 @@ var app = new Vue({
             score = app.vis_score;
          }
          totals.tp = score;
-         app.add_play(`${person.name} made a shot in the paint`);
+         if(shot_code == "jumper") {
+            app.add_play(`${person.name} made a jump shot in the paint`);
+         } else if(shot_code == "dunk") {
+            app.add_play(`${person.name} made a dunk in the paint`);
+         } else if(shot_code == "layup") {
+            app.add_play(`${person.name} made a layup in the paint`);
+         } else if(shot_code == "tipin") {
+            app.add_play(`${person.name} made a tip-in in the paint`);
+         } else if(shot_code == "3pointshot") {
+            app.add_play(`${person.name} made a 3 point shot in the paint`);
+         }
+         // app.add_play(`${person.name} made a shot in the paint`);
          var total_attempts = 0;
          var total_fgs = 0;
          for(players = 0; players < team.length; players++)
@@ -1427,11 +1475,22 @@ var app = new Vue({
         totals.fa += 1;
 
         // update fast break and in the paint
-        stats.fastb += 1;
-        stats.paint += 1;
+        stats.fastb += 2;
+        stats.paint += 2;
 
         // add to playby play
-         app.add_play(`Fast Break: ${person.name} made a shot in the paint`);
+        if(shot_code == "jumper") {
+            app.add_play(`Fast Break: ${person.name} made a jump shot in the paint`);
+         } else if(shot_code == "dunk") {
+            app.add_play(`Fast Break: ${person.name} made a dunk in the paint`);
+         } else if(shot_code == "layup") {
+            app.add_play(`Fast Break: ${person.name} made a layup in the paint`);
+         } else if(shot_code == "tipin") {
+            app.add_play(`Fast Break: ${person.name} made a tip-in in the paint`);
+         } else if(shot_code == "3pointshot") {
+            app.add_play(`Fast Break: ${person.name} made a 3 point shot in the paint`);
+         }
+         // app.add_play(`Fast Break: ${person.name} made a shot in the paint`);
          var total_attempts = 0;
          var total_fgs = 0;
          for(players = 0; players < team.length; players++)
@@ -1475,10 +1534,21 @@ var app = new Vue({
         totals.fa += 1;
 
         // update fast break
-        stats.fastb += 1;
+        stats.fastb += 2;
 
         // add to playby play
-         app.add_play(`Fast Break: ${person.name} made a shot`);
+        if(shot_code == "jumper") {
+            app.add_play(`Fast Break: ${person.name} made a jump shot`);
+         } else if(shot_code == "dunk") {
+            app.add_play(`Fast Break: ${person.name} made a dunk`);
+         } else if(shot_code == "layup") {
+            app.add_play(`Fast Break: ${person.name} made a layup`);
+         } else if(shot_code == "tipin") {
+            app.add_play(`Fast Break: ${person.name} made a tip-in`);
+         } else if(shot_code == "3pointshot") {
+            app.add_play(`Fast Break: ${person.name} made a 3 point shot`);
+         }
+         // app.add_play(`Fast Break: ${person.name} made a shot`);
          var total_attempts = 0;
          var total_fgs = 0;
          for(players = 0; players < team.length; players++)
@@ -1622,6 +1692,11 @@ var app = new Vue({
                     app.home_team[index].as += 1;
                     app.home_totals.as += 1;
                     app.add_play("Assist by " + app.home_team[index].name);
+                    
+                    //Format string for backend
+                    var backend_string = "a " + inputtext.substring(1,3) + " " + "h";
+                    ipc.send('add-play', backend_string); 
+
                 }
              }
            }
@@ -1633,6 +1708,10 @@ var app = new Vue({
                     app.vis_team[index].as += 1;
                     app.vis_totals.as += 1;
                     app.add_play("Assist by " + app.vis_team[index].name);
+										
+										//Format string for backend
+                    var backend_string = "a " + inputtext.substring(1,3) + " " + "v";
+                    ipc.send('add-play', backend_string); 
                 }
              }
            }
@@ -1655,15 +1734,18 @@ var app = new Vue({
       if(keyCode == 13) char_entered = "ENTER";
       inputtext = inputtext + char_entered;
       if(char_entered == "ENTER") {
+        home_has_possession = home;
         var player_number = inputtext.substring(1,3);
         if(app.check_in_game(player_number, home)) {
-          if(home) {
+          if(!home) {
              for(index = 0; index < app.home_team.length; index++)
              {
                 if(player_number == app.home_team[index].number)
                 {
+                    home = true;
                     app.home_team[index].stl += 1;
                     app.home_totals.stl += 1;
+                    home_stats.steals += 1;
                     app.add_play("Steal by " + app.home_team[index].name);
                     ipc.send('add-play', "S " + player_number + " H");
                 }
@@ -1674,14 +1756,17 @@ var app = new Vue({
              {
                 if(player_number == app.vis_team[index].number)
                 {
+                    home = false;
                     app.vis_team[index].stl += 1;
                     app.vis_totals.stl += 1;
+                    vis_stats.steals += 1;
                     app.add_play("Steal by " + app.vis_team[index].name);
                     ipc.send('add-play', "S " + player_number + " V");
                 }
              }
            }
         }
+        home = home_has_possession;
       } else if(char_entered == 'S') {
         inputvalidator.innerText = "Steal by: Key in a player ##.";
       } else if(!isNaN(char_entered) && inputtext.length == 3) {
@@ -1705,11 +1790,13 @@ var app = new Vue({
             home_stats.tvs += 1;
             app.home_totals.to += 1
             ipc.send('add-play', "T M H");
+            app.add_play("Turnover by " + app.teams[0]);
             app.vis_possession(); // switch possession
           } else {
             vis_stats.tvs += 1;
             app.vis_totals.to += 1
             ipc.send('add-play', "T M V");
+            app.add_play("Turnover by " + app.teams[1]);
             app.home_possession(); // switch possession
           }
         } else {
@@ -1761,19 +1848,30 @@ var app = new Vue({
       if(keyCode == 13) char_entered = "ENTER";
       inputtext = inputtext + char_entered;
       if(char_entered == "ENTER") {
+        home_has_possession = home;  // Stores whether the home team has possession in this variable. Useful becuase we set home to T/F depending on which team commits the foul (for add_play())
         if(inputtext.substring(2,3) == 'B') {
           if(inputtext.substring(1,2) == 'H') {
             home = true;
-            home_stats.tvs += 1;
-            app.home_totals.to += 1
-            app.home_totals.pf += 1
+            if(home_has_possession) {  // Offensive fouls should count as turnovers
+              home_stats.tvs += 1;
+              app.home_totals.to += 1;
+            }
+            if(!home_has_possession) {  // offensive fouls are not team fouls
+              app.home_totals.pf += 1;
+              app.home_fouls += 1;
+            }
             app.add_play("Bench foul on the home team.");
             app.vis_possession(); // switch possession
         } else {
             home = false;
-            vis_stats.tvs += 1;
-            app.vis_totals.to += 1
-            app.vis_totals.pf += 1;
+            if(!home_has_possession) {  // offensive fouls should count as turnovers
+              vis_stats.tvs += 1;
+              app.vis_totals.to += 1;
+            }
+            if(home_has_possession) {  // offensive fouls are not team fouls
+              app.vis_totals.pf += 1;
+              app.vis_fouls += 1;
+            }
             app.add_play("Bench foul on the visiting team.");
             app.home_possession(); // switch possession
         }
@@ -1785,14 +1883,21 @@ var app = new Vue({
            {
               if(player_number == app.home_team[index].number)
               {
-                  // app.home_team[index].pf += 1; Technical fouls are not personal fouls
-                  app.home_team[index].to += 1;  // Offensive fouls are turnovers
+                  app.home_team[index].pf += 1; //Technical fouls are personal fouls
+                  if(home_has_possession) {
+                    app.home_team[index].to += 1;  // Offensive fouls are turnovers
+                  }
                   app.add_play("Technical foul on " + app.home_team[index].name);
               }
            }
+           if(home_has_possession) {
             home_stats.tvs += 1;
-            app.home_totals.to += 1
-            app.home_totals.pf += 1
+            app.home_totals.to += 1;
+           }
+            if(!home_has_possession) {  // offensive fouls are not team fouls
+              app.home_totals.pf += 1;
+              app.home_fouls += 1;
+            }
             app.vis_possession(); // switch possession
         } else {
             home = false;
@@ -1801,14 +1906,21 @@ var app = new Vue({
              {
                 if(player_number == app.vis_team[index].number)
                 {
-                    // app.vis_team[index].pf += 1; Technical fouls are not personal fouls
-                    app.vis_team[index].to += 1;  // Offensive fouls are turnovers
+                    app.vis_team[index].pf += 1; //Technical fouls are personal fouls
+                    if(!home_has_possession) {
+                      app.vis_team[index].to += 1;  // Offensive fouls are turnovers
+                    }
                     app.add_play("Technical foul on " + app.vis_team[index].name);
                 }
              }
-            vis_stats.tvs += 1;
-            app.vis_totals.to += 1
-            app.vis_totals.pf += 1;
+             if(!home_has_possession) {
+              vis_stats.tvs += 1;
+              app.vis_totals.to += 1
+             }
+            if(home_has_possession) {  // offensive fouls are not team fouls
+              app.vis_totals.pf += 1;
+              app.vis_fouls += 1;
+            }
             app.home_possession(); // switch possession
         }
       } else {  // not a bench or technical foul
@@ -1820,13 +1932,20 @@ var app = new Vue({
               if(player_number == app.home_team[index].number)
               {
                   app.home_team[index].pf += 1;
-                  app.home_team[index].to += 1;  // Offensive fouls are turnovers
+                  if(home_has_possession) {
+                    app.home_team[index].to += 1;  // Offensive fouls are turnovers
+                  }
                   app.add_play("Foul on " + app.home_team[index].name);
               }
            }
-          home_stats.tvs += 1;
-          app.home_totals.to += 1
-          app.home_totals.pf += 1
+          if(home_has_possession) {
+            home_stats.tvs += 1;
+            app.home_totals.to += 1;
+          }
+          if(!home_has_possession) {  // offensive fouls are not team fouls
+            app.home_totals.pf += 1;
+            app.home_fouls += 1;
+          }
           app.vis_possession(); // switch possession
         } else {
           home = false;
@@ -1836,13 +1955,20 @@ var app = new Vue({
                 if(player_number == app.vis_team[index].number)
                 {
                     app.vis_team[index].pf += 1;
-                    app.vis_team[index].to += 1;  // Offensive fouls are turnovers
+                    if(!home_has_possession) {
+                      app.vis_team[index].to += 1;  // Offensive fouls are turnovers
+                    }
                     app.add_play("Foul on " + app.vis_team[index].name);
                 }
              }
-             vis_stats.tvs += 1;
-             app.vis_totals.to += 1
-             app.vis_totals.pf += 1
+             if(!home_has_possession) {
+              vis_stats.tvs += 1;
+              app.vis_totals.to += 1
+             }
+             if(home_has_possession) {  // offensive fouls are not team fouls
+              app.vis_totals.pf += 1
+              app.vis_fouls += 1;
+             }
              app.home_possession(); // switch possession
         }
       }
@@ -2157,16 +2283,16 @@ var app = new Vue({
       if(keyCode == 13) char_entered = "ENTER";
       inputtext = inputtext + char_entered;
       if(char_entered == "ENTER") {
-        console.log("home before switch:" + home);
-        if(!switch_possession) {
-            home = !home;
-          }
-        console.log("home after switch:" + home);
+        // console.log("home before switch:" + home);
+        // if(!switch_possession) {
+        //     home = !home;
+        //   }
+        // console.log("home after switch:" + home);
         // if(inputtext.substring(2,3) == 'D') {
         //   home = !home;
         // }
-        console.log(inputtext);
         if(inputtext.substring(3,4) == 'E') {
+          var ft_player_num = inputtext.substring(1,3);
           if(home) {
             for(index = 0; index < app.home_team.length; index++) {
               if(ft_player_num == app.home_team[index].number) {
@@ -2177,7 +2303,9 @@ var app = new Vue({
                 app.home_totals.fta += 1;
                 app.home_totals.tp += 1;
                 app.home_score += 1;
+                console.log("index:" + index);
                 app.add_play("Made free throw by " + app.home_team[index].name);
+                ipc.send('add-play', "E " + ft_player_num + " E H");
                 home_stats.ftp = Number.parseFloat((app.home_totals.ftm/app.home_totals.fta)*100).toFixed(2);
               }
             }
@@ -2193,26 +2321,31 @@ var app = new Vue({
                 app.vis_totals.tp += 1;
                 app.vis_score += 1;
                 app.add_play("Made free throw by " + app.vis_team[index].name);
+                ipc.send('add-play', "E " + ft_player_num + " E V");
                 vis_stats.ftp = Number.parseFloat((app.vis_totals.ftm/app.vis_totals.fta)*100).toFixed(2);
               }
             }
           }
         } else if(inputtext.substring(3,4) == 'M') {
+          var ft_player_num = inputtext.substring(1,3);
           if(home) {
-          for(index = 0; index < app.home_team.length; index++) {
-            if(ft_player_num == app.home_team[index].number) {
-              app.home_team[index].fta += 1;
-              app.home_totals.fta += 1;
-              app.add_play("Missed free throw by " + app.home_team[index].name);
-              home_stats.ftp = Number.parseFloat((app.home_totals.ftm/app.home_totals.fta)*100).toFixed(2);
+            for(index = 0; index < app.home_team.length; index++) {
+              console.log("index: " + index + " ft_player_num: " + ft_player_num);
+              if(ft_player_num == app.home_team[index].number) {
+                app.home_team[index].fta += 1;
+                app.home_totals.fta += 1;
+                app.add_play("Missed free throw by " + app.home_team[index].name);
+                ipc.send('add-play', "E " + ft_player_num + " M H");
+                home_stats.ftp = Number.parseFloat((app.home_totals.ftm/app.home_totals.fta)*100).toFixed(2);
+              }
             }
-          }
         } else {
           for(index = 0; index < app.vis_team.length; index++) {
             if(ft_player_num == app.vis_team[index].number) {
               app.vis_team[index].fta += 1;
               app.vis_totals.fta += 1;
               app.add_play("Missed free throw by " + app.vis_team[index].name);
+              ipc.send('add-play', "E " + ft_player_num + " M V");
               vis_stats.ftp = Number.parseFloat((app.vis_totals.ftm/app.vis_totals.fta)*100).toFixed(2);
             }
           }
@@ -2226,6 +2359,7 @@ var app = new Vue({
               app.home_team[index].fta += 1;
               app.home_totals.fta += 1;
               app.add_play("Missed free throw by " + app.home_team[index].name);
+              ipc.send('add-play', "E " + ft_player_num + " R H");
               home_stats.ftp = Number.parseFloat((app.home_totals.ftm/app.home_totals.fta)*100).toFixed(2);
             }
           }
@@ -2235,6 +2369,7 @@ var app = new Vue({
               app.vis_team[index].fta += 1;
               app.vis_totals.fta += 1;
               app.add_play("Missed free throw by " + app.vis_team[index].name);
+              ipc.send('add-play', "E " + ft_player_num + " R V");
               vis_stats.ftp = Number.parseFloat((app.vis_totals.ftm/app.vis_totals.fta)*100).toFixed(2);
             }
           }
@@ -2267,9 +2402,11 @@ var app = new Vue({
           }
         }
       } else if(char_entered == 'E' && inputtext.length == 4) {
+        var ft_player_num = inputtext.substring(1,3);
         inputvalidator.innerText = "Made FT by player #" + ft_player_num + ". Press ENTER to save play.";
       } else if(char_entered == 'M' && inputtext.length == 4) {
         // miss, no rebound
+        var ft_player_num = inputtext.substring(1,3);
         inputvalidator.innerText = "Missed FT by player #" + ft_player_num + ". Press ENTER to save play.";
       } else if(char_entered == 'R' && inputtext.length == 4) {
         //miss, rebound
@@ -2347,5 +2484,20 @@ var app = new Vue({
           }
       }
    }
+	 
 }
+
 })
+
+ipc.on('add-play-failure', function(event, arg) { 
+	console.log("An error occurred in writing " + arg + " to file : " + e);
+});
+
+ipc.on('add-play-success', function(event, arg) { 
+	console.log("Successfully recorded keystroke: " + arg);
+	//ipc.send('get-data');
+});
+
+ipc.on('get-teams-success', function(event, arg){
+	
+});

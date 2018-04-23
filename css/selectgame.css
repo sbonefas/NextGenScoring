@@ -4,7 +4,6 @@ html {
 
 body {
   background-color: #282728; /*UW Grey*/
-  overflow: hidden;
 }
 
 #menubuttons {
@@ -101,4 +100,8 @@ button {
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
+}
+
+.editgame {
+    display: inline;
 }

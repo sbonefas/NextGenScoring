@@ -15,9 +15,10 @@
     <div id="selectapp">
         <h1 id="page_title">GAME SELECTION</h1>
         <div id="">
-            <p class="game_option" id="edit">{{game_options[0].name}}
-                &emsp;&emsp;&emsp;<button v-on:click="add_new_game">{{game_options[1].name}}</button>
-            &emsp;&emsp;&emsp;{{game_options[2].name}}
+            <p class="game_option" id="edit">
+                {{game_options[0].name}}
+                &emsp;&emsp;&emsp;<button v-on:click="add_new_game">{{game_options[1].name}}</button><!--&emsp; is a tab-->
+                &emsp;&emsp;&emsp;{{game_options[2].name}}
             </p>
         </div>
 
@@ -29,6 +30,24 @@
                 <span id="closeModal" class="close">&times;</span>
                 <h1>GAME DETAILS</h1>
 
+                <h4>Home Team Name:&emsp;
+                    <input id = "userinput" type = "text" name = "home_name">
+                </h4>
+                <h4>Home Team Code (Example: WISC):&emsp;
+                    <input id = "userinput" type = "text" name = "home_code">
+                </h4>
+                <h4>Home Team Record (Wins-Losses):&emsp;
+                    <input id = "userinput" type = "text" name = "home_record">
+                </h4>
+                <h4>Visting Team Name:&emsp;
+                    <input id = "userinput" type = "text" name = "vis_name">
+                </h4>
+                <h4>Visiting Team Code (Example: WISC):&emsp;
+                    <input id = "userinput" type = "text" name = "vis_code">
+                </h4>
+                <h4>Visitor Team Record (Wins-Losses):&emsp;
+                    <input id = "userinput" type = "text" name = "vis_record">
+                </h4>
                 <h4>Game Date:&emsp;
                     <input id = "userinput" type = "date" name = "game_date">
                 </h4>
@@ -66,18 +85,6 @@
                 <h4># Mins in Overtime:&emsp;
                     <input id = "userinput" type = "text" name = "min_ot">
                 </h4>
-                <h4>Visiting Team Code (Example: WISC):&emsp;
-                    <input id = "userinput" type = "text" name = "vis_code">
-                </h4>
-                <h4>Home Team Code (Example: WISC):&emsp;
-                    <input id = "userinput" type = "text" name = "home_code">
-                </h4>
-                <h4>Visitor Team Record (Wins-Losses):&emsp;
-                    <input id = "userinput" type = "text" name = "vis_record">
-                </h4>
-                <h4>Home Team Record (Wins-Losses):&emsp;
-                    <input id = "userinput" type = "text" name = "home_record">
-                </h4>
                 <h4>Officials:&emsp;
                     <input id = "userinput" type = "text" name = "officials">
                 </h4>
@@ -100,12 +107,14 @@
         </table>
         <table class="game_search">
             <tr v-for="game in games">
-                <td><button id="game_cell" v-on:click="select_game(game)"><h3>{{game.date}}</h3><h3>&emsp;&emsp;{{game.vis_team}}</h3><h3 class="game_site">&emsp;&emsp;{{game.site}}</h3></button></td>
+                <!--<td><button id="game_cell" v-on:click="select_game(game)"><h3>{{game.home_name}}</h3></button></td>-->
+                <td><button id="game_cell" v-on:click="select_game(game)"><h3>{{game.date}}</h3><h3>&emsp;&emsp;{{game.time}}</h3><h3>&emsp;&emsp;{{game.vis_name}}</h3><h3 class="game_site">&emsp;&emsp;{{game.site}}</h3></button></td>
             </tr>
             <!--<dialog id="game_date_entry"><h3>ENTER NEW GAME DATE</h3><input id="game_box" v-on:keyup.enter="set_game_date(document.getElementById("game_box").value)"placeholder="New game name..."></dialog>-->
         </table>
     </div>
     <script type="text/javascript" src="js/vue.js"></script>
+    <!--<script type="text/javascript" src="js/app.js"></script>-->
     <script type="text/javascript" src="js/selectgame.js"></script>
 </body>
 </html>
