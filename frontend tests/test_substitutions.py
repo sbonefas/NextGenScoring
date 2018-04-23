@@ -3,6 +3,7 @@ from selenium.webdriver.common.alert import Alert
 from selenium.webdriver.common.keys import Keys
 import unittest
 import os
+import time
 
 def configure_index():
     cwd = os.getcwd()
@@ -10,7 +11,8 @@ def configure_index():
     return index_path.replace("\\", '/')
 
 
-def sub1Player(driver, player1, player2):    
+def sub1Player(driver, player1, player2):
+    time.sleep(1)
     driver.find_element_by_id("userinput").send_keys(Keys.F6)
     driver.find_element_by_id("userinput").send_keys(player1)
     driver.find_element_by_id("userinput").send_keys(player2)
