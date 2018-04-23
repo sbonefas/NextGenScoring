@@ -628,6 +628,29 @@ function read_pbp(file_name) {
 	return pbp;
 }
 
+function get_last_pbp_timestamp(file_name) {
+	// split pbp into array of plays
+	var pbp_split = read_pbp(file_name).replace(/><\/play>/g,'').replace('PBP\n<play','').split('<play');
+	// if there are no plays, set timestamp to max integer value
+	if(pbp_split[0] == 'PBP') return Number.MAX_SAFE_INTEGER;
+
+	// get last pbp and index of time attribute
+	var last_pbp = pbp_split[pbp_split.length-1];
+	var index_of_time = last_pbp.indexOf('time="');
+	// get timestamp of last pbp. overstretch substring in case time is sent incorrectly to drw
+	var timestamp = last_pbp.substring(index_of_time + 6, index_of_time + 12).replace('"','').replace(' ','');
+
+	// convert timestamp to seconds count and return
+	return mmss_to_seconds(timestamp);
+}
+
+function mmss_to_seconds(mmss) {
+	var ms = mmss.split(':');
+	var seconds = Number(ms[0])*60 + Number(ms[1])*1;
+
+	return seconds;
+}
+
 /** 
  * Creates an XML file from a game file with the given file name. Stores it at
  * the file path defined in xml_file_path defined at the top of this file.
@@ -638,6 +661,7 @@ exports.create_xml_file = function(game_file_name) {
 	// test if game_file_name is valid
 	if(!fs.existsSync(get_file_path(game_file_name))) throw "create_xml_file: File Read Error: File " + game_file_name + " does not exist!";
 	var xml_file_path = get_file_path(game_file_name).slice(0,-4) + ".xml";
+
 	// test if xml_file_path is valid
 	/**if(!fs.existsSync(xml_file_path)) {
 		//throw "create_xml_file: XML File " + xml_file_path + " does not exist!";
@@ -649,7 +673,7 @@ exports.create_xml_file = function(game_file_name) {
 	}*/
 
 	// create xml file from pbp and game information
-	var xml_string = '<bbgame source="STAT CREW Basketball" version="' + version + '" generated="' + xml_get_date() + '">\n';
+	var xml_string = '<bbgame source="NextGen Scoring" version="' + version + '" generated="' + xml_get_date() + '">\n';
 	xml_string += xml_get_venue(game_file_name) + "\n";
 	xml_string += xml_get_status(game_file_name) + "\n";
 	xml_string += xml_get_teams(game_file_name) + "\n";
@@ -748,4 +772,8 @@ exports.test_get_string_play_for_xml = function(vh, time, uni, team, checkname,
 
 exports.test_read_pbp = function(file_name) {
 	return read_pbp(file_name);
+}
+
+exports.test_get_last_pbp_timestamp = function(file_name) {
+	return get_last_pbp_timestamp(file_name);
 }

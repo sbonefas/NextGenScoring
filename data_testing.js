@@ -65,6 +65,8 @@ function clean() {
 }
 
 function test() {
+	//clean();
+
 	test_get_file_path();
 	test_create_file();
 	test_delete_file();
@@ -85,6 +87,7 @@ function test() {
 	test_read_pbp();
 	test_add_pbp();
 	test_get_all_games();
+	test_get_last_pbp_timestamp();
 
 	clean();
 }
@@ -320,4 +323,10 @@ function test_get_all_games() {
 
 	if(drw.get_all_games().length == num_files) test_success("test_get_all_games");
 	else test_fail("test_get_all_games");
+}
+
+function test_get_last_pbp_timestamp() {
+	var result_last_pbp = 589;
+	if(drw.test_get_last_pbp_timestamp(file_name) == result_last_pbp) test_success("test_get_last_pbp_timestamp");
+	else test_fail("test_get_last_pbp_timestamp")
 }
