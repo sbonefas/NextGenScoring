@@ -3,8 +3,8 @@ const ipc = electron.ipcRenderer;
 const DRW = require('./data_read_write.js'); // Imports stuff from the team_read_write.js backend file
 
 var curr_game = [];
-loaded_home_team = "";
-loaded_vis_team = "";
+//var loaded_home_team = ""
+//var loaded_vis_team = ""
 
 
 window.onload = function(){
@@ -12,15 +12,18 @@ window.onload = function(){
 
     //LOAD GAMES FROM BACKEND
     ipc.send("get-all-games");
+
+//    var getInput = confirm("Hey type something here: ");
+//    localStorage.setItem("storageName",getInput);
 }
 
-function get_home_team() {
-    return loaded_home_team;
-}
-
-function get_vis_team() {
-    return loaded_vis_team;
-}
+//function get_home_team() {
+//    return loaded_home_team;
+//}
+//
+//function get_vis_team() {
+//    return loaded_vis_team;
+//}
 
 ipc.on('get-all-games-failure', function(event) {
 	console.log("get-all-games-failure");
@@ -60,7 +63,7 @@ ipc.on('get-all-games-success', function(event, gameArray) {
 });
 
 ipc.on('get-game-success', function(event,args) {
-	console.log("get-game-success: " + args +" games: "+app.games);
+	console.log("get-game-success: " + args);
 
 	for(i = 0; i < app.games.length; i++) {
 	    if(app.games[i].date == args[6] && app.games[i].time == args[7]) {
@@ -134,8 +137,10 @@ ipc.on('init-game-success', function(event,args) {
 	console.log("init-game-success: " + args);
 	curr_game = args;
 	console.log("game: " + curr_game + "date: " + curr_game.date + "time: " + curr_game.time)
-	loaded_home_team = args[0]
-	loaded_vis_team = args[0]
+//	loaded_home_team = args[0]
+//	loaded_vis_team = args[1]
+	localStorage.setItem("homeName",args[0]);
+	localStorage.setItem("visName",args[1]);
 	window.location = "./index.html"
 });
 
@@ -170,6 +175,8 @@ var app = new Vue({
     selected_game: {},
     search_active: false,
     making_new_game: false
+//    loaded_home_team: "",
+//    loaded_vis_team: ""
   },
   created() {
    document.addEventListener('keydown', this.keyevent);
@@ -394,13 +401,19 @@ var app = new Vue({
         else {
             for(i = 0; i < app.games.length; i++) {
                 if(app.games[i].date == app.selected_game.date && app.games[i].time == app.selected_game.time) {
-                    console.log(app.games[i])
+//                    console.log(app.games[i])
                     app.selected_game = app.games[i];
                 }
             }
 //            getGame(app.selected_game)
-//            loaded_home_team = home_name
-//            loaded_vis_team = vis_name
+//            loaded_home_team = app.selected_game.home_name
+//            loaded_vis_team = app.selected_game.vis_name
+//            console.log("home: " +app.loaded_home_team+" vis: " +app.loaded_vis_team)
+	        localStorage.setItem("homeName",app.selected_game.home_name);
+	        localStorage.setItem("visName",app.selected_game.vis_name);
+//	        localStorage.setItem("currGame",app.selected_game);
+//	        console.log(app.selected_game)
+//	        console.log(localStorage.getItem("currGame"))
             window.location = "./index.html";
         }
     },

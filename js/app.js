@@ -38,8 +38,12 @@ window.onload = function(){
 	ipc.send('add-play', pers_foul);
 	ipc.send('add-play', bench_foul);
 
-//    app.teams[0] = loaded_home_name
-//    app.teams[1] = loaded_vis_name
+//    app.teams[0] = localStorage.getItem("homeName")
+//    app.teams[1] = localStorage.getItem("visName")
+//    console.log(localStorage.getItem("currGame"))
+//    app.curr_game = localStorage.getItem("currGame")
+//    console.log(app.curr_game[2])
+//    alert(localStorage.getItem("currGame"));
 }
 
 ipc.on('init-game-failure', function(event,args) {
@@ -192,7 +196,7 @@ function help() {
 var app = new Vue({
   el: '#app',
   data: {
-    teams: ["WISC", "VISITOR"],
+    teams: [localStorage.getItem("homeName"), localStorage.getItem("visName")],
     period: 'Half 1',
     home_score: 0,
     home_fouls: 0,
@@ -202,7 +206,7 @@ var app = new Vue({
     vis_fouls: 0,
     vis_full: 1,
     vis_partial: 4,
-
+    curr_game: {},
     home_team: [
                 {starter: true, in_game: "*", number: "01", name: "Player_1", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
                 {starter: true, in_game: "*", number: "02", name: "Player_2", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0, fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
@@ -2538,7 +2542,7 @@ var app = new Vue({
 })
 
 ipc.on('add-play-failure', function(event, arg) { 
-	console.log("An error occurred in writing " + arg + " to file : " + e);
+	console.log("An error occurred in writing " + arg);
 });
 
 ipc.on('add-play-success', function(event, arg) { 

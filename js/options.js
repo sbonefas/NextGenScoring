@@ -6,7 +6,7 @@ function changeDir() {
     console.log(dirName);
 }
 
-function changeXml() {
+function changeXML() {
     dirName = document.getElementById("xmlinput").value;
     console.log(xmlName);
 }
@@ -30,7 +30,7 @@ var app = new Vue({
         changeDir() {
             dirName = document.getElementById("userinput").value;
         },
-        changeXml() {
+        changeXML() {
             xmlName = document.getElementById("xmlinput").value;
         }
     }
