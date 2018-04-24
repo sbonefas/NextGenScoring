@@ -53,6 +53,7 @@ function get_file_path(file_name) {
  */
 exports.delete_file = function(file_name) {
 	if(fs.existsSync(get_file_path(file_name))) fs.unlinkSync(get_file_path(file_name));
+	if(fs.existsSync(game_directory + file_name + '.xml')) fs.unlinkSync(game_directory + file_name + '.xml');
 }
 
 /**
