@@ -417,14 +417,16 @@ var app = new Vue({
                 else {
                     date_time = app.selected_game.date + "_" + app.selected_game.time.split(/:/)[0];
 
-//                    DRW.overwrite_game_file(curr_game, date_time);
+                    DRW.overwrite_footer(date_time, curr_game);
 
                     for(i = 0; i < app.games.length; i++) {
                         if(app.games[i].date == app.selected_game.date && app.games[i].time == app.selected_game.time.split(/:/)[0]) {
-//                            console.log(app.games[i])
                             app.selected_game = app.games[i];
+                            console.log("selected game: "+app.selected_game)
                         }
                     }
+
+//                    DRW.overwrite_footer(date_time, curr_game);
 
                     localStorage.setItem("homeName",app.selected_game.home_name);
                     localStorage.setItem("visName",app.selected_game.vis_name);
@@ -432,6 +434,8 @@ var app = new Vue({
                     localStorage.setItem("visCode",app.selected_game.vis_code);
                     localStorage.setItem("gameDate",app.selected_game.date);
                     localStorage.setItem("gameTime",app.selected_game.time.split(/:/)[0]);
+
+                    console.log("selected game: "+app.selected_game +" home name: "+app.selected_game.home_name+" vis name: "+app.selected_game.vis_name+" home code: "+app.selected_game.home_code+" vis code: "+app.selected_game.vis_code)
 
                     window.location = "./index.html";
                 }
