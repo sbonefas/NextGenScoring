@@ -91,6 +91,7 @@ function test() {
 	test_add_pbp();
 	test_get_all_games();
 	test_get_last_pbp_timestamp();
+	test_overwrite_footer();
 
 	clean();
 }
@@ -332,4 +333,16 @@ function test_get_last_pbp_timestamp() {
 	var result_last_pbp = 589;
 	if(drw.test_get_last_pbp_timestamp(file_name) == result_last_pbp) test_success("test_get_last_pbp_timestamp");
 	else test_fail("test_get_last_pbp_timestamp")
+}
+
+function test_overwrite_footer() {
+	var new_footer = footer;
+	new_footer[0] = "_HTEAM_";
+	drw.overwrite_footer(file_name, new_footer);
+
+	if(drw.read_game_file(file_name)[4].toString() == new_footer.toString()) {
+		test_success("test_overwrite_footer");
+		drw.overwrite_footer(file_name, footer);
+	}
+	else test_fail("test_overwrite_footer");
 }
