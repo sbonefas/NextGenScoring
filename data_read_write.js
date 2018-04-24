@@ -92,6 +92,13 @@ exports.get_all_games = function() {
 	return games;
 }
 
+
+
+
+
+
+
+
 /**
  * Creates an empty .txt game file with the given file_name.
  *
@@ -178,6 +185,14 @@ function get_initial_game_file_contents(individual_stat_labels, team_stat_labels
 
 	return contents;
 }
+
+
+
+
+
+
+
+
 
 /**
  * Reads the given game file and returns a 3D array, where index 0
@@ -313,6 +328,15 @@ function create_2d_array(num_rows, num_cols) {
 	}
 	return arr;
 }
+
+
+
+
+
+
+
+
+
 
 /**
  * Writes to the game file with the given filename and adds stats
@@ -517,6 +541,37 @@ function get_game_information_string(file_name) {
 }
 
 /**
+ * Overwrites the footer in a given file with a new footer.
+ *
+ * @param file_name Name of the file to overwrite
+ * @param new_footer Footer to write over the old one
+ * @return True if overwrite is successful, false otherwise
+ */
+exports.overwrite_footer = function(file_name, new_footer) {
+	// Read team's stats
+	var current_game_stats;
+	try {
+		current_game_stats = exports.read_game_file(file_name);
+	} catch(e) {
+		console.log("overwrite_footer: READ ERROR: " + e);
+		return false;
+	}
+
+	return overwrite_game_file(game_array_to_string(current_game_stats) + "\n" + semicolon_replacement +
+							   "FOOTER\n" + new_footer.toString().replace(/,/g, comma_replacement) +
+							   "\n" + semicolon_replacement + read_pbp(file_name), file_name);
+}
+
+
+
+
+
+
+
+
+
+
+/**
  * Adds a play to the gamefile. This is for the XML file.
  *
  * @param file_name name of the file with the pbps
@@ -663,6 +718,16 @@ function mmss_to_seconds(mmss) {
 	return seconds;
 }
 
+
+
+
+
+
+
+
+
+
+
 /**
  * Creates an XML file from a game file with the given file name. Stores it at
  * the file path defined in xml_file_path defined at the top of this file.
@@ -702,7 +767,7 @@ exports.create_xml_file = function(game_file_name) {
 }
 
 function xml_get_date() {
-	let today = new Date();
+	var today = new Date();
 	var date_string = "";
 
 	date_string += today.getMonth()+1 + "/";
@@ -746,18 +811,124 @@ function get_prds(qh) {
 }
 
 function xml_get_status(game_file_name) {
-	//TODO
+	// TODO: do the whole function but it's short so nbd
+	// ...
+
+	return '<status></status>';
 }
 
 function xml_get_teams(game_file_name) {
-	//TODO
+	var game = exports.read_game_file(game_file_name);
+	var teams_string = '<team';
+
+	teams_string += ' vh="V"';
+	teams_string += ' id="' + game[4][3] + '"';
+	teams_string += ' name="' + game[4][1] + '"';
+	teams_string += ' record="' + game[4][5] + '">\n';
+
+	var scores = get_scoreline(game_file_name);
+	teams_string += xml_get_linescores(scores[1]) + "\n";
+	teams_string += xml_get_totals(game[1]);
+	teams_string += xml_get_playerstats(game[1]) + "\n";
+	teams_string += '</team>';
+
+	return teams_string;
+}
+
+function xml_get_linescores(scores) {
+	var linescores_string = '<linescore';
+	linescores_string += ' line="';
+	for(var period = 0; period < scores.length-1; period++) {
+		linescores_string += scores[period] + ',';
+	}
+	linescores_string += scores[scores.length-1] + '"';
+	linescores_string += ' score="' + sum(scores) + '">\n';
+
+	for(var period = 0; period < scores.length; period++) {
+		linescores_string += '<lineprd prd="' + (period+1) + '"';
+		linescores_string += ' score="' + scores[period] + '"></lineprd>\n';
+	}
+
+	linescores_string += '</linescore>';
+	return linescores_string;
+}
+
+function xml_get_totals(team_array) {
+	// TODO: implement total stats
+	// ...
+
+	return "";
+}
+
+function xml_get_playerstats(team_array) {
+	var playerstats_string = '';
+	for(player = 1; player < team_array.length; player++) {
+		playerstats_string += '<player';
+		playerstats_string += ' uni="' + team_array[player][0] + '"';
+		playerstats_string += ' code="' + team_array[player][0] + '"';
+
+		// TODO: do the rest of the stats
+		// ...
+
+		playerstats_string += '></player>\n';
+	}
+	playerstats_string = playerstats_string.substring(0, playerstats_string.length-1);
+	return playerstats_string;
+}
+
+function sum(array) {
+	var total = 0;
+	for(var i = 0; i < array.length; i++) {
+		total += array[i];
+	}
+	return total;
+}
+
+function get_scoreline(file_name) {
+	// split pbp into array of periods which are arrays of plays
+	var pbp_split = read_pbp(file_name).replace('PBP\n','').split(game_period_delimiter);
+	for(var i = 0; i < pbp_split.length; i++) {
+		pbp_split[i] = pbp_split[i].replace(/><\/play>/g,'').split('<play');
+	}
+
+	var scoreline = new Array(2); // two teams
+	scoreline[0] = new Array(pbp_split.length);  // num periods
+	scoreline[1] = new Array(pbp_split.length);  // num periods
+
+	for(var period = 0; period < pbp_split.length; period++) {
+		for(var play = pbp_split.length-1; play >= 0; play--) {
+			if(pbp_split[period][play].includes('hscore')) {
+				var hscore_idx = pbp_split[period][play].indexOf('hscore') + 8;
+				var vscore_idx = pbp_split[period][play].indexOf('vscore') + 8;
+				scoreline[0][period] = Number(pbp_split[period][play].substring(hscore_idx, hscore_idx+3).replace('"','').replace(' ',''));
+				scoreline[1][period] = Number(pbp_split[period][play].substring(vscore_idx, vscore_idx+3).replace('"','').replace(' ',''));
+			}
+		}
+	}
+
+	// correct total score to score per period
+	for(var team = 0; team < 2; team++) {
+		for(var period = 1; period < pbp_split.length; period++) {
+			if(scoreline[team][period] == undefined) scoreline[team][period] = scoreline[team][period-1];
+		}
+	}
+	for(var team = 0; team < 2; team++) {
+		for(var period = pbp_split.length-1; period >= 1; period--) {
+			scoreline[team][period] -= scoreline[team][period-1];
+		}
+	}
+
+	return scoreline;
 }
 
 function xml_get_byprdsummaries(game_file_name) {
-	//TODO
+	// TODO: do the whole thing lol
+	// ...
+
+	return '<byprdsummaries></byprdsummaries>';
 }
 
-var HARDCODED_TIME_PER_PERIOD = "20:00";
+const HARDCODED_TIME_PER_PERIOD = "20:00";
 function xml_get_plays(game_file_name) {
 	// split pbp array of periods
 	var pbp_split = read_pbp(game_file_name).replace('PBP\n','').split('\n' + game_period_delimiter + '\n');
@@ -777,6 +948,14 @@ function xml_get_plays(game_file_name) {
 
 	return plays_string;
 }
+
+
+
+
+
+
+
+
 
 
 

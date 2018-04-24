@@ -81,7 +81,7 @@ var app = new Vue({
         app.edit_team();
       }
       // <N> --> Add New Team
-      else if (e.keyCode == 78 && (document.getElementById('searched') != document.activeElement) && app.editing_team == false) {
+      else if (e.keyCode == 78 && (document.getElementById('searched') != document.activeElement) && app.editing_team == false && app.adding_team == false) {
         app.enter_team_information();
       }
       // <F9> --> Delete Team
@@ -104,6 +104,7 @@ var app = new Vue({
         modal.style.display = "block";
         span.onclick = function() {
             modal.style.display = "none";
+            app.editing_team = false;
         }
         window.onclick = function(event) {
             if (event.target == modal) {
@@ -278,49 +279,89 @@ var app = new Vue({
       for(var i = 1; i < 16; i++)
       {
         // HANDLES PLAYERS NOT ENTERED INTO THE ROSTER (THIS IS ALLOWED)
-        if(document.getElementsByName("player_name_"+i)[0].value == "" && document.getElementsByName("player_number_"+i)[0].value == "" && document.getElementsByName("player_pos_"+i)[0].value == "")
+        if(document.getElementsByName("player_name_"+i)[0].value == "" && document.getElementsByName("player_number_"+i)[0].value == "" && document.getElementsByName("player_pos_"+i)[0].value == "" && document.getElementsByName("player_year_"+i)[0].value == "")
         {
           console.log("Player "+i+ " was not entered");
         }
         else {
           // HANDLES INCOMPLETE PLAYER ENTRY (THIS IS NOT OKAY)
-          if(document.getElementsByName("player_name_"+i)[0].value == "" && document.getElementsByName("player_number_"+i)[0].value != "" && document.getElementsByName("player_pos_"+i)[0].value != "")
+          if(document.getElementsByName("player_name_"+i)[0].value == "" && document.getElementsByName("player_number_"+i)[0].value != "" && document.getElementsByName("player_pos_"+i)[0].value != "" && document.getElementsByName("player_year_"+i)[0].value != "")
           {
             window.alert("Player "+i+" was not given a name.  Please enter a name.");
             incomplete_form = true;
           }
-          else if(document.getElementsByName("player_name_"+i)[0].value != "" && document.getElementsByName("player_number_"+i)[0].value == "" && document.getElementsByName("player_pos_"+i)[0].value != "")
+          else if(document.getElementsByName("player_name_"+i)[0].value != "" && document.getElementsByName("player_number_"+i)[0].value == "" && document.getElementsByName("player_pos_"+i)[0].value != "" && document.getElementsByName("player_year_"+i)[0].value != "")
           {
             window.alert("Player "+i+" was not given a number.  Please enter a number.");
             incomplete_form = true;
           }
-          else if(document.getElementsByName("player_name_"+i)[0].value != "" && document.getElementsByName("player_number_"+i)[0].value != "" && document.getElementsByName("player_pos_"+i)[0].value == "")
+          else if(document.getElementsByName("player_name_"+i)[0].value != "" && document.getElementsByName("player_number_"+i)[0].value != "" && document.getElementsByName("player_pos_"+i)[0].value == "" && document.getElementsByName("player_year_"+i)[0].value != "")
           {
             window.alert("Player "+i+" was not given a position.  Please enter a positon.");
             incomplete_form = true;
           }
-          else if(document.getElementsByName("player_name_"+i)[0].value == "" && document.getElementsByName("player_number_"+i)[0].value == "" && document.getElementsByName("player_pos_"+i)[0].value == "")
+          else if(document.getElementsByName("player_name_"+i)[0].value != "" && document.getElementsByName("player_number_"+i)[0].value != "" && document.getElementsByName("player_pos_"+i)[0].value != "" && document.getElementsByName("player_year_"+i)[0].value == "")
+          {
+            window.alert("Player "+i+" was not given a year.  Please enter a year.");
+            incomplete_form = true;
+          }
+          else if(document.getElementsByName("player_name_"+i)[0].value == "" && document.getElementsByName("player_number_"+i)[0].value == "" && document.getElementsByName("player_pos_"+i)[0].value == "" && document.getElementsByName("player_year_"+i)[0].value != "")
           {
             window.alert("Player "+i+" was not given a name or number.  Please enter the missing information.");
             incomplete_form = true;
           }
-          else if(document.getElementsByName("player_name_"+i)[0].value != "" && document.getElementsByName("player_number_"+i)[0].value == "" && document.getElementsByName("player_pos_"+i)[0].value == "")
+          else if(document.getElementsByName("player_name_"+i)[0].value != "" && document.getElementsByName("player_number_"+i)[0].value == "" && document.getElementsByName("player_pos_"+i)[0].value == "" && document.getElementsByName("player_year_"+i)[0].value != "")
           {
             window.alert("Player "+i+" was not given a number or position.  Please enter the missing information.");
             incomplete_form = true;
           }
-          else if(document.getElementsByName("player_name_"+i)[0].value == "" && document.getElementsByName("player_number_"+i)[0].value != "" && document.getElementsByName("player_pos_"+i)[0].value == "")
+          else if(document.getElementsByName("player_name_"+i)[0].value == "" && document.getElementsByName("player_number_"+i)[0].value != "" && document.getElementsByName("player_pos_"+i)[0].value == "" && document.getElementsByName("player_year_"+i)[0].value != "")
           {
             window.alert("Player "+i+" was not given a name or position.  Please enter the missing information.");
+            incomplete_form = true;
+          }
+          else if(document.getElementsByName("player_name_"+i)[0].value != "" && document.getElementsByName("player_number_"+i)[0].value == "" && document.getElementsByName("player_pos_"+i)[0].value != "" && document.getElementsByName("player_year_"+i)[0].value == "")
+          {
+            window.alert("Player "+i+" was not given a number or year.  Please enter the missing information.");
+            incomplete_form = true;
+          }
+          else if(document.getElementsByName("player_name_"+i)[0].value != "" && document.getElementsByName("player_number_"+i)[0].value != "" && document.getElementsByName("player_pos_"+i)[0].value == "" && document.getElementsByName("player_year_"+i)[0].value == "")
+          {
+            window.alert("Player "+i+" was not given a position or year.  Please enter the missing information.");
+            incomplete_form = true;
+          }
+          else if(document.getElementsByName("player_name_"+i)[0].value != "" && document.getElementsByName("player_number_"+i)[0].value != "" && document.getElementsByName("player_pos_"+i)[0].value == "" && document.getElementsByName("player_year_"+i)[0].value == "")
+          {
+            window.alert("Player "+i+" was not given a position or year.  Please enter the missing information.");
+            incomplete_form = true;
+          }
+          else if(document.getElementsByName("player_name_"+i)[0].value == "" && document.getElementsByName("player_number_"+i)[0].value == "" && document.getElementsByName("player_pos_"+i)[0].value == "" && document.getElementsByName("player_year_"+i)[0].value != "")
+          {
+            window.alert("Player "+i+" was not given a name, number or position.  Please enter the missing information.");
+            incomplete_form = true;
+          }
+          else if(document.getElementsByName("player_name_"+i)[0].value != "" && document.getElementsByName("player_number_"+i)[0].value == "" && document.getElementsByName("player_pos_"+i)[0].value == "" && document.getElementsByName("player_year_"+i)[0].value == "")
+          {
+            window.alert("Player "+i+" was not given a number, position or year.  Please enter the missing information.");
+            incomplete_form = true;
+          }
+          else if(document.getElementsByName("player_name_"+i)[0].value == "" && document.getElementsByName("player_number_"+i)[0].value != "" && document.getElementsByName("player_pos_"+i)[0].value == "" && document.getElementsByName("player_year_"+i)[0].value == "")
+          {
+            window.alert("Player "+i+" was not given a name, position or year.  Please enter the missing information.");
+            incomplete_form = true;
+          }
+          else if(document.getElementsByName("player_name_"+i)[0].value == "" && document.getElementsByName("player_number_"+i)[0].value == "" && document.getElementsByName("player_pos_"+i)[0].value != "" && document.getElementsByName("player_year_"+i)[0].value == "")
+          {
+            window.alert("Player "+i+" was not given a name, number or year.  Please enter the missing information.");
             incomplete_form = true;
           }
           // ALL OF THE CURRENT PLAYER DETAILS ARE ENTERED
           else if(incomplete_form == false)
           {
             // CREATE PLAYER: Name, number, position
-            var player = new Player(document.getElementsByName("player_name_"+i)[0].value, document.getElementsByName("player_number_"+i)[0].value, document.getElementsByName("player_pos_"+i)[0].value);
-            console.log("NAME: "+ player.get_name() + " NUMBER: " + player.get_number() + " POSITION: " + player.get_position());
-            team_entered.unshift(player);
+            var player = new Player(document.getElementsByName("player_name_"+i)[0].value, document.getElementsByName("player_number_"+i)[0].value, document.getElementsByName("player_pos_"+i)[0].value, document.getElementsByName("player_year_"+i)[0].value);
+            console.log("NAME: "+ player.get_name() + " NUMBER: " + player.get_number() + " POSITION: " + player.get_position() + " YEAR: "+player.get_year());
+            team_entered.push(player);
           }
         }
       }
@@ -332,8 +373,8 @@ var app = new Vue({
           document.getElementsByName("player_name_"+i)[0].value = "";
           document.getElementsByName("player_number_"+i)[0].value = "";
           document.getElementsByName("player_pos_"+i)[0].value = "";
+          document.getElementsByName("player_year_"+i)[0].value = "";
         }
-
           // HIDE THE MODAL
           var modal = document.getElementById('team_roster_entry');
           for(var i = 0; i < team_entered.length; i++)
@@ -377,6 +418,7 @@ var app = new Vue({
          this.new_team = new Team(name, code, coach, assistants, stadium);
          var modal = document.getElementById('team_edit');
          modal.style.display = "none";
+         app.selected_team = {};
          var edited_team_file = app.selected_team[0].toLowerCase().split(' ').join('_'); // Dervive filename from team name
          var team = TRW.read_team(edited_team_file); // Read team file into an array
          console.log("TEAM: \n"+team);
@@ -416,7 +458,8 @@ var app = new Vue({
          var edited_team_file = app.selected_team[0].toLowerCase().split(' ').join('_'); // Dervive filename from team name
          var team = TRW.read_team(edited_team_file); // Read team file into an array
          console.log("TEAM: \n"+team);
-         var roster = team.get_active_roster();
+         var roster = team[5];
+         console.log(roster);
          var roster_modal = document.getElementById('update_roster_entry');
          roster_modal.style.display = "block";
          document.onkeydown = function(e) {
@@ -430,14 +473,53 @@ var app = new Vue({
              if (isEscape) {
                  roster_modal.style.display = "none";
                  app.editing_team = false;
+                 app.selected_team = {};
              }
            }
-         
+         var players = [];
+         var current_name = "";
+         var current_number = "";
+         var current_pos = "";
+         var current_year = "";
          for(var i = 0; i < roster.length; i++)
          {
-           document.getElementsByName("player_name_"+i)[1].value = roster[i].get_name();
-           document.getElementsByName("player_number_"+i)[1].value = roster[i].get_number();
-           document.getElementsByName("player_pos_"+i)[1].value = roster[i].get_position();
+           if(i%4 == 0)
+           {
+             // Player name
+             current_name = roster[i];
+
+           }
+           else if(i%4 == 1)
+           {
+             // Player number
+             current_number = roster[i];
+
+
+           }
+           else if(i%4 == 2)
+           {
+             // Player position
+             current_pos = roster[i];
+
+
+           }
+           else if(i%4 == 3)
+           {
+             // Player year
+             current_year = roster[i];
+             var loaded_player = new Player(current_name, current_number, current_pos, current_year);
+             // Store this array in player_info
+             players.push(loaded_player);
+           }
+         }
+         for(var player = 0; player < players.length; player++)
+         {
+           var player_number = player+1;
+           console.log("PLAYER: "+players[player]);
+           document.getElementsByName("player_name_"+player_number)[1].value = players[player].get_name();
+           document.getElementsByName("player_number_"+player_number)[1].value = players[player].get_number();
+           document.getElementsByName("player_pos_"+player_number)[1].value = players[player].get_position();
+           document.getElementsByName("player_year_"+player_number)[1].value = players[player].get_year();
          }
       }
     },
@@ -448,49 +530,89 @@ var app = new Vue({
       for(var i = 1; i < 16; i++)
       {
         // HANDLES PLAYERS NOT ENTERED INTO THE ROSTER (THIS IS ALLOWED)
-        if(document.getElementsByName("player_name_"+i)[1].value == "" && document.getElementsByName("player_number_"+i)[1].value == "" && document.getElementsByName("player_pos_"+i)[1].value == "")
+        if(document.getElementsByName("player_name_"+i)[1].value == "" && document.getElementsByName("player_number_"+i)[1].value == "" && document.getElementsByName("player_pos_"+i)[1].value == "" && document.getElementsByName("player_year_"+i)[1].value == "")
         {
           console.log("Player "+i+ " was not entered");
         }
         else {
           // HANDLES INCOMPLETE PLAYER ENTRY (THIS IS NOT OKAY)
-          if(document.getElementsByName("player_name_"+i)[1].value == "" && document.getElementsByName("player_number_"+i)[1].value != "" && document.getElementsByName("player_pos_"+i)[1].value != "")
+          if(document.getElementsByName("player_name_"+i)[1].value == "" && document.getElementsByName("player_number_"+i)[1].value != "" && document.getElementsByName("player_pos_"+i)[1].value != "" && document.getElementsByName("player_year_"+i)[1].value != "")
           {
             window.alert("Player "+i+" was not given a name.  Please enter a name.");
             incomplete_form = true;
           }
-          else if(document.getElementsByName("player_name_"+i)[1].value != "" && document.getElementsByName("player_number_"+i)[1].value == "" && document.getElementsByName("player_pos_"+i)[1].value != "")
+          else if(document.getElementsByName("player_name_"+i)[1].value != "" && document.getElementsByName("player_number_"+i)[1].value == "" && document.getElementsByName("player_pos_"+i)[1].value != "" && document.getElementsByName("player_year_"+i)[1].value != "")
           {
             window.alert("Player "+i+" was not given a number.  Please enter a number.");
             incomplete_form = true;
           }
-          else if(document.getElementsByName("player_name_"+i)[1].value != "" && document.getElementsByName("player_number_"+i)[1].value != "" && document.getElementsByName("player_pos_"+i)[1].value == "")
+          else if(document.getElementsByName("player_name_"+i)[1].value != "" && document.getElementsByName("player_number_"+i)[1].value != "" && document.getElementsByName("player_pos_"+i)[1].value == "" && document.getElementsByName("player_year_"+i)[1].value != "")
           {
             window.alert("Player "+i+" was not given a position.  Please enter a positon.");
             incomplete_form = true;
           }
-          else if(document.getElementsByName("player_name_"+i)[1].value == "" && document.getElementsByName("player_number_"+i)[1].value == "" && document.getElementsByName("player_pos_"+i)[1].value == "")
+          else if(document.getElementsByName("player_name_"+i)[1].value != "" && document.getElementsByName("player_number_"+i)[1].value != "" && document.getElementsByName("player_pos_"+i)[1].value != "" && document.getElementsByName("player_year_"+i)[1].value == "")
+          {
+            window.alert("Player "+i+" was not given a year.  Please enter a year.");
+            incomplete_form = true;
+          }
+          else if(document.getElementsByName("player_name_"+i)[1].value == "" && document.getElementsByName("player_number_"+i)[1].value == "" && document.getElementsByName("player_pos_"+i)[1].value == "" && document.getElementsByName("player_year_"+i)[1].value != "")
           {
             window.alert("Player "+i+" was not given a name or number.  Please enter the missing information.");
             incomplete_form = true;
           }
-          else if(document.getElementsByName("player_name_"+i)[1].value != "" && document.getElementsByName("player_number_"+i)[1].value == "" && document.getElementsByName("player_pos_"+i)[1].value == "")
+          else if(document.getElementsByName("player_name_"+i)[1].value != "" && document.getElementsByName("player_number_"+i)[1].value == "" && document.getElementsByName("player_pos_"+i)[1].value == "" && document.getElementsByName("player_year_"+i)[1].value != "")
           {
             window.alert("Player "+i+" was not given a number or position.  Please enter the missing information.");
             incomplete_form = true;
           }
-          else if(document.getElementsByName("player_name_"+i)[1].value == "" && document.getElementsByName("player_number_"+i)[1].value != "" && document.getElementsByName("player_pos_"+i)[1].value == "")
+          else if(document.getElementsByName("player_name_"+i)[1].value == "" && document.getElementsByName("player_number_"+i)[1].value != "" && document.getElementsByName("player_pos_"+i)[1].value == "" && document.getElementsByName("player_year_"+i)[1].value != "")
           {
             window.alert("Player "+i+" was not given a name or position.  Please enter the missing information.");
+            incomplete_form = true;
+          }
+          else if(document.getElementsByName("player_name_"+i)[1].value != "" && document.getElementsByName("player_number_"+i)[1].value == "" && document.getElementsByName("player_pos_"+i)[1].value != "" && document.getElementsByName("player_year_"+i)[1].value == "")
+          {
+            window.alert("Player "+i+" was not given a number or year.  Please enter the missing information.");
+            incomplete_form = true;
+          }
+          else if(document.getElementsByName("player_name_"+i)[1].value != "" && document.getElementsByName("player_number_"+i)[1].value != "" && document.getElementsByName("player_pos_"+i)[1].value == "" && document.getElementsByName("player_year_"+i)[1].value == "")
+          {
+            window.alert("Player "+i+" was not given a position or year.  Please enter the missing information.");
+            incomplete_form = true;
+          }
+          else if(document.getElementsByName("player_name_"+i)[1].value != "" && document.getElementsByName("player_number_"+i)[1].value != "" && document.getElementsByName("player_pos_"+i)[1].value == "" && document.getElementsByName("player_year_"+i)[1].value == "")
+          {
+            window.alert("Player "+i+" was not given a position or year.  Please enter the missing information.");
+            incomplete_form = true;
+          }
+          else if(document.getElementsByName("player_name_"+i)[1].value == "" && document.getElementsByName("player_number_"+i)[1].value == "" && document.getElementsByName("player_pos_"+i)[1].value == "" && document.getElementsByName("player_year_"+i)[1].value != "")
+          {
+            window.alert("Player "+i+" was not given a name, number or position.  Please enter the missing information.");
+            incomplete_form = true;
+          }
+          else if(document.getElementsByName("player_name_"+i)[1].value != "" && document.getElementsByName("player_number_"+i)[1].value == "" && document.getElementsByName("player_pos_"+i)[1].value == "" && document.getElementsByName("player_year_"+i)[1].value == "")
+          {
+            window.alert("Player "+i+" was not given a number, position or year.  Please enter the missing information.");
+            incomplete_form = true;
+          }
+          else if(document.getElementsByName("player_name_"+i)[1].value == "" && document.getElementsByName("player_number_"+i)[1].value != "" && document.getElementsByName("player_pos_"+i)[1].value == "" && document.getElementsByName("player_year_"+i)[1].value == "")
+          {
+            window.alert("Player "+i+" was not given a name, position or year.  Please enter the missing information.");
+            incomplete_form = true;
+          }
+          else if(document.getElementsByName("player_name_"+i)[1].value == "" && document.getElementsByName("player_number_"+i)[1].value == "" && document.getElementsByName("player_pos_"+i)[1].value != "" && document.getElementsByName("player_year_"+i)[1].value == "")
+          {
+            window.alert("Player "+i+" was not given a name, number or year.  Please enter the missing information.");
             incomplete_form = true;
           }
           // ALL OF THE CURRENT PLAYER DETAILS ARE ENTERED
           else if(incomplete_form == false)
           {
             // CREATE PLAYER: Name, number, position
-            var player = new Player(document.getElementsByName("player_name_"+i)[1].value, document.getElementsByName("player_number_"+i)[1].value, document.getElementsByName("player_pos_"+i)[1].value);
-            console.log("NAME: "+ player.get_name() + " NUMBER: " + player.get_number() + " POSITION: " + player.get_position());
-            team_entered.unshift(player);
+            var player = new Player(document.getElementsByName("player_name_"+i)[1].value, document.getElementsByName("player_number_"+i)[1].value, document.getElementsByName("player_pos_"+i)[1].value, document.getElementsByName("player_year_"+i)[1].value);
+            console.log("NAME: "+ player.get_name() + " NUMBER: " + player.get_number() + " POSITION: " + player.get_position() + " YEAR: "+player.get_year());
+            team_entered.push(player);
           }
         }
       }
@@ -502,6 +624,7 @@ var app = new Vue({
           document.getElementsByName("player_name_"+i)[1].value = "";
           document.getElementsByName("player_number_"+i)[1].value = "";
           document.getElementsByName("player_pos_"+i)[1].value = "";
+          document.getElementsByName("player_year_"+i)[1].value = "";
         }
 
           // HIDE THE MODAL
@@ -516,7 +639,7 @@ var app = new Vue({
           team_file = team_file.split(' ').join('_');
           console.log(team_file+".txt");
           TRW.overwrite_team(team_file, this.new_team.to_array());
-          console.log("NAME: "+this.new_team.get_name()+" CODE: "+this.new_team.get_code()+" STADIUM: "+this.new_team.get_stadium()+" ROSTER: "+this.new_team.get_active_roster()[0].get_name());
+          console.log("NAME: "+this.new_team.get_name()+" CODE: "+this.new_team.get_code()+" STADIUM: "+this.new_team.get_stadium()+" ROSTER: ");
           for(var i = 0; i < team_entered.length; i++)
           {
             console.log("Player "+i+": "+team_entered[i].name);
