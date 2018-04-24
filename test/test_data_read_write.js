@@ -13,7 +13,7 @@ const no_play_file = "data_no_play";
 const xml_path = "data/data_test.xml";
 const individual_stat_labels = ['number', 'fg', 'fga', 'pts'];
 const team_stat_labels = ['team fouls', 'timeouts left'];
-const footer = ['HOME_TEAM', 'AWAY_TEAM', 'HOME_TEAM_CODE', 'AWAY_TEAM_CODE',
+const footer = ['_HTEAM_', 'AWAY_TEAM', 'HOME_TEAM_CODE', 'AWAY_TEAM_CODE',
 	'HOME_TEAM_RECORD', 'AWAY_TEAM_RECORD', 'GAME_DATE', 'START_TIME', 'STADIUM',
 	'STADIUM_CODE', 'CONF_GAME?', '[SCHEDULE_NOTES]', 'HALVES/QUARTERS',
 	'MIN_PER_PERIOD', 'MIN_IN_OT', 'OFFICIALS', '[BOX_COMMENTS]', 'ATTENDANCE'];
@@ -68,6 +68,21 @@ const test_empty_team_stats_array = [[ 'number', 'fg', 'fga', 'pts' ]];
 const test_pbp = '<play vh="V" time="00:47" uni="12" team="MICH" checkname="ABDUR-RAHKMAN,M-A" action="GOOD" type="FT" vscore="78" hscore="69"></play>';
 const test_pbp_addition = test_pbp + '\n^3#!gx/?]\n<play vh="V" time="09:49" uni="13" team="MICH" checkname="WAGNER,MORITZ" action="FOUL"></play>';
 const test_stats_with_footer_and_pbp = test_stats + "\n/Od@&?l#iFOOTER\n" + footer.toString().replace(/,/g,'(&h#@d!`_') + "\n/Od@&?l#iPBP\n" + test_pbp;
+
+const test_xml_venue = '<venue gameid="GAME_DATE" visid="AWAY_TEAM_CODE" visname="AWAY_TEAM" homeid="HOME_TEAM_CODE" homename="_HTEAM_" '+
+'date="GAME_DATE" location="STADIUM" time="START_TIME" attend="ATTENDANCE" schednote="[SCHEDULE_NOTES]" leaguegame="CONF_GAME?">\n' +
+'<officials text="OFFICIALS"></officials>\n<rules prds="2" minutes="MIN_PER_PERIOD" minutesot="MIN_IN_OT" qh="HALVES/QUARTERS"></rules>\n</venue>';
+
+const test_xml_plays = '<plays format="tokens">\n<period number="1" time="20:00">\n<play vh="V" time="00:47" uni="12" team="MICH" '+
+'checkname="ABDUR-RAHKMAN,M-A" action="GOOD" type="FT" vscore="78" hscore="69"></play>\n</period>\n<period number="2" time="20:00">\n'+
+'<play vh="V" time="09:49" uni="13" team="MICH" checkname="WAGNER,MORITZ" action="FOUL"></play>\n</period>\n</plays>';
+
+const test_xml_string = '<bbgame source="NextGen Scoring" version="0.3.2" generated="4/23/2018">\n' + test_xml_venue + '\n<status></status>\n'+
+'<team vh="V" id="AWAY_TEAM_CODE" name="AWAY_TEAM" record="AWAY_TEAM_RECORD">\n<linescore line="78,0" score="78">\n'+
+'<lineprd prd="1" score="78"></lineprd>\n<lineprd prd="2" score="0"></lineprd>\n</linescore>\n<player uni="35" code="35"></player>\n'+
+'<player uni="36" code="36"></player>\n<player uni="45" code="45"></player>\n<player uni="03" code="03"></player>\n<player uni="29" code="29"></player>'+
+'\n</team>\n<byprdsummaries></byprdsummaries>\n'+ test_xml_plays + '\n</bbgame>';
+
 // ADDITIONAL INTEGRATION TEST DATA
 //data
 function statsHeader(outerIndex, index) {
@@ -382,6 +397,15 @@ describe('data_read_write tests', function() {
         }
       });
     });
+    describe('overwrite_footer()', function() {
+      it('should overwrite the footer with a new footer', function() {
+        var new_footer = footer;
+      	new_footer[0] = "_HTEAM_";
+      	drw.overwrite_footer(file_name, new_footer);
+        assert.strictEqual(drw.read_game_file(file_name)[4].toString(), new_footer.toString());
+      	drw.overwrite_footer(file_name, footer);
+      });
+    });
    describe('overwrite_game_file()', function() {
       it('should overwrite the contents of a file with new contents', function() {
         assert.strictEqual(drw.test_overwrite_game_file(test_stats_with_footer_and_pbp, file_name), true);
@@ -676,6 +700,9 @@ describe('data_read_write tests', function() {
     });
   });
   describe("create_xml_file()", function() {
+    it("properly creates an XML file", function() {
+       assert.strictEqual(drw.create_xml_file(file_name), test_xml_string);
+    });
     it("throws a File Read Error if filename doesn't exist", function() {
       try {
         drw.create_xml_file("test");
@@ -685,10 +712,6 @@ describe('data_read_write tests', function() {
     });
   })
   describe("xml_get_venue()", function() {
-     const test_xml_venue = '<venue gameid="GAME_DATE" visid="AWAY_TEAM_CODE" visname="AWAY_TEAM" homeid="HOME_TEAM_CODE" homenanme="HOME_TEAM" '+
-     'date="GAME_DATE" location="STADIUM" time="START_TIME" attend="ATTENDANCE" schednote="[SCHEDULE_NOTES]" leaguegame="CONF_GAME?">\n' +
-     '<officials text="OFFICIALS"></officials>\n<rules prds="2" minutes="MIN_PER_PERIOD" minutesot="MIN_IN_OT" qh="HALVES/QUARTERS"></rules>\n</venue>';
-
      it("correctly returns a venue (in XML) of a file", function() {
       assert.strictEqual(drw.test_xml_get_venue(file_name), test_xml_venue);
      });
@@ -706,10 +729,6 @@ describe('data_read_write tests', function() {
      })
   });
   describe("xml_get_plays()", function() {
-    const test_xml_plays = '<plays format="tokens">\n<period number="1" time="20:00">\n<play vh="V" time="00:47" uni="12" team="MICH" '+
-    'checkname="ABDUR-RAHKMAN,M-A" action="GOOD" type="FT" vscore="78" hscore="69"></play>\n</period>\n<period number="2" time="20:00">\n'+
-    '<play vh="V" time="09:49" uni="13" team="MICH" checkname="WAGNER,MORITZ" action="FOUL"></play>\n</period>\n</plays>';
-
     it("should return all plays successfully", function() {
       assert.strictEqual(drw.test_xml_get_plays(file_name), test_xml_plays);
     });

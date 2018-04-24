@@ -764,6 +764,7 @@ exports.create_xml_file = function(game_file_name) {
 	} catch(e) {
 		console.log("create_xml_file: File writing error: " + e);
 	}
+	return xml_string;
 }
 
 function xml_get_date() {
@@ -785,7 +786,7 @@ function xml_get_venue(game_file_name) {
 	venue_string += ' visid="' + footer[3] + '"';
 	venue_string += ' visname="' + footer[1] + '"';
 	venue_string += ' homeid="' + footer[2] + '"';
-	venue_string += ' homenanme="' + footer[0] + '"';
+	venue_string += ' homename="' + footer[0] + '"';
 	venue_string += ' date="' + footer[6] + '"';
 	venue_string += ' location="' + footer[8] + '"';
 	venue_string += ' time="' + footer[7] + '"';
