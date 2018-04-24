@@ -9,6 +9,7 @@ var FileReader = require('filereader');
 
 const file_name = "data_test";
 const file_path = "data/data_test.txt";
+const no_play_file = "data_no_play";
 const xml_path = "data/data_test.xml";
 const individual_stat_labels = ['number', 'fg', 'fga', 'pts'];
 const team_stat_labels = ['team fouls', 'timeouts left'];
@@ -562,22 +563,40 @@ describe('data_read_write tests', function() {
       });
    });
    describe("get_string_play_for_xml()", function() {
-     it("ensures xml is test_pbp", function() {
       var vh = 'V';
-     	var time = '00:47';
-     	var uni = '12';
-     	var team = 'MICH';
-     	var checkname = 'ABDUR-RAHKMAN,M-A';
-     	var action = 'GOOD';
-     	var type = 'FT';
-     	var vscore = '78';
-     	var hscore = '69';
+      var time = '00:47';
+      var uni = '12';
+      var team = 'MICH';
+      var checkname = 'ABDUR-RAHKMAN,M-A';
+      var action = 'GOOD';
+      var type = 'FT';
+      var vscore = '78';
+      var hscore = '69';
+     it("properly converts parameters into XML tag", function() {
      	var xml = drw.test_get_string_play_for_xml(vh, time, uni, team, checkname, action, type, vscore, hscore);
       assert.strictEqual(xml, test_pbp);
      });
+     it("throws an error due to invalid vh value", function() {
+       try {
+         let nullXml = drw.test_get_string_play_for_xml("VH", time, uni, team, checkname, action, type, vscore, hscore);
+       } catch(e) {
+         assert.strictEqual(e, "get_string_play_for_xml: invalid vh value: must be H or V. vh is VH");
+       }
+     });
+     it("returns an XML play without a type attribute", function() {
+       const test_pbp_null_type = '<play vh="V" time="00:47" uni="12" team="MICH" checkname="ABDUR-RAHKMAN,M-A" action="GOOD" vscore="78" hscore="69"></play>';
+       let nullXml = drw.test_get_string_play_for_xml(vh, time, uni, team, checkname, action, null, vscore, hscore);
+       assert.strictEqual(nullXml, test_pbp_null_type);
+     });
+     it("returns an XML play without a vscore/hscore attribute", function() {
+       const test_pbp_null_score = '<play vh="V" time="00:47" uni="12" team="MICH" checkname="ABDUR-RAHKMAN,M-A" action="GOOD" type="FT"></play>';
+       assert.strictEqual(drw.test_get_string_play_for_xml(vh, time, uni, team, checkname, action, type, null, hscore), test_pbp_null_score);
+       assert.strictEqual(drw.test_get_string_play_for_xml(vh, time, uni, team, checkname, action, type, vscore, null), test_pbp_null_score);
+       assert.strictEqual(drw.test_get_string_play_for_xml(vh, time, uni, team, checkname, action, type, null, null), test_pbp_null_score);
+     });
    });
    describe("read_pbp()", function() {
-     it("ensures xml is test_pbp", function() {
+     it("Reads a string of play by plays in a file", function() {
       var pbp_string = drw.test_read_pbp(file_name);
       assert.strictEqual(pbp_string, "PBP\n" + test_pbp);
      });
@@ -591,23 +610,69 @@ describe('data_read_write tests', function() {
      });
    });
    describe("add_pbp()", function() {
-     it("ensures xml is test_pbp", function() {
+     var vh = 'V';
+     var time = '09:49';
+     var uni = '13';
+     var team = 'MICH';
+     var checkname = 'WAGNER,MORITZ';
+     var action = 'FOUL';
+     it("adds a play to the play by play to the provided file", function() {
       //'<play vh="V" time="09:49" uni="13" team="MICH" checkname="WAGNER,MORITZ" action="FOUL"></play>'
-     	var vh = 'V';
-     	var time = '09:49';
-     	var uni = '13';
-     	var team = 'MICH';
-     	var checkname = 'WAGNER,MORITZ';
-     	var action = 'FOUL';
-
      	drw.add_pbp(file_name, vh, time, uni, team, checkname, action, null, null, null);
       assert.strictEqual(drw.test_read_pbp(file_name), "PBP\n" + test_pbp_addition);
-   });
+     });
+     describe("Null checking", function() {
+       it("Throws null error if vh is null", function() {
+         try {
+           drw.add_pbp(file_name, null, time, uni, team, checkname, action, null, null, null);
+         } catch(e) {
+           assert.strictEqual(e, "add_pbp: vh is null");
+         }
+       });
+       it("Throws null error if time is null", function() {
+         try {
+           drw.add_pbp(file_name, vh, null, uni, team, checkname, action, null, null, null);
+         } catch(e) {
+           assert.strictEqual(e, "add_pbp: time is null");
+         }
+       });
+       it("Throws null error if uni is null", function() {
+         try {
+           drw.add_pbp(file_name, vh, time, null, team, checkname, action, null, null, null);
+         } catch(e) {
+           assert.strictEqual(e, "add_pbp: uni is null");
+         }
+       });
+       it("Throws null error if team is null", function() {
+         try {
+           drw.add_pbp(file_name, vh, time, uni, null, checkname, action, null, null, null);
+         } catch(e) {
+           assert.strictEqual(e, "add_pbp: team is null");
+         }
+       });
+       it("Throws null error if checkname is null", function() {
+         try {
+           drw.add_pbp(file_name, vh, time, uni, team, null, action, null, null, null);
+         } catch(e) {
+           assert.strictEqual(e, "add_pbp: checkname is null");
+         }
+       });
+       it("Throws null error if action is null", function() {
+         try {
+           drw.add_pbp(file_name, vh, time, uni, team, checkname, null, null, null, null);
+         } catch(e) {
+           assert.strictEqual(e, "add_pbp: action is null");
+         }
+       });
+     });
   });
   describe("get_last_pbp_timestamp()", function() {
     it("ensures last pbp timestap is retrieved", function() {
       var result_last_pbp = 589;
       assert.strictEqual(drw.test_get_last_pbp_timestamp(file_name), result_last_pbp);
+    });
+    it("returns Max safe integer if file contains no plays", function() {
+      assert.strictEqual(drw.test_get_last_pbp_timestamp(no_play_file), Number.MAX_SAFE_INTEGER);
+    });
   });
- });
 });
