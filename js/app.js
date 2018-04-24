@@ -10,7 +10,6 @@ window.onload = function(){
 
 	//TIME_OF_PLAY, PRIMARY_PLAYER_NAME, SECONDARY_PLAYER_NAME (IF REBOUND), VISITOR_SCORE, HOME_SCORE, PRIMARY_TEAM_CODE, SECONDARY_TEAM_CODE
 
-<<<<<<< HEAD
 //	let fieldgoal_off_rebound = "j 02 r 05 h 2:00 FIRSTNAME1,LASTNAME1 FIRSTNAME2,LASTNAME2 56 75 WIS OHS";  //offensive rebound (shot made by home #2, rebound home #5)
 //	let fieldgoal_def_rebound = "j 02 d 03 h 2:00 FIRSTNAME1,LASTNAME1 FIRSTNAME2,LASTNAME2 56 75 WIS OHS";  //defensive rebound (shot made by home #2, rebound visit #3)
 //	let fieldgoal_no_rebound = "j 02 g h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";			//no rebound (good shot)
@@ -38,7 +37,6 @@ window.onload = function(){
 //	let thirty_sec_timeout = "o 3 h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";
 //	let min_timeout = "o m h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";
 //	let media_timeout = "o t h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";
-	
 
 //	ipc.send('add-play', fieldgoal_off_rebound);
 // 	ipc.send('add-play', fieldgoal_def_rebound);
@@ -71,42 +69,8 @@ window.onload = function(){
 //	ipc.send('add-play', min_timeout);
 //	ipc.send('add-play', media_timeout);
 
-    console.log(localStorage.getItem("gameDate"))
-=======
-	
-
-	ipc.send('add-play', fieldgoal_off_rebound);
- 	ipc.send('add-play', fieldgoal_def_rebound);
-	ipc.send('add-play', fieldgoal_no_rebound);	
-	ipc.send('add-play', fieldgoal_no_rebound);
- 	ipc.send('add-play', fieldgoal_assist);
-
- 	ipc.send('add-play', freethrow_off_rebound);
- 	ipc.send('add-play', freethrow_def_rebound);
- 	ipc.send('add-play', freethrow_no_rebound);
-	
- 	ipc.send('add-play', steal);
-	
- 	ipc.send('add-play', block_off_rebound);
- 	ipc.send('add-play', block_def_rebound);
- 	ipc.send('add-play', block_no_rebound);
-	
-	ipc.send('add-play', team_off_rebound);
-	ipc.send('add-play', team_def_rebound);
-
-	ipc.send('add-play', tech_foul);
- 	ipc.send('add-play', pers_foul);
- 	ipc.send('add-play', bench_foul);
-	
-	ipc.send('add-play', off_rebound);
-	ipc.send('add-play', def_rebound);
-	
-	ipc.send('add-play', thirty_sec_timeout);
-	ipc.send('add-play', min_timeout);
-	ipc.send('add-play', media_timeout);/*
-*/ 
  console.log(localStorage.getItem("gameDate"))
->>>>>>> backend
+
     console.log(localStorage.getItem("gameTime"))
 
     date_time = localStorage.getItem("gameDate") + "_" + localStorage.getItem("gameTime");
@@ -2615,12 +2579,9 @@ var app = new Vue({
                 app.home_score += 1;
                 app.add_play("Made free throw by " + app.home_team[index].name);
                 var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-<<<<<<< HEAD
+
                 ipc.send('add-play', "E " + ft_player_num + " E H " + curr_time + " " + app.get_player_name(ft_player_num, true) + " null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
-=======
-				alert("Player name: " + app.get_player_name(ft_player_num, true));
-                ipc.send('add-play', "E " + ft_player_num + " E H " + curr_time + " " + app.get_player_name(ft_player_num, true) + " null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
->>>>>>> backend
+
                 home_stats.ftp = Number.parseFloat((app.home_totals.ftm/app.home_totals.fta)*100).toFixed(2);
               }
             }
