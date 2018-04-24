@@ -2578,12 +2578,7 @@ var app = new Vue({
                 app.home_score += 1;
                 app.add_play("Made free throw by " + app.home_team[index].name);
                 var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-<<<<<<< HEAD
                 ipc.send('add-play', "E " + ft_player_num + " E H " + curr_time + " " + app.get_player_name(ft_player_num, true) + " null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
-=======
-				alert("Player name: " + app.get_player_name(ft_player_num, true));
-                ipc.send('add-play', "E " + ft_player_num + " E H " + curr_time + " " + app.get_player_name(ft_player_num, true) + " null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
->>>>>>> backend
                 home_stats.ftp = Number.parseFloat((app.home_totals.ftm/app.home_totals.fta)*100).toFixed(2);
               }
             }
