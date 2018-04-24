@@ -1,42 +1,73 @@
-// const electron = require("electron");
+const electron = require("electron");
 const ipc = electron.ipcRenderer;
+const TRW = require('./team_read_write.js'); // Imports stuff from the team_read_write.js backend file
+
 
 window.onload = function(){
 	// Send data to backend
-	let args = ["Wisconsin", "Ohio State", "796", "518", "100-0", "0-100", "3-12-19", "4pm", "Kohl Center", "Kohl-Center-code", "1", ["schedule notes"], "quarters", "15", "15", ["Official Names"], ["Box comments"],"attendance"];
-	ipc.send('init-game', args);
+//	let args = ["Wisconsin", "Ohio State", "796", "518", "100-0", "0-100", "3-12-19", "4pm", "Kohl Center", "Kohl-Center-code", "1", ["schedule notes"], "quarters", "15", "15", ["Official Names"], ["Box comments"],"attendance"];
+	//ipc.send('init-game', args);
 
-	let fieldgoal_off_rebound = "j 02 r 05 h";  //offensive rebound (shot made by home #2, rebound home #5)
-	let fieldgoal_def_rebound = "j 02 d 03 h";  //defensive rebound (shot made by home #2, rebound visit #3)
-	let fieldgoal_no_rebound = "j 02 g h";			//no rebound (good shot)
-	let fieldgoal_assist = "j 02 a 04 h";				//assist by home #4
-	let freethrow_off_rebound = "e 05 r 01 h";	//offensive rebound (shot made by home #5, rebound home #1)
-	let freethrow_def_rebound = "e 05 d 04 h";	//defensive rebound (shot made by home #5, rebound visit #4)
-	let freethrow_no_rebound = "e 05 e h";			//no rebound (good freethrow)
-	let steal = "s 03 v";												//steal
-	let block_off_rebound = "k 02 r 03 h";			//block, offensive rebound (blocked by home, recovered by away)
-	let block_def_rebound = "k 02 d 04 h"; 			//block, defensive rebound (blocked by home, recovered by home)
-	let block_no_rebound = "k 02 h";						//block, no rebound
-	let team_rebound = "r m d h";								//team rebound
-	let tech_foul = "f t10 h";									//technical foul
-	let pers_foul = "f 12 h";										//personal foul
-	let bench_foul = "f b h";										//bench foul
+	//TIME_OF_PLAY, PRIMARY_PLAYER_NAME, SECONDARY_PLAYER_NAME (IF REBOUND), VISITOR_SCORE, HOME_SCORE, PRIMARY_TEAM_CODE, SECONDARY_TEAM_CODE
 
-	ipc.send('add-play', fieldgoal_off_rebound);
-	ipc.send('add-play', fieldgoal_def_rebound);
-	ipc.send('add-play', fieldgoal_no_rebound);
-	ipc.send('add-play', fieldgoal_assist);
-	ipc.send('add-play', freethrow_off_rebound);
-	ipc.send('add-play', freethrow_def_rebound);
-	ipc.send('add-play', freethrow_no_rebound);
-	ipc.send('add-play', steal);
-	ipc.send('add-play', block_off_rebound);
-	ipc.send('add-play', block_def_rebound);
-	ipc.send('add-play', block_no_rebound);
-	ipc.send('add-play', team_rebound);
-	ipc.send('add-play', tech_foul);
-	ipc.send('add-play', pers_foul);
-	ipc.send('add-play', bench_foul);
+//	let fieldgoal_off_rebound = "j 02 r 05 h 2:00 FIRSTNAME1,LASTNAME1 FIRSTNAME2,LASTNAME2 56 75 WIS OHS";  //offensive rebound (shot made by home #2, rebound home #5)
+//	let fieldgoal_def_rebound = "j 02 d 03 h 2:00 FIRSTNAME1,LASTNAME1 FIRSTNAME2,LASTNAME2 56 75 WIS OHS";  //defensive rebound (shot made by home #2, rebound visit #3)
+//	let fieldgoal_no_rebound = "j 02 g h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";			//no rebound (good shot)
+//
+//	let fieldgoal_assist = "j 02 a 04 h 2:00 FIRSTNAME1,LASTNAME1 FIRSTNAME2,LASTNAME2 56 75 WIS OHS";				//assist by home #4
+//
+//	let freethrow_off_rebound = "e 05 r 01 h 2:00 FIRSTNAME1,LASTNAME1 FIRSTNAME2,LASTNAME2 56 75 WIS OHS";	//offensive rebound (shot made by home #5, rebound home #1)
+//	let freethrow_def_rebound = "e 05 d 04 h 2:00 FIRSTNAME1,LASTNAME1 FIRSTNAME2,LASTNAME2 56 75 WIS OHS";	//defensive rebound (shot made by home #5, rebound visit #4)
+//	let freethrow_no_rebound = "e 05 e h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";			//no rebound (good freethrow)
+//	let steal = "s 03 v 2:00 FIRSTNAME1,LASTNAME1 null 56 75 OHS WIS";												//steal
+//	let block_off_rebound = "k 02 r 03 h 2:00 FIRSTNAME1,LASTNAME1 FIRSTNAME2,LASTNAME2 56 75 WIS OHS";			//block, offensive rebound (blocked by home, recovered by away)
+//	let block_def_rebound = "k 02 d 04 h 2:00 FIRSTNAME1,LASTNAME1 FIRSTNAME2,LASTNAME2 56 75 WIS OHS"; 			//block, defensive rebound (blocked by home, recovered by home)
+//	let block_no_rebound = "k 02 h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";						//block, no rebound
+//
+//	let team_def_rebound = "r m d h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";								//team rebound
+//	let team_off_rebound = "r m h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 OHS WIS";
+//
+//	let tech_foul = "f t10 h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";									//technical foul
+//	let pers_foul = "f 12 h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";										//personal foul
+//	let bench_foul = "f b h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";										//bench foul
+//
+//	let off_rebound = "r 02 r h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";
+//	let def_rebound = "r 02 d h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 OHS WIS";
+//
+//	let thirty_sec_timeout = "o 3 h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";
+//	let min_timeout = "o m h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";
+//	let media_timeout = "o t h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";
+
+//	ipc.send('add-play', fieldgoal_off_rebound);
+// 	ipc.send('add-play', fieldgoal_def_rebound);
+//	ipc.send('add-play', fieldgoal_no_rebound);
+//	ipc.send('add-play', fieldgoal_no_rebound);
+// 	ipc.send('add-play', fieldgoal_assist);
+//
+// 	ipc.send('add-play', freethrow_off_rebound);
+// 	ipc.send('add-play', freethrow_def_rebound);
+// 	ipc.send('add-play', freethrow_no_rebound);
+//
+// 	ipc.send('add-play', steal);
+//
+// 	ipc.send('add-play', block_off_rebound);
+// 	ipc.send('add-play', block_def_rebound);
+// 	ipc.send('add-play', block_no_rebound);
+//
+//	ipc.send('add-play', team_off_rebound);
+//	ipc.send('add-play', team_def_rebound);
+//
+////	ipc.send('add-play', team_rebound);
+//	ipc.send('add-play', tech_foul);
+// 	ipc.send('add-play', pers_foul);
+// 	ipc.send('add-play', bench_foul);
+//
+//	ipc.send('add-play', off_rebound);
+//	ipc.send('add-play', def_rebound);
+//
+//	ipc.send('add-play', thirty_sec_timeout);
+//	ipc.send('add-play', min_timeout);
+//	ipc.send('add-play', media_timeout);
 
     console.log(localStorage.getItem("gameDate"))
     console.log(localStorage.getItem("gameTime"))
@@ -63,8 +94,33 @@ ipc.on('get-data-success', function(event,args) {
 	console.log("3: "+args[3])
 	console.log("4: "+args[4])
 
+    var home_team_file = args[4][0].toLowerCase().split(' ').join('_'); // Dervive filename from team name
+    var home_team_data = TRW.read_team(home_team_file); // Read team file into an array
+    var home_roster = home_team_data[5]
+    console.log("HOME ROSTER: \n"+home_team_data[5]);
+    var vis_team_file = args[4][1].toLowerCase().split(' ').join('_'); // Dervive filename from team name
+    var vis_team_data = TRW.read_team(vis_team_file); // Read team file into an array
+    var vis_roster = vis_team_data[5]
+    console.log("VIS ROSTER: \n"+vis_team_data[5]);
+
     start = 1;
 	//home team
+	if(args[0].length == 1) {
+        for(k=1; k < home_roster.length; k+=4) {
+            app.home_team.push(
+            {starter: true, in_game: "", number: "", name: "", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0,
+            fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+            );
+
+            if(start <= 5) {
+                app.home_team[app.home_team.length-1].in_game = "*"
+                start++;
+            }
+
+            app.home_team[app.home_team.length-1].number = home_roster[k]
+            app.home_team[app.home_team.length-1].name = home_roster[k-1];
+        }
+	}
 	for(i = 1; i < args[0].length; i++) {
 //        console.log(i)
         app.home_team.push(
@@ -76,26 +132,80 @@ ipc.on('get-data-success', function(event,args) {
             start++;
         }
         app.home_team[app.home_team.length-1].number = args[0][i][0]
+
         app.home_team[app.home_team.length-1].fg = parseInt(args[0][i][1])
+        app.home_totals.fg += app.home_team[app.home_team.length-1].fg
+
         app.home_team[app.home_team.length-1].fa = parseInt(args[0][i][2])
+        app.home_totals.fa += app.home_team[app.home_team.length-1].fa
+
         app.home_team[app.home_team.length-1].m3 = parseInt(args[0][i][3])
+        app.home_totals.m3 += app.home_team[app.home_team.length-1].m3
+
         app.home_team[app.home_team.length-1].a3 = parseInt(args[0][i][4])
+        app.home_totals.a3 += app.home_team[app.home_team.length-1].a3
+
         app.home_team[app.home_team.length-1].ftm = parseInt(args[0][i][5])
+        app.home_totals.ftm += app.home_team[app.home_team.length-1].ftm
+
         app.home_team[app.home_team.length-1].fta = parseInt(args[0][i][6])
+        app.home_totals.fta += app.home_team[app.home_team.length-1].fta
+
         app.home_team[app.home_team.length-1].rb_off = parseInt(args[0][i][7])
+        app.home_totals.rb_off += app.home_team[app.home_team.length-1].rb_off
+
         app.home_team[app.home_team.length-1].rb_def = parseInt(args[0][i][8])
+        app.home_totals.rb_def += app.home_team[app.home_team.length-1].rb_def
+
         app.home_team[app.home_team.length-1].as = parseInt(args[0][i][9])
+        app.home_totals.as += app.home_team[app.home_team.length-1].as
+
         app.home_team[app.home_team.length-1].pf = parseInt(args[0][i][10])
-//        app.home_team[app.vis_team.length-1].tf = parseInt(args[1][i][11])
+        app.home_totals.pf += app.home_team[app.home_team.length-1].pf
+
+//        app.home_team[app.vis_team.length-1].tf = parseInt(args[1][i][11]) //technical fouls
+
         app.home_team[app.home_team.length-1].blk = parseInt(args[0][i][12])
+        app.home_totals.blk += app.home_team[app.home_team.length-1].blk
+
         app.home_team[app.home_team.length-1].to = parseInt(args[0][i][13])
+        app.home_totals.to += app.home_team[app.home_team.length-1].to
+
         app.home_team[app.home_team.length-1].stl = parseInt(args[0][i][14])
+        app.home_totals.stl += app.home_team[app.home_team.length-1].stl
+
         app.home_team[app.home_team.length-1].tp = parseInt(args[0][i][15])
+        app.home_totals.tp += app.home_team[app.home_team.length-1].tp
+
 //        console.log("number: " + app.home_team[app.home_team.length-1].number)
+
+        //find player in team by number and add their name
+        for(k=1; k < home_roster.length; k+=4) {
+//            console.log(k + ": "+home_roster[k])
+            if(app.home_team[app.home_team.length-1].number == home_roster[k]) {
+                app.home_team[app.home_team.length-1].name = home_roster[k-1];
+            }
+        }
 	}
 
 	//visitor team
 	start = 1;
+	if(args[1].length == 1) {
+        for(k=1; k < vis_roster.length; k+=4) {
+            app.vis_team.push(
+            {starter: true, in_game: "", number: "", name: "", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0,
+            fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+            );
+
+            if(start <= 5) {
+                app.vis_team[app.vis_team.length-1].in_game = "*"
+                start++;
+            }
+
+            app.vis_team[app.vis_team.length-1].number = vis_roster[k]
+            app.vis_team[app.vis_team.length-1].name = vis_roster[k-1];
+        }
+	}
 	for(i = 1; i < args[1].length; i++) {
 //        console.log(i)
         app.vis_team.push(
@@ -117,12 +227,34 @@ ipc.on('get-data-success', function(event,args) {
         app.vis_team[app.vis_team.length-1].rb_def = parseInt(args[1][i][8])
         app.vis_team[app.vis_team.length-1].as = parseInt(args[1][i][9])
         app.vis_team[app.vis_team.length-1].pf = parseInt(args[1][i][10])
-//        app.vis_team[app.vis_team.length-1].tf = parseInt(args[1][i][11])
+//        app.vis_team[app.vis_team.length-1].tf = parseInt(args[1][i][11]) //technical fouls
         app.vis_team[app.vis_team.length-1].blk = parseInt(args[1][i][12])
         app.vis_team[app.vis_team.length-1].to = parseInt(args[1][i][13])
         app.vis_team[app.vis_team.length-1].stl = parseInt(args[1][i][14])
         app.vis_team[app.vis_team.length-1].tp = parseInt(args[1][i][15])
 //        console.log("number: " + app.vis_team[app.vis_team.length-1].number)
+
+        app.vis_totals.fg += app.vis_team[app.vis_team.length-1].fg
+        app.vis_totals.fa += app.vis_team[app.vis_team.length-1].fa
+        app.vis_totals.m3 += app.vis_team[app.vis_team.length-1].m3
+        app.vis_totals.a3 += app.vis_team[app.vis_team.length-1].a3
+        app.vis_totals.ftm += app.vis_team[app.vis_team.length-1].ftm
+        app.vis_totals.fta += app.vis_team[app.vis_team.length-1].fta
+        app.vis_totals.rb_off += app.vis_team[app.vis_team.length-1].rb_off
+        app.vis_totals.rb_def += app.vis_team[app.vis_team.length-1].rb_def
+        app.vis_totals.as += app.vis_team[app.vis_team.length-1].as
+        app.vis_totals.pf += app.vis_team[app.vis_team.length-1].pf
+        app.vis_totals.blk += app.vis_team[app.vis_team.length-1].blk
+        app.vis_totals.to += app.vis_team[app.vis_team.length-1].to
+        app.vis_totals.stl += app.vis_team[app.vis_team.length-1].stl
+
+        //find player in team by number and add their name
+        for(k=1; k < vis_roster.length; k+=4) {
+//            console.log(k + ": "+vis_roster[k])
+            if(app.vis_team[app.vis_team.length-1].number == vis_roster[k]) {
+                app.vis_team[app.vis_team.length-1].name = vis_roster[k-1];
+            }
+        }
 	}
 
 	//home stats
@@ -131,7 +263,7 @@ ipc.on('get-data-success', function(event,args) {
 	    home_stats.paint = parseInt(args[2][i][1])
 	    home_stats.fastb = parseInt(args[2][i][2])
 	    home_stats.tvs = parseInt(args[2][i][3])
-//	    home_stats.team_rebound = parseInt(args[2][i][4])
+//	    home_stats.team_rebound = parseInt(args[2][i][4]) //team rebound
 	    app.home_fouls = parseInt(args[2][i][5])
 	    app.home_partial = 4 - parseInt(args[2][i][6])
 	    app.home_full = 1 - parseInt(args[2][i][7])
@@ -144,7 +276,7 @@ ipc.on('get-data-success', function(event,args) {
 	    vis_stats.paint = parseInt(args[3][i][1])
 	    vis_stats.fastb = parseInt(args[3][i][2])
 	    vis_stats.tvs = parseInt(args[3][i][3])
-//	    vis_stats.team_rebound = parseInt(args[2][i][4])
+//	    vis_stats.team_rebound = parseInt(args[2][i][4]) //team rebound
 	    app.vis_fouls = parseInt(args[3][i][5])
 	    app.vis_partial = 4 - parseInt(args[3][i][6])
 	    app.vis_full = 1 - parseInt(args[3][i][7])
@@ -294,6 +426,7 @@ var app = new Vue({
   el: '#app',
   data: {
     teams: [localStorage.getItem("homeName"), localStorage.getItem("visName")],
+    team_codes: [localStorage.getItem("homeCode"), localStorage.getItem("visCode")],
     period: 'Half 1',
     home_score: 0,
     home_fouls: 0,
@@ -1336,40 +1469,40 @@ var app = new Vue({
             if(inputtext.substring(1,2) == 'T') { // media timeout
               app.add_play("Media timeout");
               var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-              ipc.send('add-play', "O T N " + curr_time + " null null " + app.vis_score + " " + app.home_score);
+              ipc.send('add-play', "O T N " + curr_time + " null null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
             } else if(inputtext.substring(1,2) == 'H' && inputtext.substring(2,3) == 'M') { // home full timeout
               if(app.home_full > 0) {
                 app.home_full -= 1;
-                app.add_play(app.teams[0] + " full timeout");
+                app.add_play(app.team_codes[0] + " full timeout");
                 var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-                ipc.send('add-play', "O M H " + curr_time + " null null " + app.vis_score + " " + app.home_score);
+                ipc.send('add-play', "O M H " + curr_time + " null null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
               } else {
                 // inputvalidator.innerText = "Out of timeouts. Press ESC/F10 to clear input.";
               }
             } else if(inputtext.substring(1,2) == 'H' && inputtext.substring(2,3) == '3') { // home 30 sec timeout
               if(app.home_partial > 0) {
                 app.home_partial -= 1;
-                app.add_play(app.teams[0] + " partial timeout");
+                app.add_play(app.team_codes[0] + " partial timeout");
                 var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-                ipc.send('add-play', "O 3 H " + curr_time + " null null " + app.vis_score + " " + app.home_score);
+                ipc.send('add-play', "O 3 H " + curr_time + " null null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
               } else {
                 // inputvalidator.innerText = "Out of timeouts. Press ESC/F10 to clear input.";
               }
             } else if(inputtext.substring(1,2) == 'V' && inputtext.substring(2,3) == 'M') { // visitor full timeout
               if(app.vis_full > 0) {
                 app.vis_full -= 1;
-                app.add_play(app.teams[1] + " full timeout");
+                app.add_play(app.team_codes[1] + " full timeout");
                 var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-                ipc.send('add-play', "O M V " + curr_time + " null null " + app.vis_score + " " + app.home_score);
+                ipc.send('add-play', "O M V " + curr_time + " null null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
               } else {
                 // inputvalidator.innerText = "Out of timeouts. Press ESC/F10 to clear input.";
               }
             } else if(inputtext.substring(1,2) == 'V' && inputtext.substring(2,3) == '3') { // visitor 30 sec timeout
               if(app.vis_partial > 0) {
                 app.vis_partial -= 1;
-                app.add_play(app.teams[1] + " partial timeout");
+                app.add_play(app.team_codes[1] + " partial timeout");
                 var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-                ipc.send('add-play', "O 3 v " + curr_time + " null null " + app.vis_score + " " + app.home_score);
+                ipc.send('add-play', "O 3 v " + curr_time + " null null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
               } else {
                 // inputvalidator.innerText = "Out of timeouts. Press ESC/F10 to clear input.";
               }
@@ -1824,7 +1957,7 @@ var app = new Vue({
                     app.add_play("Assist by " + app.home_team[index].name);
                     
                     var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-                    ipc.send('add-play', "A " + player_number + " H " + curr_time + " " + app.get_player_name(player_number, true) + " null " + app.vis_score + " " + app.home_score);
+                    ipc.send('add-play', "A " + player_number + " H " + curr_time + " " + app.get_player_name(player_number, true) + " null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
 
                 }
              }
@@ -1839,7 +1972,7 @@ var app = new Vue({
                     app.add_play("Assist by " + app.vis_team[index].name);
 										
 										var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-                    ipc.send('add-play', "A " + player_number + " V " + curr_time + " " + app.get_player_name(player_number, false) + " null " + app.vis_score + " " + app.home_score);
+                    ipc.send('add-play', "A " + player_number + " V " + curr_time + " " + app.get_player_name(player_number, false) + " null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
                 }
              }
            }
@@ -1876,7 +2009,7 @@ var app = new Vue({
                     home_stats.steals += 1;
                     app.add_play("Steal by " + app.home_team[index].name);
                     var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-                    ipc.send('add-play', "S " + player_number + " H " + curr_time + " " + app.get_player_name(player_number, true) + " null " + app.vis_score + " " + app.home_score);
+                    ipc.send('add-play', "S " + player_number + " H " + curr_time + " " + app.get_player_name(player_number, true) + " null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
                 }
              }
            }
@@ -1891,7 +2024,7 @@ var app = new Vue({
                     vis_stats.steals += 1;
                     app.add_play("Steal by " + app.vis_team[index].name);
                     var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-                    ipc.send('add-play', "S " + player_number + " V " + curr_time + " " + app.get_player_name(player_number, false) + " null " + app.vis_score + " " + app.home_score);
+                    ipc.send('add-play', "S " + player_number + " V " + curr_time + " " + app.get_player_name(player_number, false) + " null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
                 }
              }
            }
@@ -1920,15 +2053,15 @@ var app = new Vue({
             home_stats.tvs += 1;
             app.home_totals.to += 1
             var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-            ipc.send('add-play', "T M H " + curr_time + " null null " + app.vis_score + " " + app.home_score);
-            app.add_play("Turnover by " + app.teams[0]);
+            ipc.send('add-play', "T M H " + curr_time + " null null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
+            app.add_play("Turnover by " + app.team_codes[0]);
             app.vis_possession(); // switch possession
           } else {
             vis_stats.tvs += 1;
             app.vis_totals.to += 1
             var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-            ipc.send('add-play', "T M V " + curr_time + " null null " + app.vis_score + " " + app.home_score);
-            app.add_play("Turnover by " + app.teams[1]);
+            ipc.send('add-play', "T M V " + curr_time + " null null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
+            app.add_play("Turnover by " + app.team_codes[1]);
             app.home_possession(); // switch possession
           }
         } else {
@@ -1940,7 +2073,7 @@ var app = new Vue({
                   app.home_team[index].to += 1;
                   app.add_play("Turnover by " + app.home_team[index].name);
                   var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-                  ipc.send('add-play', "T " + player_number + " H " + curr_time + " " + app.get_player_name(player_number, true) + " null " + app.vis_score + " " + app.home_score);
+                  ipc.send('add-play', "T " + player_number + " H " + curr_time + " " + app.get_player_name(player_number, true) + " null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
                   break;
               }
             }
@@ -1953,7 +2086,7 @@ var app = new Vue({
                     app.vis_team[index].to += 1;
                     app.add_play("Turnover by " + app.vis_team[index].name);
                     var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-                    ipc.send('add-play', "T " + player_number + " V " + curr_time + " " + app.get_player_name(player_number, false) + " null " + app.vis_score + " " + app.home_score);
+                    ipc.send('add-play', "T " + player_number + " V " + curr_time + " " + app.get_player_name(player_number, false) + " null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
                     break;
                 }
            }
@@ -1996,7 +2129,7 @@ var app = new Vue({
             }
             app.add_play("Bench foul on the home team.");
             var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-            ipc.send('add-play', "F B H " + curr_time + " null null " + app.vis_score + " " + app.home_score);
+            ipc.send('add-play', "F B H " + curr_time + " null null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
             app.vis_possession(); // switch possession
         } else {
             home = false;
@@ -2010,7 +2143,7 @@ var app = new Vue({
             }
             app.add_play("Bench foul on the visiting team.");
             var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-            ipc.send('add-play', "F B V " + curr_time + " null null " + app.vis_score + " " + app.home_score);
+            ipc.send('add-play', "F B V " + curr_time + " null null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
             app.home_possession(); // switch possession
         }
       } else if(inputtext.substring(2,3) == 'T') {
@@ -2027,7 +2160,7 @@ var app = new Vue({
                   }
                   app.add_play("Technical foul on " + app.home_team[index].name);
                   var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-                  ipc.send('add-play', "F T " + player_number + " H " + curr_time + " " + app.get_player_name(player_number, true) + " null " + app.vis_score + " " + app.home_score);
+                  ipc.send('add-play', "F T " + player_number + " H " + curr_time + " " + app.get_player_name(player_number, true) + " null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
               }
            }
            if(home_has_possession) {
@@ -2052,7 +2185,7 @@ var app = new Vue({
                     }
                     app.add_play("Technical foul on " + app.vis_team[index].name);
                     var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-                    ipc.send('add-play', "F T " + player_number + " V " + curr_time + " " + app.get_player_name(player_number, false) + " null " + app.vis_score + " " + app.home_score);
+                    ipc.send('add-play', "F T " + player_number + " V " + curr_time + " " + app.get_player_name(player_number, false) + " null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
                 }
              }
              if(!home_has_possession) {
@@ -2079,7 +2212,7 @@ var app = new Vue({
                   }
                   app.add_play("Foul on " + app.home_team[index].name);
                   var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-                  ipc.send('add-play', "F " + player_number + " H " + curr_time + " " + app.get_player_name(player_number, true) + " null " + app.vis_score + " " + app.home_score);
+                  ipc.send('add-play', "F " + player_number + " H " + curr_time + " " + app.get_player_name(player_number, true) + " null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
               }
            }
           if(home_has_possession) {
@@ -2104,7 +2237,7 @@ var app = new Vue({
                     }
                     app.add_play("Foul on " + app.vis_team[index].name);
                     var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-                    ipc.send('add-play', "F " + player_number + " V " + curr_time + " " + app.get_player_name(player_number, false) + " null " + app.vis_score + " " + app.home_score);
+                    ipc.send('add-play', "F " + player_number + " V " + curr_time + " " + app.get_player_name(player_number, false) + " null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
                 }
              }
              if(!home_has_possession) {
@@ -2245,7 +2378,7 @@ var app = new Vue({
                     app.home_totals.rb_def += 1;
                     app.add_play("Defensive rebound by " + app.home_team[index].name);
                     var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-                    ipc.send('add-play', "R " + player_number + " D V " + curr_time + " " + app.get_player_name(player_number, true) + " null " + app.vis_score + " " + app.home_score);
+                    ipc.send('add-play', "R " + player_number + " D V " + curr_time + " " + app.get_player_name(player_number, true) + " null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
                     app.home_possession();
                   } else {
                     inputvalidator.innerText = "Player #" + player_number + " is not in the game. Press ESC/F10 to clear input.";
@@ -2264,7 +2397,7 @@ var app = new Vue({
                     app.vis_totals.rb_def += 1;
                     app.add_play("Defensive rebound by " + app.vis_team[index].name);
                     var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-                    ipc.send('add-play', "R " + player_number + " D H " + curr_time + " " + app.get_player_name(player_number, false) + " null " + app.vis_score + " " + app.home_score);
+                    ipc.send('add-play', "R " + player_number + " D H " + curr_time + " " + app.get_player_name(player_number, false) + " null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
                     app.vis_possession();
                   } else {
                     inputvalidator.innerText = "Player #" + player_number + " is not in the game. Press ESC/F10 to clear input.";
@@ -2285,7 +2418,7 @@ var app = new Vue({
                 app.home_totals.rb_off += 1;
                 app.add_play("Offensive rebound by " + app.home_team[index].name);
                 var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-                ipc.send('add-play', "R " + player_number + " R H " + curr_time + " " + app.get_player_name(player_number, true) + " null " + app.vis_score + " " + app.home_score);
+                ipc.send('add-play', "R " + player_number + " R H " + curr_time + " " + app.get_player_name(player_number, true) + " null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
                 app.home_possession();
               } else {
                 inputvalidator.innerText = "Player #" + player_number + " is not in the game. Press ESC/F10 to clear input.";
@@ -2299,9 +2432,8 @@ var app = new Vue({
                 app.vis_team[index].rb_off += 1;
                 app.vis_totals.rb_off += 1;
                 app.add_play("Offensive rebound by " + app.vis_team[index].name);
-                ipc.send('add-play', "R " + player_number + " R V");
                 var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-                ipc.send('add-play', "R " + player_number + " R V " + curr_time + " " + app.get_player_name(player_number, false) + " null " + app.vis_score + " " + app.home_score);
+                ipc.send('add-play', "R " + player_number + " R V " + curr_time + " " + app.get_player_name(player_number, false) + " null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
                 app.vis_possession();
               } else {
                 inputvalidator.innerText = "Player #" + player_number + " is not in the game. Press ESC/F10 to clear input.";
@@ -2318,12 +2450,12 @@ var app = new Vue({
         if(home) {
           app.vis_totals.rb_def += 1;
           var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-          ipc.send('add-play', "R M D H " + curr_time + " null null " + app.vis_score + " " + app.home_score);
+          ipc.send('add-play', "R M D H " + curr_time + " null null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
           app.vis_possession();
         } else {
           app.home_totals.rb_def += 1;
           var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-          ipc.send('add-play', "R M D V " + curr_time + " null null " + app.vis_score + " " + app.home_score);
+          ipc.send('add-play', "R M D V " + curr_time + " null null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
           app.home_possession();
         }
 
@@ -2332,11 +2464,11 @@ var app = new Vue({
         if(home) {
           app.home_totals.rb_off += 1;
           var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-          ipc.send('add-play', "R M H " + curr_time + " null null " + app.vis_score + " " + app.home_score);
+          ipc.send('add-play', "R M H " + curr_time + " null null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
         } else {
           app.vis_totals.rb_off += 1;
           var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
-          ipc.send('add-play', "R M V " + curr_time + " null null " + app.vis_score + " " + app.home_score);
+          ipc.send('add-play', "R M V " + curr_time + " null null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
         }
         app.add_play("Offensive Team Rebound");
       }
@@ -2438,14 +2570,6 @@ var app = new Vue({
       if(keyCode == 13) char_entered = "ENTER";
       inputtext = inputtext + char_entered;
       if(char_entered == "ENTER") {
-        // console.log("home before switch:" + home);
-        // if(!switch_possession) {
-        //     home = !home;
-        //   }
-        // console.log("home after switch:" + home);
-        // if(inputtext.substring(2,3) == 'D') {
-        //   home = !home;
-        // }
         if(inputtext.substring(3,4) == 'E') {
           var ft_player_num = inputtext.substring(1,3);
           if(home) {
@@ -2458,9 +2582,9 @@ var app = new Vue({
                 app.home_totals.fta += 1;
                 app.home_totals.tp += 1;
                 app.home_score += 1;
-                console.log("index:" + index);
                 app.add_play("Made free throw by " + app.home_team[index].name);
-                ipc.send('add-play', "E " + ft_player_num + " E H");
+                var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
+                ipc.send('add-play', "E " + ft_player_num + " E H " + curr_time + " " + app.get_player_name(ft_player_num, true) + " null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
                 home_stats.ftp = Number.parseFloat((app.home_totals.ftm/app.home_totals.fta)*100).toFixed(2);
               }
             }
@@ -2476,7 +2600,8 @@ var app = new Vue({
                 app.vis_totals.tp += 1;
                 app.vis_score += 1;
                 app.add_play("Made free throw by " + app.vis_team[index].name);
-                ipc.send('add-play', "E " + ft_player_num + " E V");
+                var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
+                ipc.send('add-play', "E " + ft_player_num + " E V " + curr_time + " " + app.get_player_name(ft_player_num, false) + " null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
                 vis_stats.ftp = Number.parseFloat((app.vis_totals.ftm/app.vis_totals.fta)*100).toFixed(2);
               }
             }
@@ -2490,7 +2615,8 @@ var app = new Vue({
                 app.home_team[index].fta += 1;
                 app.home_totals.fta += 1;
                 app.add_play("Missed free throw by " + app.home_team[index].name);
-                ipc.send('add-play', "E " + ft_player_num + " M H");
+                var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
+                ipc.send('add-play', "E " + ft_player_num + " M H " + curr_time + " " + app.get_player_name(ft_player_num, true) + " null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
                 home_stats.ftp = Number.parseFloat((app.home_totals.ftm/app.home_totals.fta)*100).toFixed(2);
               }
             }
@@ -2500,7 +2626,8 @@ var app = new Vue({
               app.vis_team[index].fta += 1;
               app.vis_totals.fta += 1;
               app.add_play("Missed free throw by " + app.vis_team[index].name);
-              ipc.send('add-play', "E " + ft_player_num + " M V");
+              var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
+              ipc.send('add-play', "E " + ft_player_num + " M V " + curr_time + " " + app.get_player_name(ft_player_num, false) + " null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
               vis_stats.ftp = Number.parseFloat((app.vis_totals.ftm/app.vis_totals.fta)*100).toFixed(2);
             }
           }
@@ -2514,7 +2641,8 @@ var app = new Vue({
               app.home_team[index].fta += 1;
               app.home_totals.fta += 1;
               app.add_play("Missed free throw by " + app.home_team[index].name);
-              ipc.send('add-play', "E " + ft_player_num + " R H");
+              var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
+              ipc.send('add-play', "E " + ft_player_num + " R H " + curr_time + " " + app.get_player_name(ft_player_num, true) + " null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
               home_stats.ftp = Number.parseFloat((app.home_totals.ftm/app.home_totals.fta)*100).toFixed(2);
             }
           }
@@ -2525,6 +2653,8 @@ var app = new Vue({
               app.vis_totals.fta += 1;
               app.add_play("Missed free throw by " + app.vis_team[index].name);
               ipc.send('add-play', "E " + ft_player_num + " R V");
+              var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
+              ipc.send('add-play', "E " + ft_player_num + " R V " + curr_time + " " + app.get_player_name(ft_player_num, false) + " null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
               vis_stats.ftp = Number.parseFloat((app.vis_totals.ftm/app.vis_totals.fta)*100).toFixed(2);
             }
           }
@@ -2586,7 +2716,8 @@ var app = new Vue({
                   if(blocker == app.home_team[index].number && app.check_in_game(blocker, true)) {
                     app.home_team[index].blk += 1;
                     home_stats.blocks += 1;
-                    ipc.send('add-play', "K " + blocker + " H");
+                    var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
+                    ipc.send('add-play', "K " + blocker + " H " + curr_time + " " + app.get_player_name(blocker, true) + " null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
                     app.vis_possession();
                     break;
                   }
@@ -2597,7 +2728,8 @@ var app = new Vue({
                 if(blocker == app.vis_team[index].number && app.check_in_game(blocker, false)) {
                   app.vis_team[index].blk += 1;
                   vis_stats.blocks += 1;
-                  ipc.send('add-play', "K " + blocker + " V");
+                  var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
+                  ipc.send('add-play', "K " + blocker + " V " + curr_time + " " + app.get_player_name(blocker, false) + " null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
                   app.home_possession();
                   break;
                 }

@@ -99,10 +99,12 @@ ipc.on('get-game-success', function(event,args) {
         }
     }
 
+    full_time = app.selected_game.time + ":00"
+
     document.getElementsByName("home_name")[0].value = app.selected_game.home_name;
     document.getElementsByName("vis_name")[0].value = app.selected_game.vis_name;
     document.getElementsByName("game_date")[0].value = app.selected_game.date;
-    document.getElementsByName("game_time")[0].value = app.selected_game.time;
+    document.getElementsByName("game_time")[0].value = full_time;
     document.getElementsByName("game_site")[0].value = app.selected_game.site;
     document.getElementById("select_site").selectedIndex = app.selected_game.site_code;//0 = home, 1 = away, 2 = neutral
     document.getElementById("select_league").selectedIndex = app.selected_game.league;//0 = Yes, 1 = No
@@ -197,7 +199,8 @@ var app = new Vue({
     edit_game() {
       if(app.selected_game.date != undefined) {
 
-        date_time = app.selected_game.date + "_" + app.selected_game.time;
+        date_time = app.selected_game.date + "_" + app.selected_game.time.split(/:/)[0];
+//            console.log(app.selected_game.time.split(/:/)[0])
         //UNCOMMENT TO TEST GET-GAME
 //		date_time = "3-12-19_4pm"
         console.log(date_time)
@@ -273,93 +276,93 @@ var app = new Vue({
     },
     submit() {
         var is_existing = false;
-        if(making_new_game) {
+//        if(making_new_game) {
             curr_game = []
 
             home_name = document.getElementsByName("home_name")[0].value;
             if(home_name != "") {
                 curr_game.push(home_name)
-                app.games[app.games.length-1].home_name = home_name
+//                app.games[app.games.length-1].home_name = home_name
             }
 
             vis_name = document.getElementsByName("vis_name")[0].value;
             if(vis_name != "") {
                 curr_game.push(vis_name)
-                app.games[app.games.length-1].vis_name = vis_name
+//                app.games[app.games.length-1].vis_name = vis_name
             }
 
             home_code = document.getElementsByName("home_code")[0].value;
             if(home_code != "") {
                 curr_game.push(home_code)
-                app.games[app.games.length-1].home_code = home_code
+//                app.games[app.games.length-1].home_code = home_code
             }
 
             vis_code = document.getElementsByName("vis_code")[0].value;
             if(vis_code != "") {
                 curr_game.push(vis_code)
-                app.games[app.games.length-1].vis_code = vis_code
+//                app.games[app.games.length-1].vis_code = vis_code
             }
 
             home_record = document.getElementsByName("home_record")[0].value;
             if(home_record != "") {
                 curr_game.push(home_record)
-                app.games[app.games.length-1].home_record = home_record
+//                app.games[app.games.length-1].home_record = home_record
             }
 
             vis_record = document.getElementsByName("vis_record")[0].value;
             if(vis_record != "") {
                 curr_game.push(vis_record)
-                app.games[app.games.length-1].vis_record = vis_record
+//                app.games[app.games.length-1].vis_record = vis_record
             }
 
             game_date = document.getElementsByName("game_date")[0].value;
             if(game_date != "") {
                 curr_game.push(game_date)
-                app.games[app.games.length-1].date = game_date
+//                app.games[app.games.length-1].date = game_date
             }
 
-            game_time = document.getElementsByName("game_time")[0].value;
+            game_time = document.getElementsByName("game_time")[0].value.split(/:/)[0];
             if(game_time != "") {
                 curr_game.push(game_time)
-                app.games[app.games.length-1].time = game_time
+//                app.games[app.games.length-1].time = game_time
             }
 
             game_site = document.getElementsByName("game_site")[0].value;
             if(game_site != "") {
                 curr_game.push(game_site)
-                app.games[app.games.length-1].site = game_site
+//                app.games[app.games.length-1].site = game_site
             }
 
             select_site = document.getElementById("select_site").selectedIndex;//0 = home, 1 = away, 2 = neutral
             curr_game.push(select_site)
-            app.games[app.games.length-1].site_code = select_site
+//            app.games[app.games.length-1].site_code = select_site
 
             league = document.getElementById("select_league").selectedIndex;//0 = Yes, 1 = No
             curr_game.push(league)
-            app.games[app.games.length-1].league = league
+//            app.games[app.games.length-1].league = league
 
             sched_note_array = []
             sched_note = document.getElementsByName("sched_note")[0].value;
             sched_note_array.push(sched_note)
             if(sched_note != "") {
                 curr_game.push(sched_note_array)
-                app.games[app.games.length-1].schedule_note = sched_note
+//                app.games[app.games.length-1].schedule_note = sched_note
             }
 
             halves = document.getElementById("select_halves").selectedIndex;//0 = halves, 1 = quarters
             curr_game.push(halves)
-            app.games[app.games.length-1].quarters = halves
+//            app.games[app.games.length-1].quarters = halves
 
             min_period = document.getElementsByName("min_period")[0].value;
             if(min_period != "") {
                 curr_game.push(min_period)
-                app.games[app.games.length-1].min_period = min_period
+//                app.games[app.games.length-1].min_period = min_period
             }
 
             min_ot = document.getElementsByName("min_ot")[0].value;
             if(min_ot != "") {
                 curr_game.push(min_ot)
-                app.games[app.games.length-1].min_ot = min_ot
+//                app.games[app.games.length-1].min_ot = min_ot
             }
 
             officials_array = []
@@ -367,7 +370,7 @@ var app = new Vue({
             officials_array.push(officials)
             if(officials != "") {
                 curr_game.push(officials_array)
-                app.games[app.games.length-1].officials = officials_array
+//                app.games[app.games.length-1].officials = officials_array
             }
 
             comments_array = []
@@ -375,13 +378,13 @@ var app = new Vue({
             comments_array.push(comments)
             if(comments != "") {
                 curr_game.push(comments_array)
-                app.games[app.games.length-1].comments = comments
+//                app.games[app.games.length-1].comments = comments
             }
 
             atten = document.getElementsByName("atten")[0].value;
             if(atten != "") {
                 curr_game.push(atten)
-                app.games[app.games.length-1].attendance = atten
+//                app.games[app.games.length-1].attendance = atten
             }
 
             // UNCOMMENT TO TEST INIT-GAME-FAILURE
@@ -389,44 +392,92 @@ var app = new Vue({
 
             if(curr_game.length == 18) {
                 console.log(curr_game)
-                ipc.send("init-game", curr_game)
+                if(making_new_game) {
+                    app.games[app.games.length-1].home_name = home_name
+                    app.games[app.games.length-1].vis_name = vis_name
+                    app.games[app.games.length-1].home_code = home_code
+                    app.games[app.games.length-1].vis_code = vis_code
+                    app.games[app.games.length-1].home_record = home_record
+                    app.games[app.games.length-1].vis_record = vis_record
+                    app.games[app.games.length-1].date = game_date
+                    app.games[app.games.length-1].time = game_time
+                    app.games[app.games.length-1].site = game_site
+                    app.games[app.games.length-1].site_code = select_site
+                    app.games[app.games.length-1].league = league
+                    app.games[app.games.length-1].schedule_note = sched_note
+                    app.games[app.games.length-1].quarters = halves
+                    app.games[app.games.length-1].min_period = min_period
+                    app.games[app.games.length-1].min_ot = min_ot
+                    app.games[app.games.length-1].officials = officials_array
+                    app.games[app.games.length-1].comments = comments
+                    app.games[app.games.length-1].attendance = atten
+
+                    ipc.send("init-game", curr_game)
+                }
+                else {
+                    date_time = app.selected_game.date + "_" + app.selected_game.time.split(/:/)[0];
+
+//                    DRW.overwrite_game_file(curr_game, date_time);
+
+                    for(i = 0; i < app.games.length; i++) {
+                        if(app.games[i].date == app.selected_game.date && app.games[i].time == app.selected_game.time.split(/:/)[0]) {
+//                            console.log(app.games[i])
+                            app.selected_game = app.games[i];
+                        }
+                    }
+
+                    localStorage.setItem("homeName",app.selected_game.home_name);
+                    localStorage.setItem("visName",app.selected_game.vis_name);
+                    localStorage.setItem("homeCode",app.selected_game.home_code);
+                    localStorage.setItem("visCode",app.selected_game.vis_code);
+                    localStorage.setItem("gameDate",app.selected_game.date);
+                    localStorage.setItem("gameTime",app.selected_game.time.split(/:/)[0]);
+
+                    window.location = "./index.html";
+                }
             }
             else {
                 window.alert("Please fill in all fields");
             }
-        }
-        else {
-            for(i = 0; i < app.games.length; i++) {
-                if(app.games[i].date == app.selected_game.date && app.games[i].time == app.selected_game.time) {
-//                    console.log(app.games[i])
-                    app.selected_game = app.games[i];
-                }
-            }
-//            getGame(app.selected_game)
-//            loaded_home_team = app.selected_game.home_name
-//            loaded_vis_team = app.selected_game.vis_name
-//            console.log("home: " +app.loaded_home_team+" vis: " +app.loaded_vis_team)
-	        localStorage.setItem("homeName",app.selected_game.home_name);
-	        localStorage.setItem("visName",app.selected_game.vis_name);
-	        localStorage.setItem("gameDate",app.selected_game.date);
-	        localStorage.setItem("gameTime",app.selected_game.time);
-//	        localStorage.setItem("currGame",app.selected_game);
-//	        console.log(app.selected_game)
-//	        console.log(localStorage.getItem("currGame"))
-            window.location = "./index.html";
-        }
+//        }
+//        else {
+//
+//            date_time = app.selected_game.date + "_" + app.selected_game.time.split(/:/)[0];
+//            new_content
+//
+//            DRW.overwrite_game_file(new_team.to_array(), date_time);
+//
+//            for(i = 0; i < app.games.length; i++) {
+//                if(app.games[i].date == app.selected_game.date && app.games[i].time == app.selected_game.time.split(/:/)[0]) {
+////                    console.log(app.games[i])
+//                    app.selected_game = app.games[i];
+//                }
+//            }
+////            getGame(app.selected_game)
+////            loaded_home_team = app.selected_game.home_name
+////            loaded_vis_team = app.selected_game.vis_name
+////            console.log("home: " +app.loaded_home_team+" vis: " +app.loaded_vis_team)
+//	        localStorage.setItem("homeName",app.selected_game.home_name);
+//	        localStorage.setItem("visName",app.selected_game.vis_name);
+//	        localStorage.setItem("gameDate",app.selected_game.date);
+//	        localStorage.setItem("gameTime",app.selected_game.time.split(/:/)[0]);
+////	        localStorage.setItem("currGame",app.selected_game);
+////	        console.log(app.selected_game)
+////	        console.log(localStorage.getItem("currGame"))
+//            window.location = "./index.html";
+//        }
     },
     // If F9 is pressed
     delete_game() {
       if(app.selected_game.date != undefined) {
-        if(window.confirm("DELETE GAME: "+ app.selected_game.date + " at " + app.selected_game.time + "?"))
+        if(window.confirm("DELETE GAME: "+ app.selected_game.date + " at " + app.selected_game.time.split(/:/)[0] + "?"))
         {
           for(var index = 0; index < app.games.length; index++)
           {
             if(app.games[index].date == app.selected_game.date)
             {
               app.games.splice(index, 1);
-              date_time = app.selected_game.date + "_" + app.selected_game.time;
+              date_time = app.selected_game.date + "_" + app.selected_game.time.split(/:/)[0];
 
               //UNCOMMENT to test delete_file
 //              date_time = "0006-08-08_18:06";

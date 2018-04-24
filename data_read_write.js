@@ -22,6 +22,7 @@
  *																	*
   *******************************************************************/
 
+
 const fs = require("fs");	//node.js filesystem
 
 /** path to the folder where data is kept */
@@ -60,23 +61,6 @@ exports.edit_game_directory = function(new_path) {
 }
 
 /**
- * Returns an array of array representations of games as defined in read_game
- *
- * @return array of games
- */
-exports.get_all_games = function() {
-	file_names = fs.readdirSync(game_directory);
-	games = Array(file_names.length);
-
-	// Convert file names in teams to contents
-	for(var el_no = 0; el_no < file_names.length; el_no++) {
-		games[el_no] = exports.read_game_file(file_names[el_no].replace(".txt",""));
-	}
-
-	return games;
-}
-
-/**
  * Creates an empty .txt game file with the given file_name.
  *
  * @param file_name Name of the file to create. The file name should
@@ -102,7 +86,11 @@ exports.create_game_file = function(individual_stat_labels, team_stat_labels, fi
 
 	// Create file. Return false on errors
 	var file_contents = get_initial_game_file_contents(individual_stat_labels, team_stat_labels, footer);
-	fs.writeFileSync(file_path, file_contents);
+	try {
+    	fs.writeFileSync(file_path, file_contents);
+	} catch (e) {
+		throw "File Creation Failed: " + e;
+	}
 	return true;
 }
 
@@ -313,7 +301,14 @@ exports.write_player_stats_to_game_file = function(stat_changes, file_name) {
 	var player_number = stat_changes[1];
 
 	// Read team's stats
-	var current_game_stats = exports.read_game_file(file_name);
+	var current_game_stats;
+	try {
+		current_game_stats = exports.read_game_file(file_name);
+	} catch(e) {
+		console.log("READ ERROR: " + e);
+		return false;
+	}
+
 	// Edit player's stats
 	var current_team_stats = edit_current_stats(current_game_stats[1-is_home], stat_changes);
 	current_game_stats[1-is_home] = current_team_stats;
@@ -343,7 +338,14 @@ exports.write_team_stats_to_game_file = function(stat_changes, file_name) {
 	var player_number = stat_changes[1];
 
 	// Read team's stats
-	var current_game_stats = exports.read_game_file(file_name);
+	var current_game_stats;
+	try {
+		current_game_stats = exports.read_game_file(file_name);
+	} catch(e) {
+		console.log("READ ERROR: " + e);
+		return false;
+	}
+
 	// Edit team's stats
 	var team_stats = current_game_stats[3 - is_home][1];
 	for(var stat = 0; stat < team_stats.length; stat++) {
@@ -442,7 +444,13 @@ function game_array_to_string(game_array) {
 function overwrite_game_file(new_content, file_name) {
 	if (file_name == undefined) throw "No File Name Provided";
 	if(!fs.existsSync(get_file_path(file_name))) throw "File Read Error: File " + file_name + " does not exist!";
-  fs.writeFileSync(get_file_path(file_name), new_content);
+
+	try {
+    	fs.writeFileSync(get_file_path(file_name), new_content);
+	} catch (e) {
+		console.log("OVERWRITE ERROR: " + e);
+    	return false;
+	}
 	return true;
 }
 
@@ -468,31 +476,14 @@ function get_game_information_string(file_name) {
 	return game_information;
 }
 
-/**
- * Adds a play to the gamefile. This is for the XML file.
- *
- * @params vh "V" for visitor and "H" for home play
- * @param time Time that the play happened
- * @param uni Jersey number of the player that did the play
- * @param team Team abbrev of the player that did the action (e.g. "WISC")
- * @param checkname Name of the player that did the play
- * @param action Kind of play that was performed (e.g. "BLOCK")
- * @param type Additional information regarding the play (e.g. "DEFENSIVE")
- * @param vscore Visitor's score after the play
- * @param hscore Home score after the play
- */
-exports.add_pbp = function(file_name, vh, time, uni, team, checkname,
-								action, type, vscore, hscore) {
-
-
-}
-
-
-
 /** These functions make private functions public for data_testing.js */
 
 exports.test_get_file_path = function(file_name) {
 	return get_file_path(file_name);
+}
+
+exports.test_delete_file = function(file_name) {
+	return delete_file(file_name);
 }
 
 exports.test_get_initial_game_file_contents = function(individual_stat_labels, team_stat_labels, footer) {
