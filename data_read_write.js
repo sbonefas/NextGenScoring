@@ -831,3 +831,15 @@ exports.test_read_pbp = function(file_name) {
 exports.test_get_last_pbp_timestamp = function(file_name) {
 	return get_last_pbp_timestamp(file_name);
 }
+
+exports.test_xml_get_venue = function(file_name) {
+	return xml_get_venue(file_name);
+}
+
+exports.test_get_prds = function(qh) {
+	return get_prds(qh);
+}
+
+exports.test_xml_get_plays = function(file_name) {
+	return xml_get_plays(file_name);
+}

@@ -667,12 +667,51 @@ describe('data_read_write tests', function() {
      });
   });
   describe("get_last_pbp_timestamp()", function() {
-    it("ensures last pbp timestap is retrieved", function() {
+    it("gets last time stamp of pbp of a file", function() {
       var result_last_pbp = 589;
       assert.strictEqual(drw.test_get_last_pbp_timestamp(file_name), result_last_pbp);
     });
     it("returns Max safe integer if file contains no plays", function() {
       assert.strictEqual(drw.test_get_last_pbp_timestamp(no_play_file), Number.MAX_SAFE_INTEGER);
+    });
+  });
+  describe("create_xml_file()", function() {
+    it("throws a File Read Error if filename doesn't exist", function() {
+      try {
+        drw.create_xml_file("test");
+      } catch(e) {
+        assert.strictEqual(e, "create_xml_file: File Read Error: File test does not exist!");
+      }
+    });
+  })
+  describe("xml_get_venue()", function() {
+     const test_xml_venue = '<venue gameid="GAME_DATE" visid="AWAY_TEAM_CODE" visname="AWAY_TEAM" homeid="HOME_TEAM_CODE" homenanme="HOME_TEAM" '+
+     'date="GAME_DATE" location="STADIUM" time="START_TIME" attend="ATTENDANCE" schednote="[SCHEDULE_NOTES]" leaguegame="CONF_GAME?">\n' +
+     '<officials text="OFFICIALS"></officials>\n<rules prds="2" minutes="MIN_PER_PERIOD" minutesot="MIN_IN_OT" qh="HALVES/QUARTERS"></rules>\n</venue>';
+
+     it("correctly returns a venue (in XML) of a file", function() {
+      assert.strictEqual(drw.test_xml_get_venue(file_name), test_xml_venue);
+     });
+  });
+  describe("get_prds()", function() {
+     it("Quarters as periods", function() {
+      assert.strictEqual(drw.test_get_prds('q'), "4");
+      assert.strictEqual(drw.test_get_prds('Q'), "4");
+      assert.strictEqual(drw.test_get_prds('quarters'), "4");
+     });
+     it("Halves as periods", function() {
+       assert.strictEqual(drw.test_get_prds('h'), "2");
+       assert.strictEqual(drw.test_get_prds('half'), "2");
+       assert.strictEqual(drw.test_get_prds('a quarter actually'), "2");
+     })
+  });
+  describe("xml_get_plays()", function() {
+    const test_xml_plays = '<plays format="tokens">\n<period number="1" time="20:00">\n<play vh="V" time="00:47" uni="12" team="MICH" '+
+    'checkname="ABDUR-RAHKMAN,M-A" action="GOOD" type="FT" vscore="78" hscore="69"></play>\n</period>\n<period number="2" time="20:00">\n'+
+    '<play vh="V" time="09:49" uni="13" team="MICH" checkname="WAGNER,MORITZ" action="FOUL"></play>\n</period>\n</plays>';
+
+    it("should return all plays successfully", function() {
+      assert.strictEqual(drw.test_xml_get_plays(file_name), test_xml_plays);
     });
   });
 });
