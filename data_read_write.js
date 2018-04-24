@@ -713,7 +713,36 @@ function xml_get_date() {
 }
 
 function xml_get_venue(game_file_name) {
-	//TODO
+	var footer = exports.read_game_file(game_file_name)[4];
+	var venue_string = '<venue';
+
+	venue_string += ' gameid="' + footer[6].replace(/\//g, '-') + '"';
+	venue_string += ' visid="' + footer[3] + '"';
+	venue_string += ' visname="' + footer[1] + '"';
+	venue_string += ' homeid="' + footer[2] + '"';
+	venue_string += ' homenanme="' + footer[0] + '"';
+	venue_string += ' date="' + footer[6] + '"';
+	venue_string += ' location="' + footer[8] + '"';
+	venue_string += ' time="' + footer[7] + '"';
+	venue_string += ' attend="' + footer[17] + '"';
+	venue_string += ' schednote="' + footer[11] + '"';
+	venue_string += ' leaguegame="' + footer[10] + '"';
+
+	venue_string += '>\n<officials text="' + footer[15] + '"></officials>\n';
+
+	venue_string += '<rules';
+	venue_string += ' prds="' + get_prds(footer[12]) + '"';
+	venue_string += ' minutes="' + footer[13] + '"';
+	venue_string += ' minutesot="' + footer[14] + '"';
+	venue_string += ' qh="' + footer[12] + '"></rules>\n';
+	venue_string += '</venue>';
+
+	return venue_string;
+}
+
+function get_prds(qh) {
+	if(qh.toUpperCase() == 'Q' || qh.toUpperCase() == 'QUARTERS') return '4';
+	else return '2';
 }
 
 function xml_get_status(game_file_name) {
@@ -728,8 +757,25 @@ function xml_get_byprdsummaries(game_file_name) {
 	//TODO
 }
 
+var HARDCODED_TIME_PER_PERIOD = "20:00";
 function xml_get_plays(game_file_name) {
-	//TODO
+	// split pbp array of periods
+	var pbp_split = read_pbp(game_file_name).replace('PBP\n','').split('\n' + game_period_delimiter + '\n');
+
+	// create plays_string
+	var plays_string = '<plays format="tokens">\n';
+	for(var i = 1; i <= pbp_split.length; i++) {
+		plays_string += '<period number="' + i + '" time="' + HARDCODED_TIME_PER_PERIOD + '">\n';
+		
+		// TODO: include special stats and summary stats
+		// ...
+		
+		plays_string += pbp_split[i-1];
+		plays_string += '\n</period>\n';
+	}
+	plays_string += '</plays>';
+
+	return plays_string;
 }
 
 
