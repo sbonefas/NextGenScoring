@@ -98,11 +98,11 @@ ipc.on('get-data-success', function(event,args) {
     var home_team_file = args[4][0].toLowerCase().split(' ').join('_'); // Dervive filename from team name
     var home_team_data = TRW.read_team(home_team_file); // Read team file into an array
     var home_roster = home_team_data[5]
-    console.log("HOME TEAM: \n"+home_team_data[5]);
+    console.log("HOME ROSTER: \n"+home_team_data[5]);
     var vis_team_file = args[4][1].toLowerCase().split(' ').join('_'); // Dervive filename from team name
     var vis_team_data = TRW.read_team(vis_team_file); // Read team file into an array
     var vis_roster = vis_team_data[5]
-    console.log("VIS TEAM: \n"+vis_team_data[5]);
+    console.log("VIS ROSTER: \n"+vis_team_data[5]);
 
     start = 1;
 	//home team
