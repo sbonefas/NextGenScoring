@@ -126,7 +126,7 @@ function infoHeaders(outerIndex, index) {
     if (outerIndex == 0) {
       var array = ["home name", "vis name", "home code", "vis code", "home record",
       "vis record", "2018-04-23", "18", "site", "2", "1", "note", "1", "period",
-      "ot", "official", "comment", "atten\r"];
+      "ot", "official", "comment", "atten"];
     }
     else {
       var array = ["Wisconsin", "Ohio State", "796", "518", "100-0", "0-100", "3-12-19",
