@@ -12,7 +12,10 @@ const file_path = "data/data_test.txt";
 const xml_path = "data/data_test.xml";
 const individual_stat_labels = ['number', 'fg', 'fga', 'pts'];
 const team_stat_labels = ['team fouls', 'timeouts left'];
-const footer = ['test', 1,'test2/test3/test4', 'test5'];
+const footer = ['HOME_TEAM', 'AWAY_TEAM', 'HOME_TEAM_CODE', 'AWAY_TEAM_CODE',
+	'HOME_TEAM_RECORD', 'AWAY_TEAM_RECORD', 'GAME_DATE', 'START_TIME', 'STADIUM',
+	'STADIUM_CODE', 'CONF_GAME?', '[SCHEDULE_NOTES]', 'HALVES/QUARTERS',
+	'MIN_PER_PERIOD', 'MIN_IN_OT', 'OFFICIALS', '[BOX_COMMENTS]', 'ATTENDANCE'];
 
 String.prototype.replaceAll = function(target, replacement) {
   return this.split(target).join(replacement);
@@ -51,8 +54,7 @@ const test_stats_array = [
   	[ '36', '2', '3', '6' ],[ '45', '6', '7', '12' ],[ '03', '4', '5', '8' ] ],
   [ [ 'team fouls', 'timeouts left'],[ '9', '4'] ],
   [ [ 'team fouls', 'timeouts left'],[ '8', '3'] ],
-  [ 'test', 1, 'test2/test3/test4', 'test5']
-  ];
+  footer];
 const test_team_stats_array = [ [ 'number', 'fg', 'fga', 'pts' ],
 	[ '30', '2', '4', '6' ],
 	[ '31', '3', '3', '7' ],
@@ -63,7 +65,7 @@ const test_stat_changes_no_exist = [0, '29', 0, 1, 0];
 const test_empty_team_stats_array = [[ 'number', 'fg', 'fga', 'pts' ]];
 
 const test_pbp = '<play vh="V" time="00:47" uni="12" team="MICH" checkname="ABDUR-RAHKMAN,M-A" action="GOOD" type="FT" vscore="78" hscore="69"></play>';
-const test_pbp_addition = test_pbp + '\n<play vh="V" time="09:49" uni="13" team="MICH" checkname="WAGNER,MORITZ" action="FOUL"></play>';
+const test_pbp_addition = test_pbp + '\n^3#!gx/?]\n<play vh="V" time="09:49" uni="13" team="MICH" checkname="WAGNER,MORITZ" action="FOUL"></play>';
 const test_stats_with_footer_and_pbp = test_stats + "\n/Od@&?l#iFOOTER\n" + footer.toString().replace(/,/g,'(&h#@d!`_') + "\n/Od@&?l#iPBP\n" + test_pbp;
 // ADDITIONAL INTEGRATION TEST DATA
 //data
@@ -140,6 +142,8 @@ function infoHeaders(outerIndex, index) {
 after(function() {
     drw.delete_file(file_name);
     if(fs.existsSync(file_path)) assert.fail(false, true, "Path of deleted file shouldn't exist in file system", "delete");
+    if(fs.existsSync('data/.DS_STORE.txt')) drw.delete_file('.DS_STORE');
+  	if(fs.existsSync(xml_path)) fs.unlinkSync(xml_path);
 });
 
 describe('data_read_write tests', function() {
@@ -180,7 +184,7 @@ describe('data_read_write tests', function() {
              drw.create_game_file(undefined, team_stat_labels, file_name, footer)
              assert.fail("No individual stats error should be caught");
            } catch (e) {
-             assert.strictEqual(e, "No Individual Stat Labels Provided");
+             assert.strictEqual(e, "create_game_file: No Individual Stat Labels Provided");
            }
          });
          it('should catch No Team Stats Labels Provided error when team_stat_labels is undefined', function() {
@@ -188,7 +192,7 @@ describe('data_read_write tests', function() {
              drw.create_game_file(individual_stat_labels, undefined, file_name, footer);
              assert.fail("No team stats error should be thrown and caught");
            } catch (e) {
-             assert.strictEqual(e, "No Team Stat Labels Provided");
+             assert.strictEqual(e, "create_game_file: No Team Stat Labels Provided");
            }
          });
          it('should catch No Footer Provided error when footer is undefined', function() {
@@ -196,7 +200,7 @@ describe('data_read_write tests', function() {
              drw.create_game_file(individual_stat_labels, team_stat_labels, file_name, undefined);
              assert.fail("No footer error should be thrown and caught");
            } catch (e) {
-             assert.strictEqual(e, "No Footer Provided");
+             assert.strictEqual(e, "create_game_file: No Footer Provided");
            }
          });
          it('should catch No File Name Provided error when file_name is undefined', function() {
@@ -204,7 +208,7 @@ describe('data_read_write tests', function() {
              drw.create_game_file(individual_stat_labels, team_stat_labels, undefined, footer);
              assert.fail("No File Name error should be thrown and caught");
            } catch (e) {
-             assert.strictEqual(e, "No File Name Provided");
+             assert.strictEqual(e, "create_game_file: No File Name Provided");
            }
          });
          it('should catch No Individual Stats Labels Provided error when all arguments are undefined', function() {
@@ -212,7 +216,7 @@ describe('data_read_write tests', function() {
              drw.create_game_file(undefined, undefined, undefined, undefined);
              assert.fail("No individual stats error should be thrown and caught");
            } catch (e) {
-             assert.strictEqual(e, "No Individual Stat Labels Provided");
+             assert.strictEqual(e, "create_game_file: No Individual Stat Labels Provided");
            }
          });
          it('should throw and error when writeFileSync fails', function() {
@@ -296,7 +300,7 @@ describe('data_read_write tests', function() {
         assert.strictEqual(drw.test_create_2d_array(-1, 9).toString(), result_array.toString());
         assert.fail("Invalid index error should be thrown and caught");
       } catch (e) {
-        assert.strictEqual(e, "Invalid Index Error");
+        assert.strictEqual(e, "create_2d_array: Invalid Index Error");
       }
     });
     it('should throw an Invalid Index error if given a negative col', function() {
@@ -304,7 +308,7 @@ describe('data_read_write tests', function() {
         assert.strictEqual(drw.test_create_2d_array(1, -9).toString(), result_array.toString());
         assert.fail("Invalid index error should be thrown and caught");
       } catch (e) {
-        assert.strictEqual(e, "Invalid Index Error");
+        assert.strictEqual(e, "create_2d_array: Invalid Index Error");
       }
     });
     it('should throw an Invalid Index error if given a row or col of size zero', function() {
@@ -312,7 +316,7 @@ describe('data_read_write tests', function() {
         assert.strictEqual(drw.test_create_2d_array(0, 1).toString(), result_array.toString());
         assert.fail("Invalid index error should be thrown and caught");
       } catch (e) {
-        assert.strictEqual(e, "Invalid Index Error");
+        assert.strictEqual(e, "create_2d_array: Invalid Index Error");
       }
     });
    });
@@ -323,8 +327,7 @@ describe('data_read_write tests', function() {
           [ [ 'number', 'fg', 'fga', 'pts' ] ],
           [ [ 'team fouls', 'timeouts left' ], ['0', '0'] ],
           [ [ 'team fouls', 'timeouts left' ], ['0', '0'] ],
-          [ 'test', '1', 'test2/test3/test4', 'test5' ]
-          ];
+          footer];
         assert.strictEqual(drw.read_game_file(file_name).toString(), result_array.toString());
      });
      it('should return a File Read Error given a file that doesn\'t exist', function() {
@@ -332,7 +335,7 @@ describe('data_read_write tests', function() {
          drw.read_game_file("test");
          assert.fail("File Read Error should be thrown and caught");
        } catch (e) {
-         assert.strictEqual(e, "File Read Error: File test does not exist!");
+         assert.strictEqual(e, "read_game_file: File Read Error: File test does not exist!");
        }
      });
      it('should return a No File Name Provided Error given an undefined file name', function() {
@@ -340,7 +343,7 @@ describe('data_read_write tests', function() {
          drw.read_game_file(undefined);
          assert.fail("No File Name Provided Error should be thrown and caught");
        } catch (e) {
-         assert.strictEqual(e, "No File Name Provided");
+         assert.strictEqual(e, "read_game_file: No File Name Provided");
        }
      });
    });
@@ -374,7 +377,7 @@ describe('data_read_write tests', function() {
           drw.test_get_game_information_string("test");
           assert.fail("File Read Error should be thrown and caught");
         } catch (e) {
-          assert.strictEqual(e, "File Read Error: File test does not exist!");
+          assert.strictEqual(e, "get_game_information_string: File Read Error: File test does not exist!");
         }
       });
     });
@@ -388,7 +391,7 @@ describe('data_read_write tests', function() {
           drw.test_overwrite_game_file(test_stats_with_footer, "test");
           assert.fail("File Read Error should be thrown and caught");
         } catch (e) {
-          assert.strictEqual(e, "File Read Error: File test does not exist!");
+          assert.strictEqual(e, "overwrite_game_file: File Read Error: File test does not exist!");
         }
       });
       it('should return a No File Name Provided Error given an undefined file name', function() {
@@ -396,7 +399,7 @@ describe('data_read_write tests', function() {
           drw.test_overwrite_game_file(test_stats_with_footer, undefined);
           assert.fail("No File Name Provided Error should be thrown and caught");
         } catch (e) {
-          assert.strictEqual(e, "No File Name Provided");
+          assert.strictEqual(e, "overwrite_game_file: No File Name Provided");
         }
       });
       it('should throw and error when writeFileSync fails', function() {
@@ -427,7 +430,7 @@ describe('data_read_write tests', function() {
          ['03',4,5,8] ],
          [ [ 'team fouls', 'timeouts left' ], [ '9', '4' ] ],
          [ [ 'team fouls', 'timeouts left' ], [ '8', '3' ] ],
-         [ 'test', '1', 'test2/test3/test4', 'test5' ] ];
+         footer];
          assert.strictEqual(drw.read_game_file(file_name).toString(), result_array.toString())
       });
    });
@@ -446,7 +449,7 @@ describe('data_read_write tests', function() {
          ['29',0,1,0] ],
          [ [ 'team fouls', 'timeouts left' ], [ '9', '4' ] ],
          [ [ 'team fouls', 'timeouts left' ], [ '8', '3' ] ],
-         [ 'test', '1', 'test2/test3/test4', 'test5' ] ];
+         footer];
 
          drw.write_player_stats_to_game_file(test_stat_changes_exist, file_name);
          drw.write_player_stats_to_game_file(test_stat_changes_exist, file_name);
@@ -459,7 +462,7 @@ describe('data_read_write tests', function() {
              drw.write_player_stats_to_game_file(undefined, file_name);
              assert.fail("No Stat Changes Error should be thrown and caught");
            } catch (e) {
-             assert.strictEqual(e, "No Stat Changes Provided");
+             assert.strictEqual(e, "write_player_stats_to_game_file: No Stat Changes Provided");
            }
          });
          it('should throw a No File Name Error if stat_changes is undefined', function() {
@@ -467,7 +470,7 @@ describe('data_read_write tests', function() {
             drw.write_player_stats_to_game_file(test_stat_changes_exist, undefined);
             assert.fail("No File Name Error should be thrown and caught");
           } catch (e) {
-             assert.strictEqual(e, "No File Name Provided");
+             assert.strictEqual(e, "write_player_stats_to_game_file: No File Name Provided");
            }
          });
          it('should throw a No Stat Changes Error if both arguments are undefined', function() {
@@ -475,14 +478,14 @@ describe('data_read_write tests', function() {
              drw.write_player_stats_to_game_file(undefined, undefined);
              assert.fail("No Stat Changes Error should be thrown and caught");
            } catch (e) {
-             assert.strictEqual(e, "No Stat Changes Provided");
+             assert.strictEqual(e, "write_player_stats_to_game_file: No Stat Changes Provided");
            }
          });
          it('should throw an Index Error if is_home isn\'t 0 or 1', function() {
            try {
              drw.write_player_stats_to_game_file([2, '31', 1, 1, 2], file_name);
            } catch (e) {
-             assert.strictEqual(e, "Index Error: The first index in any stat changes must be 0 or 1");
+             assert.strictEqual(e, "write_player_stats_to_game_file: Index Error: The first index in any stat changes must be 0 or 1");
            }
          });
          it('should return a File Read Error given a file that doesn\'t exist', function() {
@@ -490,7 +493,7 @@ describe('data_read_write tests', function() {
              drw.write_player_stats_to_game_file(test_stat_changes_exist, "test");
              assert.fail("File Read Error should be thrown and caught");
            } catch (e) {
-             assert.strictEqual(e, "File Read Error: File test does not exist!");
+             assert.strictEqual(e, "write_player_stats_to_game_file: File Read Error: File test does not exist!");
            }
          });
       });
@@ -510,7 +513,7 @@ describe('data_read_write tests', function() {
           ['29',0,1,0] ],
           [ [ 'team fouls', 'timeouts left' ], [ '10', '4' ] ],
           [ [ 'team fouls', 'timeouts left' ], [ '8', '1' ] ],
-          [ 'test', '1', 'test2/test3/test4', 'test5' ] ];
+          footer];
 
           drw.write_team_stats_to_game_file([1, 1, 0], file_name);
           drw.write_team_stats_to_game_file([0, 0, -2], file_name);
@@ -522,7 +525,7 @@ describe('data_read_write tests', function() {
               drw.write_team_stats_to_game_file(undefined, file_name);
               assert.fail("No Stat Changes Error should be thrown and caught");
             } catch (e) {
-              assert.strictEqual(e, "No Stat Changes Provided");
+              assert.strictEqual(e, "write_team_stats_to_game_file: No Stat Changes Provided");
             }
           });
           it('should throw a No File Name Error if stat_changes is undefined', function() {
@@ -530,7 +533,7 @@ describe('data_read_write tests', function() {
              drw.write_team_stats_to_game_file([1, 1, 0], undefined);
              assert.fail("No File Name Error should be thrown and caught");
            } catch (e) {
-              assert.strictEqual(e, "No File Name Provided");
+              assert.strictEqual(e, "write_team_stats_to_game_file: No File Name Provided");
             }
           });
           it('should throw a No Stat Changes Error if both arguments are undefined', function() {
@@ -538,14 +541,14 @@ describe('data_read_write tests', function() {
               drw.write_team_stats_to_game_file(undefined, undefined);
               assert.fail("No Stat Changes Error should be thrown and caught");
             } catch (e) {
-              assert.strictEqual(e, "No Stat Changes Provided");
+              assert.strictEqual(e, "write_team_stats_to_game_file: No Stat Changes Provided");
             }
           });
           it('should throw a Index Error if is_home isn\'t 0 or 1', function() {
             try {
               drw.write_team_stats_to_game_file([2, 1, 0], file_name);
             } catch (e) {
-              assert.strictEqual(e, "Index Error: The first index in any stat changes must be 0 or 1");
+              assert.strictEqual(e, "write_team_stats_to_game_file: Index Error: The first index in any stat changes must be 0 or 1");
             }
           });
           it('should return a File Read Error given a file that doesn\'t exist', function() {
@@ -553,7 +556,7 @@ describe('data_read_write tests', function() {
               drw.write_team_stats_to_game_file(test_stat_changes_exist, "test");
               assert.fail("File Read Error should be thrown and caught");
             } catch (e) {
-              assert.strictEqual(e, "File Read Error: File test does not exist!");
+              assert.strictEqual(e, "write_team_stats_to_game_file: File Read Error: File test does not exist!");
             }
           });
       });
@@ -583,13 +586,13 @@ describe('data_read_write tests', function() {
          drw.test_read_pbp("test");
          assert.fail("Should throw a File Read Error");
        } catch(e) {
-         assert.strictEqual(e, "File Read Error: File test does not exist!");
+         assert.strictEqual(e, "read_pbp: File Read Error: File test does not exist!");
        }
      });
    });
    describe("add_pbp()", function() {
      it("ensures xml is test_pbp", function() {
-       '<play vh="V" time="09:49" uni="13" team="MICH" checkname="WAGNER,MORITZ" action="FOUL"></play>'
+      //'<play vh="V" time="09:49" uni="13" team="MICH" checkname="WAGNER,MORITZ" action="FOUL"></play>'
      	var vh = 'V';
      	var time = '09:49';
      	var uni = '13';
@@ -601,4 +604,10 @@ describe('data_read_write tests', function() {
       assert.strictEqual(drw.test_read_pbp(file_name), "PBP\n" + test_pbp_addition);
    });
   });
+  describe("get_last_pbp_timestamp()", function() {
+    it("ensures last pbp timestap is retrieved", function() {
+      var result_last_pbp = 589;
+      assert.strictEqual(drw.test_get_last_pbp_timestamp(file_name), result_last_pbp);
+  });
+ });
 });
