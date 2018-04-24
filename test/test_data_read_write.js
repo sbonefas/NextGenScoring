@@ -272,7 +272,11 @@ describe('data_read_write tests', function() {
    });
    describe('scrape_player_stats()', function() {
      it('should properly transform a string of stats to a 2D array', function() {
-        assert.strictEqual(drw.test_scrape_player_stats(test_team_stats).toString(), test_team_stats_array.toString());
+       //edit_current_stats changes 3, 3, 7 to 4, 4, 9
+       test_team_stats = "HOME\nnumber,fg,fga,pts\n30,2,4,6\n\
+       31,4,4,9\n44,5,7,12\n02,1,5,2";
+       test_team_stats = test_team_stats.replaceAll(",", "(&h#@d!`_");
+       assert.strictEqual(drw.test_scrape_player_stats(test_team_stats).toString(), test_team_stats_array.toString());
      });
    });
    describe('create_2d_array()', function() {
