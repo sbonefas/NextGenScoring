@@ -5,71 +5,72 @@ const TRW = require('./team_read_write.js'); // Imports stuff from the team_read
 
 window.onload = function(){
 	// Send data to backend
-	let args = ["Wisconsin", "Ohio State", "796", "518", "100-0", "0-100", "3-12-19", "4pm", "Kohl Center", "Kohl-Center-code", "1", ["schedule notes"], "quarters", "15", "15", ["Official Names"], ["Box comments"],"attendance"];
+//	let args = ["Wisconsin", "Ohio State", "796", "518", "100-0", "0-100", "3-12-19", "4pm", "Kohl Center", "Kohl-Center-code", "1", ["schedule notes"], "quarters", "15", "15", ["Official Names"], ["Box comments"],"attendance"];
 	//ipc.send('init-game', args);
 
 	//TIME_OF_PLAY, PRIMARY_PLAYER_NAME, SECONDARY_PLAYER_NAME (IF REBOUND), VISITOR_SCORE, HOME_SCORE, PRIMARY_TEAM_CODE, SECONDARY_TEAM_CODE
 
-	let fieldgoal_off_rebound = "j 02 r 05 h 2:00 FIRSTNAME1,LASTNAME1 FIRSTNAME2,LASTNAME2 56 75 WIS OHS";  //offensive rebound (shot made by home #2, rebound home #5)
-	let fieldgoal_def_rebound = "j 02 d 03 h 2:00 FIRSTNAME1,LASTNAME1 FIRSTNAME2,LASTNAME2 56 75 WIS OHS";  //defensive rebound (shot made by home #2, rebound visit #3)
-	let fieldgoal_no_rebound = "j 02 g h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";			//no rebound (good shot)
+//	let fieldgoal_off_rebound = "j 02 r 05 h 2:00 FIRSTNAME1,LASTNAME1 FIRSTNAME2,LASTNAME2 56 75 WIS OHS";  //offensive rebound (shot made by home #2, rebound home #5)
+//	let fieldgoal_def_rebound = "j 02 d 03 h 2:00 FIRSTNAME1,LASTNAME1 FIRSTNAME2,LASTNAME2 56 75 WIS OHS";  //defensive rebound (shot made by home #2, rebound visit #3)
+//	let fieldgoal_no_rebound = "j 02 g h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";			//no rebound (good shot)
+//
+//	let fieldgoal_assist = "j 02 a 04 h 2:00 FIRSTNAME1,LASTNAME1 FIRSTNAME2,LASTNAME2 56 75 WIS OHS";				//assist by home #4
+//
+//	let freethrow_off_rebound = "e 05 r 01 h 2:00 FIRSTNAME1,LASTNAME1 FIRSTNAME2,LASTNAME2 56 75 WIS OHS";	//offensive rebound (shot made by home #5, rebound home #1)
+//	let freethrow_def_rebound = "e 05 d 04 h 2:00 FIRSTNAME1,LASTNAME1 FIRSTNAME2,LASTNAME2 56 75 WIS OHS";	//defensive rebound (shot made by home #5, rebound visit #4)
+//	let freethrow_no_rebound = "e 05 e h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";			//no rebound (good freethrow)
+//	let steal = "s 03 v 2:00 FIRSTNAME1,LASTNAME1 null 56 75 OHS WIS";												//steal
+//	let block_off_rebound = "k 02 r 03 h 2:00 FIRSTNAME1,LASTNAME1 FIRSTNAME2,LASTNAME2 56 75 WIS OHS";			//block, offensive rebound (blocked by home, recovered by away)
+//	let block_def_rebound = "k 02 d 04 h 2:00 FIRSTNAME1,LASTNAME1 FIRSTNAME2,LASTNAME2 56 75 WIS OHS"; 			//block, defensive rebound (blocked by home, recovered by home)
+//	let block_no_rebound = "k 02 h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";						//block, no rebound
+//
+//	let team_def_rebound = "r m d h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";								//team rebound
+//	let team_off_rebound = "r m h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 OHS WIS";
+//
+//	let tech_foul = "f t10 h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";									//technical foul
+//	let pers_foul = "f 12 h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";										//personal foul
+//	let bench_foul = "f b h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";										//bench foul
+//
+//	let off_rebound = "r 02 r h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";
+//	let def_rebound = "r 02 d h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 OHS WIS";
+//
+//	let thirty_sec_timeout = "o 3 h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";
+//	let min_timeout = "o m h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";
+//	let media_timeout = "o t h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";
+	
+	
+	
+//	ipc.send('add-play', fieldgoal_off_rebound);
+// 	ipc.send('add-play', fieldgoal_def_rebound);
+//	ipc.send('add-play', fieldgoal_no_rebound);
+//	ipc.send('add-play', fieldgoal_no_rebound);
+// 	ipc.send('add-play', fieldgoal_assist);
+//
+// 	ipc.send('add-play', freethrow_off_rebound);
+// 	ipc.send('add-play', freethrow_def_rebound);
+// 	ipc.send('add-play', freethrow_no_rebound);
+//
+// 	ipc.send('add-play', steal);
+//
+// 	ipc.send('add-play', block_off_rebound);
+// 	ipc.send('add-play', block_def_rebound);
+// 	ipc.send('add-play', block_no_rebound);
+//
+//	ipc.send('add-play', team_off_rebound);
+//	ipc.send('add-play', team_def_rebound);
+//
+////	ipc.send('add-play', team_rebound);
+//	ipc.send('add-play', tech_foul);
+// 	ipc.send('add-play', pers_foul);
+// 	ipc.send('add-play', bench_foul);
+//
+//	ipc.send('add-play', off_rebound);
+//	ipc.send('add-play', def_rebound);
+//
+//	ipc.send('add-play', thirty_sec_timeout);
+//	ipc.send('add-play', min_timeout);
+//	ipc.send('add-play', media_timeout);
 
-	let fieldgoal_assist = "j 02 a 04 h 2:00 FIRSTNAME1,LASTNAME1 FIRSTNAME2,LASTNAME2 56 75 WIS OHS";				//assist by home #4
-
-	let freethrow_off_rebound = "e 05 r 01 h 2:00 FIRSTNAME1,LASTNAME1 FIRSTNAME2,LASTNAME2 56 75 WIS OHS";	//offensive rebound (shot made by home #5, rebound home #1)
-	let freethrow_def_rebound = "e 05 d 04 h 2:00 FIRSTNAME1,LASTNAME1 FIRSTNAME2,LASTNAME2 56 75 WIS OHS";	//defensive rebound (shot made by home #5, rebound visit #4)
-	let freethrow_no_rebound = "e 05 e h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";			//no rebound (good freethrow)
-	let steal = "s 03 v 2:00 FIRSTNAME1,LASTNAME1 null 56 75 OHS WIS";												//steal
-	let block_off_rebound = "k 02 r 03 h 2:00 FIRSTNAME1,LASTNAME1 FIRSTNAME2,LASTNAME2 56 75 WIS OHS";			//block, offensive rebound (blocked by home, recovered by away)
-	let block_def_rebound = "k 02 d 04 h 2:00 FIRSTNAME1,LASTNAME1 FIRSTNAME2,LASTNAME2 56 75 WIS OHS"; 			//block, defensive rebound (blocked by home, recovered by home)
-	let block_no_rebound = "k 02 h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";						//block, no rebound
-	
-	let team_def_rebound = "r m d h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";								//team rebound
-	let team_off_rebound = "r m h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 OHS WIS";
-	
-	let tech_foul = "f t10 h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";									//technical foul
-	let pers_foul = "f 12 h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";										//personal foul
-	let bench_foul = "f b h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";										//bench foul
-
-	let off_rebound = "r 02 r h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";
-	let def_rebound = "r 02 d h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 OHS WIS";
-	
-	let thirty_sec_timeout = "o 3 h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";
-	let min_timeout = "o m h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";
-	let media_timeout = "o t h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";
-	
-	
-	
-	ipc.send('add-play', fieldgoal_off_rebound);
- 	ipc.send('add-play', fieldgoal_def_rebound);
-	ipc.send('add-play', fieldgoal_no_rebound);	
-	ipc.send('add-play', fieldgoal_no_rebound);
- 	ipc.send('add-play', fieldgoal_assist);
-
- 	ipc.send('add-play', freethrow_off_rebound);
- 	ipc.send('add-play', freethrow_def_rebound);
- 	ipc.send('add-play', freethrow_no_rebound);
-	
- 	ipc.send('add-play', steal);
-	
- 	ipc.send('add-play', block_off_rebound);
- 	ipc.send('add-play', block_def_rebound);
- 	ipc.send('add-play', block_no_rebound);
-	
-	ipc.send('add-play', team_off_rebound);
-	ipc.send('add-play', team_def_rebound);
-
-//	ipc.send('add-play', team_rebound);
-	ipc.send('add-play', tech_foul);
- 	ipc.send('add-play', pers_foul);
- 	ipc.send('add-play', bench_foul);
-	
-	ipc.send('add-play', off_rebound);
-	ipc.send('add-play', def_rebound);
-	
-	ipc.send('add-play', thirty_sec_timeout);
-	ipc.send('add-play', min_timeout);
-	ipc.send('add-play', media_timeout);
     console.log(localStorage.getItem("gameDate"))
     console.log(localStorage.getItem("gameTime"))
 
@@ -106,6 +107,22 @@ ipc.on('get-data-success', function(event,args) {
 
     start = 1;
 	//home team
+	if(args[0].length == 1) {
+        for(k=1; k < home_roster.length; k+=4) {
+            app.home_team.push(
+            {starter: true, in_game: "", number: "", name: "", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0,
+            fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+            );
+
+            if(start <= 5) {
+                app.home_team[app.home_team.length-1].in_game = "*"
+                start++;
+            }
+
+            app.home_team[app.home_team.length-1].number = home_roster[k]
+            app.home_team[app.home_team.length-1].name = home_roster[k-1];
+        }
+	}
 	for(i = 1; i < args[0].length; i++) {
 //        console.log(i)
         app.home_team.push(
@@ -175,6 +192,22 @@ ipc.on('get-data-success', function(event,args) {
 
 	//visitor team
 	start = 1;
+	if(args[1].length == 1) {
+        for(k=1; k < vis_roster.length; k+=4) {
+            app.vis_team.push(
+            {starter: true, in_game: "", number: "", name: "", fg: 0, fa: 0, m3: 0, a3: 0, ftm: 0,
+            fta: 0, rb_off: 0, rb_def: 0, as: 0, blk: 0, to: 0, stl: 0, pf: 0, tp: 0},
+            );
+
+            if(start <= 5) {
+                app.vis_team[app.vis_team.length-1].in_game = "*"
+                start++;
+            }
+
+            app.vis_team[app.vis_team.length-1].number = vis_roster[k]
+            app.vis_team[app.vis_team.length-1].name = vis_roster[k-1];
+        }
+	}
 	for(i = 1; i < args[1].length; i++) {
 //        console.log(i)
         app.vis_team.push(
