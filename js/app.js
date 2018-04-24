@@ -117,21 +117,51 @@ ipc.on('get-data-success', function(event,args) {
             start++;
         }
         app.home_team[app.home_team.length-1].number = args[0][i][0]
+
         app.home_team[app.home_team.length-1].fg = parseInt(args[0][i][1])
+        app.home_totals.fg += app.home_team[app.home_team.length-1].fg
+
         app.home_team[app.home_team.length-1].fa = parseInt(args[0][i][2])
+        app.home_totals.fa += app.home_team[app.home_team.length-1].fa
+
         app.home_team[app.home_team.length-1].m3 = parseInt(args[0][i][3])
+        app.home_totals.m3 += app.home_team[app.home_team.length-1].m3
+
         app.home_team[app.home_team.length-1].a3 = parseInt(args[0][i][4])
+        app.home_totals.a3 += app.home_team[app.home_team.length-1].a3
+
         app.home_team[app.home_team.length-1].ftm = parseInt(args[0][i][5])
+        app.home_totals.ftm += app.home_team[app.home_team.length-1].ftm
+
         app.home_team[app.home_team.length-1].fta = parseInt(args[0][i][6])
+        app.home_totals.fta += app.home_team[app.home_team.length-1].fta
+
         app.home_team[app.home_team.length-1].rb_off = parseInt(args[0][i][7])
+        app.home_totals.rb_off += app.home_team[app.home_team.length-1].rb_off
+
         app.home_team[app.home_team.length-1].rb_def = parseInt(args[0][i][8])
+        app.home_totals.rb_def += app.home_team[app.home_team.length-1].rb_def
+
         app.home_team[app.home_team.length-1].as = parseInt(args[0][i][9])
+        app.home_totals.as += app.home_team[app.home_team.length-1].as
+
         app.home_team[app.home_team.length-1].pf = parseInt(args[0][i][10])
+        app.home_totals.pf += app.home_team[app.home_team.length-1].pf
+
 //        app.home_team[app.vis_team.length-1].tf = parseInt(args[1][i][11]) //technical fouls
+
         app.home_team[app.home_team.length-1].blk = parseInt(args[0][i][12])
+        app.home_totals.blk += app.home_team[app.home_team.length-1].blk
+
         app.home_team[app.home_team.length-1].to = parseInt(args[0][i][13])
+        app.home_totals.to += app.home_team[app.home_team.length-1].to
+
         app.home_team[app.home_team.length-1].stl = parseInt(args[0][i][14])
+        app.home_totals.stl += app.home_team[app.home_team.length-1].stl
+
         app.home_team[app.home_team.length-1].tp = parseInt(args[0][i][15])
+        app.home_totals.tp += app.home_team[app.home_team.length-1].tp
+
 //        console.log("number: " + app.home_team[app.home_team.length-1].number)
 
         //find player in team by number and add their name
@@ -172,6 +202,20 @@ ipc.on('get-data-success', function(event,args) {
         app.vis_team[app.vis_team.length-1].stl = parseInt(args[1][i][14])
         app.vis_team[app.vis_team.length-1].tp = parseInt(args[1][i][15])
 //        console.log("number: " + app.vis_team[app.vis_team.length-1].number)
+
+        app.vis_totals.fg += app.vis_team[app.vis_team.length-1].fg
+        app.vis_totals.fa += app.vis_team[app.vis_team.length-1].fa
+        app.vis_totals.m3 += app.vis_team[app.vis_team.length-1].m3
+        app.vis_totals.a3 += app.vis_team[app.vis_team.length-1].a3
+        app.vis_totals.ftm += app.vis_team[app.vis_team.length-1].ftm
+        app.vis_totals.fta += app.vis_team[app.vis_team.length-1].fta
+        app.vis_totals.rb_off += app.vis_team[app.vis_team.length-1].rb_off
+        app.vis_totals.rb_def += app.vis_team[app.vis_team.length-1].rb_def
+        app.vis_totals.as += app.vis_team[app.vis_team.length-1].as
+        app.vis_totals.pf += app.vis_team[app.vis_team.length-1].pf
+        app.vis_totals.blk += app.vis_team[app.vis_team.length-1].blk
+        app.vis_totals.to += app.vis_team[app.vis_team.length-1].to
+        app.vis_totals.stl += app.vis_team[app.vis_team.length-1].stl
 
         //find player in team by number and add their name
         for(k=1; k < vis_roster.length; k+=4) {
