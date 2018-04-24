@@ -15,7 +15,7 @@ total_points(&h#@d!`_made_in_paint(&h#@d!`_fast_break(&h#@d!`_team_turnover(&h#@
 147(&h#@d!`_0(&h#@d!`_0(&h#@d!`_0(&h#@d!`_21(&h#@d!`_0(&h#@d!`_21(&h#@d!`_21
 0(&h#@d!`_0(&h#@d!`_0(&h#@d!`_0(&h#@d!`_0(&h#@d!`_0(&h#@d!`_0(&h#@d!`_0
 /Od@&?l#iFOOTER
-wisconsin(&h#@d!`_wisconsin(&h#@d!`_h(&h#@d!`_j(&h#@d!`_h(&h#@d!`_j(&h#@d!`_2018-04-24(&h#@d!`_17(&h#@d!`_h(&h#@d!`_0(&h#@d!`_0(&h#@d!`_h(&h#@d!`_0(&h#@d!`_h(&h#@d!`_h(&h#@d!`_h(&h#@d!`_h(&h#@d!`_h
+Wisconsin(&h#@d!`_Minnesota(&h#@d!`_h(&h#@d!`_j(&h#@d!`_h(&h#@d!`_j(&h#@d!`_2018-04-24(&h#@d!`_17(&h#@d!`_h(&h#@d!`_0(&h#@d!`_0(&h#@d!`_h(&h#@d!`_0(&h#@d!`_h(&h#@d!`_h(&h#@d!`_h(&h#@d!`_h(&h#@d!`_h
 /Od@&?l#iPBP
 <play vh="H" time="2:00" uni="05" team="WIS" checkname="FIRSTNAME2,LASTNAME2" action="REBOUND" type="OFF" vscore="56" hscore="75"></play>
 <play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="MISS" type="JUMPER" vscore="56" hscore="75"></play>
