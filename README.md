@@ -10,11 +10,17 @@ Once you have Node downloaded, install Electron and other dependencies using npm
 
 > npm install Electron
 
+Install mocha- the testing framework
+> npm install mocha 
+
 Install nyc for code coverage metrics
 > npm install nyc
 
 Install filereader
 > npm install filereader
+
+If you can't run npm start or npm test then look at the package.json and the devDependencies and dependencies.
+If they haven't been install run npm install (name of dependency) for all of them until you can get npm start and test to run.
 
 To prepare for the frontend tests, 
 - Download Python 3.6.4 [here](https://www.python.org/downloads/) 
