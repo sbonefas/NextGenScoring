@@ -8,9 +8,13 @@ const fs = require('fs');
 
 const file_name = "data_test";
 const file_path = "data/data_test.txt";
+const xml_path = "data/data_test.xml";
 const individual_stat_labels = ['number', 'fg', 'fga', 'pts'];
 const team_stat_labels = ['team fouls', 'timeouts left'];
-const footer = ['test', 1,'test2/test3/test4', 'test5'];
+const footer = ['HOME_TEAM', 'AWAY_TEAM', 'HOME_TEAM_CODE', 'AWAY_TEAM_CODE',
+	'HOME_TEAM_RECORD', 'AWAY_TEAM_RECORD', 'GAME_DATE', 'START_TIME', 'STADIUM', 
+	'STADIUM_CODE', 'CONF_GAME?', '[SCHEDULE_NOTES]', 'HALVES/QUARTERS', 
+	'MIN_PER_PERIOD', 'MIN_IN_OT', 'OFFICIALS', '[BOX_COMMENTS]', 'ATTENDANCE'];
 
 /** UNIT TEST DATA */
 const test_stats = "HOME\nnumber(&h#@d!`_fg(&h#@d!`_fga(&h#@d!`_pts\n"
@@ -21,7 +25,7 @@ const test_stats = "HOME\nnumber(&h#@d!`_fg(&h#@d!`_fga(&h#@d!`_pts\n"
 + "9(&h#@d!`_4\n"
 + "8(&h#@d!`_3";
 const test_pbp = '<play vh="V" time="00:47" uni="12" team="MICH" checkname="ABDUR-RAHKMAN,M-A" action="GOOD" type="FT" vscore="78" hscore="69"></play>';
-const test_pbp_addition = test_pbp + '\n<play vh="V" time="09:49" uni="13" team="MICH" checkname="WAGNER,MORITZ" action="FOUL"></play>';
+const test_pbp_addition = test_pbp + '\n^3#!gx/?]\n<play vh="V" time="09:49" uni="13" team="MICH" checkname="WAGNER,MORITZ" action="FOUL"></play>';
 const test_stats_with_footer_and_pbp = test_stats + "\n/Od@&?l#iFOOTER\n" + footer.toString().replace(/,/g,'(&h#@d!`_') + "\n/Od@&?l#iPBP\n" + test_pbp;
 const test_team_stats = "HOME\nnumber(&h#@d!`_fg(&h#@d!`_fga(&h#@d!`_pts\n30(&h#@d!`_2(&h#@d!`_4(&h#@d!`_6\n\
 31(&h#@d!`_3(&h#@d!`_3(&h#@d!`_7\n44(&h#@d!`_5(&h#@d!`_7(&h#@d!`_12\n02(&h#@d!`_1(&h#@d!`_5(&h#@d!`_2";
@@ -32,7 +36,7 @@ const test_stats_array = [
   	[ '36', '2', '3', '6' ],[ '45', '6', '7', '12' ],[ '03', '4', '5', '8' ] ],
   [ [ 'team fouls', 'timeouts left'],[ '9', '4'] ],
   [ [ 'team fouls', 'timeouts left'],[ '8', '3'] ],
-  [ 'test', 1, 'test2/test3/test4', 'test5']
+  footer
   ];
 const test_team_stats_array = [ [ 'number', 'fg', 'fga', 'pts' ],
 	[ '30', '2', '4', '6' ],
@@ -59,9 +63,13 @@ function test_fail(test_name) {
 
 function clean() {
 	if(fs.existsSync(file_path)) drw.delete_file(file_name);
+	if(fs.existsSync('data/.DS_STORE.txt')) drw.delete_file('.DS_STORE');
+	if(fs.existsSync(xml_path)) fs.unlinkSync(xml_path);
 }
 
 function test() {
+	//clean();
+
 	test_get_file_path();
 	test_create_file();
 	test_delete_file();
@@ -82,6 +90,8 @@ function test() {
 	test_read_pbp();
 	test_add_pbp();
 	test_get_all_games();
+	test_get_last_pbp_timestamp();
+	test_overwrite_footer();
 
 	clean();
 }
@@ -165,7 +175,7 @@ function test_read_game_file_empty() {
   	[ [ 'number', 'fg', 'fga', 'pts' ] ],
   	[ [ 'team fouls', 'timeouts left' ], ['0', '0'] ],
   	[ [ 'team fouls', 'timeouts left' ], ['0', '0'] ],
-  	[ 'test', '1', 'test2/test3/test4', 'test5' ]
+  	footer
   	];
 
 	if(drw.read_game_file(file_name).toString() == result_array.toString()) test_success("test_read_game_file (empty)");
@@ -220,7 +230,7 @@ function test_write_player_stats_to_game_file() {
 ['29',0,1,0] ],
 [ [ 'team fouls', 'timeouts left' ], [ '9', '4' ] ],
 [ [ 'team fouls', 'timeouts left' ], [ '8', '3' ] ],
-[ 'test', '1', 'test2/test3/test4', 'test5' ] ];
+footer ];
 
 	drw.write_player_stats_to_game_file(test_stat_changes_exist, file_name);
 	drw.write_player_stats_to_game_file(test_stat_changes_exist, file_name);
@@ -244,7 +254,7 @@ function test_write_team_stats_to_game_file() {
 ['29',0,1,0] ],
 [ [ 'team fouls', 'timeouts left' ], [ '10', '4' ] ],
 [ [ 'team fouls', 'timeouts left' ], [ '8', '1' ] ],
-[ 'test', '1', 'test2/test3/test4', 'test5' ] ];
+footer ];
 
 	drw.write_team_stats_to_game_file([1, 1, 0], file_name);
 	drw.write_team_stats_to_game_file([0, 0, -2], file_name);
@@ -268,7 +278,7 @@ function test_read_game_file_full() {
 ['03',4,5,8] ],
 [ [ 'team fouls', 'timeouts left' ], [ '9', '4' ] ],
 [ [ 'team fouls', 'timeouts left' ], [ '8', '3' ] ],
-[ 'test', '1', 'test2/test3/test4', 'test5' ] ];
+footer ];
 
 	if(drw.read_game_file(file_name).toString() == result_array.toString()) test_success("test_read_game_file (full)");
 	else test_fail("test_read_game_file (full)");
@@ -298,7 +308,7 @@ function test_read_pbp() {
 }
 
 function test_add_pbp() {
-	'<play vh="V" time="09:49" uni="13" team="MICH" checkname="WAGNER,MORITZ" action="FOUL"></play>'
+	//'<play vh="V" time="09:49" uni="13" team="MICH" checkname="WAGNER,MORITZ" action="FOUL"></play>'
 	var vh = 'V';
 	var time = '09:49';
 	var uni = '13';
@@ -317,4 +327,22 @@ function test_get_all_games() {
 
 	if(drw.get_all_games().length == num_files) test_success("test_get_all_games");
 	else test_fail("test_get_all_games");
+}
+
+function test_get_last_pbp_timestamp() {
+	var result_last_pbp = 589;
+	if(drw.test_get_last_pbp_timestamp(file_name) == result_last_pbp) test_success("test_get_last_pbp_timestamp");
+	else test_fail("test_get_last_pbp_timestamp")
+}
+
+function test_overwrite_footer() {
+	var new_footer = footer;
+	new_footer[0] = "_HTEAM_";
+	drw.overwrite_footer(file_name, new_footer);
+
+	if(drw.read_game_file(file_name)[4].toString() == new_footer.toString()) {
+		test_success("test_overwrite_footer");
+		drw.overwrite_footer(file_name, footer);
+	}
+	else test_fail("test_overwrite_footer");
 }

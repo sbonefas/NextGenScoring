@@ -37,9 +37,7 @@ window.onload = function(){
 //	let thirty_sec_timeout = "o 3 h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";
 //	let min_timeout = "o m h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";
 //	let media_timeout = "o t h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";
-	
-	
-	
+
 //	ipc.send('add-play', fieldgoal_off_rebound);
 // 	ipc.send('add-play', fieldgoal_def_rebound);
 //	ipc.send('add-play', fieldgoal_no_rebound);
@@ -2580,7 +2578,12 @@ var app = new Vue({
                 app.home_score += 1;
                 app.add_play("Made free throw by " + app.home_team[index].name);
                 var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
+<<<<<<< HEAD
                 ipc.send('add-play', "E " + ft_player_num + " E H " + curr_time + " " + app.get_player_name(ft_player_num, true) + " null " + app.vis_score + " " + app.home_score + " " + app.team_codes[0] + " "  + app.team_codes[1]);
+=======
+				alert("Player name: " + app.get_player_name(ft_player_num, true));
+                ipc.send('add-play', "E " + ft_player_num + " E H " + curr_time + " " + app.get_player_name(ft_player_num, true) + " null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
+>>>>>>> backend
                 home_stats.ftp = Number.parseFloat((app.home_totals.ftm/app.home_totals.fta)*100).toFixed(2);
               }
             }

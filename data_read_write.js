@@ -31,6 +31,7 @@ var game_directory = "data/";
 /** comma and semicolon replacements */
 const comma_replacement		= "(&h#@d!`_";
 const semicolon_replacement = "/Od@&?l#i";
+const game_period_delimiter = "^3#!gx/?]"
 
 /** version number of the software for xml creation purposes */
 var version = "0.3.2";
@@ -90,6 +91,13 @@ exports.get_all_games = function() {
 
 	return games;
 }
+
+
+
+
+
+
+
 
 /**
  * Creates an empty .txt game file with the given file_name.
@@ -177,6 +185,14 @@ function get_initial_game_file_contents(individual_stat_labels, team_stat_labels
 
 	return contents;
 }
+
+
+
+
+
+
+
+
 
 /**
  * Reads the given game file and returns a 3D array, where index 0
@@ -312,6 +328,15 @@ function create_2d_array(num_rows, num_cols) {
 	}
 	return arr;
 }
+
+
+
+
+
+
+
+
+
 
 /**
  * Writes to the game file with the given filename and adds stats
@@ -516,6 +541,37 @@ function get_game_information_string(file_name) {
 }
 
 /** 
+ * Overwrites the footer in a given file with a new footer.
+ *
+ * @param file_name Name of the file to overwrite
+ * @param new_footer Footer to write over the old one
+ * @return True if overwrite is successful, false otherwise
+ */
+exports.overwrite_footer = function(file_name, new_footer) {
+	// Read team's stats
+	var current_game_stats;
+	try {
+		current_game_stats = exports.read_game_file(file_name);
+	} catch(e) {
+		console.log("overwrite_footer: READ ERROR: " + e);
+		return false;
+	}
+
+	return overwrite_game_file(game_array_to_string(current_game_stats) + "\n" + semicolon_replacement +
+							   "FOOTER\n" + new_footer.toString().replace(/,/g, comma_replacement) + 
+							   "\n" + semicolon_replacement + read_pbp(file_name), file_name);
+}
+
+
+
+
+
+
+
+
+
+
+/** 
  * Adds a play to the gamefile. This is for the XML file.
  *
  * @param file_name name of the file with the pbps
@@ -542,9 +598,14 @@ exports.add_pbp = function(file_name, vh, time, uni, team, checkname,
 	// get new pbp to add
 	var xml_play = get_string_play_for_xml(vh, time, uni, team, checkname, 
 										   action, type, vscore, hscore);
-	// get current pbp string and add new pbp
+
+	// get current pbp string and add new pbp. add period delimiter if period ended.
 	var curr_pbp = read_pbp(file_name);
+	if(get_last_pbp_timestamp(file_name) < mmss_to_seconds(time)) {
+		curr_pbp += "\n" + game_period_delimiter;
+	}
 	curr_pbp += "\n" + xml_play;
+
 	// get current game array
 	current_game_stats = exports.read_game_file(file_name);
 
@@ -628,6 +689,45 @@ function read_pbp(file_name) {
 	return pbp;
 }
 
+/**
+ * Gets the number of seconds until 00:00 of the time of the last play in the given file.
+ */
+function get_last_pbp_timestamp(file_name) {
+	// split pbp into array of plays
+	var pbp_split = read_pbp(file_name).replace(/><\/play>/g,'').replace('PBP\n<play','').split('<play');
+	// if there are no plays, set timestamp to max integer value
+	if(pbp_split[0] == 'PBP') return Number.MAX_SAFE_INTEGER;
+
+	// get last pbp and index of time attribute
+	var last_pbp = pbp_split[pbp_split.length-1];
+	var index_of_time = last_pbp.indexOf('time="');
+	// get timestamp of last pbp. overstretch substring in case time is sent incorrectly to drw
+	var timestamp = last_pbp.substring(index_of_time + 6, index_of_time + 12).replace('"','').replace(' ','');
+
+	// convert timestamp to seconds count and return
+	return mmss_to_seconds(timestamp);
+}
+
+/**
+ * Converts a string formatted as mm:ss into the number of seconds until 00:00.
+ */
+function mmss_to_seconds(mmss) {
+	var ms = mmss.split(':');
+	var seconds = Number(ms[0])*60 + Number(ms[1])*1;
+
+	return seconds;
+}
+
+
+
+
+
+
+
+
+
+
+
 /** 
  * Creates an XML file from a game file with the given file name. Stores it at
  * the file path defined in xml_file_path defined at the top of this file.
@@ -638,6 +738,7 @@ exports.create_xml_file = function(game_file_name) {
 	// test if game_file_name is valid
 	if(!fs.existsSync(get_file_path(game_file_name))) throw "create_xml_file: File Read Error: File " + game_file_name + " does not exist!";
 	var xml_file_path = get_file_path(game_file_name).slice(0,-4) + ".xml";
+
 	// test if xml_file_path is valid
 	/**if(!fs.existsSync(xml_file_path)) {
 		//throw "create_xml_file: XML File " + xml_file_path + " does not exist!";
@@ -649,7 +750,7 @@ exports.create_xml_file = function(game_file_name) {
 	}*/
 
 	// create xml file from pbp and game information
-	var xml_string = '<bbgame source="STAT CREW Basketball" version="' + version + '" generated="' + xml_get_date() + '">\n';
+	var xml_string = '<bbgame source="NextGen Scoring" version="' + version + '" generated="' + xml_get_date() + '">\n';
 	xml_string += xml_get_venue(game_file_name) + "\n";
 	xml_string += xml_get_status(game_file_name) + "\n";
 	xml_string += xml_get_teams(game_file_name) + "\n";
@@ -666,7 +767,7 @@ exports.create_xml_file = function(game_file_name) {
 }
 
 function xml_get_date() {
-	let today = new Date();
+	var today = new Date();
 	var date_string = "";
 
 	date_string += today.getMonth()+1 + "/";
@@ -677,24 +778,184 @@ function xml_get_date() {
 }
 
 function xml_get_venue(game_file_name) {
-	//TODO
+	var footer = exports.read_game_file(game_file_name)[4];
+	var venue_string = '<venue';
+
+	venue_string += ' gameid="' + footer[6].replace(/\//g, '-') + '"';
+	venue_string += ' visid="' + footer[3] + '"';
+	venue_string += ' visname="' + footer[1] + '"';
+	venue_string += ' homeid="' + footer[2] + '"';
+	venue_string += ' homenanme="' + footer[0] + '"';
+	venue_string += ' date="' + footer[6] + '"';
+	venue_string += ' location="' + footer[8] + '"';
+	venue_string += ' time="' + footer[7] + '"';
+	venue_string += ' attend="' + footer[17] + '"';
+	venue_string += ' schednote="' + footer[11] + '"';
+	venue_string += ' leaguegame="' + footer[10] + '"';
+
+	venue_string += '>\n<officials text="' + footer[15] + '"></officials>\n';
+
+	venue_string += '<rules';
+	venue_string += ' prds="' + get_prds(footer[12]) + '"';
+	venue_string += ' minutes="' + footer[13] + '"';
+	venue_string += ' minutesot="' + footer[14] + '"';
+	venue_string += ' qh="' + footer[12] + '"></rules>\n';
+	venue_string += '</venue>';
+
+	return venue_string;
+}
+
+function get_prds(qh) {
+	if(qh.toUpperCase() == 'Q' || qh.toUpperCase() == 'QUARTERS') return '4';
+	else return '2';
 }
 
 function xml_get_status(game_file_name) {
-	//TODO
+	// TODO: do the whole function but it's short so nbd
+	// ...
+
+	return '<status></status>';
 }
 
 function xml_get_teams(game_file_name) {
-	//TODO
+	var game = exports.read_game_file(game_file_name);
+	var teams_string = '<team';
+
+	teams_string += ' vh="V"';
+	teams_string += ' id="' + game[4][3] + '"';
+	teams_string += ' name="' + game[4][1] + '"';
+	teams_string += ' record="' + game[4][5] + '">\n';
+
+	var scores = get_scoreline(game_file_name);
+	teams_string += xml_get_linescores(scores[1]) + "\n";
+	teams_string += xml_get_totals(game[1]);
+	teams_string += xml_get_playerstats(game[1]) + "\n";
+	teams_string += '</team>';
+
+	return teams_string;
+}
+
+function xml_get_linescores(scores) {
+	var linescores_string = '<linescore';
+	linescores_string += ' line="';
+	for(var period = 0; period < scores.length-1; period++) {
+		linescores_string += scores[period] + ',';
+	}
+	linescores_string += scores[scores.length-1] + '"';
+	linescores_string += ' score="' + sum(scores) + '">\n';
+	
+	for(var period = 0; period < scores.length; period++) {
+		linescores_string += '<lineprd prd="' + (period+1) + '"';
+		linescores_string += ' score="' + scores[period] + '"></lineprd>\n';
+	}
+
+	linescores_string += '</linescore>';
+	return linescores_string;
+}
+
+function xml_get_totals(team_array) {
+	// TODO: implement total stats
+	// ...
+
+	return "";
+}
+
+function xml_get_playerstats(team_array) {
+	var playerstats_string = '';
+	for(player = 1; player < team_array.length; player++) {
+		playerstats_string += '<player';
+		playerstats_string += ' uni="' + team_array[player][0] + '"';
+		playerstats_string += ' code="' + team_array[player][0] + '"';
+
+		// TODO: do the rest of the stats
+		// ...
+
+		playerstats_string += '></player>\n';
+	}
+	playerstats_string = playerstats_string.substring(0, playerstats_string.length-1);
+	return playerstats_string;
+}
+
+function sum(array) {
+	var total = 0;
+	for(var i = 0; i < array.length; i++) {
+		total += array[i];
+	} 
+	return total;
+}
+
+function get_scoreline(file_name) {
+	// split pbp into array of periods which are arrays of plays
+	var pbp_split = read_pbp(file_name).replace('PBP\n','').split(game_period_delimiter);
+	for(var i = 0; i < pbp_split.length; i++) {
+		pbp_split[i] = pbp_split[i].replace(/><\/play>/g,'').split('<play');
+	}
+
+	var scoreline = new Array(2); // two teams
+	scoreline[0] = new Array(pbp_split.length);  // num periods
+	scoreline[1] = new Array(pbp_split.length);  // num periods
+
+	for(var period = 0; period < pbp_split.length; period++) {
+		for(var play = pbp_split.length-1; play >= 0; play--) {
+			if(pbp_split[period][play].includes('hscore')) {
+				var hscore_idx = pbp_split[period][play].indexOf('hscore') + 8;
+				var vscore_idx = pbp_split[period][play].indexOf('vscore') + 8;
+				scoreline[0][period] = Number(pbp_split[period][play].substring(hscore_idx, hscore_idx+3).replace('"','').replace(' ',''));
+				scoreline[1][period] = Number(pbp_split[period][play].substring(vscore_idx, vscore_idx+3).replace('"','').replace(' ',''));
+			}
+		}
+	}
+
+	// correct total score to score per period
+	for(var team = 0; team < 2; team++) {
+		for(var period = 1; period < pbp_split.length; period++) {
+			if(scoreline[team][period] == undefined) scoreline[team][period] = scoreline[team][period-1];
+		} 
+	}
+	for(var team = 0; team < 2; team++) {
+		for(var period = pbp_split.length-1; period >= 1; period--) {
+			scoreline[team][period] -= scoreline[team][period-1];
+		}
+	}
+
+	return scoreline;
 }
 
 function xml_get_byprdsummaries(game_file_name) {
-	//TODO
+	// TODO: do the whole thing lol
+	// ...
+
+	return '<byprdsummaries></byprdsummaries>';
 }
 
+const HARDCODED_TIME_PER_PERIOD = "20:00";
 function xml_get_plays(game_file_name) {
-	//TODO
+	// split pbp array of periods
+	var pbp_split = read_pbp(game_file_name).replace('PBP\n','').split('\n' + game_period_delimiter + '\n');
+
+	// create plays_string
+	var plays_string = '<plays format="tokens">\n';
+	for(var i = 1; i <= pbp_split.length; i++) {
+		plays_string += '<period number="' + i + '" time="' + HARDCODED_TIME_PER_PERIOD + '">\n';
+		
+		// TODO: include special stats and summary stats
+		// ...
+		
+		plays_string += pbp_split[i-1];
+		plays_string += '\n</period>\n';
+	}
+	plays_string += '</plays>';
+
+	return plays_string;
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -748,4 +1009,8 @@ exports.test_get_string_play_for_xml = function(vh, time, uni, team, checkname,
 
 exports.test_read_pbp = function(file_name) {
 	return read_pbp(file_name);
+}
+
+exports.test_get_last_pbp_timestamp = function(file_name) {
+	return get_last_pbp_timestamp(file_name);
 }
