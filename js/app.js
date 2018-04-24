@@ -1,5 +1,7 @@
 const electron = require("electron");
 const ipc = electron.ipcRenderer;
+const TRW = require('./team_read_write.js'); // Imports stuff from the team_read_write.js backend file
+
 
 window.onload = function(){
 	// Send data to backend
@@ -57,7 +59,7 @@ window.onload = function(){
 	ipc.send('add-play', team_off_rebound);
 	ipc.send('add-play', team_def_rebound);
 
-	ipc.send('add-play', team_rebound);
+//	ipc.send('add-play', team_rebound);
 	ipc.send('add-play', tech_foul);
  	ipc.send('add-play', pers_foul);
  	ipc.send('add-play', bench_foul);
@@ -93,6 +95,15 @@ ipc.on('get-data-success', function(event,args) {
 	console.log("3: "+args[3])
 	console.log("4: "+args[4])
 
+    var home_team_file = args[4][0].toLowerCase().split(' ').join('_'); // Dervive filename from team name
+    var home_team_data = TRW.read_team(home_team_file); // Read team file into an array
+    var home_roster = home_team_data[5]
+    console.log("HOME TEAM: \n"+home_team_data[5]);
+    var vis_team_file = args[4][1].toLowerCase().split(' ').join('_'); // Dervive filename from team name
+    var vis_team_data = TRW.read_team(vis_team_file); // Read team file into an array
+    var vis_roster = vis_team_data[5]
+    console.log("VIS TEAM: \n"+vis_team_data[5]);
+
     start = 1;
 	//home team
 	for(i = 1; i < args[0].length; i++) {
@@ -116,12 +127,20 @@ ipc.on('get-data-success', function(event,args) {
         app.home_team[app.home_team.length-1].rb_def = parseInt(args[0][i][8])
         app.home_team[app.home_team.length-1].as = parseInt(args[0][i][9])
         app.home_team[app.home_team.length-1].pf = parseInt(args[0][i][10])
-//        app.home_team[app.vis_team.length-1].tf = parseInt(args[1][i][11])
+//        app.home_team[app.vis_team.length-1].tf = parseInt(args[1][i][11]) //technical fouls
         app.home_team[app.home_team.length-1].blk = parseInt(args[0][i][12])
         app.home_team[app.home_team.length-1].to = parseInt(args[0][i][13])
         app.home_team[app.home_team.length-1].stl = parseInt(args[0][i][14])
         app.home_team[app.home_team.length-1].tp = parseInt(args[0][i][15])
 //        console.log("number: " + app.home_team[app.home_team.length-1].number)
+
+        //find player in team by number and add their name
+        for(k=1; k < home_roster.length; k+=4) {
+//            console.log(k + ": "+home_roster[k])
+            if(app.home_team[app.home_team.length-1].number == home_roster[k]) {
+                app.home_team[app.home_team.length-1].name = home_roster[k-1];
+            }
+        }
 	}
 
 	//visitor team
@@ -147,12 +166,20 @@ ipc.on('get-data-success', function(event,args) {
         app.vis_team[app.vis_team.length-1].rb_def = parseInt(args[1][i][8])
         app.vis_team[app.vis_team.length-1].as = parseInt(args[1][i][9])
         app.vis_team[app.vis_team.length-1].pf = parseInt(args[1][i][10])
-//        app.vis_team[app.vis_team.length-1].tf = parseInt(args[1][i][11])
+//        app.vis_team[app.vis_team.length-1].tf = parseInt(args[1][i][11]) //technical fouls
         app.vis_team[app.vis_team.length-1].blk = parseInt(args[1][i][12])
         app.vis_team[app.vis_team.length-1].to = parseInt(args[1][i][13])
         app.vis_team[app.vis_team.length-1].stl = parseInt(args[1][i][14])
         app.vis_team[app.vis_team.length-1].tp = parseInt(args[1][i][15])
 //        console.log("number: " + app.vis_team[app.vis_team.length-1].number)
+
+        //find player in team by number and add their name
+        for(k=1; k < vis_roster.length; k+=4) {
+//            console.log(k + ": "+vis_roster[k])
+            if(app.vis_team[app.vis_team.length-1].number == vis_roster[k]) {
+                app.vis_team[app.vis_team.length-1].name = vis_roster[k-1];
+            }
+        }
 	}
 
 	//home stats
@@ -161,7 +188,7 @@ ipc.on('get-data-success', function(event,args) {
 	    home_stats.paint = parseInt(args[2][i][1])
 	    home_stats.fastb = parseInt(args[2][i][2])
 	    home_stats.tvs = parseInt(args[2][i][3])
-//	    home_stats.team_rebound = parseInt(args[2][i][4])
+//	    home_stats.team_rebound = parseInt(args[2][i][4]) //team rebound
 	    app.home_fouls = parseInt(args[2][i][5])
 	    app.home_partial = 4 - parseInt(args[2][i][6])
 	    app.home_full = 1 - parseInt(args[2][i][7])
@@ -174,7 +201,7 @@ ipc.on('get-data-success', function(event,args) {
 	    vis_stats.paint = parseInt(args[3][i][1])
 	    vis_stats.fastb = parseInt(args[3][i][2])
 	    vis_stats.tvs = parseInt(args[3][i][3])
-//	    vis_stats.team_rebound = parseInt(args[2][i][4])
+//	    vis_stats.team_rebound = parseInt(args[2][i][4]) //team rebound
 	    app.vis_fouls = parseInt(args[3][i][5])
 	    app.vis_partial = 4 - parseInt(args[3][i][6])
 	    app.vis_full = 1 - parseInt(args[3][i][7])
