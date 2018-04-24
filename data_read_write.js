@@ -717,7 +717,7 @@ function xml_get_venue(game_file_name) {
 }
 
 function xml_get_status(game_file_name) {
-	//TODO
+	
 }
 
 function xml_get_teams(game_file_name) {

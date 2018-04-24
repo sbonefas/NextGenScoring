@@ -8,36 +8,36 @@ window.onload = function(){
 
 	//TIME_OF_PLAY, PRIMARY_PLAYER_NAME, SECONDARY_PLAYER_NAME (IF REBOUND), VISITOR_SCORE, HOME_SCORE, PRIMARY_TEAM_CODE, SECONDARY_TEAM_CODE
 
-	let fieldgoal_off_rebound = "j 02 r 05 h 2:00 FIRSTNAME1,LASTNAME1 FIRSTNAME2,LASTNAME2 56 75 WIS OHS";  //offensive rebound (shot made by home #2, rebound home #5)
-	let fieldgoal_def_rebound = "j 02 d 03 h 2:00 FIRSTNAME1,LASTNAME1 FIRSTNAME2,LASTNAME2 56 75 WIS OHS";  //defensive rebound (shot made by home #2, rebound visit #3)
-	let fieldgoal_no_rebound = "j 02 g h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";			//no rebound (good shot)
+	let fieldgoal_off_rebound = "J 02 R 05 H 2:00 LASTNAME1,FIRSTNAME1 FIRSTNAME2,LASTNAME2 56 75 WIS OHS";  //offensive rebound (shot made by home #2, rebound home #5)
+	let fieldgoal_def_rebound = "J 02 D 03 H 2:00 LASTNAME1,FIRSTNAME1 FIRSTNAME2,LASTNAME2 56 75 WIS OHS";  //defensive rebound (shot made by home #2, rebound visit #3)
+	let fieldgoal_no_rebound = "J 02 G H 2:00 LASTNAME1,FIRSTNAME1 null 56 75 WIS OHS";			//no rebound (good shot)
 
-	let fieldgoal_assist = "j 02 a 04 h 2:00 FIRSTNAME1,LASTNAME1 FIRSTNAME2,LASTNAME2 56 75 WIS OHS";				//assist by home #4
+	let fieldgoal_assist = "J 02 A 04 H 2:00 LASTNAME1,FIRSTNAME1 FIRSTNAME2,LASTNAME2 56 75 WIS OHS";				//assist by home #4
 
-	let freethrow_off_rebound = "e 05 r 01 h 2:00 FIRSTNAME1,LASTNAME1 FIRSTNAME2,LASTNAME2 56 75 WIS OHS";	//offensive rebound (shot made by home #5, rebound home #1)
-	let freethrow_def_rebound = "e 05 d 04 h 2:00 FIRSTNAME1,LASTNAME1 FIRSTNAME2,LASTNAME2 56 75 WIS OHS";	//defensive rebound (shot made by home #5, rebound visit #4)
-	let freethrow_no_rebound = "e 05 e h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";			//no rebound (good freethrow)
-	let steal = "s 03 v 2:00 FIRSTNAME1,LASTNAME1 null 56 75 OHS WIS";												//steal
-	let block_off_rebound = "k 02 r 03 h 2:00 FIRSTNAME1,LASTNAME1 FIRSTNAME2,LASTNAME2 56 75 WIS OHS";			//block, offensive rebound (blocked by home, recovered by away)
-	let block_def_rebound = "k 02 d 04 h 2:00 FIRSTNAME1,LASTNAME1 FIRSTNAME2,LASTNAME2 56 75 WIS OHS"; 			//block, defensive rebound (blocked by home, recovered by home)
-	let block_no_rebound = "k 02 h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";						//block, no rebound
+	let freethrow_off_rebound = "E 05 R 01 H 2:00 LASTNAME1,FIRSTNAME1 FIRSTNAME2,LASTNAME2 56 75 WIS OHS";	//offensive rebound (shot made by home #5, rebound home #1)
+	let freethrow_def_rebound = "E 05 D 04 H 2:00 LASTNAME1,FIRSTNAME1 FIRSTNAME2,LASTNAME2 56 75 WIS OHS";	//defensive rebound (shot made by home #5, rebound visit #4)
+	let freethrow_no_rebound = "E 05 E H 2:00 LASTNAME1,FIRSTNAME1 null 56 75 WIS OHS";			//no rebound (good freethrow)
+	let steal = "S 03 V 2:00 LASTNAME1,FIRSTNAME1 null 56 75 OHS WIS";												//steal
+	let block_off_rebound = "K 02 R 03 H 2:00 LASTNAME1,FIRSTNAME1 FIRSTNAME2,LASTNAME2 56 75 WIS OHS";			//block, offensive rebound (blocked by home, recovered by away)
+	let block_def_rebound = "K 02 D 04 H 2:00 LASTNAME1,FIRSTNAME1 FIRSTNAME2,LASTNAME2 56 75 WIS OHS"; 			//block, defensive rebound (blocked by home, recovered by home)
+	let block_no_rebound = "K 02 H 2:00 LASTNAME1,FIRSTNAME1 null 56 75 WIS OHS";						//block, no rebound
 	
-	let team_def_rebound = "r m d h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";								//team rebound
-	let team_off_rebound = "r m h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 OHS WIS";
+	let team_def_rebound = "R M D H 2:00 LASTNAME1,FIRSTNAME1 null 56 75 WIS OHS";								//team rebound
+	let team_off_rebound = "R M H 2:00 LASTNAME1,FIRSTNAME1 null 56 75 OHS WIS";
 	
-	let tech_foul = "f t10 h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";									//technical foul
-	let pers_foul = "f 12 h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";										//personal foul
-	let bench_foul = "f b h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";										//bench foul
+	let tech_foul = "F T10 H 2:00 LASTNAME1,FIRSTNAME1 null 56 75 WIS OHS";									//technical foul
+	let pers_foul = "F 12 H 2:00 LASTNAME1,FIRSTNAME1 null 56 75 WIS OHS";										//personal foul
+	let bench_foul = "F B H 2:00 LASTNAME1,FIRSTNAME1 null 56 75 WIS OHS";										//bench foul
 
-	let off_rebound = "r 02 r h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";
-	let def_rebound = "r 02 d h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 OHS WIS";
+	let off_rebound = "R 02 R H 2:00 LASTNAME1,FIRSTNAME1 null 56 75 WIS OHS";
+	let def_rebound = "R 02 D H 2:00 LASTNAME1,FIRSTNAME1 null 56 75 OHS WIS";
 	
-	let thirty_sec_timeout = "o 3 h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";
-	let min_timeout = "o m h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";
-	let media_timeout = "o t h 2:00 FIRSTNAME1,LASTNAME1 null 56 75 WIS OHS";
+	let thirty_sec_timeout = "O 3 H 2:00 LASTNAME1,FIRSTNAME1 null 56 75 WIS OHS";
+	let min_timeout = "O M H 2:00 LASTNAME1,FIRSTNAME1 null 56 75 WIS OHS";
+	let media_timeout = "O T H 2:00 LASTNAME1,FIRSTNAME1 null 56 75 WIS OHS";
 	
 	
-	
+
 	ipc.send('add-play', fieldgoal_off_rebound);
  	ipc.send('add-play', fieldgoal_def_rebound);
 	ipc.send('add-play', fieldgoal_no_rebound);	
@@ -57,7 +57,6 @@ window.onload = function(){
 	ipc.send('add-play', team_off_rebound);
 	ipc.send('add-play', team_def_rebound);
 
-	ipc.send('add-play', team_rebound);
 	ipc.send('add-play', tech_foul);
  	ipc.send('add-play', pers_foul);
  	ipc.send('add-play', bench_foul);
@@ -67,8 +66,9 @@ window.onload = function(){
 	
 	ipc.send('add-play', thirty_sec_timeout);
 	ipc.send('add-play', min_timeout);
-	ipc.send('add-play', media_timeout);
-    console.log(localStorage.getItem("gameDate"))
+	ipc.send('add-play', media_timeout);/*
+*/ 
+ console.log(localStorage.getItem("gameDate"))
     console.log(localStorage.getItem("gameTime"))
 
     date_time = localStorage.getItem("gameDate") + "_" + localStorage.getItem("gameTime");
@@ -2475,6 +2475,7 @@ var app = new Vue({
                 app.home_score += 1;
                 app.add_play("Made free throw by " + app.home_team[index].name);
                 var curr_time = "" + document.getElementById('clockminutes').innerText + ':' + document.getElementById('clockseconds').innerText;
+				alert("Player name: " + app.get_player_name(ft_player_num, true));
                 ipc.send('add-play', "E " + ft_player_num + " E H " + curr_time + " " + app.get_player_name(ft_player_num, true) + " null " + app.vis_score + " " + app.home_score + " " + app.teams[0] + " "  + app.teams[1]);
                 home_stats.ftp = Number.parseFloat((app.home_totals.ftm/app.home_totals.fta)*100).toFixed(2);
               }
