@@ -26,7 +26,8 @@ This link can help add something to your PATH variable: [here](https://www.java.
 > pip install selenium
 
 # Usage and Testing
-Due to an unexpected issue between Selenium and Electron, our frontend tests are not able to be ran alongside the backend and integration tests. 
+Due to an unexpected issue between Selenium and Electron, our frontend tests are not able to be ran alongside the backend and integration tests. To counter this, you will have to checkout the frontend_testing branch by executing
+> git checkout frontend_testing
 
 To run the frontend tests, in the "NextGenScoring" directory, run the Python scripts with:
 > python frontend\ tests/name_of_file.py 
