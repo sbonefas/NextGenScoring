@@ -290,6 +290,11 @@ var app = new Vue({
             window.alert("Player "+i+" was not given a name.  Please enter a name.");
             incomplete_form = true;
           }
+          else if(document.getElementsByName("player_number_"+i)[0].value != "" && document.getElementsByName("player_number_"+i)[0].value.length != 2)
+          {
+            window.alert("Player "+i+" was not given a valid number.  Please enter a number with at least two digit. Example 04 or 15");
+            incomplete_form = true;
+          }
           else if(document.getElementsByName("player_name_"+i)[0].value != "" && document.getElementsByName("player_number_"+i)[0].value == "" && document.getElementsByName("player_pos_"+i)[0].value != "" && document.getElementsByName("player_year_"+i)[0].value != "")
           {
             window.alert("Player "+i+" was not given a number.  Please enter a number.");
@@ -544,6 +549,11 @@ var app = new Vue({
           else if(document.getElementsByName("player_name_"+i)[1].value != "" && document.getElementsByName("player_number_"+i)[1].value == "" && document.getElementsByName("player_pos_"+i)[1].value != "" && document.getElementsByName("player_year_"+i)[1].value != "")
           {
             window.alert("Player "+i+" was not given a number.  Please enter a number.");
+            incomplete_form = true;
+          }
+          else if(document.getElementsByName("player_number_"+i)[1].value != "" && document.getElementsByName("player_number_"+i)[1].value.length != 2)
+          {
+            window.alert("Player "+i+" was not given a valid number.  Please enter a number with at least two digit. Example 04 or 15");
             incomplete_form = true;
           }
           else if(document.getElementsByName("player_name_"+i)[1].value != "" && document.getElementsByName("player_number_"+i)[1].value != "" && document.getElementsByName("player_pos_"+i)[1].value == "" && document.getElementsByName("player_year_"+i)[1].value != "")
