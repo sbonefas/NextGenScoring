@@ -428,6 +428,8 @@ var app = new Vue({
 
                     localStorage.setItem("homeName",app.selected_game.home_name);
                     localStorage.setItem("visName",app.selected_game.vis_name);
+                    localStorage.setItem("homeCode",app.selected_game.home_code);
+                    localStorage.setItem("visCode",app.selected_game.vis_code);
                     localStorage.setItem("gameDate",app.selected_game.date);
                     localStorage.setItem("gameTime",app.selected_game.time.split(/:/)[0]);
 
