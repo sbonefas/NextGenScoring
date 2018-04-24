@@ -3,23 +3,18 @@ const ipc = electron.ipcRenderer;
 const DRW = require('./data_read_write.js'); // Imports stuff from the team_read_write.js backend file
 
 var curr_game = [];
-loaded_home_team = "";
-loaded_vis_team = "";
+//var loaded_home_team = ""
+//var loaded_vis_team = ""
 
 
 window.onload = function(){
-	let args = ["Wisconsin", "Ohio State", "796", "518", "100/0", "0/100", "3/12/19", "4pm", "Kohl Center", "H|V|N", "league", ["schedule notes"], "quarters", "15", "15", ["Official Names"], ["Box comments"], "attendance"];
+//	let args = ["Wisconsin", "Ohio State", "796", "518", "100/0", "0/100", "3/12/19", "4pm", "Kohl Center", "H|V|N", "league", ["schedule notes"], "quarters", "15", "15", ["Official Names"], ["Box comments"], "attendance"];
 
     //LOAD GAMES FROM BACKEND
     ipc.send("get-all-games");
-}
 
-function get_home_team() {
-    return loaded_home_team;
-}
-
-function get_vis_team() {
-    return loaded_vis_team;
+//    var getInput = confirm("Hey type something here: ");
+//    localStorage.setItem("storageName",getInput);
 }
 
 ipc.on('get-all-games-failure', function(event) {
@@ -60,7 +55,7 @@ ipc.on('get-all-games-success', function(event, gameArray) {
 });
 
 ipc.on('get-game-success', function(event,args) {
-	console.log("get-game-success: " + args +" games: "+app.games);
+	console.log("get-game-success: " + args);
 
 	for(i = 0; i < app.games.length; i++) {
 	    if(app.games[i].date == args[6] && app.games[i].time == args[7]) {
@@ -104,10 +99,12 @@ ipc.on('get-game-success', function(event,args) {
         }
     }
 
+    full_time = app.selected_game.time + ":00"
+
     document.getElementsByName("home_name")[0].value = app.selected_game.home_name;
     document.getElementsByName("vis_name")[0].value = app.selected_game.vis_name;
     document.getElementsByName("game_date")[0].value = app.selected_game.date;
-    document.getElementsByName("game_time")[0].value = app.selected_game.time;
+    document.getElementsByName("game_time")[0].value = full_time;
     document.getElementsByName("game_site")[0].value = app.selected_game.site;
     document.getElementById("select_site").selectedIndex = app.selected_game.site_code;//0 = home, 1 = away, 2 = neutral
     document.getElementById("select_league").selectedIndex = app.selected_game.league;//0 = Yes, 1 = No
@@ -134,8 +131,12 @@ ipc.on('init-game-success', function(event,args) {
 	console.log("init-game-success: " + args);
 	curr_game = args;
 	console.log("game: " + curr_game + "date: " + curr_game.date + "time: " + curr_game.time)
-	loaded_home_team = args[0]
-	loaded_vis_team = args[0]
+//	loaded_home_team = args[0]
+//	loaded_vis_team = args[1]
+	localStorage.setItem("homeName",args[0]);
+	localStorage.setItem("visName",args[1]);
+	localStorage.setItem("gameDate",args[6]);
+	localStorage.setItem("gameTime",args[7]);
 	window.location = "./index.html"
 });
 
@@ -170,6 +171,8 @@ var app = new Vue({
     selected_game: {},
     search_active: false,
     making_new_game: false
+//    loaded_home_team: "",
+//    loaded_vis_team: ""
   },
   created() {
    document.addEventListener('keydown', this.keyevent);
@@ -196,7 +199,8 @@ var app = new Vue({
     edit_game() {
       if(app.selected_game.date != undefined) {
 
-        date_time = app.selected_game.date + "_" + app.selected_game.time;
+        date_time = app.selected_game.date + "_" + app.selected_game.time.split(/:/)[0];
+//            console.log(app.selected_game.time.split(/:/)[0])
         //UNCOMMENT TO TEST GET-GAME
 //		date_time = "3-12-19_4pm"
         console.log(date_time)
@@ -317,7 +321,7 @@ var app = new Vue({
                 app.games[app.games.length-1].date = game_date
             }
 
-            game_time = document.getElementsByName("game_time")[0].value;
+            game_time = document.getElementsByName("game_time")[0].value.split(/:/)[0];
             if(game_time != "") {
                 curr_game.push(game_time)
                 app.games[app.games.length-1].time = game_time
@@ -390,31 +394,42 @@ var app = new Vue({
                 console.log(curr_game)
                 ipc.send("init-game", curr_game)
             }
+            else {
+                window.alert("Please fill in all fields");
+            }
         }
         else {
             for(i = 0; i < app.games.length; i++) {
-                if(app.games[i].date == app.selected_game.date && app.games[i].time == app.selected_game.time) {
-                    console.log(app.games[i])
+                if(app.games[i].date == app.selected_game.date && app.games[i].time == app.selected_game.time.split(/:/)[0]) {
+//                    console.log(app.games[i])
                     app.selected_game = app.games[i];
                 }
             }
 //            getGame(app.selected_game)
-//            loaded_home_team = home_name
-//            loaded_vis_team = vis_name
+//            loaded_home_team = app.selected_game.home_name
+//            loaded_vis_team = app.selected_game.vis_name
+//            console.log("home: " +app.loaded_home_team+" vis: " +app.loaded_vis_team)
+	        localStorage.setItem("homeName",app.selected_game.home_name);
+	        localStorage.setItem("visName",app.selected_game.vis_name);
+	        localStorage.setItem("gameDate",app.selected_game.date);
+	        localStorage.setItem("gameTime",app.selected_game.time.split(/:/)[0]);
+//	        localStorage.setItem("currGame",app.selected_game);
+//	        console.log(app.selected_game)
+//	        console.log(localStorage.getItem("currGame"))
             window.location = "./index.html";
         }
     },
     // If F9 is pressed
     delete_game() {
       if(app.selected_game.date != undefined) {
-        if(window.confirm("DELETE GAME: "+ app.selected_game.date + " at " + app.selected_game.time + "?"))
+        if(window.confirm("DELETE GAME: "+ app.selected_game.date + " at " + app.selected_game.time.split(/:/)[0] + "?"))
         {
           for(var index = 0; index < app.games.length; index++)
           {
             if(app.games[index].date == app.selected_game.date)
             {
               app.games.splice(index, 1);
-              date_time = app.selected_game.date + "_" + app.selected_game.time;
+              date_time = app.selected_game.date + "_" + app.selected_game.time.split(/:/)[0];
 
               //UNCOMMENT to test delete_file
 //              date_time = "0006-08-08_18:06";
