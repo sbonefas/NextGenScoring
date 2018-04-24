@@ -486,7 +486,7 @@ function get_game_information_string(file_name) {
 	return game_information;
 }
 
-/** 
+/**
  * Adds a play to the gamefile. This is for the XML file.
  *
  * @param file_name name of the file with the pbps
@@ -500,7 +500,7 @@ function get_game_information_string(file_name) {
  * @param vscore Visitor's score after the play
  * @param hscore Home score after the play
  */
-exports.add_pbp = function(file_name, vh, time, uni, team, checkname, 
+exports.add_pbp = function(file_name, vh, time, uni, team, checkname,
 								action, type, vscore, hscore) {
 	// Check that all required fields are there
 	if(vh == null) throw "vh is null";
@@ -511,7 +511,7 @@ exports.add_pbp = function(file_name, vh, time, uni, team, checkname,
 	if(action == null) throw "action is null";
 
 	// get new pbp to add
-	var xml_play = get_string_play_for_xml(vh, time, uni, team, checkname, 
+	var xml_play = get_string_play_for_xml(vh, time, uni, team, checkname,
 										   action, type, vscore, hscore);
 	// get current pbp string and add new pbp
 	var curr_pbp = read_pbp(file_name);
@@ -525,7 +525,7 @@ exports.add_pbp = function(file_name, vh, time, uni, team, checkname,
 							   curr_pbp, file_name);
 }
 
-/** 
+/**
  * Converts the given parameters into a valid xml tag that represents
  * a play in the media printout of play-by-plays.
  *
@@ -540,7 +540,7 @@ exports.add_pbp = function(file_name, vh, time, uni, team, checkname,
  * @param vscore Visitor's score after the play
  * @param hscore Home score after the play
  */
-function get_string_play_for_xml(vh, time, uni, team, checkname, 
+function get_string_play_for_xml(vh, time, uni, team, checkname,
 								action, type, vscore, hscore) {
 
 	// Init xml play tag
@@ -574,10 +574,10 @@ function get_string_play_for_xml(vh, time, uni, team, checkname,
 	return play;
 }
 
-/** 
+/**
  * Reads the file with the given file_name and returns a string of the
  * play-by-play list in that file. Includes the first line PBP\n.
- * 
+ *
  * @param file_name name of the file
  * @return string representation of the play-by-plays
  */
@@ -596,14 +596,14 @@ function read_pbp(file_name) {
 	return pbp;
 }
 
-/** 
+/**
  * Creates an XML file from a game file with the given file name. Stores it at
  * the file path defined in xml_file_path defined at the top of this file.
  *
  * @param game_file_name name of the game file to generate xml file from
  */
 exports.create_xml_file = function(game_file_name) {
-	
+
 }
 
 
@@ -646,9 +646,9 @@ exports.test_get_game_information_string = function(file_name) {
 	return get_game_information_string(file_name);
 }
 
-exports.test_get_string_play_for_xml = function(vh, time, uni, team, checkname, 
+exports.test_get_string_play_for_xml = function(vh, time, uni, team, checkname,
 								action, type, vscore, hscore) {
-	return get_string_play_for_xml(vh, time, uni, team, checkname, 
+	return get_string_play_for_xml(vh, time, uni, team, checkname,
 								action, type, vscore, hscore);
 }
 

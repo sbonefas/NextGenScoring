@@ -67,6 +67,74 @@ const test_pbp_addition = test_pbp + '\n<play vh="V" time="09:49" uni="13" team=
 const test_stats_with_footer_and_pbp = test_stats + "\n/Od@&?l#iFOOTER\n" + footer.toString().replace(/,/g,'(&h#@d!`_') + "\n/Od@&?l#iPBP\n" + test_pbp;
 // ADDITIONAL INTEGRATION TEST DATA
 //data
+function statsHeader(outerIndex, index) {
+  assert.strictEqual(drw.get_all_games()[outerIndex][index][0][0], "player_number");
+  assert.strictEqual(drw.get_all_games()[outerIndex][index][0][1], "fg");
+  assert.strictEqual(drw.get_all_games()[outerIndex][index][0][2], "fga");
+  assert.strictEqual(drw.get_all_games()[outerIndex][index][0][3], "m3");
+  assert.strictEqual(drw.get_all_games()[outerIndex][index][0][4], "3a");
+  assert.strictEqual(drw.get_all_games()[outerIndex][index][0][5], "ft");
+  assert.strictEqual(drw.get_all_games()[outerIndex][index][0][6], "fta");
+  assert.strictEqual(drw.get_all_games()[outerIndex][index][0][7], "offr");
+  assert.strictEqual(drw.get_all_games()[outerIndex][index][0][8], "defr");
+  assert.strictEqual(drw.get_all_games()[outerIndex][index][0][9], "ast");
+  assert.strictEqual(drw.get_all_games()[outerIndex][index][0][10], "pf");
+  assert.strictEqual(drw.get_all_games()[outerIndex][index][0][11], "tf");
+  assert.strictEqual(drw.get_all_games()[outerIndex][index][0][12], "blk");
+  assert.strictEqual(drw.get_all_games()[outerIndex][index][0][13], "trn");
+  assert.strictEqual(drw.get_all_games()[outerIndex][index][0][14], "stl");
+  assert.strictEqual(drw.get_all_games()[outerIndex][index][0][15], "pts");
+}
+
+function infoHeaders(outerIndex, index) {
+  if (index == 0 || index == 1) {
+    statsHeader(outerIndex, index);
+  }
+  else if (index == 2 || index == 3) {
+    assert.strictEqual(drw.get_all_games()[outerIndex][index][0][0], "total_points");
+    assert.strictEqual(drw.get_all_games()[outerIndex][index][0][1], "made_in_paint");
+    assert.strictEqual(drw.get_all_games()[outerIndex][index][0][2], "fast_break");
+    assert.strictEqual(drw.get_all_games()[outerIndex][index][0][3], "team_turnover");
+    assert.strictEqual(drw.get_all_games()[outerIndex][index][0][4], "team_rebound");
+    assert.strictEqual(drw.get_all_games()[outerIndex][index][0][5], "team_fouls");
+    assert.strictEqual(drw.get_all_games()[outerIndex][index][0][6], "partial_timeouts_taken");
+    assert.strictEqual(drw.get_all_games()[outerIndex][index][0][7], "full_timeouts_taken");
+
+    for (let i = 0; i <= 7; i++) {
+      assert.strictEqual(drw.get_all_games()[outerIndex][index][1][i], "0");
+    }
+  }
+  else if (index == 4) {
+    if (outerIndex == 0) {
+      var array = ["home name", "vis name", "home code", "vis code", "home record",
+      "vis record", "2018-04-23", "18", "site", "2", "1", "note", "1", "period",
+      "ot", "official", "comment", "atten\r"];
+    }
+    else {
+      var array = ["Wisconsin", "Ohio State", "796", "518", "100-0", "0-100", "3-12-19",
+      "4pm", "Kohl Center", "Kohl-Center-code", "1", "schedule notes", "quarters",
+      "15", "15", "Official Names", "Box comments", "attendance\r"];
+    }
+    assert.strictEqual(drw.get_all_games()[outerIndex][index][0], array[0]);
+    assert.strictEqual(drw.get_all_games()[outerIndex][index][1], array[1]);
+    assert.strictEqual(drw.get_all_games()[outerIndex][index][2], array[2]);
+    assert.strictEqual(drw.get_all_games()[outerIndex][index][3], array[3]);
+    assert.strictEqual(drw.get_all_games()[outerIndex][index][4], array[4]);
+    assert.strictEqual(drw.get_all_games()[outerIndex][index][5], array[5]);
+    assert.strictEqual(drw.get_all_games()[outerIndex][index][6], array[6]);
+    assert.strictEqual(drw.get_all_games()[outerIndex][index][7], array[7]);
+    assert.strictEqual(drw.get_all_games()[outerIndex][index][8], array[8]);
+    assert.strictEqual(drw.get_all_games()[outerIndex][index][9], array[9]);
+    assert.strictEqual(drw.get_all_games()[outerIndex][index][10], array[10]);
+    assert.strictEqual(drw.get_all_games()[outerIndex][index][11], array[11]);
+    assert.strictEqual(drw.get_all_games()[outerIndex][index][12], array[12]);
+    assert.strictEqual(drw.get_all_games()[outerIndex][index][13], array[13]);
+    assert.strictEqual(drw.get_all_games()[outerIndex][index][14], array[14]);
+    assert.strictEqual(drw.get_all_games()[outerIndex][index][15], array[15]);
+    assert.strictEqual(drw.get_all_games()[outerIndex][index][16], array[16]);
+    assert.strictEqual(drw.get_all_games()[outerIndex][index][17], array[17]);
+  }
+}
 
 // Merged clean and delete together
 after(function() {
@@ -75,6 +143,15 @@ after(function() {
 });
 
 describe('data_read_write tests', function() {
+   describe('get_all_games()', function() {
+     it('should return an array of all the games', function() {
+       for (let i = 0; i <= 1; i++) {
+         for (let j = 0; j <= 4; j++) {
+           infoHeaders(i, j);
+         }
+       }
+     });
+   });
    describe('get_file_path()', function() {
      it('should construct a valid file path given a file_name', function() {
        assert.strictEqual(drw.test_get_file_path(file_name), file_path);
@@ -477,9 +554,9 @@ describe('data_read_write tests', function() {
           });
       });
    });
-   describe("test_get_string_play_for_xml()", function() {
+   describe("get_string_play_for_xml()", function() {
      it("ensures xml is test_pbp", function() {
-       var vh = 'V';
+      var vh = 'V';
      	var time = '00:47';
      	var uni = '12';
      	var team = 'MICH';
@@ -492,13 +569,21 @@ describe('data_read_write tests', function() {
       assert.strictEqual(xml, test_pbp);
      });
    });
-   describe("test_read_pbp()", function() {
+   describe("read_pbp()", function() {
      it("ensures xml is test_pbp", function() {
       var pbp_string = drw.test_read_pbp(file_name);
       assert.strictEqual(pbp_string, "PBP\n" + test_pbp);
      });
+     it("throws a File Read Error if the file doesn't exist", function() {
+       try {
+         drw.test_read_pbp("test");
+         assert.fail("Should throw a File Read Error");
+       } catch(e) {
+         assert.strictEqual(e, "File Read Error: File test does not exist!");
+       }
+     });
    });
-   describe("test_add_pbp()", function() {
+   describe("add_pbp()", function() {
      it("ensures xml is test_pbp", function() {
        '<play vh="V" time="09:49" uni="13" team="MICH" checkname="WAGNER,MORITZ" action="FOUL"></play>'
      	var vh = 'V';
