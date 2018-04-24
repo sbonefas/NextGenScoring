@@ -1,0 +1,20 @@
+HOME
+number(&h#@d!`_fg(&h#@d!`_fga(&h#@d!`_pts
+30(&h#@d!`_2(&h#@d!`_4(&h#@d!`_6
+31(&h#@d!`_5(&h#@d!`_5(&h#@d!`_11
+44(&h#@d!`_5(&h#@d!`_7(&h#@d!`_12
+02(&h#@d!`_1(&h#@d!`_5(&h#@d!`_2
+/Od@&?l#iAWAY
+number(&h#@d!`_fg(&h#@d!`_fga(&h#@d!`_pts
+35(&h#@d!`_1(&h#@d!`_4(&h#@d!`_2
+36(&h#@d!`_2(&h#@d!`_3(&h#@d!`_6
+45(&h#@d!`_6(&h#@d!`_7(&h#@d!`_12
+03(&h#@d!`_4(&h#@d!`_5(&h#@d!`_8
+29(&h#@d!`_0(&h#@d!`_1(&h#@d!`_0
+/Od@&?l#iTEAM
+team fouls(&h#@d!`_timeouts left
+10(&h#@d!`_4
+8(&h#@d!`_1
+/Od@&?l#iFOOTER
+HOME_TEAM(&h#@d!`_AWAY_TEAM(&h#@d!`_HOME_TEAM_CODE(&h#@d!`_AWAY_TEAM_CODE(&h#@d!`_HOME_TEAM_RECORD(&h#@d!`_AWAY_TEAM_RECORD(&h#@d!`_GAME_DATE(&h#@d!`_START_TIME(&h#@d!`_STADIUM(&h#@d!`_STADIUM_CODE(&h#@d!`_CONF_GAME?(&h#@d!`_[SCHEDULE_NOTES](&h#@d!`_HALVES/QUARTERS(&h#@d!`_MIN_PER_PERIOD(&h#@d!`_MIN_IN_OT(&h#@d!`_OFFICIALS(&h#@d!`_[BOX_COMMENTS](&h#@d!`_ATTENDANCE
+/Od@&?l#iPBP

@@ -135,7 +135,7 @@ describe("team_read_write tests", function() {
 		});
 	});
 
-	describe("overwrite_team", function() {
+	describe("overwrite_team()", function() {
 		it("should successfully overwrite contents a team", function() {
 			trw.overwrite_team(file_names[0], team3_content);
 			trw.overwrite_team(file_names[1], team2_content);
