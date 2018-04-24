@@ -1,7 +1,154 @@
-<bbgame source="STAT CREW Basketball" version="0.3.2" generated="4/23/2018">
+<bbgame source="NextGen Scoring" version="0.3.2" generated="4/23/2018">
+<venue gameid="2018-04-23" visid="vis_code" visname="Minnesota" homeid="home_code" homenanme="Wisconsin" date="2018-04-23" location="site" time="18" attend="atten" schednote="note" leaguegame="1">
+<officials text="official"></officials>
+<rules prds="2" minutes="period" minutesot="ot" qh="1"></rules>
+</venue>
+<status></status>
+<team vh="V" id="vis_code" name="Minnesota" record="vis record">
+<linescore line="56,-55" score="1">
+<lineprd prd="1" score="56"></lineprd>
+<lineprd prd="2" score="-55"></lineprd>
+</linescore>
+<player uni="03" code="03"></player>
+<player uni="04" code="04"></player>
+<player uni="02" code="02"></player>
+</team>
+<byprdsummaries></byprdsummaries>
+<plays format="tokens">
+<period number="1" time="20:00">
 undefined
-undefined
-undefined
-undefined
-undefined
+<play vh="H" time="2:00" uni="05" team="WIS" checkname="FIRSTNAME2,LASTNAME2" action="REBOUND" type="OFF" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="MISS" type="JUMPER" vscore="56" hscore="75"></play>
+<play vh="V" time="2:00" uni="03" team="OHS" checkname="FIRSTNAME2,LASTNAME2" action="REBOUND" type="DEF" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="MISS" type="JUMPER" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="GOOD" type="JUMPER" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="GOOD" type="JUMPER" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="04" team="WIS" checkname="FIRSTNAME2,LASTNAME2" action="ASSIST" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="GOOD" type="JUMPER" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="01" team="WIS" checkname="FIRSTNAME2,LASTNAME2" action="REBOUND" type="OFF" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="05" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="MISS" type="FT" vscore="56" hscore="75"></play>
+<play vh="V" time="2:00" uni="04" team="OHS" checkname="FIRSTNAME2,LASTNAME2" action="REBOUND" type="DEF" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="05" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="MISS" type="FT" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="05" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="GOOD" type="FT" vscore="56" hscore="75"></play>
+<play vh="V" time="2:00" uni="03" team="OHS" checkname="FIRSTNAME1,LASTNAME1" action="STEAL" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="03" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="REBOUND" type="OFF" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="BLOCK" vscore="56" hscore="75"></play>
+<play vh="V" time="2:00" uni="04" team="OHS" checkname="FIRSTNAME1,LASTNAME1" action="REBOUND" type="DEF" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="BLOCK" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="BLOCK" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="TM" team="WIS" checkname="TEAM" action="REBOUND" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="05" team="WIS" checkname="FIRSTNAME2,LASTNAME2" action="REBOUND" type="OFF" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="MISS" type="JUMPER" vscore="56" hscore="75"></play>
+<play vh="V" time="2:00" uni="03" team="OHS" checkname="FIRSTNAME2,LASTNAME2" action="REBOUND" type="DEF" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="MISS" type="JUMPER" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="GOOD" type="JUMPER" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="GOOD" type="JUMPER" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="04" team="WIS" checkname="FIRSTNAME2,LASTNAME2" action="ASSIST" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="GOOD" type="JUMPER" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="01" team="WIS" checkname="FIRSTNAME2,LASTNAME2" action="REBOUND" type="OFF" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="05" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="MISS" type="FT" vscore="56" hscore="75"></play>
+<play vh="V" time="2:00" uni="04" team="OHS" checkname="FIRSTNAME2,LASTNAME2" action="REBOUND" type="DEF" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="05" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="MISS" type="FT" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="05" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="GOOD" type="FT" vscore="56" hscore="75"></play>
+<play vh="V" time="2:00" uni="03" team="OHS" checkname="FIRSTNAME1,LASTNAME1" action="STEAL" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="03" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="REBOUND" type="OFF" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="BLOCK" vscore="56" hscore="75"></play>
+<play vh="V" time="2:00" uni="04" team="OHS" checkname="FIRSTNAME1,LASTNAME1" action="REBOUND" type="DEF" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="BLOCK" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="BLOCK" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="TM" team="WIS" checkname="TEAM" action="REBOUND" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="REBOUND" type="OFF" vscore="56" hscore="75"></play>
+<play vh="V" time="2:00" uni="02" team="OHS" checkname="FIRSTNAME1,LASTNAME1" action="REBOUND" type="DEF" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="TM" team="WIS" checkname="TEAM" action="TIMEOUT" type="30SEC" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="TM" team="WIS" checkname="TEAM" action="TIMEOUT" type="TEAM" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="TM" team="WIS" checkname="TEAM" action="TIMEOUT" type="media" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="05" team="WIS" checkname="FIRSTNAME2,LASTNAME2" action="REBOUND" type="OFF" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="MISS" type="JUMPER" vscore="56" hscore="75"></play>
+<play vh="V" time="2:00" uni="03" team="OHS" checkname="FIRSTNAME2,LASTNAME2" action="REBOUND" type="DEF" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="MISS" type="JUMPER" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="GOOD" type="JUMPER" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="GOOD" type="JUMPER" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="04" team="WIS" checkname="FIRSTNAME2,LASTNAME2" action="ASSIST" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="GOOD" type="JUMPER" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="01" team="WIS" checkname="FIRSTNAME2,LASTNAME2" action="REBOUND" type="OFF" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="05" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="MISS" type="FT" vscore="56" hscore="75"></play>
+<play vh="V" time="2:00" uni="04" team="OHS" checkname="FIRSTNAME2,LASTNAME2" action="REBOUND" type="DEF" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="05" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="MISS" type="FT" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="05" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="GOOD" type="FT" vscore="56" hscore="75"></play>
+<play vh="V" time="2:00" uni="03" team="OHS" checkname="FIRSTNAME1,LASTNAME1" action="STEAL" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="03" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="REBOUND" type="OFF" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="BLOCK" vscore="56" hscore="75"></play>
+<play vh="V" time="2:00" uni="04" team="OHS" checkname="FIRSTNAME1,LASTNAME1" action="REBOUND" type="DEF" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="BLOCK" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="BLOCK" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="TM" team="WIS" checkname="TEAM" action="REBOUND" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="REBOUND" type="OFF" vscore="56" hscore="75"></play>
+<play vh="V" time="2:00" uni="02" team="OHS" checkname="FIRSTNAME1,LASTNAME1" action="REBOUND" type="DEF" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="TM" team="WIS" checkname="TEAM" action="TIMEOUT" type="30SEC" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="TM" team="WIS" checkname="TEAM" action="TIMEOUT" type="TEAM" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="TM" team="WIS" checkname="TEAM" action="TIMEOUT" type="media" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="05" team="WIS" checkname="FIRSTNAME2,LASTNAME2" action="REBOUND" type="OFF" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="MISS" type="JUMPER" vscore="56" hscore="75"></play>
+<play vh="V" time="2:00" uni="03" team="OHS" checkname="FIRSTNAME2,LASTNAME2" action="REBOUND" type="DEF" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="MISS" type="JUMPER" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="GOOD" type="JUMPER" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="GOOD" type="JUMPER" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="04" team="WIS" checkname="FIRSTNAME2,LASTNAME2" action="ASSIST" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="GOOD" type="JUMPER" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="01" team="WIS" checkname="FIRSTNAME2,LASTNAME2" action="REBOUND" type="OFF" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="05" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="MISS" type="FT" vscore="56" hscore="75"></play>
+<play vh="V" time="2:00" uni="04" team="OHS" checkname="FIRSTNAME2,LASTNAME2" action="REBOUND" type="DEF" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="05" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="MISS" type="FT" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="05" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="GOOD" type="FT" vscore="56" hscore="75"></play>
+<play vh="V" time="2:00" uni="03" team="OHS" checkname="FIRSTNAME1,LASTNAME1" action="STEAL" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="03" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="REBOUND" type="OFF" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="BLOCK" vscore="56" hscore="75"></play>
+<play vh="V" time="2:00" uni="04" team="OHS" checkname="FIRSTNAME1,LASTNAME1" action="REBOUND" type="DEF" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="BLOCK" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="BLOCK" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="TM" team="WIS" checkname="TEAM" action="REBOUND" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="REBOUND" type="OFF" vscore="56" hscore="75"></play>
+<play vh="V" time="2:00" uni="02" team="OHS" checkname="FIRSTNAME1,LASTNAME1" action="REBOUND" type="DEF" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="TM" team="WIS" checkname="TEAM" action="TIMEOUT" type="30SEC" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="TM" team="WIS" checkname="TEAM" action="TIMEOUT" type="TEAM" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="TM" team="WIS" checkname="TEAM" action="TIMEOUT" type="media" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="05" team="WIS" checkname="FIRSTNAME2,LASTNAME2" action="REBOUND" type="OFF" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="MISS" type="JUMPER" vscore="56" hscore="75"></play>
+<play vh="V" time="2:00" uni="03" team="OHS" checkname="FIRSTNAME2,LASTNAME2" action="REBOUND" type="DEF" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="MISS" type="JUMPER" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="GOOD" type="JUMPER" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="GOOD" type="JUMPER" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="04" team="WIS" checkname="FIRSTNAME2,LASTNAME2" action="ASSIST" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="GOOD" type="JUMPER" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="01" team="WIS" checkname="FIRSTNAME2,LASTNAME2" action="REBOUND" type="OFF" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="05" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="MISS" type="FT" vscore="56" hscore="75"></play>
+<play vh="V" time="2:00" uni="04" team="OHS" checkname="FIRSTNAME2,LASTNAME2" action="REBOUND" type="DEF" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="05" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="MISS" type="FT" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="05" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="GOOD" type="FT" vscore="56" hscore="75"></play>
+<play vh="V" time="2:00" uni="03" team="OHS" checkname="FIRSTNAME1,LASTNAME1" action="STEAL" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="03" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="REBOUND" type="OFF" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="BLOCK" vscore="56" hscore="75"></play>
+<play vh="V" time="2:00" uni="04" team="OHS" checkname="FIRSTNAME1,LASTNAME1" action="REBOUND" type="DEF" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="BLOCK" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="BLOCK" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="TM" team="WIS" checkname="TEAM" action="REBOUND" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="REBOUND" type="OFF" vscore="56" hscore="75"></play>
+<play vh="V" time="2:00" uni="02" team="OHS" checkname="FIRSTNAME1,LASTNAME1" action="REBOUND" type="DEF" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="TM" team="WIS" checkname="TEAM" action="TIMEOUT" type="30SEC" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="TM" team="WIS" checkname="TEAM" action="TIMEOUT" type="TEAM" vscore="56" hscore="75"></play>
+<play vh="H" time="2:00" uni="TM" team="WIS" checkname="TEAM" action="TIMEOUT" type="media" vscore="56" hscore="75"></play>
+</period>
+<period number="2" time="20:00">
+<play vh="H" time="20:00" uni="04" team="home_code" checkname="Ferris.Matt" action="GOOD" type="FT" vscore="1" hscore="36"></play>
+<play vh="H" time="20:00" uni="02" team="home_code" checkname="Ford.Aleem" action="REBOUND" type="OFF" vscore="1" hscore="36"></play>
+<play vh="H" time="20:00" uni="H" team="home_code" checkname="null" action="REBOUND" type="OFF" vscore="1" hscore="36"></play>
+<play vh="H" time="20:00" uni="04" team="home_code" checkname="Ferris.Matt" action="MISS" type="FT" vscore="1" hscore="36"></play>
+<play vh="H" time="20:00" uni="03" team="home_code" checkname="McGrory.Walt" action="GOOD" type="FT" vscore="1" hscore="37"></play>
+<play vh="H" time="20:00" uni="03" team="home_code" checkname="McGrory.Walt" action="REBOUND" type="OFF" vscore="1" hscore="37"></play>
+<play vh="V" time="20:00" uni="03" team="home_code" checkname="Murphy.Jordan" action="REBOUND" type="DEF" vscore="1" hscore="37"></play>
+<play vh="H" time="20:00" uni="02" team="home_code" checkname="Ford.Aleem" action="REBOUND" type="DEF" vscore="1" hscore="37"></play>
+<play vh="H" time="20:00" uni="H" team="home_code" checkname="null" action="REBOUND" type="OFF" vscore="1" hscore="37"></play>
+<play vh="H" time="20:00" uni="03" team="home_code" checkname="McGrory.Walt" action="MISS" type="FT" vscore="1" hscore="37"></play>
+</period>
+</plays>
 </bbgame>
