@@ -395,6 +395,7 @@ var app = new Vue({
   el: '#app',
   data: {
     teams: [localStorage.getItem("homeName"), localStorage.getItem("visName")],
+    team_codes: [localStorage.getItem("homeCode"), localStorage.getItem("visCode")],
     period: 'Half 1',
     home_score: 0,
     home_fouls: 0,
