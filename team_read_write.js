@@ -29,10 +29,11 @@ const fs = require("fs");	//node.js filesystem
 var team_directory = "team/";
 
 /** comma, open array, close array, and subarray separator delimiter replacements */
-const comma_replacement  = "%!_a)#$d#";
-const open_replacement   = "u^#q@3.>{";
-const close_replacement  = ":p2$%_1=*";
-const subarray_separator = "@i+b&*-~r";
+const comma_replacement  	= "%!_a)#$d#";
+const open_replacement   	= "u^#q@3.>{";
+const close_replacement  	= ":p2$%_1=*";
+const subarray_separator 	= "@i+b&*-~r";
+const subsubarray_separator = ">D*&jhs!="
 
 /**
  * Returns the filepath of a file with a given name
@@ -118,6 +119,7 @@ exports.get_all_teams = function() {
 	for(var i = 0; i < file_names.length; i++) {
 		if(file_names[i].substring(0,1) == '.' || file_names[i].slice(-4) != '.txt') {
 			file_names.splice(i, 1);
+			i--;
 		}
 	}
 	teams = Array(file_names.length);

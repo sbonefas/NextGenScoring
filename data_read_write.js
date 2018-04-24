@@ -79,6 +79,7 @@ exports.get_all_games = function() {
 	for(var i = 0; i < file_names.length; i++) {
 		if(file_names[i].substring(0,1) == '.' || file_names[i].slice(-4) == '.xml') {
 			file_names.splice(i, 1);
+			i--;
 		}
 	}
 
