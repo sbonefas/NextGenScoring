@@ -3,18 +3,12 @@ const ipc = electron.ipcRenderer;
 const DRW = require('./data_read_write.js'); // Imports stuff from the team_read_write.js backend file
 
 var curr_game = [];
-//var loaded_home_team = ""
-//var loaded_vis_team = ""
-
 
 window.onload = function(){
 //	let args = ["Wisconsin", "Ohio State", "796", "518", "100/0", "0/100", "3/12/19", "4pm", "Kohl Center", "H|V|N", "league", ["schedule notes"], "quarters", "15", "15", ["Official Names"], ["Box comments"], "attendance"];
 
     //LOAD GAMES FROM BACKEND
     ipc.send("get-all-games");
-
-//    var getInput = confirm("Hey type something here: ");
-//    localStorage.setItem("storageName",getInput);
 }
 
 ipc.on('get-all-games-failure', function(event) {
@@ -131,8 +125,6 @@ ipc.on('init-game-success', function(event,args) {
 	console.log("init-game-success: " + args);
 	curr_game = args;
 	console.log("game: " + curr_game + "date: " + curr_game.date + "time: " + curr_game.time)
-//	loaded_home_team = args[0]
-//	loaded_vis_team = args[1]
 	localStorage.setItem("homeName",args[0]);
 	localStorage.setItem("visName",args[1]);
 	localStorage.setItem("gameDate",args[6]);
@@ -171,8 +163,6 @@ var app = new Vue({
     selected_game: {},
     search_active: false,
     making_new_game: false
-//    loaded_home_team: "",
-//    loaded_vis_team: ""
   },
   created() {
    document.addEventListener('keydown', this.keyevent);
@@ -276,200 +266,174 @@ var app = new Vue({
     },
     submit() {
         var is_existing = false;
-//        if(making_new_game) {
-            curr_game = []
+        curr_game = []
 
-            home_name = document.getElementsByName("home_name")[0].value;
-            if(home_name != "") {
-                curr_game.push(home_name)
-//                app.games[app.games.length-1].home_name = home_name
-            }
+        home_name = document.getElementsByName("home_name")[0].value;
+        if(home_name != "") {
+            curr_game.push(home_name)
+        }
 
-            vis_name = document.getElementsByName("vis_name")[0].value;
-            if(vis_name != "") {
-                curr_game.push(vis_name)
-//                app.games[app.games.length-1].vis_name = vis_name
-            }
+        vis_name = document.getElementsByName("vis_name")[0].value;
+        if(vis_name != "") {
+            curr_game.push(vis_name)
+        }
 
-            home_code = document.getElementsByName("home_code")[0].value;
-            if(home_code != "") {
-                curr_game.push(home_code)
-//                app.games[app.games.length-1].home_code = home_code
-            }
+        home_code = document.getElementsByName("home_code")[0].value;
+        if(home_code != "") {
+            curr_game.push(home_code)
+        }
 
-            vis_code = document.getElementsByName("vis_code")[0].value;
-            if(vis_code != "") {
-                curr_game.push(vis_code)
-//                app.games[app.games.length-1].vis_code = vis_code
-            }
+        vis_code = document.getElementsByName("vis_code")[0].value;
+        if(vis_code != "") {
+            curr_game.push(vis_code)
+        }
 
-            home_record = document.getElementsByName("home_record")[0].value;
-            if(home_record != "") {
-                curr_game.push(home_record)
-//                app.games[app.games.length-1].home_record = home_record
-            }
+        home_record = document.getElementsByName("home_record")[0].value;
+        if(home_record != "") {
+            curr_game.push(home_record)
+        }
 
-            vis_record = document.getElementsByName("vis_record")[0].value;
-            if(vis_record != "") {
-                curr_game.push(vis_record)
-//                app.games[app.games.length-1].vis_record = vis_record
-            }
+        vis_record = document.getElementsByName("vis_record")[0].value;
+        if(vis_record != "") {
+            curr_game.push(vis_record)
+        }
 
-            game_date = document.getElementsByName("game_date")[0].value;
-            if(game_date != "") {
-                curr_game.push(game_date)
-//                app.games[app.games.length-1].date = game_date
-            }
+        game_date = document.getElementsByName("game_date")[0].value;
+        if(game_date != "") {
+            curr_game.push(game_date)
+        }
 
-            game_time = document.getElementsByName("game_time")[0].value.split(/:/)[0];
-            if(game_time != "") {
-                curr_game.push(game_time)
-//                app.games[app.games.length-1].time = game_time
-            }
+        game_time = document.getElementsByName("game_time")[0].value.split(/:/)[0];
+        if(game_time != "") {
+            curr_game.push(game_time)
+        }
 
-            game_site = document.getElementsByName("game_site")[0].value;
-            if(game_site != "") {
-                curr_game.push(game_site)
-//                app.games[app.games.length-1].site = game_site
-            }
+        game_site = document.getElementsByName("game_site")[0].value;
+        if(game_site != "") {
+            curr_game.push(game_site)
+        }
 
-            select_site = document.getElementById("select_site").selectedIndex;//0 = home, 1 = away, 2 = neutral
-            curr_game.push(select_site)
-//            app.games[app.games.length-1].site_code = select_site
+        select_site = document.getElementById("select_site").selectedIndex;//0 = home, 1 = away, 2 = neutral
+        curr_game.push(select_site)
 
-            league = document.getElementById("select_league").selectedIndex;//0 = Yes, 1 = No
-            curr_game.push(league)
-//            app.games[app.games.length-1].league = league
+        league = document.getElementById("select_league").selectedIndex;//0 = Yes, 1 = No
+        curr_game.push(league)
 
-            sched_note_array = []
-            sched_note = document.getElementsByName("sched_note")[0].value;
-            sched_note_array.push(sched_note)
-            if(sched_note != "") {
-                curr_game.push(sched_note_array)
-//                app.games[app.games.length-1].schedule_note = sched_note
-            }
+        sched_note_array = []
+        sched_note = document.getElementsByName("sched_note")[0].value;
+        sched_note_array.push(sched_note)
+        if(sched_note != "") {
+            curr_game.push(sched_note_array)
+        }
 
-            halves = document.getElementById("select_halves").selectedIndex;//0 = halves, 1 = quarters
-            curr_game.push(halves)
-//            app.games[app.games.length-1].quarters = halves
+        halves = document.getElementById("select_halves").selectedIndex;//0 = halves, 1 = quarters
+        curr_game.push(halves)
 
-            min_period = document.getElementsByName("min_period")[0].value;
-            if(min_period != "") {
-                curr_game.push(min_period)
-//                app.games[app.games.length-1].min_period = min_period
-            }
+        min_period = document.getElementsByName("min_period")[0].value;
+        if(min_period != "") {
+            curr_game.push(min_period)
+        }
 
-            min_ot = document.getElementsByName("min_ot")[0].value;
-            if(min_ot != "") {
-                curr_game.push(min_ot)
-//                app.games[app.games.length-1].min_ot = min_ot
-            }
+        min_ot = document.getElementsByName("min_ot")[0].value;
+        if(min_ot != "") {
+            curr_game.push(min_ot)
+        }
 
-            officials_array = []
-            officials = document.getElementsByName("officials")[0].value;
-            officials_array.push(officials)
-            if(officials != "") {
-                curr_game.push(officials_array)
-//                app.games[app.games.length-1].officials = officials_array
-            }
+        officials_array = []
+        officials = document.getElementsByName("officials")[0].value;
+        officials_array.push(officials)
+        if(officials != "") {
+            curr_game.push(officials_array)
+        }
 
-            comments_array = []
-            comments = document.getElementsByName("Text1")[0].value;
-            comments_array.push(comments)
-            if(comments != "") {
-                curr_game.push(comments_array)
-//                app.games[app.games.length-1].comments = comments
-            }
+        comments_array = []
+        comments = document.getElementsByName("Text1")[0].value;
+        comments_array.push(comments)
+        if(comments != "") {
+            curr_game.push(comments_array)
+        }
 
-            atten = document.getElementsByName("atten")[0].value;
-            if(atten != "") {
-                curr_game.push(atten)
-//                app.games[app.games.length-1].attendance = atten
-            }
+        atten = document.getElementsByName("atten")[0].value;
+        if(atten != "") {
+            curr_game.push(atten)
+        }
 
-            // UNCOMMENT TO TEST INIT-GAME-FAILURE
+        // UNCOMMENT TO TEST INIT-GAME-FAILURE
 //            curr_game = ["Wisconsin", "Ohio State", "796", "518", "100/0", "0/100", "3/12/19", "4pm", "Kohl Center", "H|V|N", "league", ["schedule notes"], "quarters", "15", "15", ["Official Names"], ["Box comments"], "attendance"];
 
-            if(curr_game.length == 18) {
-                console.log(curr_game)
-                if(making_new_game) {
-                    app.games[app.games.length-1].home_name = home_name
-                    app.games[app.games.length-1].vis_name = vis_name
-                    app.games[app.games.length-1].home_code = home_code
-                    app.games[app.games.length-1].vis_code = vis_code
-                    app.games[app.games.length-1].home_record = home_record
-                    app.games[app.games.length-1].vis_record = vis_record
-                    app.games[app.games.length-1].date = game_date
-                    app.games[app.games.length-1].time = game_time
-                    app.games[app.games.length-1].site = game_site
-                    app.games[app.games.length-1].site_code = select_site
-                    app.games[app.games.length-1].league = league
-                    app.games[app.games.length-1].schedule_note = sched_note
-                    app.games[app.games.length-1].quarters = halves
-                    app.games[app.games.length-1].min_period = min_period
-                    app.games[app.games.length-1].min_ot = min_ot
-                    app.games[app.games.length-1].officials = officials_array
-                    app.games[app.games.length-1].comments = comments
-                    app.games[app.games.length-1].attendance = atten
+        if(curr_game.length == 18) {
+            console.log(curr_game)
+            if(making_new_game) {
+                app.games[app.games.length-1].home_name = home_name
+                app.games[app.games.length-1].vis_name = vis_name
+                app.games[app.games.length-1].home_code = home_code
+                app.games[app.games.length-1].vis_code = vis_code
+                app.games[app.games.length-1].home_record = home_record
+                app.games[app.games.length-1].vis_record = vis_record
+                app.games[app.games.length-1].date = game_date
+                app.games[app.games.length-1].time = game_time
+                app.games[app.games.length-1].site = game_site
+                app.games[app.games.length-1].site_code = select_site
+                app.games[app.games.length-1].league = league
+                app.games[app.games.length-1].schedule_note = sched_note
+                app.games[app.games.length-1].quarters = halves
+                app.games[app.games.length-1].min_period = min_period
+                app.games[app.games.length-1].min_ot = min_ot
+                app.games[app.games.length-1].officials = officials_array
+                app.games[app.games.length-1].comments = comments
+                app.games[app.games.length-1].attendance = atten
 
-                    ipc.send("init-game", curr_game)
-                }
-                else {
-                    date_time = app.selected_game.date + "_" + app.selected_game.time.split(/:/)[0];
-
-                    DRW.overwrite_footer(date_time, curr_game);
-
-                    for(i = 0; i < app.games.length; i++) {
-                        if(app.games[i].date == app.selected_game.date && app.games[i].time == app.selected_game.time.split(/:/)[0]) {
-                            app.selected_game = app.games[i];
-                            console.log("selected game: "+app.selected_game)
-                        }
-                    }
-
-//                    DRW.overwrite_footer(date_time, curr_game);
-
-                    localStorage.setItem("homeName",app.selected_game.home_name);
-                    localStorage.setItem("visName",app.selected_game.vis_name);
-                    localStorage.setItem("homeCode",app.selected_game.home_code);
-                    localStorage.setItem("visCode",app.selected_game.vis_code);
-                    localStorage.setItem("gameDate",app.selected_game.date);
-                    localStorage.setItem("gameTime",app.selected_game.time.split(/:/)[0]);
-
-                    console.log("selected game: "+app.selected_game +" home name: "+app.selected_game.home_name+" vis name: "+app.selected_game.vis_name+" home code: "+app.selected_game.home_code+" vis code: "+app.selected_game.vis_code)
-
-                    window.location = "./index.html";
-                }
+                ipc.send("init-game", curr_game)
             }
             else {
-                window.alert("Please fill in all fields");
+                date_time = app.selected_game.date + "_" + app.selected_game.time.split(/:/)[0];
+
+                DRW.overwrite_footer(date_time, curr_game);
+
+                for(i = 0; i < app.games.length; i++) {
+                    if(app.games[i].date == app.selected_game.date && app.games[i].time == app.selected_game.time.split(/:/)[0]) {
+                        app.selected_game = app.games[i];
+                        console.log("selected game: "+app.selected_game)
+                    }
+                }
+
+                //[HOME_TEAM, AWAY_TEAM, HOME_TEAM_CODE, AWAY_TEAM_CODE, HOME_TEAM_RECORD, AWAY_TEAM_RECORD, GAME_DATE, START_TIME, STADIUM, STADIUM_CODE, CONF_GAME?, [SCHEDULE_NOTES], QUARTERS/HALVES?, MIN_PER_PERIOD, MIN_IN_OT, OFFICIALS, [BOX_COMMENTS], ATTENDANCE]
+                //[    0    ,     1    ,       2       ,        3      ,        4        ,        5        ,     6    ,     7     ,   8    ,       9     ,    10     ,        11       ,        12       ,       13      ,    14    ,    15    ,        16     ,     17    ]
+
+                app.selected_game.home_name = curr_game[0];
+                app.selected_game.vis_name = curr_game[1];
+                app.selected_game.home_code = curr_game[2];
+                app.selected_game.vis_code = curr_game[3];
+                app.selected_game.home_record = curr_game[4];
+                app.selected_game.vis_record = curr_game[5];
+                app.selected_game.date = curr_game[6];
+                app.selected_game.time = curr_game[7];
+                app.selected_game.site = curr_game[8];
+                app.selected_game.site_code = curr_game[9];
+                app.selected_game.league = curr_game[10];
+                app.selected_game.schedule_note = curr_game[11];
+                app.selected_game.halves = curr_game[12];
+                app.selected_game.min_period = curr_game[13];
+                app.selected_game.min_ot = curr_game[14];
+                app.selected_game.officials = curr_game[15];
+                app.selected_game.comments = curr_game[16];
+                app.selected_game.attendance = curr_game[17];
+
+                localStorage.setItem("homeName",app.selected_game.home_name);
+                localStorage.setItem("visName",app.selected_game.vis_name);
+                localStorage.setItem("homeCode",app.selected_game.home_code);
+                localStorage.setItem("visCode",app.selected_game.vis_code);
+                localStorage.setItem("gameDate",app.selected_game.date);
+                localStorage.setItem("gameTime",app.selected_game.time.split(/:/)[0]);
+
+                console.log("selected game: "+app.selected_game +" home name: "+app.selected_game.home_name+" vis name: "+app.selected_game.vis_name+" home code: "+app.selected_game.home_code+" vis code: "+app.selected_game.vis_code)
+
+                window.location = "./index.html";
             }
-//        }
-//        else {
-//
-//            date_time = app.selected_game.date + "_" + app.selected_game.time.split(/:/)[0];
-//            new_content
-//
-//            DRW.overwrite_game_file(new_team.to_array(), date_time);
-//
-//            for(i = 0; i < app.games.length; i++) {
-//                if(app.games[i].date == app.selected_game.date && app.games[i].time == app.selected_game.time.split(/:/)[0]) {
-////                    console.log(app.games[i])
-//                    app.selected_game = app.games[i];
-//                }
-//            }
-////            getGame(app.selected_game)
-////            loaded_home_team = app.selected_game.home_name
-////            loaded_vis_team = app.selected_game.vis_name
-////            console.log("home: " +app.loaded_home_team+" vis: " +app.loaded_vis_team)
-//	        localStorage.setItem("homeName",app.selected_game.home_name);
-//	        localStorage.setItem("visName",app.selected_game.vis_name);
-//	        localStorage.setItem("gameDate",app.selected_game.date);
-//	        localStorage.setItem("gameTime",app.selected_game.time.split(/:/)[0]);
-////	        localStorage.setItem("currGame",app.selected_game);
-////	        console.log(app.selected_game)
-////	        console.log(localStorage.getItem("currGame"))
-//            window.location = "./index.html";
-//        }
+        }
+        else {
+            window.alert("Please fill in all fields");
+        }
     },
     // If F9 is pressed
     delete_game() {
