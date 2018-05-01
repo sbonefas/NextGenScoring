@@ -150,9 +150,6 @@ var app = new Vue({
 //            {home_name: "Wisconsin", vis_name: "Ohio State", date: "2018-04-13", time: "18:00", site: "Greg Gard", site_code: 1, league: 0, schedule_note: "On time",
 //            quarters: 0, min_period: 20, min_ot: 5, vis_team: "MINN", home_team: "WISC", vis_record: "0-1", home_record: "1-0",
 //            officials: ["ref1", "ref2", "ref3"], attendance: 20000, comments: "comments"},
-//            {home_name: "Wisconsin", vis_name: "Ohio State", date: "2018-04-14", time: "19:00", site: "Greg Gard", site_code: 2, league: 0, schedule_note: "On time",
-//            quarters: 0, min_period: 20, min_ot: 5, vis_team: "MINN", home_team: "WISC", vis_record: "0-1", home_record: "1-0",
-//            officials: ["ref1", "ref2", "ref3"], attendance: 20000, comments: "comments"}
           ],
     game_options: [
       {name: "<ENTER> - EDIT GAME"},
