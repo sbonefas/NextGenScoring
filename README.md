@@ -1,49 +1,55 @@
 # NextGenScoring
 The Stat Crew System for Basketball, the current software used by the UW Athletic Department to score basketball games, is extremely outdated and obsolete (it cannot run on Window operating systems past XP). The purpose of this project is to develop a modern replacement to the software which can be used via a web application. Our program allows scorekeepers to document all relevant statistics related to the game being played, and then export it to both a file which the stadium’s scoreboards reference, as well as any external media sources which are following the game. 
-(ITERATION no1)
 
 # Installation
 To run NextGenScoring, you must first download Node.js and install Electron. Download Node.js [here](https://nodejs.org/en/). To make sure it is installed, run
 
 > node -v
 
-Once you have Node downloaded, install Electron using npm by running
+Once you have Node downloaded, install Electron and other dependencies using npm by running
 
 > npm install Electron
 
+Install mocha- the testing framework
+> npm install mocha 
+
+Install nyc for code coverage metrics
+> npm install nyc
+
+Install filereader
+> npm install filereader
+
+If you can't run npm start or npm test then look at the package.json and the devDependencies and dependencies.
+If they haven't been install run npm install (name of dependency) for all of them until you can get npm start and test to run.
+
+To prepare for the frontend tests, 
+- Download Python 3.6.4 [here](https://www.python.org/downloads/) 
+- Download Mozilla Firefox 57.0 [here](https://filehippo.com/download_firefox/79535/) 
+- Install geckodriver 0.20.0 [here](https://github.com/mozilla/geckodriver/releases) 
+- Edit your environmental variables to ensure that your computer can find the geckodriver. (As an example, the geckodriver.exe file is in my C:\Users\neu3\bin folder, and C:\Users\neu3\bin\geckodriver.exe is in my Path user variable) 
+This link can help add something to your PATH variable: [here](https://www.java.com/en/download/help/path.xml)
+- Once python is installed, to install Selenium in the terminal run
+> pip install selenium
+
 # Usage and Testing
-On Iteration 1, our front end and back end are disconnected. This is because of a an oversight regarding Vue.js default prompts being incompatible with Electron that we didn't become aware of until late in Iteration 1. This means that we are unable to string a complete command from the user to the data and back.
+Due to an unexpected issue between Selenium and Electron, our frontend tests are not able to be ran alongside the backend and integration tests. 
 
-So, to run our backend tests, run
+To run the frontend tests, in the "NextGenScoring" directory, run the Python scripts with:
+> python frontend\ tests/name_of_file.py 
 
-> node data_testing.js
+To run our backend tests, run
 
-This will run a rough automated test script that tests all data reading and writing.
+> npm test
 
-To see some hardcoded interactions between the front and back ends, run
+This will run our entire backend test suite and provide pass/fail messages along with code coverage statistics.
+
+To manually use the software without running any test scripts, run
 
 > npm start
 
-You will see an old version of the front end that runs some data reading and writing, confirming that this interaction is ready for implementation.
+This should lead you to a login page asking for a password,
 
-To view the front end, run (Unix/Linux)
-
-> open index.html
-
-or (Windows)
-
-> explorer "index.html"
-
-This will open the in-game scoring interface, which hard edits the scoreboard on the screen. By Iteration 2, this will instead edit the data through the backend, and then send the edited data from the backend to the scoreboard. 
-
-The password to enter the frontend application is:
-
+The password to enter the application is:
 >123
 
-To run our frontend tests, download Python 3.6.4 [here](https://www.python.org/downloads/). You also need to download Mozilla Firefox 57.0 [here](https://filehippo.com/download_firefox/79535/). Finally, you need to install geckodriver 0.20.0 [here](https://github.com/mozilla/geckodriver/releases) and edit your environmental variables to ensure that your computer can find the geckodriver. Also be sure to set the testing variable in app.js to be true.
 
-In the terminal run
-
-> pip install selenium
-
-to install Selenium. Go to the tests/frontend tests and run the Python scripts with python name_of_file.py 

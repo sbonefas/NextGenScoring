@@ -20,8 +20,8 @@ class TestShotCodes2(unittest.TestCase):
 		
     @classmethod
     def tearDownClass(cls):
-	    #__class__.driver.quit()
-        pass
+	    __class__.driver.quit()
+        #pass
 
     def setUp(self):
         #__class__.driver = webdriver.Firefox()
@@ -517,12 +517,26 @@ class TestShotCodes2(unittest.TestCase):
        self.assertEqual("WISC", play_by_play[4])
        self.assertEqual(home_score + "-" + away_score, play_by_play[5]) 
         
-        
-    # def test_assist(self):
-       # self.home_on_offense()
-       
-       # self.assist("01")
     
+    def test_0ft_perc(self):
+        print("test_0ft_perc")
+        self.free_throw("01", False, True, True, "01")
+        self.free_throw("01", False, True, True, "01")
+        fg_perc = __class__.driver.find_element_by_id('ps-home').find_element_by_xpath('div/p[1]').text.split(' ')[5]
+        self.assertEqual(fg_perc, "0.00")
+        
+        self.free_throw("01", True, False, False, "01")
+        self.home_on_offense()
+        self.free_throw("01", True, False, False, "01")
+        fg_perc = __class__.driver.find_element_by_id('ps-home').find_element_by_xpath('div/p[1]').text.split(' ')[5]
+        self.assertEqual(fg_perc, "50.00")
+    
+        self.home_on_offense()
+        self.free_throw("01", True, False, False, "01")
+        self.home_on_offense()
+        self.free_throw("01", True, False, False, "01")
+        fg_perc = __class__.driver.find_element_by_id('ps-home').find_element_by_xpath('div/p[1]').text.split(' ')[5]
+        self.assertEqual(fg_perc, "66.67")
         
 
 if __name__ == '__main__':

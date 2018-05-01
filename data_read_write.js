@@ -46,7 +46,7 @@ function get_file_path(file_name) {
 	return game_directory + file_name + '.txt';
 }
 
-/** 
+/**
  * Deltes a file with a given filename from the game directory
  *
  * @param file_name Name of the file
@@ -79,6 +79,7 @@ exports.get_all_games = function() {
 	for(var i = 0; i < file_names.length; i++) {
 		if(file_names[i].substring(0,1) == '.' || file_names[i].slice(-4) == '.xml') {
 			file_names.splice(i, 1);
+			i--;
 		}
 	}
 
@@ -540,7 +541,7 @@ function get_game_information_string(file_name) {
 	return game_information;
 }
 
-/** 
+/**
  * Overwrites the footer in a given file with a new footer.
  *
  * @param file_name Name of the file to overwrite
@@ -558,7 +559,7 @@ exports.overwrite_footer = function(file_name, new_footer) {
 	}
 
 	return overwrite_game_file(game_array_to_string(current_game_stats) + "\n" + semicolon_replacement +
-							   "FOOTER\n" + new_footer.toString().replace(/,/g, comma_replacement) + 
+							   "FOOTER\n" + new_footer.toString().replace(/,/g, comma_replacement) +
 							   "\n" + semicolon_replacement + read_pbp(file_name), file_name);
 }
 
@@ -571,7 +572,7 @@ exports.overwrite_footer = function(file_name, new_footer) {
 
 
 
-/** 
+/**
  * Adds a play to the gamefile. This is for the XML file.
  *
  * @param file_name name of the file with the pbps
@@ -585,7 +586,7 @@ exports.overwrite_footer = function(file_name, new_footer) {
  * @param vscore Visitor's score after the play
  * @param hscore Home score after the play
  */
-exports.add_pbp = function(file_name, vh, time, uni, team, checkname, 
+exports.add_pbp = function(file_name, vh, time, uni, team, checkname,
 								action, type, vscore, hscore) {
 	// Check that all required fields are there
 	if(vh == null) throw "add_pbp: vh is null";
@@ -596,7 +597,7 @@ exports.add_pbp = function(file_name, vh, time, uni, team, checkname,
 	if(action == null) throw "add_pbp: action is null";
 
 	// get new pbp to add
-	var xml_play = get_string_play_for_xml(vh, time, uni, team, checkname, 
+	var xml_play = get_string_play_for_xml(vh, time, uni, team, checkname,
 										   action, type, vscore, hscore);
 
 	// get current pbp string and add new pbp. add period delimiter if period ended.
@@ -618,7 +619,7 @@ exports.add_pbp = function(file_name, vh, time, uni, team, checkname,
 	exports.create_xml_file(file_name);
 }
 
-/** 
+/**
  * Converts the given parameters into a valid xml tag that represents
  * a play in the media printout of play-by-plays.
  *
@@ -633,7 +634,7 @@ exports.add_pbp = function(file_name, vh, time, uni, team, checkname,
  * @param vscore Visitor's score after the play
  * @param hscore Home score after the play
  */
-function get_string_play_for_xml(vh, time, uni, team, checkname, 
+function get_string_play_for_xml(vh, time, uni, team, checkname,
 								action, type, vscore, hscore) {
 
 	// Init xml play tag
@@ -667,10 +668,10 @@ function get_string_play_for_xml(vh, time, uni, team, checkname,
 	return play;
 }
 
-/** 
+/**
  * Reads the file with the given file_name and returns a string of the
  * play-by-play list in that file. Includes the first line PBP\n.
- * 
+ *
  * @param file_name name of the file
  * @return string representation of the play-by-plays
  */
@@ -728,7 +729,7 @@ function mmss_to_seconds(mmss) {
 
 
 
-/** 
+/**
  * Creates an XML file from a game file with the given file name. Stores it at
  * the file path defined in xml_file_path defined at the top of this file.
  *
@@ -764,6 +765,7 @@ exports.create_xml_file = function(game_file_name) {
 	} catch(e) {
 		console.log("create_xml_file: File writing error: " + e);
 	}
+	return xml_string;
 }
 
 function xml_get_date() {
@@ -785,7 +787,7 @@ function xml_get_venue(game_file_name) {
 	venue_string += ' visid="' + footer[3] + '"';
 	venue_string += ' visname="' + footer[1] + '"';
 	venue_string += ' homeid="' + footer[2] + '"';
-	venue_string += ' homenanme="' + footer[0] + '"';
+	venue_string += ' homename="' + footer[0] + '"';
 	venue_string += ' date="' + footer[6] + '"';
 	venue_string += ' location="' + footer[8] + '"';
 	venue_string += ' time="' + footer[7] + '"';
@@ -843,7 +845,7 @@ function xml_get_linescores(scores) {
 	}
 	linescores_string += scores[scores.length-1] + '"';
 	linescores_string += ' score="' + sum(scores) + '">\n';
-	
+
 	for(var period = 0; period < scores.length; period++) {
 		linescores_string += '<lineprd prd="' + (period+1) + '"';
 		linescores_string += ' score="' + scores[period] + '"></lineprd>\n';
@@ -880,7 +882,7 @@ function sum(array) {
 	var total = 0;
 	for(var i = 0; i < array.length; i++) {
 		total += array[i];
-	} 
+	}
 	return total;
 }
 
@@ -910,7 +912,7 @@ function get_scoreline(file_name) {
 	for(var team = 0; team < 2; team++) {
 		for(var period = 1; period < pbp_split.length; period++) {
 			if(scoreline[team][period] == undefined) scoreline[team][period] = scoreline[team][period-1];
-		} 
+		}
 	}
 	for(var team = 0; team < 2; team++) {
 		for(var period = pbp_split.length-1; period >= 1; period--) {
@@ -937,10 +939,10 @@ function xml_get_plays(game_file_name) {
 	var plays_string = '<plays format="tokens">\n';
 	for(var i = 1; i <= pbp_split.length; i++) {
 		plays_string += '<period number="' + i + '" time="' + HARDCODED_TIME_PER_PERIOD + '">\n';
-		
+
 		// TODO: include special stats and summary stats
 		// ...
-		
+
 		plays_string += pbp_split[i-1];
 		plays_string += '\n</period>\n';
 	}
@@ -963,10 +965,6 @@ function xml_get_plays(game_file_name) {
 
 exports.test_get_file_path = function(file_name) {
 	return get_file_path(file_name);
-}
-
-exports.test_delete_file = function(file_name) {
-	return delete_file(file_name);
 }
 
 exports.test_get_initial_game_file_contents = function(individual_stat_labels, team_stat_labels, footer) {
@@ -1001,9 +999,9 @@ exports.test_get_game_information_string = function(file_name) {
 	return get_game_information_string(file_name);
 }
 
-exports.test_get_string_play_for_xml = function(vh, time, uni, team, checkname, 
+exports.test_get_string_play_for_xml = function(vh, time, uni, team, checkname,
 								action, type, vscore, hscore) {
-	return get_string_play_for_xml(vh, time, uni, team, checkname, 
+	return get_string_play_for_xml(vh, time, uni, team, checkname,
 								action, type, vscore, hscore);
 }
 
@@ -1013,4 +1011,16 @@ exports.test_read_pbp = function(file_name) {
 
 exports.test_get_last_pbp_timestamp = function(file_name) {
 	return get_last_pbp_timestamp(file_name);
+}
+
+exports.test_xml_get_venue = function(file_name) {
+	return xml_get_venue(file_name);
+}
+
+exports.test_get_prds = function(qh) {
+	return get_prds(qh);
+}
+
+exports.test_xml_get_plays = function(file_name) {
+	return xml_get_plays(file_name);
 }

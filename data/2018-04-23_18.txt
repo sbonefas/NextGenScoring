@@ -16,7 +16,7 @@ total_points(&h#@d!`_made_in_paint(&h#@d!`_fast_break(&h#@d!`_team_turnover(&h#@
 37(&h#@d!`_0(&h#@d!`_0(&h#@d!`_0(&h#@d!`_5(&h#@d!`_0(&h#@d!`_4(&h#@d!`_4
 1(&h#@d!`_0(&h#@d!`_0(&h#@d!`_0(&h#@d!`_0(&h#@d!`_0(&h#@d!`_0(&h#@d!`_0
 /Od@&?l#iFOOTER
-Wisconsin(&h#@d!`_Minnesota(&h#@d!`_home_code(&h#@d!`_vis_code(&h#@d!`_home record(&h#@d!`_vis record(&h#@d!`_2018-04-23(&h#@d!`_18(&h#@d!`_site(&h#@d!`_2(&h#@d!`_1(&h#@d!`_note(&h#@d!`_1(&h#@d!`_period(&h#@d!`_ot(&h#@d!`_official(&h#@d!`_comment(&h#@d!`_atten
+Wisconsin(&h#@d!`_Ohio State(&h#@d!`_WIS(&h#@d!`_OH(&h#@d!`_home record(&h#@d!`_vis record(&h#@d!`_2018-04-23(&h#@d!`_18(&h#@d!`_site(&h#@d!`_2(&h#@d!`_1(&h#@d!`_note(&h#@d!`_1(&h#@d!`_period(&h#@d!`_ot(&h#@d!`_official(&h#@d!`_comment(&h#@d!`_atten
 /Od@&?l#iundefined
 <play vh="H" time="2:00" uni="05" team="WIS" checkname="FIRSTNAME2,LASTNAME2" action="REBOUND" type="OFF" vscore="56" hscore="75"></play>
 <play vh="H" time="2:00" uni="02" team="WIS" checkname="FIRSTNAME1,LASTNAME1" action="MISS" type="JUMPER" vscore="56" hscore="75"></play>

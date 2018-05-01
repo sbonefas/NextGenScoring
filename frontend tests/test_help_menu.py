@@ -71,7 +71,8 @@ F6 - Make player substitutions
 F7 - Change the clock time
 F10 - Clear and do not complete any partially keyed action
 SPACEBAR - Start or Stop the Clock
-ESC - Return to Main Menu"""
+ESC - Return to Main Menu
+To change period (Half 1, Half 2, OT, 2OT, etc) click on the clock to advance to the next period. Max: 7 overtime periods."""
         
         content = __class__.driver.find_element_by_class_name("modal-content").text
         
