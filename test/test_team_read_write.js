@@ -169,7 +169,9 @@ describe("team_read_write tests", function() {
 			var teams = trw.get_all_teams();
 			assert.strictEqual(teams[0].toString(), trw.read_team("minnesota").toString());
 			assert.strictEqual(teams[1].toString(), trw.read_team("ohio_state").toString());
-			assert.strictEqual(teams[2].toString(), trw.read_team("wisconsin").toString());
+			assert.strictEqual(teams[2].toString(), trw.read_team(file_names[0]).toString());
+			assert.strictEqual(teams[3].toString(), trw.read_team(file_names[1]).toString());
+			assert.strictEqual(teams[4].toString(), trw.read_team("wisconsin").toString());
 		});
 	});
 });
