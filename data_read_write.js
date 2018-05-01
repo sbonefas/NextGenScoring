@@ -1024,3 +1024,7 @@ exports.test_get_prds = function(qh) {
 exports.test_xml_get_plays = function(file_name) {
 	return xml_get_plays(file_name);
 }
+
+exports.test_xml_get_date = function() {
+	return xml_get_date();
+}

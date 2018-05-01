@@ -77,7 +77,9 @@ const test_xml_plays = '<plays format="tokens">\n<period number="1" time="20:00"
 'checkname="ABDUR-RAHKMAN,M-A" action="GOOD" type="FT" vscore="78" hscore="69"></play>\n</period>\n<period number="2" time="20:00">\n'+
 '<play vh="V" time="09:49" uni="13" team="MICH" checkname="WAGNER,MORITZ" action="FOUL"></play>\n</period>\n</plays>';
 
-const test_xml_string = '<bbgame source="NextGen Scoring" version="0.3.2" generated="4/23/2018">\n' + test_xml_venue + '\n<status></status>\n'+
+const date = drw.test_xml_get_date();
+
+const test_xml_string = '<bbgame source="NextGen Scoring" version="0.3.2" generated="'+ date +'">\n' + test_xml_venue + '\n<status></status>\n'+
 '<team vh="V" id="AWAY_TEAM_CODE" name="AWAY_TEAM" record="AWAY_TEAM_RECORD">\n<linescore line="78,0" score="78">\n'+
 '<lineprd prd="1" score="78"></lineprd>\n<lineprd prd="2" score="0"></lineprd>\n</linescore>\n<player uni="35" code="35"></player>\n'+
 '<player uni="36" code="36"></player>\n<player uni="45" code="45"></player>\n<player uni="03" code="03"></player>\n<player uni="29" code="29"></player>'+
@@ -119,15 +121,61 @@ function infoHeaders(outerIndex, index) {
     assert.strictEqual(drw.get_all_games()[outerIndex][index][0][7], "full_timeouts_taken");
 
     for (let i = 0; i <= 7; i++) {
-      assert.strictEqual(drw.get_all_games()[outerIndex][index][1][i], "0");
+      if (outerIndex == 0) {
+				if (index == 2) {
+					if (i == 0 ) {
+						assert.strictEqual(drw.get_all_games()[outerIndex][index][1][i], "37");
+					}
+					else if (i == 4) {
+						assert.strictEqual(drw.get_all_games()[outerIndex][index][1][i], "5");
+					}
+					else if (i == 6 || i == 7) {
+						assert.strictEqual(drw.get_all_games()[outerIndex][index][1][i], "4");
+					}
+					else {
+						assert.strictEqual(drw.get_all_games()[outerIndex][index][1][i], "0");
+					}
+				}
+				//inner index is 3
+				else {
+					if (i == 0) {
+						assert.strictEqual(drw.get_all_games()[outerIndex][index][1][i], "1");
+					}
+					else {
+					  assert.strictEqual(drw.get_all_games()[outerIndex][index][1][i], "0");
+				  }
+				}
+			}
+			else { //outerIndex = 1
+				if(index == 2) {
+					if (i == 0 ) {
+						assert.strictEqual(drw.get_all_games()[outerIndex][index][1][i], "147");
+					}
+					else if (i == 4 || i == 6 || i == 7) {
+						assert.strictEqual(drw.get_all_games()[outerIndex][index][1][i], "21");
+					}
+					else {
+						assert.strictEqual(drw.get_all_games()[outerIndex][index][1][i], "0");
+					}
+				}
+				else { //Inner index = 3
+					assert.strictEqual(drw.get_all_games()[outerIndex][index][1][i], "0");
+				}
+			}
     }
   }
   else if (index == 4) {
+		//console.log(drw.get_all_games());
     if (outerIndex == 0) {
-      var array = ["home name", "vis name", "home code", "vis code", "home record",
-      "vis record", "2018-04-23", "18", "site", "2", "1", "note", "1", "period",
-      "ot", "official", "comment", "atten"];
+			var array = ["Wisconsin", "Minnesota", "WIS", "MINN", "home record", "vis record", "2018-04-23",
+      "18", "game_site", "2", "1", "note", "1",
+      "period", "ot", "official", "comment", "atten\r"];
     }
+		else if (outerIndex == 1) {
+		  var array = ["Wisconsin", "Minnesota", "h", "j", "h", "j", "2018-04-24",
+		  "17", "site", "0", "0", "h", "0",
+		  "h", "h", "h", "h", "h\r"];
+	  }
     else {
       var array = ["Wisconsin", "Ohio State", "796", "518", "100-0", "0-100", "3-12-19",
       "4pm", "Kohl Center", "Kohl-Center-code", "1", "schedule notes", "quarters",
